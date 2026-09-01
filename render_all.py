@@ -1,5 +1,5 @@
 """Render the paper's key tables and headline numbers from the committed
-JSON artifacts in data/. Requires only numpy; no model downloads.
+JSON artifacts in data_canonical/. Requires only numpy; no model downloads.
 
 Usage: theta-zoom-render (after pip install .) or python render_all.py
 """
@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 
-DATA = Path(__file__).resolve().parent / "data"
+DATA = Path(__file__).resolve().parent / "data_canonical"
 
 
 def j(name):
@@ -75,8 +75,8 @@ def main():
     axis_search_summary()
     cyclic_summary()
     ranking_summary()
-    print("\nFigure scripts: scripts/make_fig5_mechanism.py, "
-          "scripts/make_fig6_llm.py")
+    print("\nFigure scripts: scripts_canonical/make_fig5_mechanism.py, "
+          "scripts_canonical/make_fig6_llm.py")
 
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
 # Supplementary code and data — "Structure is in the zoom"
 
-Every number in the paper traces to a JSON artifact in `data/` produced by a
-script in `scripts/`. The mapping below covers the paper's headline claims;
+Every number in the paper traces to a JSON artifact in `data_canonical/` produced by a
+script in `scripts_canonical/`. The mapping below covers the paper's headline claims;
 the full number -> artifact -> script manifest ships with the repository.
 
 ## Two ways to use this repository
 
-**Reproduce the paper.** `scripts/` + `data/` trace every number to its
+**Reproduce the paper.** `scripts_canonical/` + `data_canonical/` trace every number to its
 generating script and committed artifact (table below); registered
 expectations are in each script's docstring, committed before the run.
 
@@ -37,16 +37,21 @@ theta-zoom llm --model EleutherAI/pythia-160m --axis axes.json \
 
 For a language model: collect last-token hidden states per layer for a
 prompt battery (one forward pass per prompt) and call `zoom()` per layer;
-`scripts/run37_inferential_nulls.py` is the full worked example. Before
+`scripts_canonical/run37_inferential_nulls.py` is the full worked example. Before
 reading any nonzero shift as label representation, ask what nuisance
 structure your partition preserves (carriers, topics, sessions) and pass it
 as `strata` — the paper's two-null-levels rule.
 
 ## Layout
 
-- `scripts/` — 80 analysis scripts. Registered expectations, where used, are
+The folder names mirror the scripts' hard-coded relative paths
+(`HERE.parent / "data_canonical"`), so every script runs unmodified from a
+clone. `figures_canonical/` holds the paper figures and is where the
+`make_fig*` scripts write.
+
+- `scripts_canonical/` — 82 analysis scripts. Registered expectations, where used, are
   recorded in each script's docstring and were written before the run.
-- `data/` — 88 result JSONs (committed outputs of the scripts).
+- `data_canonical/` — 90 result JSONs (committed outputs of the scripts).
 - Raw data are not included; all sources are public (below).
 
 ## Headline claim -> artifact
@@ -99,4 +104,4 @@ as `strata` — the paper's two-null-levels rule.
 See `requirements.txt`. Scripts run on CPU except where noted (LLM batteries
 use MPS/CUDA if available; every model fits in 16 GB at fp16 except
 Pythia-2.8B, which wants ~8 GB for weights alone).
-- Scripts keep their original relative output paths; all committed outputs are provided in data/.
+- Scripts keep their original relative output paths; all committed outputs are provided in data_canonical/.
