@@ -47,7 +47,7 @@ plt.subplots_adjust(wspace=0.30, left=0.055, right=0.985, top=0.89,
 all_sh = []
 for panel, axis, title, cmap in [
         (0, "world_knowledge", "(a) content axis: inherited, diluted", None),
-        (1, "language_type", "(b) structural axis: built with depth", COOL)]:
+        (1, "language_type", "(b) structural axis: built along the declared path", COOL)]:
     ax = axes[panel]
     for fname, tag, warm in MODELS:
         d = json.load(open(DATA / fname))
@@ -76,7 +76,7 @@ d28 = json.load(open(DATA / "run26_pythia28b_battery.json"))
 # it appears as the shaded control band of panels (a,b) instead.
 AXCOL = {"world_knowledge": ("world knowledge", "#e6550d"),
          "language_type": ("construction type", "#3182bd"),
-         "ethical": ("moral foundation", "#31a354"),
+         "ethical": ("ethical concept", "#31a354"),
          "tqa_category": ("TruthfulQA category", "#969696"),
          "hs_activity": ("HellaSwag activity", "#bcbddc"),
          "arc_topic": ("ARC science topic", "#c994c7")}
@@ -115,6 +115,8 @@ ins.set_title("OLMo-1B (solid) / GPT-Neo (dashed)", fontsize=6)
 ins.set_ylim(-0.35, 0.30)
 
 for out in OUTS:
+    if out is not OUTS[0] and not out.parent.exists():
+        continue  # secondary copy only when the paper tree is present
     out.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out, dpi=220)
     print("wrote", out)

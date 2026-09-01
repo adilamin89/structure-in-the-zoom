@@ -139,6 +139,8 @@ ins.tick_params(labelsize=6)
 ins.set_title("rot-tuned var. fraction", fontsize=6.5)
 
 for out in OUTS:
+    if out is not OUTS[0] and not out.parent.exists():
+        continue  # secondary copy only when the paper tree is present
     out.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out, dpi=220)
     print("wrote", out)

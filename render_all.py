@@ -16,7 +16,7 @@ def j(name):
 
 
 def llm_summary():
-    print("\n== LLM battery: content/structure contrast (paper Table 5) ==")
+    print("\n== LLM battery: depth profiles + descriptive sig/shuffle (runs 17-26) ==")
     files = {"Pythia-160m": "run17_multiclass_battery.json",
              "Pythia-410m": "run18_pythia410m_battery.json",
              "Pythia-1B": "run19_pythia1b_battery.json",
@@ -31,6 +31,19 @@ def llm_summary():
             r = np.mean(np.abs(de)) / max(np.mean(np.abs(sh)), 1e-9)
             print(f"  {tag:12s} {ax:16s} emb {de[0]:+.2f} "
                   f"final {de[-1]:+.2f} sig/shuffle {r:.1f}x")
+
+
+def certified_summary():
+    """Permutation-certified layer counts (paper Table 5, run37 artifact)."""
+    print("\n== LLM battery: certified layers, declared order . order-averaged "
+          "(500 permutations, two-sided p<0.05; paper Table 5) ==")
+    d = j("run37_inferential_nulls.json")
+    for m, mv in d["models"].items():
+        for a, av in mv["axes"].items():
+            L = av["layers"]
+            nc = sum(1 for l in L if l["p_two"] < 0.05)
+            na = sum(1 for l in L if l["p_two_orderavg"] < 0.05)
+            print(f"  {m:24s} {a:16s} {nc:2d}/{len(L)} . {na:2d}/{len(L)}")
 
 
 def cnn_summary():
@@ -71,6 +84,7 @@ def ranking_summary():
 
 def main():
     llm_summary()
+    certified_summary()
     cnn_summary()
     axis_search_summary()
     cyclic_summary()
