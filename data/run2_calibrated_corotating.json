@@ -1,0 +1,30 @@
+{
+ "gt3_delta_reference": 0.237,
+ "shared_baseline": {
+  "delta": 0.08066285706221554,
+  "shuffle_mean": 0.0004595369448208653,
+  "realized_wc_pr": 20.322358951359764
+ },
+ "corotating": {
+  "delta": 0.4911307854022871,
+  "shuffle_mean": 0.0010835799999005928,
+  "realized_wc_pr": 20.180965688843415
+ },
+ "corotating_seed2": {
+  "delta": 0.49000289703602784,
+  "shuffle_mean": -0.0014219484125234702,
+  "realized_wc_pr": 21.092308281275493
+ },
+ "shared_b2x2": {
+  "delta": 0.046709693296901014
+ },
+ "corotating_b2x2": {
+  "delta": 0.3887810971168718
+ },
+ "corotating_b2x2_gainx2": {
+  "delta": 0.6327071227727881
+ },
+ "corotating_gainx2": {
+  "delta": 0.6181597763393538
+ }
+}

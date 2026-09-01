@@ -1,0 +1,46 @@
+{
+ "plain": {
+  "conv1": {
+   "tuned_fraction": 0.0056,
+   "freq1_share": 0.006,
+   "freq2_share": 0.988
+  },
+  "conv2": {
+   "tuned_fraction": 0.0192,
+   "freq1_share": 0.006,
+   "freq2_share": 0.987
+  },
+  "conv3": {
+   "tuned_fraction": 0.0881,
+   "freq1_share": 0.016,
+   "freq2_share": 0.969
+  }
+ },
+ "equivariant": {
+  "conv1_equi": {
+   "tuned_fraction": 0.0084,
+   "freq1_share": 0.004,
+   "freq2_share": 0.992
+  },
+  "conv2_equi": {
+   "tuned_fraction": 0.0409,
+   "freq1_share": 0.003,
+   "freq2_share": 0.994
+  },
+  "conv3_equi": {
+   "tuned_fraction": 0.0952,
+   "freq1_share": 0.015,
+   "freq2_share": 0.971
+  },
+  "conv1_inv": {
+   "tuned_fraction": 0.0005
+  },
+  "conv2_inv": {
+   "tuned_fraction": 0.0005
+  },
+  "conv3_inv": {
+   "tuned_fraction": 0.0005
+  }
+ },
+ "note": "tuned_fraction = rotation-class mean variance / total feature variance; freq shares = C4 Fourier power of class means. Invariant-layer freq shares omitted: residuals are numerical dust (the buggy normalized-correlation version of this analysis is superseded)."
+}

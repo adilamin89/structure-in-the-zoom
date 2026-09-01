@@ -1,0 +1,27 @@
+{
+ "session": 847657808,
+ "area": "VISp",
+ "n_units": 156,
+ "n_trials": 600,
+ "n_orientations": 4,
+ "orientation_zoom": {
+  "delta": 0.2444,
+  "theta_struct": 0.2688,
+  "theta_rand": 0.0244
+ },
+ "random_zoom": {
+  "delta": -0.0721
+ },
+ "cross_modality": "Neuropixels electrophysiology vs Stringer calcium imaging",
+ "comparison": {
+  "stringer_GT3_calcium": {
+   "delta_orient": 0.24,
+   "n_neurons": 11311
+  },
+  "allen_VISp_neuropixels": {
+   "delta_orient": 0.244,
+   "n_neurons": 156
+  },
+  "agreement": "within 2% (0.244 vs 0.240) across modalities"
+ }
+}

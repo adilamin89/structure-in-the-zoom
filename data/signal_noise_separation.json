@@ -1,0 +1,104 @@
+{
+ "recordings": [
+  {
+   "name": "gratings_drifting_GT1_2019_04_",
+   "condition": "DRIFT",
+   "alpha_full": 1.102,
+   "alpha_signal": 1.261,
+   "alpha_diff": 0.159,
+   "n_struct": 233,
+   "level_spacing_r": 0.5577,
+   "spacing_var": 26.464
+  },
+  {
+   "name": "gratings_drifting_GT2_2019_04_",
+   "condition": "DRIFT",
+   "alpha_full": 1.065,
+   "alpha_signal": 1.221,
+   "alpha_diff": 0.156,
+   "n_struct": 224,
+   "level_spacing_r": 0.4851,
+   "spacing_var": 27.838
+  },
+  {
+   "name": "gratings_drifting_GT3_2019_04_",
+   "condition": "DRIFT",
+   "alpha_full": 1.021,
+   "alpha_signal": 1.183,
+   "alpha_diff": 0.163,
+   "n_struct": 211,
+   "level_spacing_r": 0.5366,
+   "spacing_var": 27.619
+  },
+  {
+   "name": "gratings_local_GT1_2019_04_27_",
+   "condition": "LOCAL",
+   "alpha_full": 0.902,
+   "alpha_signal": 0.986,
+   "alpha_diff": 0.083,
+   "n_struct": 348,
+   "level_spacing_r": 0.5131,
+   "spacing_var": 21.629
+  },
+  {
+   "name": "gratings_local_GT2_2019_04_23_",
+   "condition": "LOCAL",
+   "alpha_full": 0.95,
+   "alpha_signal": 1.058,
+   "alpha_diff": 0.109,
+   "n_struct": 259,
+   "level_spacing_r": 0.5048,
+   "spacing_var": 18.26
+  },
+  {
+   "name": "gratings_local_GT3_2019_04_24_",
+   "condition": "LOCAL",
+   "alpha_full": 1.042,
+   "alpha_signal": 1.23,
+   "alpha_diff": 0.188,
+   "n_struct": 189,
+   "level_spacing_r": 0.534,
+   "spacing_var": 12.794
+  },
+  {
+   "name": "gratings_low_contrast_GT1_2019",
+   "condition": "LOW-C",
+   "alpha_full": 0.887,
+   "alpha_signal": 0.949,
+   "alpha_diff": 0.063,
+   "n_struct": 352,
+   "level_spacing_r": 0.5326,
+   "spacing_var": 45.077
+  },
+  {
+   "name": "gratings_low_contrast_GT2_2019",
+   "condition": "LOW-C",
+   "alpha_full": 0.84,
+   "alpha_signal": 0.927,
+   "alpha_diff": 0.087,
+   "n_struct": 338,
+   "level_spacing_r": 0.5712,
+   "spacing_var": 35.484
+  },
+  {
+   "name": "static_biased_TX40_2019_06_12_",
+   "condition": "STATIC",
+   "alpha_full": 1.079,
+   "alpha_signal": 1.27,
+   "alpha_diff": 0.192,
+   "n_struct": 219,
+   "level_spacing_r": 0.4996,
+   "spacing_var": 43.185
+  },
+  {
+   "name": "static_biased_TX42_2019_06_13_",
+   "condition": "STATIC",
+   "alpha_full": 0.989,
+   "alpha_signal": 1.132,
+   "alpha_diff": 0.143,
+   "n_struct": 293,
+   "level_spacing_r": 0.5196,
+   "spacing_var": 64.236
+  }
+ ]
+}

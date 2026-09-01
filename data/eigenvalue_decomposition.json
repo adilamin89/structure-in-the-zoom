@@ -1,0 +1,10 @@
+{
+ "alpha_stringer": 1.0100656833470407,
+ "alpha_floor": 0.04390611976734739,
+ "alpha_floor_sd": 0.0001380013163320477,
+ "delta_alpha": 0.9661595635796933,
+ "floor_fraction": 0.0434685788174253,
+ "q_ratio": 2.546375506528591,
+ "n_stimuli": 4442,
+ "n_neurons": 11311
+}

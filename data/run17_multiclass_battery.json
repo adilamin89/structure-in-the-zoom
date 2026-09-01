@@ -1,0 +1,641 @@
+{
+ "model": "EleutherAI/pythia-160m",
+ "n_layers": 12,
+ "axes": {
+  "tqa_category": {
+   "n_classes": 8,
+   "n_prompts": 128,
+   "class_names": [
+    "Misconceptions",
+    "Law",
+    "Health",
+    "Sociology",
+    "Economics",
+    "Fiction",
+    "Conspiracies",
+    "Paranormal"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -0.02438950525333866,
+     "shuffle_mean": -0.03287400743635239,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": 0.03258129112419733,
+     "shuffle_mean": -0.17368927604316275,
+     "delta_excess": 0.05697079637753599
+    },
+    {
+     "layer": 2,
+     "delta": 0.1039302707019692,
+     "shuffle_mean": -0.014735187098665632,
+     "delta_excess": 0.12831977595530786
+    },
+    {
+     "layer": 3,
+     "delta": 0.05500417802239915,
+     "shuffle_mean": -0.002538233271476076,
+     "delta_excess": 0.07939368327573781
+    },
+    {
+     "layer": 4,
+     "delta": -0.019464914950959866,
+     "shuffle_mean": -0.008011303696830573,
+     "delta_excess": 0.004924590302378795
+    },
+    {
+     "layer": 5,
+     "delta": 0.0009133822706601791,
+     "shuffle_mean": -0.0149147990593268,
+     "delta_excess": 0.02530288752399884
+    },
+    {
+     "layer": 6,
+     "delta": 0.023401898418431488,
+     "shuffle_mean": 0.027499410998348184,
+     "delta_excess": 0.04779140367177015
+    },
+    {
+     "layer": 7,
+     "delta": -0.029170009772001848,
+     "shuffle_mean": 0.0007834342801402938,
+     "delta_excess": -0.004780504518663187
+    },
+    {
+     "layer": 8,
+     "delta": -0.04659572706007564,
+     "shuffle_mean": 0.010283038875722161,
+     "delta_excess": -0.02220622180673698
+    },
+    {
+     "layer": 9,
+     "delta": -0.0664702150107877,
+     "shuffle_mean": 0.013327791758864626,
+     "delta_excess": -0.04208070975744904
+    },
+    {
+     "layer": 10,
+     "delta": -0.07289946859553004,
+     "shuffle_mean": -0.053501779440513916,
+     "delta_excess": -0.048509963342191376
+    },
+    {
+     "layer": 11,
+     "delta": 0.008552435543953907,
+     "shuffle_mean": 0.035151494712780194,
+     "delta_excess": 0.03294194079729257
+    },
+    {
+     "layer": 12,
+     "delta": -0.020334049300864132,
+     "shuffle_mean": 0.00038755249625395117,
+     "delta_excess": 0.004055455952474529
+    }
+   ]
+  },
+  "hs_activity": {
+   "n_classes": 8,
+   "n_prompts": 128,
+   "class_names": [
+    "Personal Care and Style",
+    "Family Life",
+    "Food and Entertaining",
+    "Computers and Electronics",
+    "Health",
+    "Home and Garden",
+    "Finance and Business",
+    "Pets and Animals"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -1.4005595800914524e-10,
+     "shuffle_mean": 4.349635612216671e-09,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": -0.3688766803623916,
+     "shuffle_mean": -0.03336445045424332,
+     "delta_excess": -0.3688766802223356
+    },
+    {
+     "layer": 2,
+     "delta": -0.1665499707469401,
+     "shuffle_mean": 0.04244749498822583,
+     "delta_excess": -0.16654997060688415
+    },
+    {
+     "layer": 3,
+     "delta": -0.03979609318533539,
+     "shuffle_mean": 0.03592198435506316,
+     "delta_excess": -0.03979609304527943
+    },
+    {
+     "layer": 4,
+     "delta": -0.0720629881604466,
+     "shuffle_mean": -0.0064065461471156885,
+     "delta_excess": -0.07206298802039064
+    },
+    {
+     "layer": 5,
+     "delta": -0.0296866733441436,
+     "shuffle_mean": 0.012641094729443558,
+     "delta_excess": -0.029686673204087643
+    },
+    {
+     "layer": 6,
+     "delta": -0.031039579106649118,
+     "shuffle_mean": -0.005072295154713036,
+     "delta_excess": -0.03103957896659316
+    },
+    {
+     "layer": 7,
+     "delta": -0.03858600477040647,
+     "shuffle_mean": 0.039496424346765216,
+     "delta_excess": -0.03858600463035051
+    },
+    {
+     "layer": 8,
+     "delta": 0.09761054624143672,
+     "shuffle_mean": 0.019565306763888773,
+     "delta_excess": 0.09761054638149268
+    },
+    {
+     "layer": 9,
+     "delta": 0.01273051418513435,
+     "shuffle_mean": 0.14015242265115735,
+     "delta_excess": 0.012730514325190309
+    },
+    {
+     "layer": 10,
+     "delta": 0.1005626498996509,
+     "shuffle_mean": 0.08111124021002171,
+     "delta_excess": 0.10056265003970685
+    },
+    {
+     "layer": 11,
+     "delta": -0.08079183254776201,
+     "shuffle_mean": -0.007026428065574286,
+     "delta_excess": -0.08079183240770606
+    },
+    {
+     "layer": 12,
+     "delta": -0.09686745829913812,
+     "shuffle_mean": 0.01826027220771651,
+     "delta_excess": -0.09686745815908217
+    }
+   ]
+  },
+  "arc_topic": {
+   "n_classes": 8,
+   "n_prompts": 128,
+   "class_names": [
+    "biology",
+    "physics",
+    "earth",
+    "chemistry",
+    "space",
+    "ecology",
+    "human_body",
+    "weather"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -0.1971938747409423,
+     "shuffle_mean": -0.06842502556595467,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": -0.08209526524251187,
+     "shuffle_mean": -0.04398714590076244,
+     "delta_excess": 0.11509860949843043
+    },
+    {
+     "layer": 2,
+     "delta": -0.03125533003514086,
+     "shuffle_mean": -0.031997872406200625,
+     "delta_excess": 0.16593854470580144
+    },
+    {
+     "layer": 3,
+     "delta": -0.015538420720060564,
+     "shuffle_mean": -0.02906788143174563,
+     "delta_excess": 0.18165545402088173
+    },
+    {
+     "layer": 4,
+     "delta": 0.0246221626158179,
+     "shuffle_mean": -0.06238264307105597,
+     "delta_excess": 0.2218160373567602
+    },
+    {
+     "layer": 5,
+     "delta": 0.06165674999043175,
+     "shuffle_mean": -0.008434677617761888,
+     "delta_excess": 0.25885062473137405
+    },
+    {
+     "layer": 6,
+     "delta": 0.022156071162082125,
+     "shuffle_mean": -0.022731941035532544,
+     "delta_excess": 0.21934994590302442
+    },
+    {
+     "layer": 7,
+     "delta": -0.0482095373026869,
+     "shuffle_mean": -0.03719177991969559,
+     "delta_excess": 0.1489843374382554
+    },
+    {
+     "layer": 8,
+     "delta": -0.10157584557229543,
+     "shuffle_mean": -0.044970182901673636,
+     "delta_excess": 0.09561802916864687
+    },
+    {
+     "layer": 9,
+     "delta": -0.07899340448784031,
+     "shuffle_mean": -0.01842360448002365,
+     "delta_excess": 0.11820047025310199
+    },
+    {
+     "layer": 10,
+     "delta": -0.06453190251650365,
+     "shuffle_mean": -0.03652206812087264,
+     "delta_excess": 0.13266197222443865
+    },
+    {
+     "layer": 11,
+     "delta": -0.03809825465562483,
+     "shuffle_mean": 0.024798530250846253,
+     "delta_excess": 0.15909562008531747
+    },
+    {
+     "layer": 12,
+     "delta": -0.022055290274484385,
+     "shuffle_mean": -0.04211789874912947,
+     "delta_excess": 0.17513858446645791
+    }
+   ]
+  },
+  "ethical": {
+   "n_classes": 8,
+   "n_prompts": 128,
+   "class_names": [
+    "fairness",
+    "harm",
+    "honesty",
+    "privacy",
+    "autonomy",
+    "loyalty",
+    "authority",
+    "sanctity"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": 0.04616504226426621,
+     "shuffle_mean": 0.05033702745337609,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": 0.011006227108161903,
+     "shuffle_mean": 0.021342691983233776,
+     "delta_excess": -0.035158815156104306
+    },
+    {
+     "layer": 2,
+     "delta": 0.009054684220618947,
+     "shuffle_mean": 0.031051805712140834,
+     "delta_excess": -0.03711035804364726
+    },
+    {
+     "layer": 3,
+     "delta": -0.010689036719064848,
+     "shuffle_mean": 0.034584024698829555,
+     "delta_excess": -0.05685407898333106
+    },
+    {
+     "layer": 4,
+     "delta": -0.004558885918486522,
+     "shuffle_mean": 0.035922176001030405,
+     "delta_excess": -0.05072392818275273
+    },
+    {
+     "layer": 5,
+     "delta": -0.009298969123281986,
+     "shuffle_mean": 0.016991759925230897,
+     "delta_excess": -0.055464011387548195
+    },
+    {
+     "layer": 6,
+     "delta": 0.009132083602955365,
+     "shuffle_mean": 0.03973502896670893,
+     "delta_excess": -0.037032958661310844
+    },
+    {
+     "layer": 7,
+     "delta": -0.028953406756609956,
+     "shuffle_mean": 0.047556270135930265,
+     "delta_excess": -0.07511844902087617
+    },
+    {
+     "layer": 8,
+     "delta": -0.043592818172130565,
+     "shuffle_mean": 0.04045558314377136,
+     "delta_excess": -0.08975786043639677
+    },
+    {
+     "layer": 9,
+     "delta": -0.007557005994903554,
+     "shuffle_mean": 0.04034805802489196,
+     "delta_excess": -0.05372204825916976
+    },
+    {
+     "layer": 10,
+     "delta": -0.027591711027736276,
+     "shuffle_mean": 0.018220526162912788,
+     "delta_excess": -0.07375675329200249
+    },
+    {
+     "layer": 11,
+     "delta": -0.0046653787937301905,
+     "shuffle_mean": 0.04758070126790058,
+     "delta_excess": -0.0508304210579964
+    },
+    {
+     "layer": 12,
+     "delta": 0.0008914644412891803,
+     "shuffle_mean": 0.01776700231437476,
+     "delta_excess": -0.04527357782297703
+    }
+   ]
+  },
+  "world_knowledge": {
+   "n_classes": 8,
+   "n_prompts": 128,
+   "class_names": [
+    "mathematics",
+    "geography",
+    "history",
+    "technology",
+    "law",
+    "medicine",
+    "philosophy",
+    "sports"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": 0.11101166260224982,
+     "shuffle_mean": 0.013540941188584088,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": 0.14556390155625343,
+     "shuffle_mean": 0.03595246963916328,
+     "delta_excess": 0.03455223895400361
+    },
+    {
+     "layer": 2,
+     "delta": 0.1440649398272008,
+     "shuffle_mean": 0.0592159094449279,
+     "delta_excess": 0.033053277224950994
+    },
+    {
+     "layer": 3,
+     "delta": 0.10085455612913885,
+     "shuffle_mean": 0.03741600817272346,
+     "delta_excess": -0.010157106473110966
+    },
+    {
+     "layer": 4,
+     "delta": 0.08780357980044706,
+     "shuffle_mean": 0.02318719916640759,
+     "delta_excess": -0.023208082801802754
+    },
+    {
+     "layer": 5,
+     "delta": 0.10944614889234738,
+     "shuffle_mean": 0.029709223606439416,
+     "delta_excess": -0.001565513709902433
+    },
+    {
+     "layer": 6,
+     "delta": 0.09225695578602922,
+     "shuffle_mean": 0.017543983968475806,
+     "delta_excess": -0.0187547068162206
+    },
+    {
+     "layer": 7,
+     "delta": 0.1269820052990558,
+     "shuffle_mean": 0.02431909088874982,
+     "delta_excess": 0.015970342696805973
+    },
+    {
+     "layer": 8,
+     "delta": 0.13224069085276496,
+     "shuffle_mean": 0.01957680192010892,
+     "delta_excess": 0.021229028250515147
+    },
+    {
+     "layer": 9,
+     "delta": 0.046609138578235954,
+     "shuffle_mean": -0.014623736960638945,
+     "delta_excess": -0.06440252402401386
+    },
+    {
+     "layer": 10,
+     "delta": 0.07599412941410011,
+     "shuffle_mean": 0.024882967494845153,
+     "delta_excess": -0.03501753318814971
+    },
+    {
+     "layer": 11,
+     "delta": 0.07341010544961057,
+     "shuffle_mean": 0.0006011354592212248,
+     "delta_excess": -0.03760155715263924
+    },
+    {
+     "layer": 12,
+     "delta": 0.052835073526883436,
+     "shuffle_mean": 0.02302699152269838,
+     "delta_excess": -0.05817658907536638
+    }
+   ]
+  },
+  "language_type": {
+   "n_classes": 8,
+   "n_prompts": 128,
+   "class_names": [
+    "question",
+    "definition",
+    "comparison",
+    "narrative",
+    "cause_effect",
+    "instruction",
+    "opinion",
+    "negation"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -0.0814370532590224,
+     "shuffle_mean": 0.017539363842788026,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": -0.08177369933956125,
+     "shuffle_mean": 0.01697622334821327,
+     "delta_excess": -0.00033664608053884937
+    },
+    {
+     "layer": 2,
+     "delta": -0.08694279843673836,
+     "shuffle_mean": -0.029556040470903232,
+     "delta_excess": -0.005505745177715959
+    },
+    {
+     "layer": 3,
+     "delta": -0.04779442318786875,
+     "shuffle_mean": -0.010324146824253644,
+     "delta_excess": 0.033642630071153645
+    },
+    {
+     "layer": 4,
+     "delta": -0.013751306578879463,
+     "shuffle_mean": 0.0003421499378125414,
+     "delta_excess": 0.06768574668014293
+    },
+    {
+     "layer": 5,
+     "delta": 0.0075000515677662305,
+     "shuffle_mean": 0.0035405978913977563,
+     "delta_excess": 0.08893710482678863
+    },
+    {
+     "layer": 6,
+     "delta": 0.018290845265805156,
+     "shuffle_mean": -0.010388723111807496,
+     "delta_excess": 0.09972789852482755
+    },
+    {
+     "layer": 7,
+     "delta": 0.025916860758171678,
+     "shuffle_mean": -0.005707459512262525,
+     "delta_excess": 0.10735391401719407
+    },
+    {
+     "layer": 8,
+     "delta": 0.043882193991208907,
+     "shuffle_mean": 0.020356515845967992,
+     "delta_excess": 0.1253192472502313
+    },
+    {
+     "layer": 9,
+     "delta": 0.07268044710036203,
+     "shuffle_mean": -0.0011041489313432518,
+     "delta_excess": 0.15411750035938443
+    },
+    {
+     "layer": 10,
+     "delta": 0.10958134609125902,
+     "shuffle_mean": 0.006935639479443712,
+     "delta_excess": 0.19101839935028142
+    },
+    {
+     "layer": 11,
+     "delta": 0.13676489063222713,
+     "shuffle_mean": -0.004667446901290606,
+     "delta_excess": 0.21820194389124953
+    },
+    {
+     "layer": 12,
+     "delta": 0.12160000675535343,
+     "shuffle_mean": 0.00980156392931053,
+     "delta_excess": 0.20303706001437583
+    }
+   ]
+  },
+  "random": {
+   "n_prompts": 128,
+   "n_classes": 8,
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -0.30083600727582516,
+     "shuffle_mean": -0.10837348634184059
+    },
+    {
+     "layer": 1,
+     "delta": 0.12338784306330502,
+     "shuffle_mean": -0.016199818537836298
+    },
+    {
+     "layer": 2,
+     "delta": -0.03216684044179127,
+     "shuffle_mean": -0.027410523947047082
+    },
+    {
+     "layer": 3,
+     "delta": 0.006537804040771866,
+     "shuffle_mean": -0.017958431189127287
+    },
+    {
+     "layer": 4,
+     "delta": -0.02056117606733232,
+     "shuffle_mean": -0.047125332231505154
+    },
+    {
+     "layer": 5,
+     "delta": 0.011622865580399155,
+     "shuffle_mean": -0.02644153770046297
+    },
+    {
+     "layer": 6,
+     "delta": -0.0012060524825494578,
+     "shuffle_mean": -0.003951047307393341
+    },
+    {
+     "layer": 7,
+     "delta": 0.0024272250156771036,
+     "shuffle_mean": -0.007548730869702336
+    },
+    {
+     "layer": 8,
+     "delta": -0.0008306577812072224,
+     "shuffle_mean": -0.018757468837484238
+    },
+    {
+     "layer": 9,
+     "delta": 0.0007726642016603336,
+     "shuffle_mean": -0.017818355512969276
+    },
+    {
+     "layer": 10,
+     "delta": 0.029296170672651,
+     "shuffle_mean": 0.0013732650764577859
+    },
+    {
+     "layer": 11,
+     "delta": -0.10217014636043253,
+     "shuffle_mean": -0.07091683726034234
+    },
+    {
+     "layer": 12,
+     "delta": -0.012685221699556992,
+     "shuffle_mean": -0.020134668422023227
+    }
+   ]
+  }
+ }
+}

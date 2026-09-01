@@ -1,0 +1,154 @@
+{
+ "design": "declared-axis search on natimg2800",
+ "axes": [
+  "spatial_frequency",
+  "dominant_orientation",
+  "random"
+ ],
+ "sessions": {
+  "natimg2800_M170717_MP034_2017-09-11": {
+   "n_neurons": 10103,
+   "n_trials": 5600,
+   "axes": {
+    "spatial_frequency": {
+     "delta": 0.05839473655958699,
+     "shuffle_mean": -0.0002906570716732393,
+     "class_counts": [
+      700,
+      700,
+      700,
+      700,
+      700,
+      700,
+      700,
+      700
+     ]
+    },
+    "dominant_orientation": {
+     "delta": 0.0017918112414053722,
+     "shuffle_mean": -0.0026066107424994713,
+     "class_counts": [
+      258,
+      238,
+      376,
+      1844,
+      1790,
+      476,
+      294,
+      324
+     ]
+    },
+    "random": {
+     "delta": -0.004089536429697838,
+     "shuffle_mean": 0.005107761794688803,
+     "class_counts": [
+      696,
+      706,
+      716,
+      725,
+      679,
+      719,
+      700,
+      659
+     ]
+    }
+   }
+  },
+  "natimg2800_M160825_MP027_2016-12-14": {
+   "n_neurons": 11449,
+   "n_trials": 5166,
+   "axes": {
+    "spatial_frequency": {
+     "delta": 0.08549378340883548,
+     "shuffle_mean": -0.006903896405237875,
+     "class_counts": [
+      649,
+      640,
+      643,
+      641,
+      647,
+      648,
+      649,
+      649
+     ]
+    },
+    "dominant_orientation": {
+     "delta": 0.01924447216577463,
+     "shuffle_mean": 0.004016489302903059,
+     "class_counts": [
+      235,
+      227,
+      351,
+      1689,
+      1657,
+      444,
+      264,
+      299
+     ]
+    },
+    "random": {
+     "delta": -0.010987382256178485,
+     "shuffle_mean": 0.00884988452935771,
+     "class_counts": [
+      639,
+      665,
+      663,
+      658,
+      626,
+      663,
+      640,
+      612
+     ]
+    }
+   }
+  },
+  "natimg2800_M170604_MP031_2017-06-28": {
+   "n_neurons": 10079,
+   "n_trials": 5600,
+   "axes": {
+    "spatial_frequency": {
+     "delta": 0.03332382664297148,
+     "shuffle_mean": 0.007763301139530898,
+     "class_counts": [
+      700,
+      700,
+      700,
+      700,
+      700,
+      700,
+      700,
+      700
+     ]
+    },
+    "dominant_orientation": {
+     "delta": 0.005571633804628939,
+     "shuffle_mean": 0.0021986227829946968,
+     "class_counts": [
+      258,
+      238,
+      376,
+      1844,
+      1790,
+      476,
+      294,
+      324
+     ]
+    },
+    "random": {
+     "delta": -0.008355516161970056,
+     "shuffle_mean": -0.002366759580514094,
+     "class_counts": [
+      696,
+      706,
+      716,
+      725,
+      679,
+      719,
+      700,
+      659
+     ]
+    }
+   }
+  }
+ }
+}

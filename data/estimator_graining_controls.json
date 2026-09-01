@@ -1,0 +1,28 @@
+{
+ "A9_8_estimator": {
+  "delta_dir_centered": 0.237289528162427,
+  "delta_dir_uncentered": 0.45833016421214157
+ },
+ "A9_1_coarse_graining": [
+  {
+   "K": 1,
+   "pref_sorted": 0.23064625472113773,
+   "random_blocks": 0.23064626225262502
+  },
+  {
+   "K": 4,
+   "pref_sorted": 0.20978173574124537,
+   "random_blocks": 0.18957491007184568
+  },
+  {
+   "K": 16,
+   "pref_sorted": 0.2161151627327766,
+   "random_blocks": 0.07314235737181181
+  },
+  {
+   "K": 32,
+   "pref_sorted": 0.2706760929134262,
+   "random_blocks": 0.02633268578366312
+  }
+ ]
+}

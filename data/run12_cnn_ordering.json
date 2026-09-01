@@ -1,0 +1,80 @@
+{
+ "plain/conv1/adjacent": {
+  "mean": 0.015103080202412791,
+  "sd": 0.0071013713757048305
+ },
+ "plain/conv1/antipodal": {
+  "mean": 0.01710562372261176,
+  "sd": 0.008143826965920102
+ },
+ "plain/conv2/adjacent": {
+  "mean": 0.0926695476017397,
+  "sd": 0.024348921796196413
+ },
+ "plain/conv2/antipodal": {
+  "mean": 0.10513968082567748,
+  "sd": 0.0275580175188148
+ },
+ "plain/conv3/adjacent": {
+  "mean": 0.07100229258211876,
+  "sd": 0.06329439396125325
+ },
+ "plain/conv3/antipodal": {
+  "mean": 0.07803101198961573,
+  "sd": 0.06965653413381002
+ },
+ "equivariant/conv1_equi/adjacent": {
+  "mean": 0.013847116341092777,
+  "sd": 0.0030163844938078653
+ },
+ "equivariant/conv1_equi/antipodal": {
+  "mean": 0.015606227584547222,
+  "sd": 0.0033322592480212183
+ },
+ "equivariant/conv2_equi/adjacent": {
+  "mean": 0.09194909956213651,
+  "sd": 0.02762059986375895
+ },
+ "equivariant/conv2_equi/antipodal": {
+  "mean": 0.10413530855585514,
+  "sd": 0.030575706837463437
+ },
+ "equivariant/conv3_equi/adjacent": {
+  "mean": 0.09816668102856124,
+  "sd": 0.048566719345857066
+ },
+ "equivariant/conv3_equi/antipodal": {
+  "mean": 0.10894806852224923,
+  "sd": 0.0564108819350436
+ },
+ "plain/conv1/effect": {
+  "mean": 0.0020025435201989654,
+  "sd": 0.0010582190434453218,
+  "frac_pos": 1.0
+ },
+ "plain/conv2/effect": {
+  "mean": 0.012470133223937786,
+  "sd": 0.0034308615680019774,
+  "frac_pos": 1.0
+ },
+ "plain/conv3/effect": {
+  "mean": 0.007028719407496978,
+  "sd": 0.006402222032053432,
+  "frac_pos": 0.8
+ },
+ "equivariant/conv1_equi/effect": {
+  "mean": 0.0017591112434544448,
+  "sd": 0.0003837627286429933,
+  "frac_pos": 1.0
+ },
+ "equivariant/conv2_equi/effect": {
+  "mean": 0.012186208993718636,
+  "sd": 0.0032050715722019884,
+  "frac_pos": 1.0
+ },
+ "equivariant/conv3_equi/effect": {
+  "mean": 0.010781387493687986,
+  "sd": 0.008131842169648488,
+  "frac_pos": 0.8
+ }
+}

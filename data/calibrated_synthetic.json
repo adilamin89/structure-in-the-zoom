@@ -1,0 +1,17 @@
+{
+ "measured_within_class_corr": 0.2490265816450119,
+ "measured_within_class_pr": 20.081971229179473,
+ "n_neur_syn": 4000,
+ "realized_within_class_pr": 20.322358951359764,
+ "E1_calibrated": {
+  "delta_dir": 0.08066285706221554,
+  "shuffle_mean": 0.0004595369448208653,
+  "shuffle_sd": 0.0012689637475617739
+ },
+ "E2_isotropic": {
+  "delta_dir": 0.003530433065556511
+ },
+ "E3_double_quadrupole": {
+  "delta_dir": 0.046709693296901014
+ }
+}

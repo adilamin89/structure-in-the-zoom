@@ -1,0 +1,530 @@
+{
+ "model": "EleutherAI/pythia-160m",
+ "n_layers": 12,
+ "axes": {
+  "topic_tqa": {
+   "n_classes": 8,
+   "n_prompts": 128,
+   "class_names": [
+    "Misconceptions",
+    "Law",
+    "Health",
+    "Sociology",
+    "Economics",
+    "Fiction",
+    "Conspiracies",
+    "Paranormal"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -0.02438950525333866,
+     "shuffle_mean": -0.03287400743635239,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": 0.03258129112419733,
+     "shuffle_mean": -0.17368927604316275,
+     "delta_excess": 0.05697079637753599
+    },
+    {
+     "layer": 2,
+     "delta": 0.1039302707019692,
+     "shuffle_mean": -0.014735187098665632,
+     "delta_excess": 0.12831977595530786
+    },
+    {
+     "layer": 3,
+     "delta": 0.05500417802239915,
+     "shuffle_mean": -0.002538233271476076,
+     "delta_excess": 0.07939368327573781
+    },
+    {
+     "layer": 4,
+     "delta": -0.019464914950959866,
+     "shuffle_mean": -0.008011303696830573,
+     "delta_excess": 0.004924590302378795
+    },
+    {
+     "layer": 5,
+     "delta": 0.0009133822706601791,
+     "shuffle_mean": -0.0149147990593268,
+     "delta_excess": 0.02530288752399884
+    },
+    {
+     "layer": 6,
+     "delta": 0.023401898418431488,
+     "shuffle_mean": 0.027499410998348184,
+     "delta_excess": 0.04779140367177015
+    },
+    {
+     "layer": 7,
+     "delta": -0.029170009772001848,
+     "shuffle_mean": 0.0007834342801402938,
+     "delta_excess": -0.004780504518663187
+    },
+    {
+     "layer": 8,
+     "delta": -0.04659572706007564,
+     "shuffle_mean": 0.010283038875722161,
+     "delta_excess": -0.02220622180673698
+    },
+    {
+     "layer": 9,
+     "delta": -0.0664702150107877,
+     "shuffle_mean": 0.013327791758864626,
+     "delta_excess": -0.04208070975744904
+    },
+    {
+     "layer": 10,
+     "delta": -0.07289946859553004,
+     "shuffle_mean": -0.053501779440513916,
+     "delta_excess": -0.048509963342191376
+    },
+    {
+     "layer": 11,
+     "delta": 0.008552435543953907,
+     "shuffle_mean": 0.035151494712780194,
+     "delta_excess": 0.03294194079729257
+    },
+    {
+     "layer": 12,
+     "delta": -0.020334049300864132,
+     "shuffle_mean": 0.00038755249625395117,
+     "delta_excess": 0.004055455952474529
+    }
+   ]
+  },
+  "factual_tqa": {
+   "n_classes": 2,
+   "n_prompts": 128,
+   "class_names": [
+    "true",
+    "false"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -0.1715872186990225,
+     "shuffle_mean": -0.040290025611404004,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": -0.11893284717528696,
+     "shuffle_mean": 0.005164117904542453,
+     "delta_excess": 0.05265437152373553
+    },
+    {
+     "layer": 2,
+     "delta": -0.124418860324717,
+     "shuffle_mean": -0.03245647600031602,
+     "delta_excess": 0.0471683583743055
+    },
+    {
+     "layer": 3,
+     "delta": -0.04161911984711231,
+     "shuffle_mean": 0.032892961812204156,
+     "delta_excess": 0.12996809885191019
+    },
+    {
+     "layer": 4,
+     "delta": -0.013688469838678718,
+     "shuffle_mean": -0.012012433135956235,
+     "delta_excess": 0.15789874886034377
+    },
+    {
+     "layer": 5,
+     "delta": -0.06477797855399109,
+     "shuffle_mean": -0.025626444739930577,
+     "delta_excess": 0.1068092401450314
+    },
+    {
+     "layer": 6,
+     "delta": 0.05068241334903273,
+     "shuffle_mean": -0.018699310864296697,
+     "delta_excess": 0.22226963204805522
+    },
+    {
+     "layer": 7,
+     "delta": -0.14265665412234432,
+     "shuffle_mean": -0.030511862719637756,
+     "delta_excess": 0.02893056457667817
+    },
+    {
+     "layer": 8,
+     "delta": 0.02190908360520638,
+     "shuffle_mean": 0.007528473983165851,
+     "delta_excess": 0.19349630230422887
+    },
+    {
+     "layer": 9,
+     "delta": -0.002883505390604557,
+     "shuffle_mean": 0.009425951470436266,
+     "delta_excess": 0.16870371330841794
+    },
+    {
+     "layer": 10,
+     "delta": -0.15887473750344608,
+     "shuffle_mean": -0.060270413304349305,
+     "delta_excess": 0.012712481195576414
+    },
+    {
+     "layer": 11,
+     "delta": -0.19265376863741054,
+     "shuffle_mean": -0.0015234907180693646,
+     "delta_excess": -0.02106654993838805
+    },
+    {
+     "layer": 12,
+     "delta": -0.11015503836892587,
+     "shuffle_mean": -0.03919033272530168,
+     "delta_excess": 0.06143218033009662
+    }
+   ]
+  },
+  "reasoning_hs": {
+   "n_classes": 2,
+   "n_prompts": 128,
+   "class_names": [
+    "correct",
+    "incorrect"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": 0.0,
+     "shuffle_mean": 0.0,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": -0.043346302890716726,
+     "shuffle_mean": 0.02294040835305553,
+     "delta_excess": -0.043346302890716726
+    },
+    {
+     "layer": 2,
+     "delta": -0.0511011672406648,
+     "shuffle_mean": -0.0474384433312577,
+     "delta_excess": -0.0511011672406648
+    },
+    {
+     "layer": 3,
+     "delta": -0.030859112384499315,
+     "shuffle_mean": 0.037939554322711025,
+     "delta_excess": -0.030859112384499315
+    },
+    {
+     "layer": 4,
+     "delta": 0.053259104174613214,
+     "shuffle_mean": 0.031490500448315285,
+     "delta_excess": 0.053259104174613214
+    },
+    {
+     "layer": 5,
+     "delta": 0.05169817410894412,
+     "shuffle_mean": 0.019489356599317616,
+     "delta_excess": 0.05169817410894412
+    },
+    {
+     "layer": 6,
+     "delta": -0.060404133272511984,
+     "shuffle_mean": 0.003158830930783935,
+     "delta_excess": -0.060404133272511984
+    },
+    {
+     "layer": 7,
+     "delta": -0.09095530952330035,
+     "shuffle_mean": -0.023353266329118716,
+     "delta_excess": -0.09095530952330035
+    },
+    {
+     "layer": 8,
+     "delta": -0.01767300520096357,
+     "shuffle_mean": 0.06480583560155165,
+     "delta_excess": -0.01767300520096357
+    },
+    {
+     "layer": 9,
+     "delta": 0.04879841505366219,
+     "shuffle_mean": 0.061713361392520295,
+     "delta_excess": 0.04879841505366219
+    },
+    {
+     "layer": 10,
+     "delta": 0.010480849363680558,
+     "shuffle_mean": 0.11547668254484889,
+     "delta_excess": 0.010480849363680558
+    },
+    {
+     "layer": 11,
+     "delta": -0.04394303060323704,
+     "shuffle_mean": 0.03850633080543497,
+     "delta_excess": -0.04394303060323704
+    },
+    {
+     "layer": 12,
+     "delta": -0.09319553806803016,
+     "shuffle_mean": -0.01941026677822854,
+     "delta_excess": -0.09319553806803016
+    }
+   ]
+  },
+  "activity_hs": {
+   "n_classes": 8,
+   "n_prompts": 128,
+   "class_names": [
+    "Personal Care and Style",
+    "Family Life",
+    "Food and Entertaining",
+    "Computers and Electronics",
+    "Health",
+    "Home and Garden",
+    "Finance and Business",
+    "Pets and Animals"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -1.4005595800914524e-10,
+     "shuffle_mean": 4.349635612216671e-09,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": -0.3688766803623916,
+     "shuffle_mean": -0.03336445045424332,
+     "delta_excess": -0.3688766802223356
+    },
+    {
+     "layer": 2,
+     "delta": -0.1665499707469401,
+     "shuffle_mean": 0.04244749498822583,
+     "delta_excess": -0.16654997060688415
+    },
+    {
+     "layer": 3,
+     "delta": -0.03979609318533539,
+     "shuffle_mean": 0.03592198435506316,
+     "delta_excess": -0.03979609304527943
+    },
+    {
+     "layer": 4,
+     "delta": -0.0720629881604466,
+     "shuffle_mean": -0.0064065461471156885,
+     "delta_excess": -0.07206298802039064
+    },
+    {
+     "layer": 5,
+     "delta": -0.0296866733441436,
+     "shuffle_mean": 0.012641094729443558,
+     "delta_excess": -0.029686673204087643
+    },
+    {
+     "layer": 6,
+     "delta": -0.031039579106649118,
+     "shuffle_mean": -0.005072295154713036,
+     "delta_excess": -0.03103957896659316
+    },
+    {
+     "layer": 7,
+     "delta": -0.03858600477040647,
+     "shuffle_mean": 0.039496424346765216,
+     "delta_excess": -0.03858600463035051
+    },
+    {
+     "layer": 8,
+     "delta": 0.09761054624143672,
+     "shuffle_mean": 0.019565306763888773,
+     "delta_excess": 0.09761054638149268
+    },
+    {
+     "layer": 9,
+     "delta": 0.01273051418513435,
+     "shuffle_mean": 0.14015242265115735,
+     "delta_excess": 0.012730514325190309
+    },
+    {
+     "layer": 10,
+     "delta": 0.1005626498996509,
+     "shuffle_mean": 0.08111124021002171,
+     "delta_excess": 0.10056265003970685
+    },
+    {
+     "layer": 11,
+     "delta": -0.08079183254776201,
+     "shuffle_mean": -0.007026428065574286,
+     "delta_excess": -0.08079183240770606
+    },
+    {
+     "layer": 12,
+     "delta": -0.09686745829913812,
+     "shuffle_mean": 0.01826027220771651,
+     "delta_excess": -0.09686745815908217
+    }
+   ]
+  },
+  "domain_arc": {
+   "n_classes": 4,
+   "n_prompts": 64,
+   "class_names": [
+    "biology",
+    "physics",
+    "earth_sci",
+    "chemistry"
+   ],
+   "layers": [
+    {
+     "layer": 0,
+     "delta": -0.25743274020861184,
+     "shuffle_mean": -0.13217161686194306,
+     "delta_excess": 0.0
+    },
+    {
+     "layer": 1,
+     "delta": -0.1692053265637957,
+     "shuffle_mean": -0.09355063626980828,
+     "delta_excess": 0.08822741364481615
+    },
+    {
+     "layer": 2,
+     "delta": -0.0850469326072984,
+     "shuffle_mean": -0.038439254328284364,
+     "delta_excess": 0.17238580760131345
+    },
+    {
+     "layer": 3,
+     "delta": -0.11947354584780506,
+     "shuffle_mean": -0.08133711544748994,
+     "delta_excess": 0.13795919436080678
+    },
+    {
+     "layer": 4,
+     "delta": 0.03731705300034949,
+     "shuffle_mean": 0.015978800130433225,
+     "delta_excess": 0.29474979320896133
+    },
+    {
+     "layer": 5,
+     "delta": -0.04801770706742625,
+     "shuffle_mean": -0.04742170141916233,
+     "delta_excess": 0.2094150331411856
+    },
+    {
+     "layer": 6,
+     "delta": 0.01411095246671823,
+     "shuffle_mean": 0.040687522050830795,
+     "delta_excess": 0.2715436926753301
+    },
+    {
+     "layer": 7,
+     "delta": -0.06512451094549698,
+     "shuffle_mean": -0.011696606525570263,
+     "delta_excess": 0.19230822926311486
+    },
+    {
+     "layer": 8,
+     "delta": -0.08956783476397945,
+     "shuffle_mean": -0.017304310017512415,
+     "delta_excess": 0.1678649054446324
+    },
+    {
+     "layer": 9,
+     "delta": -0.035632163817127305,
+     "shuffle_mean": 0.07083352161229468,
+     "delta_excess": 0.22180057639148454
+    },
+    {
+     "layer": 10,
+     "delta": -0.1897674994075382,
+     "shuffle_mean": -0.1000165728313657,
+     "delta_excess": 0.06766524080107364
+    },
+    {
+     "layer": 11,
+     "delta": -0.04408815869875582,
+     "shuffle_mean": 0.006296084967260557,
+     "delta_excess": 0.21334458150985602
+    },
+    {
+     "layer": 12,
+     "delta": -0.05224970433074838,
+     "shuffle_mean": -0.027259410877134183,
+     "delta_excess": 0.20518303587786346
+    }
+   ]
+  },
+  "random": {
+   "n_prompts": 128,
+   "layers": [
+    {
+     "layer": 0,
+     "delta": 0.04574583826025924,
+     "shuffle_mean": -0.037620244277225434
+    },
+    {
+     "layer": 1,
+     "delta": 0.08340749635582972,
+     "shuffle_mean": -0.000579449784620345
+    },
+    {
+     "layer": 2,
+     "delta": 0.020624647794910966,
+     "shuffle_mean": -0.0007518602605669944
+    },
+    {
+     "layer": 3,
+     "delta": 0.1814448898850059,
+     "shuffle_mean": 0.13353425008506048
+    },
+    {
+     "layer": 4,
+     "delta": -0.020246112456813847,
+     "shuffle_mean": 0.04091951809517476
+    },
+    {
+     "layer": 5,
+     "delta": -0.06796160897510267,
+     "shuffle_mean": -0.046543442029305604
+    },
+    {
+     "layer": 6,
+     "delta": 0.04096085681899542,
+     "shuffle_mean": 0.029629059886623545
+    },
+    {
+     "layer": 7,
+     "delta": 0.3468155541259442,
+     "shuffle_mean": -0.0538099459793457
+    },
+    {
+     "layer": 8,
+     "delta": -0.04006114011499068,
+     "shuffle_mean": -0.027289558507457994
+    },
+    {
+     "layer": 9,
+     "delta": 0.019144470657786905,
+     "shuffle_mean": 0.0045454899825720044
+    },
+    {
+     "layer": 10,
+     "delta": -0.0510361970848599,
+     "shuffle_mean": 0.018272134111217614
+    },
+    {
+     "layer": 11,
+     "delta": 0.2366277336112098,
+     "shuffle_mean": 0.11170790021953256
+    },
+    {
+     "layer": 12,
+     "delta": -0.08504355673643993,
+     "shuffle_mean": -0.036074430457242256
+    }
+   ]
+  }
+ }
+}

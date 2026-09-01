@@ -1,0 +1,224 @@
+{
+ "axes": {
+  "compass": [
+   {
+    "layer": 1,
+    "planted_r2": 0.9661387393419072,
+    "dihedral_min": 0.9661387393419072,
+    "random_mean": 0.16730839714205387,
+    "random_sd": 0.21012329259677945,
+    "random_max": 0.9801017070836261,
+    "n_random_ge_planted": 9
+   },
+   {
+    "layer": 2,
+    "planted_r2": 0.9581145207554613,
+    "dihedral_min": 0.9581145207554613,
+    "random_mean": 0.14986798097867246,
+    "random_sd": 0.1815971525303245,
+    "random_max": 0.9808057325332032,
+    "n_random_ge_planted": 5
+   },
+   {
+    "layer": 3,
+    "planted_r2": 0.9857440864704026,
+    "dihedral_min": 0.9857440864704026,
+    "random_mean": 0.15289927513017054,
+    "random_sd": 0.20166912248174526,
+    "random_max": 0.9932709544462353,
+    "n_random_ge_planted": 5
+   },
+   {
+    "layer": 4,
+    "planted_r2": 0.9629724853237619,
+    "dihedral_min": 0.9629724853237619,
+    "random_mean": 0.1302276855248867,
+    "random_sd": 0.14022982091259514,
+    "random_max": 0.9730359412135553,
+    "n_random_ge_planted": 1
+   },
+   {
+    "layer": 5,
+    "planted_r2": 0.9844416201395491,
+    "dihedral_min": 0.9844416201395491,
+    "random_mean": 0.15327833723144352,
+    "random_sd": 0.16609708122008682,
+    "random_max": 0.9897546310172081,
+    "n_random_ge_planted": 1
+   },
+   {
+    "layer": 6,
+    "planted_r2": 0.9771895251719949,
+    "dihedral_min": 0.9771895251719949,
+    "random_mean": 0.1397854661115395,
+    "random_sd": 0.16588165945621994,
+    "random_max": 0.9799871709543189,
+    "n_random_ge_planted": 2
+   },
+   {
+    "layer": 7,
+    "planted_r2": 0.9855644778710111,
+    "dihedral_min": 0.9855644778710111,
+    "random_mean": 0.15766108383985064,
+    "random_sd": 0.18122969966197305,
+    "random_max": 0.9870830822324661,
+    "n_random_ge_planted": 1
+   },
+   {
+    "layer": 8,
+    "planted_r2": 0.9720870721839207,
+    "dihedral_min": 0.9720870721839207,
+    "random_mean": 0.1413647432781345,
+    "random_sd": 0.16490585488493514,
+    "random_max": 0.9710139563381635,
+    "n_random_ge_planted": 0
+   },
+   {
+    "layer": 9,
+    "planted_r2": 0.9730833146393503,
+    "dihedral_min": 0.9730833146393503,
+    "random_mean": 0.14849349613404225,
+    "random_sd": 0.17471376277323675,
+    "random_max": 0.9792320521398028,
+    "n_random_ge_planted": 1
+   },
+   {
+    "layer": 10,
+    "planted_r2": 0.968910136858635,
+    "dihedral_min": 0.968910136858635,
+    "random_mean": 0.17160693046888922,
+    "random_sd": 0.21589473198362147,
+    "random_max": 0.9725183299833312,
+    "n_random_ge_planted": 6
+   },
+   {
+    "layer": 11,
+    "planted_r2": 0.9683951519274836,
+    "dihedral_min": 0.9683951519274836,
+    "random_mean": 0.1485529963022924,
+    "random_sd": 0.16546595876073023,
+    "random_max": 0.9728139916619286,
+    "n_random_ge_planted": 2
+   },
+   {
+    "layer": 12,
+    "planted_r2": 0.9814831079564187,
+    "dihedral_min": 0.9814831079564187,
+    "random_mean": 0.1550667418535564,
+    "random_sd": 0.19686626857791065,
+    "random_max": 0.9871151893157123,
+    "n_random_ge_planted": 1
+   }
+  ],
+  "clock": [
+   {
+    "layer": 1,
+    "planted_r2": 0.09724015751823611,
+    "dihedral_min": 0.097240157518236,
+    "random_mean": 0.12338226390800798,
+    "random_sd": 0.08388291913943016,
+    "random_max": 0.39928709205079493,
+    "n_random_ge_planted": 117
+   },
+   {
+    "layer": 2,
+    "planted_r2": 0.1150744257475328,
+    "dihedral_min": 0.11507442574753268,
+    "random_mean": 0.09642243718251386,
+    "random_sd": 0.06043534748472132,
+    "random_max": 0.34738528796936463,
+    "n_random_ge_planted": 62
+   },
+   {
+    "layer": 3,
+    "planted_r2": 0.12424723807515081,
+    "dihedral_min": 0.12424723807515081,
+    "random_mean": 0.10289052952300015,
+    "random_sd": 0.06869519720894307,
+    "random_max": 0.3248081724342916,
+    "n_random_ge_planted": 48
+   },
+   {
+    "layer": 4,
+    "planted_r2": 0.16441180787950604,
+    "dihedral_min": 0.16441180787950604,
+    "random_mean": 0.1246400449201189,
+    "random_sd": 0.07467594220514291,
+    "random_max": 0.32211955022330707,
+    "n_random_ge_planted": 48
+   },
+   {
+    "layer": 5,
+    "planted_r2": 0.1731109392987723,
+    "dihedral_min": 0.1731109392987723,
+    "random_mean": 0.10570401248556528,
+    "random_sd": 0.06872341381129951,
+    "random_max": 0.3403301416206953,
+    "n_random_ge_planted": 31
+   },
+   {
+    "layer": 6,
+    "planted_r2": 0.1682909747455481,
+    "dihedral_min": 0.1682909747455481,
+    "random_mean": 0.10544097303695982,
+    "random_sd": 0.06320780093260099,
+    "random_max": 0.3283927963575608,
+    "n_random_ge_planted": 24
+   },
+   {
+    "layer": 7,
+    "planted_r2": 0.16586037198241832,
+    "dihedral_min": 0.1658603719824181,
+    "random_mean": 0.11120063324011427,
+    "random_sd": 0.07677095494180962,
+    "random_max": 0.3220122679281606,
+    "n_random_ge_planted": 42
+   },
+   {
+    "layer": 8,
+    "planted_r2": 0.1599782534227554,
+    "dihedral_min": 0.1599782534227554,
+    "random_mean": 0.11271040418659836,
+    "random_sd": 0.07453163086216064,
+    "random_max": 0.3384829864816641,
+    "n_random_ge_planted": 38
+   },
+   {
+    "layer": 9,
+    "planted_r2": 0.1714918332527493,
+    "dihedral_min": 0.1714918332527493,
+    "random_mean": 0.11113731820637313,
+    "random_sd": 0.07085379210545899,
+    "random_max": 0.3158616724332135,
+    "n_random_ge_planted": 34
+   },
+   {
+    "layer": 10,
+    "planted_r2": 0.18407060746415016,
+    "dihedral_min": 0.18407060746415005,
+    "random_mean": 0.11247673753968833,
+    "random_sd": 0.07195507738899472,
+    "random_max": 0.2912335940313916,
+    "n_random_ge_planted": 37
+   },
+   {
+    "layer": 11,
+    "planted_r2": 0.15154310487518452,
+    "dihedral_min": 0.1515431048751844,
+    "random_mean": 0.10768783940236297,
+    "random_sd": 0.0667163339321741,
+    "random_max": 0.30083587668747536,
+    "n_random_ge_planted": 41
+   },
+   {
+    "layer": 12,
+    "planted_r2": 0.1364023170736408,
+    "dihedral_min": 0.1364023170736407,
+    "random_mean": 0.12250352220341255,
+    "random_sd": 0.08319079862935436,
+    "random_max": 0.3511259326685334,
+    "n_random_ge_planted": 63
+   }
+  ]
+ }
+}

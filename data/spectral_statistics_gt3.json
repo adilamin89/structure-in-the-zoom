@@ -1,0 +1,28 @@
+{
+ "n_structural": 211,
+ "spacing_distribution": {
+  "chi2_wigner": 1065.02,
+  "chi2_poisson": 68.53,
+  "better_fit": "Poisson",
+  "ratio": 0.06
+ },
+ "level_spacing_ratio": {
+  "mean_r": 0.5366,
+  "goe": 0.5307,
+  "poisson": 0.3863
+ },
+ "number_variance": {
+  "L10_measured": 0.0,
+  "L10_goe": 1.16,
+  "growth": "logarithmic"
+ },
+ "spectral_form_factor": {
+  "K_0.5_measured": 4.06,
+  "K_0.5_goe": 0.663
+ },
+ "dos_oscillations": {
+  "residual_rms": 0.0499,
+  "dominant_period": 70.3,
+  "autocorr_lag1": 0.4362
+ }
+}

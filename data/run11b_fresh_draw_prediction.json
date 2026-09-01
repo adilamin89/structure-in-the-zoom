@@ -1,0 +1,16 @@
+{
+ "boot_mean": 0.31790331728490206,
+ "boot_ci95": [
+  0.28882968466306264,
+  0.340680749211566
+ ],
+ "s_mean": 0.7492500000000001,
+ "s_ci95": [
+  0.71,
+  0.78
+ ],
+ "n_boot": 200,
+ "observed_delta": 0.237,
+ "observed_inside": false,
+ "note": "fresh disjoint 120-trial draws per class per replicate (no replacement, no duplication); supersedes run11 part A whose with-replacement duplication pinned s at 1"
+}

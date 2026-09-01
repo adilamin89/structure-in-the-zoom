@@ -1,0 +1,245 @@
+{
+ "construction": "dir16, 8 rungs x 2 bins, paired=(k,k+8) vs sequential=(2k,2k+1), identical rung sizes",
+ "rows": [
+  {
+   "name": "gratings_drifting_GT1_2019_04_12_1",
+   "rung_sizes_paired": [
+    533,
+    1079,
+    1600,
+    2157,
+    2717,
+    3243,
+    3779,
+    4282
+   ],
+   "rung_sizes_sequential": [
+    522,
+    1068,
+    1608,
+    2118,
+    2675,
+    3207,
+    3753,
+    4282
+   ],
+   "theta_paired": 0.4000772707021194,
+   "theta_sequential": 0.43252103972117106,
+   "theta_floor_paired": 0.060635432288250725,
+   "theta_floor_sequential": 0.05394567116411371,
+   "delta_paired": 0.33944183841386866,
+   "delta_sequential": 0.37857536855705737,
+   "order_effect": -0.03913353014318871
+  },
+  {
+   "name": "gratings_drifting_GT2_2019_04_05_1",
+   "rung_sizes_paired": [
+    563,
+    1133,
+    1680,
+    2251,
+    2839,
+    3382,
+    3941,
+    4469
+   ],
+   "rung_sizes_sequential": [
+    554,
+    1123,
+    1692,
+    2230,
+    2809,
+    3358,
+    3920,
+    4469
+   ],
+   "theta_paired": 0.2798301793161505,
+   "theta_sequential": 0.3476371742860769,
+   "theta_floor_paired": 0.04328472739351493,
+   "theta_floor_sequential": 0.03933532315942923,
+   "delta_paired": 0.23654545192263557,
+   "delta_sequential": 0.30830185112664765,
+   "order_effect": -0.07175639920401208
+  },
+  {
+   "name": "gratings_drifting_GT3_2019_04_05_1",
+   "rung_sizes_paired": [
+    556,
+    1124,
+    1664,
+    2234,
+    2819,
+    3362,
+    3916,
+    4442
+   ],
+   "rung_sizes_sequential": [
+    547,
+    1110,
+    1678,
+    2210,
+    2787,
+    3334,
+    3894,
+    4442
+   ],
+   "theta_paired": 0.20118622390295166,
+   "theta_sequential": 0.31802783198704715,
+   "theta_floor_paired": 0.07591093949754789,
+   "theta_floor_sequential": 0.06404924013481757,
+   "delta_paired": 0.12527528440540375,
+   "delta_sequential": 0.2539785918522296,
+   "order_effect": -0.12870330744682584
+  },
+  {
+   "name": "gratings_local_GT1_2019_04_27_2",
+   "rung_sizes_paired": [
+    669,
+    1313,
+    1939,
+    2602,
+    3276,
+    3907,
+    4559,
+    5170
+   ],
+   "rung_sizes_sequential": [
+    632,
+    1292,
+    1947,
+    2562,
+    3243,
+    3872,
+    4522,
+    5170
+   ],
+   "theta_paired": 0.4502364614076381,
+   "theta_sequential": 0.5816323620771384,
+   "theta_floor_paired": 0.10920022217802923,
+   "theta_floor_sequential": 0.11224091313180298,
+   "delta_paired": 0.3410362392296089,
+   "delta_sequential": 0.46939144894533547,
+   "order_effect": -0.12835520971572656
+  },
+  {
+   "name": "gratings_local_GT2_2019_04_23_2",
+   "rung_sizes_paired": [
+    510,
+    1037,
+    1543,
+    2081,
+    2629,
+    3136,
+    3655,
+    4139
+   ],
+   "rung_sizes_sequential": [
+    501,
+    1031,
+    1558,
+    2048,
+    2584,
+    3098,
+    3626,
+    4139
+   ],
+   "theta_paired": 0.43440466259468313,
+   "theta_sequential": 0.5021802498520446,
+   "theta_floor_paired": 0.09439915604341384,
+   "theta_floor_sequential": 0.09366691787860772,
+   "delta_paired": 0.34000550655126927,
+   "delta_sequential": 0.40851333197343687,
+   "order_effect": -0.0685078254221676
+  },
+  {
+   "name": "gratings_local_GT3_2019_04_24_2",
+   "rung_sizes_paired": [
+    420,
+    829,
+    1240,
+    1651,
+    2074,
+    2471,
+    2885,
+    3278
+   ],
+   "rung_sizes_sequential": [
+    390,
+    816,
+    1227,
+    1620,
+    2059,
+    2455,
+    2864,
+    3278
+   ],
+   "theta_paired": 0.5230137124514063,
+   "theta_sequential": 0.5488377695270228,
+   "theta_floor_paired": 0.08779922386888508,
+   "theta_floor_sequential": 0.08568769075337775,
+   "delta_paired": 0.4352144885825212,
+   "delta_sequential": 0.46315007877364506,
+   "order_effect": -0.02793559019112385
+  },
+  {
+   "name": "gratings_low_contrast_GT1_2019_04_09_1",
+   "rung_sizes_paired": [
+    532,
+    1078,
+    1597,
+    2151,
+    2710,
+    3233,
+    3768,
+    4270
+   ],
+   "rung_sizes_sequential": [
+    521,
+    1065,
+    1604,
+    2113,
+    2670,
+    3199,
+    3742,
+    4270
+   ],
+   "theta_paired": 0.2967763824425173,
+   "theta_sequential": 0.3473388911407624,
+   "theta_floor_paired": 0.13403539286746755,
+   "theta_floor_sequential": 0.12149121568302847,
+   "delta_paired": 0.16274098957504976,
+   "delta_sequential": 0.22584767545773393,
+   "order_effect": -0.06310668588268417
+  },
+  {
+   "name": "gratings_low_contrast_GT2_2019_04_12_2",
+   "rung_sizes_paired": [
+    584,
+    1165,
+    1731,
+    2312,
+    2911,
+    3468,
+    4037,
+    4573
+   ],
+   "rung_sizes_sequential": [
+    565,
+    1153,
+    1738,
+    2285,
+    2885,
+    3444,
+    4015,
+    4573
+   ],
+   "theta_paired": 0.30600451080031404,
+   "theta_sequential": 0.34373097177334283,
+   "theta_floor_paired": 0.12157423956748528,
+   "theta_floor_sequential": 0.12576621563886228,
+   "delta_paired": 0.18443027123282876,
+   "delta_sequential": 0.21796475613448055,
+   "order_effect": -0.033534484901651784
+  }
+ ]
+}

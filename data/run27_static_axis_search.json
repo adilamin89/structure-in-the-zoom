@@ -1,0 +1,102 @@
+{
+ "design": "axis search on static-grating sessions",
+ "note": "istim spans 43-47 deg; orientation probe degenerate by design. Axes: fine_orientation, time_block, random.",
+ "sessions": {
+  "static_biased_TX40_2019_06_12_2": {
+   "n_neurons": 17631,
+   "n_trials": 4470,
+   "axes": {
+    "fine_orientation": {
+     "delta": 0.009483949218454003,
+     "shuffle_mean": 0.003768661804752836,
+     "class_counts": [
+      554,
+      570,
+      569,
+      538,
+      579,
+      549,
+      561,
+      550
+     ]
+    },
+    "time_block": {
+     "delta": 0.03886362474132875,
+     "shuffle_mean": 0.009032373916066632,
+     "class_counts": [
+      559,
+      559,
+      559,
+      559,
+      559,
+      559,
+      558,
+      558
+     ]
+    },
+    "random": {
+     "delta": 0.003084049403128182,
+     "shuffle_mean": -0.002898190129832575,
+     "class_counts": [
+      553,
+      590,
+      578,
+      551,
+      536,
+      573,
+      552,
+      537
+     ]
+    }
+   }
+  },
+  "static_biased_TX42_2019_06_13_1": {
+   "n_neurons": 18982,
+   "n_trials": 5356,
+   "axes": {
+    "fine_orientation": {
+     "delta": 0.016145872521522393,
+     "shuffle_mean": -0.011136512141671922,
+     "class_counts": [
+      649,
+      681,
+      675,
+      649,
+      706,
+      650,
+      675,
+      671
+     ]
+    },
+    "time_block": {
+     "delta": 0.1996393922650529,
+     "shuffle_mean": 0.02060898918463614,
+     "class_counts": [
+      670,
+      670,
+      670,
+      670,
+      669,
+      669,
+      669,
+      669
+     ]
+    },
+    "random": {
+     "delta": 0.030637624947139307,
+     "shuffle_mean": 0.009714321930931632,
+     "class_counts": [
+      662,
+      688,
+      690,
+      690,
+      647,
+      687,
+      660,
+      632
+     ]
+    }
+   }
+  }
+ }
+}

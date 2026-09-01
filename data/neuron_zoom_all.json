@@ -1,0 +1,86 @@
+{
+ "rows": [
+  {
+   "name": "gratings_drifting_GT1_2019_04_12_1",
+   "n_neurons": 20616,
+   "theta_obs": 0.30175131178260933,
+   "theta_floor": 0.32752413724927426,
+   "delta": -0.025772825466664928,
+   "floor_frac": 1.0854108149999773
+  },
+  {
+   "name": "gratings_drifting_GT2_2019_04_05_1",
+   "n_neurons": 14034,
+   "theta_obs": 0.31483348061272576,
+   "theta_floor": 0.3520997199340897,
+   "delta": -0.03726623932136397,
+   "floor_frac": 1.1183680949333494
+  },
+  {
+   "name": "gratings_drifting_GT3_2019_04_05_1",
+   "n_neurons": 11311,
+   "theta_obs": 0.28766006608451317,
+   "theta_floor": 0.3310420555066955,
+   "delta": -0.043381989422182354,
+   "floor_frac": 1.1508099125911935
+  },
+  {
+   "name": "gratings_local_GT1_2019_04_27_2",
+   "n_neurons": 22482,
+   "theta_obs": 0.3672948404247824,
+   "theta_floor": 0.39321598895207555,
+   "delta": -0.02592114852729316,
+   "floor_frac": 1.0705731354606423
+  },
+  {
+   "name": "gratings_local_GT2_2019_04_23_2",
+   "n_neurons": 17750,
+   "theta_obs": 0.37265598163882646,
+   "theta_floor": 0.3790831595047619,
+   "delta": -0.006427177865935441,
+   "floor_frac": 1.0172469467353529
+  },
+  {
+   "name": "gratings_local_GT3_2019_04_24_2",
+   "n_neurons": 15640,
+   "theta_obs": 0.37882019572212533,
+   "theta_floor": 0.3444580613239397,
+   "delta": 0.03436213439818564,
+   "floor_frac": 0.9092917041218384
+  },
+  {
+   "name": "gratings_low_contrast_GT1_2019_04_09_1",
+   "n_neurons": 22565,
+   "theta_obs": 0.37592516529935527,
+   "theta_floor": 0.4637988060660132,
+   "delta": -0.08787364076665793,
+   "floor_frac": 1.2337530149030664
+  },
+  {
+   "name": "gratings_low_contrast_GT2_2019_04_12_2",
+   "n_neurons": 16159,
+   "theta_obs": 0.3908710050327811,
+   "theta_floor": 0.38103735815493567,
+   "delta": 0.009833646877845437,
+   "floor_frac": 0.9748417080028212
+  },
+  {
+   "name": "static_biased_TX40_2019_06_12_2",
+   "n_neurons": 17631,
+   "theta_obs": 0.2445980506706272,
+   "theta_floor": 0.36894092273634105,
+   "delta": -0.12434287206571384,
+   "floor_frac": 1.5083559403878997
+  },
+  {
+   "name": "static_biased_TX42_2019_06_13_1",
+   "n_neurons": 18982,
+   "theta_obs": 0.22360613400930926,
+   "theta_floor": 0.24688960961745385,
+   "delta": -0.023283475608144588,
+   "floor_frac": 1.1041271775092505
+  }
+ ],
+ "mean_delta": -0.03300735877679252,
+ "n_negative": 8
+}

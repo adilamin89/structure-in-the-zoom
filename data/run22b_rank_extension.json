@@ -1,0 +1,63 @@
+{
+ "construction": "run22 T2 extended to 2.8B: mean |delta| per axis over layers, Spearman between models",
+ "mean_delta": {
+  "160m": {
+   "world_knowledge": 0.09992868367033211,
+   "language_type": 0.06522430176647875,
+   "ethical": 0.016396670318710425,
+   "tqa_category": 0.03874671892501301,
+   "hs_activity": 0.08732007622996084,
+   "arc_topic": 0.060614008408955616
+  },
+  "410m": {
+   "world_knowledge": 0.09822681893771869,
+   "language_type": 0.0625504273995525,
+   "ethical": 0.029287234061694974,
+   "tqa_category": 0.03573585139587542,
+   "hs_activity": 0.09651072927389742,
+   "arc_topic": 0.05439698735177409
+  },
+  "1B": {
+   "world_knowledge": 0.0944574768013747,
+   "language_type": 0.04667602262543222,
+   "ethical": 0.024971202121875334,
+   "tqa_category": 0.026697726765610236,
+   "hs_activity": 0.08375509216853148,
+   "arc_topic": 0.036418590163861495
+  },
+  "2.8B": {
+   "world_knowledge": 0.05451877873921101,
+   "language_type": 0.040480526309639976,
+   "ethical": 0.026259732516116963,
+   "tqa_category": 0.05142909642460333,
+   "hs_activity": 0.06497627109531445,
+   "arc_topic": 0.0321912924019886
+  }
+ },
+ "pairs": {
+  "160m_vs_410m": {
+   "rho": 1.0,
+   "p": 0.0
+  },
+  "160m_vs_1B": {
+   "rho": 1.0,
+   "p": 0.0
+  },
+  "160m_vs_2.8B": {
+   "rho": 0.771,
+   "p": 0.0724
+  },
+  "410m_vs_1B": {
+   "rho": 1.0,
+   "p": 0.0
+  },
+  "410m_vs_2.8B": {
+   "rho": 0.771,
+   "p": 0.0724
+  },
+  "1B_vs_2.8B": {
+   "rho": 0.771,
+   "p": 0.0724
+  }
+ }
+}

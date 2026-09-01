@@ -1,0 +1,192 @@
+{
+ "model": "EleutherAI/pythia-160m",
+ "design": "carrier-stratified floor + within-carrier label shuffles",
+ "axes": {
+  "compass": [
+   {
+    "layer": 0,
+    "delta_plain": -0.23234091478839258,
+    "delta_stratified": -1.2908058895732307e-09,
+    "strat_shuffle_mean": 1.879510449111823e-09,
+    "strat_shuffle_sd": 1.6402175805868668e-09
+   },
+   {
+    "layer": 1,
+    "delta_plain": -0.24201558477693805,
+    "delta_stratified": 0.00014007340353843455,
+    "strat_shuffle_mean": 6.427896418790234e-05,
+    "strat_shuffle_sd": 0.0003365378512881154
+   },
+   {
+    "layer": 2,
+    "delta_plain": -0.2673249471791549,
+    "delta_stratified": 0.000871404871749117,
+    "strat_shuffle_mean": 0.00012233693162845338,
+    "strat_shuffle_sd": 0.0012088588061254584
+   },
+   {
+    "layer": 3,
+    "delta_plain": -0.2338719163749367,
+    "delta_stratified": 0.001067772392923931,
+    "strat_shuffle_mean": -6.260900181630593e-06,
+    "strat_shuffle_sd": 0.0008359573966361412
+   },
+   {
+    "layer": 4,
+    "delta_plain": -0.2401063049732438,
+    "delta_stratified": 0.00015485487467334358,
+    "strat_shuffle_mean": -0.00010734008233167448,
+    "strat_shuffle_sd": 0.0006274417974637433
+   },
+   {
+    "layer": 5,
+    "delta_plain": -0.24584964516122074,
+    "delta_stratified": -0.00013763406107055332,
+    "strat_shuffle_mean": -8.255408583825877e-05,
+    "strat_shuffle_sd": 0.0007189257729396495
+   },
+   {
+    "layer": 6,
+    "delta_plain": -0.20257745659619958,
+    "delta_stratified": -0.0009565267464002876,
+    "strat_shuffle_mean": -0.001505036202646294,
+    "strat_shuffle_sd": 0.002349584246061477
+   },
+   {
+    "layer": 7,
+    "delta_plain": -0.2238637060795921,
+    "delta_stratified": 0.0008567117637782538,
+    "strat_shuffle_mean": 0.0009147937668545518,
+    "strat_shuffle_sd": 0.004306769864646856
+   },
+   {
+    "layer": 8,
+    "delta_plain": -0.2218415247666111,
+    "delta_stratified": -0.001209047917056845,
+    "strat_shuffle_mean": -0.0008340506701768237,
+    "strat_shuffle_sd": 0.002011145102405277
+   },
+   {
+    "layer": 9,
+    "delta_plain": -0.22227936063014464,
+    "delta_stratified": 0.0015318320637873447,
+    "strat_shuffle_mean": 0.0004506272813722833,
+    "strat_shuffle_sd": 0.0024129934863008485
+   },
+   {
+    "layer": 10,
+    "delta_plain": -0.16714035830501126,
+    "delta_stratified": 0.0014010470162735336,
+    "strat_shuffle_mean": 3.824948713335931e-05,
+    "strat_shuffle_sd": 0.001364860820365478
+   },
+   {
+    "layer": 11,
+    "delta_plain": -0.1724124740736766,
+    "delta_stratified": 0.0012004323076142461,
+    "strat_shuffle_mean": 0.00048093183874121286,
+    "strat_shuffle_sd": 0.002702753706152726
+   },
+   {
+    "layer": 12,
+    "delta_plain": -0.18260268902513815,
+    "delta_stratified": 0.0006517158423777654,
+    "strat_shuffle_mean": 0.0010752259346848013,
+    "strat_shuffle_sd": 0.002918393442147079
+   }
+  ],
+  "clock": [
+   {
+    "layer": 0,
+    "delta_plain": -0.2271528931174395,
+    "delta_stratified": -2.464201941087333e-09,
+    "strat_shuffle_mean": 1.3623405172980347e-09,
+    "strat_shuffle_sd": 3.4225426858756033e-09
+   },
+   {
+    "layer": 1,
+    "delta_plain": -0.23742451166962855,
+    "delta_stratified": 0.0016725654482801612,
+    "strat_shuffle_mean": 0.000605789741178684,
+    "strat_shuffle_sd": 0.002075920839874332
+   },
+   {
+    "layer": 2,
+    "delta_plain": -0.26964686309288555,
+    "delta_stratified": 0.00018544691384297582,
+    "strat_shuffle_mean": 0.0005407875713809928,
+    "strat_shuffle_sd": 0.002964582145519062
+   },
+   {
+    "layer": 3,
+    "delta_plain": -0.21855143718620962,
+    "delta_stratified": 0.00027216447862866457,
+    "strat_shuffle_mean": 0.0013778286668959937,
+    "strat_shuffle_sd": 0.0036004543927212565
+   },
+   {
+    "layer": 4,
+    "delta_plain": -0.20952735343758064,
+    "delta_stratified": -0.0007459493806578135,
+    "strat_shuffle_mean": 0.000297419106131404,
+    "strat_shuffle_sd": 0.003429717826303997
+   },
+   {
+    "layer": 5,
+    "delta_plain": -0.23415955492611112,
+    "delta_stratified": 0.002307278149251555,
+    "strat_shuffle_mean": 0.0005676590248163792,
+    "strat_shuffle_sd": 0.0035596344727126103
+   },
+   {
+    "layer": 6,
+    "delta_plain": -0.1693832752494889,
+    "delta_stratified": 0.0016439414888899696,
+    "strat_shuffle_mean": -0.00012293044273862537,
+    "strat_shuffle_sd": 0.003429979961095215
+   },
+   {
+    "layer": 7,
+    "delta_plain": -0.22527585711299952,
+    "delta_stratified": -0.004398587731571455,
+    "strat_shuffle_mean": 0.0019472124764467833,
+    "strat_shuffle_sd": 0.010431761992239233
+   },
+   {
+    "layer": 8,
+    "delta_plain": -0.20141562417754177,
+    "delta_stratified": 0.002437507203172311,
+    "strat_shuffle_mean": 0.0010192063936474206,
+    "strat_shuffle_sd": 0.0038927712309098864
+   },
+   {
+    "layer": 9,
+    "delta_plain": -0.21088966737847725,
+    "delta_stratified": -0.015774771500352988,
+    "strat_shuffle_mean": 0.006920597013701879,
+    "strat_shuffle_sd": 0.011308253811663692
+   },
+   {
+    "layer": 10,
+    "delta_plain": -0.2284613249005311,
+    "delta_stratified": -0.01802789863454051,
+    "strat_shuffle_mean": 0.0058320710691686095,
+    "strat_shuffle_sd": 0.007872539125970524
+   },
+   {
+    "layer": 11,
+    "delta_plain": -0.18859294449695085,
+    "delta_stratified": -0.0011372252653629802,
+    "strat_shuffle_mean": 0.00640111088455404,
+    "strat_shuffle_sd": 0.013115287499340052
+   },
+   {
+    "layer": 12,
+    "delta_plain": -0.22583794515981387,
+    "delta_stratified": -0.024855561108974786,
+    "strat_shuffle_mean": 0.005871051525034254,
+    "strat_shuffle_sd": 0.018060668999527938
+   }
+  ]
+ }
+}

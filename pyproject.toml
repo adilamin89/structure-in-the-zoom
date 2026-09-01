@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "theta-zoom"
+version = "1.0.0"
+description = "Code and data for 'Structure is in the zoom: probing neural symmetry through dimensionality scaling'"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+models = ["torch>=2.2", "transformers>=4.40", "datasets>=2.18"]
+
+[project.scripts]
+theta-zoom = "theta_zoom:main"
+theta-zoom-render = "render_all:main"
+
+[tool.setuptools]
+py-modules = ["render_all", "theta_zoom"]

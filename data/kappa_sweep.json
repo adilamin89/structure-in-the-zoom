@@ -1,0 +1,107 @@
+{
+ "noise_sd": 0.3,
+ "n_neurons": 2048,
+ "n_stimuli": 512,
+ "results": [
+  {
+   "kappa": 2.0,
+   "coarse_graining": [
+    {
+     "K": 1,
+     "n_voxels": 2048,
+     "delta_cat": -0.7865703414832123
+    },
+    {
+     "K": 4,
+     "n_voxels": 512,
+     "delta_cat": -0.4276402584178689
+    },
+    {
+     "K": 16,
+     "n_voxels": 128,
+     "delta_cat": 0.09482088585644724
+    },
+    {
+     "K": 64,
+     "n_voxels": 32,
+     "delta_cat": 0.3520456100051609
+    }
+   ]
+  },
+  {
+   "kappa": 4.0,
+   "coarse_graining": [
+    {
+     "K": 1,
+     "n_voxels": 2048,
+     "delta_cat": -0.5331331591415154
+    },
+    {
+     "K": 4,
+     "n_voxels": 512,
+     "delta_cat": -0.04999332568930269
+    },
+    {
+     "K": 16,
+     "n_voxels": 128,
+     "delta_cat": 0.4176838237187869
+    },
+    {
+     "K": 64,
+     "n_voxels": 32,
+     "delta_cat": 0.6102083574808158
+    }
+   ]
+  },
+  {
+   "kappa": 8.0,
+   "coarse_graining": [
+    {
+     "K": 1,
+     "n_voxels": 2048,
+     "delta_cat": -0.19299933130683092
+    },
+    {
+     "K": 4,
+     "n_voxels": 512,
+     "delta_cat": 0.14099867877671338
+    },
+    {
+     "K": 16,
+     "n_voxels": 128,
+     "delta_cat": 0.4899023134382083
+    },
+    {
+     "K": 64,
+     "n_voxels": 32,
+     "delta_cat": 0.6349648364486683
+    }
+   ]
+  },
+  {
+   "kappa": 16.0,
+   "coarse_graining": [
+    {
+     "K": 1,
+     "n_voxels": 2048,
+     "delta_cat": 0.06323960999770845
+    },
+    {
+     "K": 4,
+     "n_voxels": 512,
+     "delta_cat": 0.44695872014243787
+    },
+    {
+     "K": 16,
+     "n_voxels": 128,
+     "delta_cat": 0.7838539964993898
+    },
+    {
+     "K": 64,
+     "n_voxels": 32,
+     "delta_cat": 0.9162025224507818
+    }
+   ]
+  }
+ ]
+}

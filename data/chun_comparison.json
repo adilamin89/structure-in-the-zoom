@@ -1,0 +1,14 @@
+{
+ "direction_aligned": {
+  "theta_raw": 0.3049332894510185,
+  "theta_floor_empirical": 0.06764376128859152,
+  "theta_chun_corrected": 0.28556293968845964,
+  "delta_matched_floor": 0.237289528162427,
+  "delta_chun_corrected": 0.25350504309768446,
+  "agreement_pct": 6.833641189659997
+ },
+ "random": {
+  "delta_matched_floor": 0.00692716568882662,
+  "delta_chun_corrected": 0.01118331117364757
+ }
+}

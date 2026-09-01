@@ -1,0 +1,178 @@
+{
+ "construction": "spatial kNN anchors vs random subsets, 50 draws/rung both arms, identical aggregation",
+ "rows": [
+  {
+   "name": "gratings_drifting_GT1_2019_04_12_1",
+   "n_neurons": 20616,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.31759945536676504,
+   "theta_floor": 0.34330096040663177,
+   "delta_spatial": -0.025701505039866734,
+   "delta_control_rand_vs_rand": 0.005874331928028054
+  },
+  {
+   "name": "gratings_drifting_GT2_2019_04_05_1",
+   "n_neurons": 14034,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.2781213202711911,
+   "theta_floor": 0.3353695245486482,
+   "delta_spatial": -0.05724820427745714,
+   "delta_control_rand_vs_rand": 0.017728340530440312
+  },
+  {
+   "name": "gratings_drifting_GT3_2019_04_05_1",
+   "n_neurons": 11311,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.3457750453147636,
+   "theta_floor": 0.34201585466180806,
+   "delta_spatial": 0.0037591906529555463,
+   "delta_control_rand_vs_rand": -0.004364163817888955
+  },
+  {
+   "name": "gratings_local_GT1_2019_04_27_2",
+   "n_neurons": 22482,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.447184912674366,
+   "theta_floor": 0.4722413506934903,
+   "delta_spatial": -0.025056438019124327,
+   "delta_control_rand_vs_rand": 0.01703131653023332
+  },
+  {
+   "name": "gratings_local_GT2_2019_04_23_2",
+   "n_neurons": 17750,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.40136549559865986,
+   "theta_floor": 0.47172240461665726,
+   "delta_spatial": -0.0703569090179974,
+   "delta_control_rand_vs_rand": 0.00503059157141883
+  },
+  {
+   "name": "gratings_local_GT3_2019_04_24_2",
+   "n_neurons": 15640,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.37872233397305594,
+   "theta_floor": 0.3993197224420798,
+   "delta_spatial": -0.02059738846902387,
+   "delta_control_rand_vs_rand": 0.010815481244832004
+  },
+  {
+   "name": "gratings_low_contrast_GT1_2019_04_09_1",
+   "n_neurons": 22565,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.4128471182596941,
+   "theta_floor": 0.41826235672474826,
+   "delta_spatial": -0.005415238465054151,
+   "delta_control_rand_vs_rand": -0.0028909977105947005
+  },
+  {
+   "name": "gratings_low_contrast_GT2_2019_04_12_2",
+   "n_neurons": 16159,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.40349411572747296,
+   "theta_floor": 0.46463664472809346,
+   "delta_spatial": -0.061142529000620505,
+   "delta_control_rand_vs_rand": 0.002607303099106617
+  },
+  {
+   "name": "static_biased_TX40_2019_06_12_2",
+   "n_neurons": 17631,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.25540418232975526,
+   "theta_floor": 0.3253073323063453,
+   "delta_spatial": -0.06990314997659003,
+   "delta_control_rand_vs_rand": -0.012162767805276364
+  },
+  {
+   "name": "static_biased_TX42_2019_06_13_1",
+   "n_neurons": 18982,
+   "sizes": [
+    50,
+    100,
+    200,
+    500,
+    1000,
+    2000,
+    5000
+   ],
+   "theta_spatial": 0.27072447897363766,
+   "theta_floor": 0.26699466958975,
+   "delta_spatial": 0.0037298093838876722,
+   "delta_control_rand_vs_rand": -0.011236318855916694
+  }
+ ],
+ "mean_delta_spatial": -0.03279323622288909,
+ "n_negative": 8,
+ "mean_delta_control": 0.002843311671438242
+}
