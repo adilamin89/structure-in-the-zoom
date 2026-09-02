@@ -16,6 +16,10 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+plt.rcParams.update({"font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8,
+                     "xtick.labelsize": 7.5, "ytick.labelsize": 7.5,
+                     "legend.fontsize": 6.8, "savefig.dpi": 300})
+# figsize equals the printed width (jmlr textwidth 6.0 in) so fonts print 1:1
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
@@ -40,14 +44,14 @@ def profile(data, axis):
     return x, y, sh
 
 
-fig, axes = plt.subplots(1, 3, figsize=(12.6, 3.5))
-plt.subplots_adjust(wspace=0.30, left=0.055, right=0.985, top=0.89,
-                    bottom=0.17)
+fig, axes = plt.subplots(1, 3, figsize=(6.0, 2.4))
+plt.subplots_adjust(wspace=0.40, left=0.08, right=0.99, top=0.89,
+                    bottom=0.20)
 
 all_sh = []
 for panel, axis, title, cmap in [
-        (0, "world_knowledge", "(a) content axis: inherited, diluted", None),
-        (1, "language_type", "(b) structural axis: built along the declared path", COOL)]:
+        (0, "world_knowledge", "(a) content axis", None),
+        (1, "language_type", "(b) structural axis", COOL)]:
     ax = axes[panel]
     for fname, tag, warm in MODELS:
         d = json.load(open(DATA / fname))
@@ -59,8 +63,8 @@ for panel, axis, title, cmap in [
     ax.set_xlabel("normalized depth $\\ell/L$")
     if panel == 0:
         ax.set_ylabel(r"$\delta$")
-    ax.set_title(title, fontsize=10)
-    ax.legend(fontsize=7.5, frameon=False)
+    ax.set_title(title)
+    ax.legend(fontsize=6.5, frameon=False)
 sh_arr = np.array(all_sh)
 for panel in (0, 1):
     axes[panel].axhspan(sh_arr.mean() - 2 * sh_arr.std(),
@@ -92,15 +96,16 @@ for axis, (lab, c) in AXCOL.items():
 ax.axhline(0, color="k", lw=0.6)
 ax.set_xlabel("normalized depth $\\ell/L$")
 ax.set_ylabel(r"embedding excess $\delta(\ell)-\delta(0)$")
-ax.set_title("(c) Pythia-2.8B: excess over the embedding", fontsize=10)
-ax.legend(fontsize=6.5, frameon=False, ncol=2, loc="lower right")
-ax.set_ylim(-0.22, 0.42)
+ax.set_title("(c) 2.8B: embedding excess")
+ax.legend(fontsize=5.6, frameon=False, ncol=2, loc="lower right",
+          columnspacing=0.8, handlelength=1.4)  # sits below every curve (ylim opened)
+ax.set_ylim(-0.34, 0.42)
 
 # inset: cross-family (OLMo, solid) vs same-corpus different-architecture
 # (GPT-Neo, dashed) — the rise tracks the corpus, the shape the architecture
 d25 = json.load(open(DATA / "run25_olmo1b_16pc_battery.json"))
 d29 = json.load(open(DATA / "run29_gptneo_battery.json"))
-ins = ax.inset_axes([0.06, 0.60, 0.40, 0.34])
+ins = ax.inset_axes([0.13, 0.60, 0.40, 0.33])
 for d, style in [(d25, "-"), (d29, "--")]:
     for axis, c in [("world_knowledge", "#e6550d"),
                     ("language_type", "#3182bd")]:
@@ -110,13 +115,13 @@ for d, style in [(d25, "-"), (d29, "--")]:
         y = np.array([lr["delta"] for lr in ls])
         ins.plot(x, y, style, lw=1.0, color=c)
 ins.axhline(0, color="k", lw=0.5)
-ins.tick_params(labelsize=6)
-ins.set_title("OLMo-1B (solid) / GPT-Neo (dashed)", fontsize=6)
+ins.tick_params(labelsize=5.5)
+ins.set_title("OLMo-1B solid, GPT-Neo dashed", fontsize=5.4)
 ins.set_ylim(-0.35, 0.30)
 
 for out in OUTS:
     if out is not OUTS[0] and not out.parent.exists():
         continue  # secondary copy only when the paper tree is present
     out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, dpi=220)
+    fig.savefig(out, dpi=300)
     print("wrote", out)

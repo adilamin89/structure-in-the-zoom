@@ -24,6 +24,10 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+plt.rcParams.update({"font.size": 8, "axes.titlesize": 8.5, "axes.labelsize": 8,
+                     "xtick.labelsize": 7.5, "ytick.labelsize": 7.5,
+                     "legend.fontsize": 6.8, "savefig.dpi": 300})
+# figsize equals the printed width (jmlr textwidth 6.0 in) so fonts print 1:1
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
@@ -36,8 +40,8 @@ r42 = json.load(open(DC / "run42_blimp_battery.json"))
 r43 = json.load(open(DC / "run43b_baroni_64pairs.json"))
 r40 = json.load(open(DC / "run40_spont_state_axis.json"))
 
-fig, axes = plt.subplots(1, 4, figsize=(15.5, 3.6),
-                         gridspec_kw={"width_ratios": [1.25, 1, 1, 0.95]})
+fig, axes = plt.subplots(2, 2, figsize=(6.0, 4.9))
+axes = axes.ravel()  # 2x2 at text width so panel fonts print 1:1
 
 # (a) declared path vs order-averaged, Pythia-2.8B
 ax = axes[0]
@@ -57,10 +61,11 @@ for axis_name, col in colors.items():
 ax.axhline(0, color="k", lw=0.6)
 ax.set_xlabel("normalized depth $\\ell/L$")
 ax.set_ylabel("$\\delta$")
-ax.set_title("(a) Pythia-2.8B: path vs partition", fontsize=10.5)
-ax.legend(fontsize=7, loc="upper left", frameon=False, ncol=1)
-ax.text(0.98, 0.04, "bands: $\\pm 2$ SD of the 500-permutation null\n(light: declared; dark: order-averaged)",
-        transform=ax.transAxes, ha="right", va="bottom", fontsize=6.5, color="0.35")
+ax.set_title("(a) Pythia-2.8B: path vs partition")
+ax.set_ylim(-0.17, 0.20)
+ax.legend(fontsize=6.4, loc="upper right", frameon=False, ncol=1)  # clear of the embedding-layer points
+ax.text(0.98, 0.03, "bands: $\\pm 2$ SD of the 500-permutation null\n(light: declared; dark: order-averaged)",
+        transform=ax.transAxes, ha="right", va="bottom", fontsize=5.8, color="0.35")
 
 # (b) BLiMP two nulls
 def two_null_panel(ax, layers, title, ylim=None):
@@ -75,13 +80,14 @@ def two_null_panel(ax, layers, title, ylim=None):
     ax.plot(x, d, "-", color="k", lw=1.8, label="observed $\\delta$")
     ax.axhline(0, color="k", lw=0.6)
     ax.set_xlabel("normalized depth $\\ell/L$")
-    ax.set_title(title, fontsize=10.5)
+    ax.set_ylabel("$\\delta$")
+    ax.set_title(title)
     if ylim:
         ax.set_ylim(*ylim)
 
 two_null_panel(axes[1], r42["models"]["pythia-2.8b-deduped"]["B_grammaticality"]["layers"],
                "(b) BLiMP, 64 pairs: composition only")
-axes[1].legend(fontsize=7, loc="lower left", frameon=False)
+axes[1].legend(fontsize=6.2, loc="lower left", frameon=False)
 two_null_panel(axes[2], r43["models"]["pythia-2.8b-deduped"]["layers"],
                "(c) Baroni, 64 pairs: signal beyond carriers")
 
@@ -103,15 +109,15 @@ ax.plot([-lim, lim], [-lim, lim], color="0.8", lw=0.7)
 ax.set_xlim(-lim, lim); ax.set_ylim(-9.5, 6)
 ax.set_xlabel("$z$ vs frame permutation")
 ax.set_ylabel("$z$ vs circular shift")
-ax.set_title("(d) spontaneous sessions: two nulls", fontsize=10.5)
-ax.legend(fontsize=7, loc="upper left", frameon=False)
+ax.set_title("(d) spontaneous sessions: two nulls")
+ax.legend(fontsize=6.4, loc="upper left", frameon=False)
 
 for a in axes:
     a.spines["top"].set_visible(False); a.spines["right"].set_visible(False)
-fig.tight_layout(w_pad=1.2)
+fig.tight_layout(w_pad=1.0, h_pad=1.2)
 for out in OUTS:
     if out is not OUTS[0] and not out.parent.exists():
         continue
     out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, dpi=220)
+    fig.savefig(out, dpi=300)
     print(f"wrote {out}")

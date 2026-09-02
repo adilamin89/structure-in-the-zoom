@@ -138,7 +138,7 @@ figshare releases; Allen Brain Observatory Neuropixels) and are not included.
 
 - `theta_zoom.py` — the instrument and CLI (`theta-zoom`, `theta-zoom-render`)
 - `axes/` — the paper's prompt battery (+ `language_type.strata.json`, the topic map)
-- `scripts_canonical/` — 84 analysis scripts · `data_canonical/` — 91 result JSONs
+- `scripts_canonical/` — 85 analysis scripts · `data_canonical/` — 91 result JSONs
 - `figures_canonical/` — the paper's figures; `make_fig*` scripts write here
 
 ### Headline claim -> artifact
