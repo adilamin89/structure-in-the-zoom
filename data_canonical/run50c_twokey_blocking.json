@@ -1,0 +1,109 @@
+{
+ "rows": [
+  {
+   "name": "gratings_drifting_GT1_2019_04_12_1",
+   "status": "ok",
+   "delta_K1": 0.3560432154734058,
+   "delta_twokey_K32": 0.4463444540454855,
+   "retention_twokey": 1.2536243766139805,
+   "retention_single_dir_sorted": 1.203833666459899
+  },
+  {
+   "name": "gratings_drifting_GT2_2019_04_05_1",
+   "status": "ok",
+   "delta_K1": 0.28974579447696525,
+   "delta_twokey_K32": 0.2510090430172943,
+   "retention_twokey": 0.8663078042958429,
+   "retention_single_dir_sorted": 0.7843004944805559
+  },
+  {
+   "name": "gratings_drifting_GT3_2019_04_05_1",
+   "status": "ok",
+   "delta_K1": 0.23221473805216986,
+   "delta_twokey_K32": 0.25255268429069544,
+   "retention_twokey": 1.0875824954484863,
+   "retention_single_dir_sorted": 1.1277397116590366
+  },
+  {
+   "name": "gratings_local_GT1_2019_04_27_2",
+   "status": "ok",
+   "delta_K1": 0.45753781173550756,
+   "delta_twokey_K32": 0.20110661615772968,
+   "retention_twokey": 0.4395409756297583,
+   "retention_single_dir_sorted": 0.41263723156189236
+  },
+  {
+   "name": "gratings_local_GT2_2019_04_23_2",
+   "status": "ok",
+   "delta_K1": 0.3949944534233574,
+   "delta_twokey_K32": 0.18914034928334283,
+   "retention_twokey": 0.4788430511975344,
+   "retention_single_dir_sorted": 0.4089618028560329
+  },
+  {
+   "name": "gratings_local_GT3_2019_04_24_2",
+   "status": "ok",
+   "delta_K1": 0.4559898158068647,
+   "delta_twokey_K32": 0.2677243359231053,
+   "retention_twokey": 0.5871278845326239,
+   "retention_single_dir_sorted": 0.5631627515568469
+  },
+  {
+   "name": "gratings_low_contrast_GT1_2019_04_09_1",
+   "status": "ok",
+   "delta_K1": 0.20198864434289732,
+   "delta_twokey_K32": 0.2934606534592077,
+   "retention_twokey": 1.452857186174421,
+   "retention_single_dir_sorted": 1.4408892027292188
+  },
+  {
+   "name": "gratings_low_contrast_GT2_2019_04_12_2",
+   "status": "ok",
+   "delta_K1": 0.21276379245589228,
+   "delta_twokey_K32": 0.23891931871165428,
+   "retention_twokey": 1.1229322242936812,
+   "retention_single_dir_sorted": 1.0765027516499934
+  }
+ ],
+ "verdict": {
+  "T1_twokey_beats_single_all_localized": true,
+  "T1_localized_ge_0p6_count": 0,
+  "T2_fullfield_abs_change_lt_0p15_all": true,
+  "localized_retention_twokey_vs_single": [
+   [
+    0.44,
+    0.41
+   ],
+   [
+    0.48,
+    0.41
+   ],
+   [
+    0.59,
+    0.56
+   ]
+  ],
+  "fullfield_retention_twokey_vs_single": [
+   [
+    1.25,
+    1.2
+   ],
+   [
+    0.87,
+    0.78
+   ],
+   [
+    1.09,
+    1.13
+   ],
+   [
+    1.45,
+    1.44
+   ],
+   [
+    1.12,
+    1.08
+   ]
+  ]
+ }
+}

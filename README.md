@@ -205,6 +205,7 @@ python render_all.py
 | Split-half control for the sorted-blocking flow | run49_blocking_splithalf.json | run49_blocking_splithalf.py |
 | Graining delta(K) and Chun agreement on all eight recordings | run50_perrecording_anchors.json | run50_perrecording_anchors.py |
 | Sector-resolved graining (orientation-, direction-sorted, random blocks) on all eight recordings (App E table) | run50b_graining_sectors.json | run50b_graining_sectors.py |
+| Two-key (footprint x phase) blocking test of the App E explanation (registered miss) | run50c_twokey_blocking.json | run50c_twokey_blocking.py |
 | Figures 1-4 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
 | Figures 5-7 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
 
