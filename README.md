@@ -1,10 +1,22 @@
 # Structure is in the zoom
 
-**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs.
-arXiv 2026 (identifier added on posting) · NeurReps @ NeurIPS 2026 (short version).
-Code, data, and `theta-zoom`, the measurement as a tool.
+**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs. arXiv 2026
+(identifier added on posting). This repository is two things: `theta-zoom`, the measurement
+released as a tested tool, and the complete code and data behind every number in the paper.
 
-## Quick start (sixty seconds)
+## The tool
+
+A dimensionality scaling exponent (how the participation ratio grows as you add data) is not
+a property of a system: on one ten-thousand-neuron patch of mouse V1 it reads 0.25, 0.31, and
+0.35 along three probe axes, and the three numbers mean three different things. `theta-zoom`
+decomposes any such exponent exactly into a **label-blind sampling floor** plus a **shift
+delta earned against a declared axis** (the classes you accumulate and the order you add them
+in), and tests that shift two ways: against an exact label-permutation null, and, when you
+tell it what nuisance structure your partition preserves, against a **nuisance-preserving
+null** that isolates what the labels add. It runs on any samples-by-features array and on any
+Hugging Face language model layer by layer.
+
+### Install and run (sixty seconds)
 
 ```bash
 pip install -e ".[models]"                       # numpy core; [models] adds torch + transformers
@@ -13,38 +25,46 @@ theta-zoom plot pythia160m.json --out pythia160m.png
 theta-zoom summarize pythia160m.json           # plain-language reading, the paper's rules applied
 ```
 
-That runs the paper's whole prompt battery (seven declared axes, eight classes of
-sixteen prompts each, in `axes/`) through every layer of the model and gives you,
-per layer and per axis:
+### What it returns, per layer and per axis
 
-- `delta` and `p_two`: the axis-resolved shift along the declared class order and its
-  exact 500-permutation p-value;
-- `delta_orderavg` and `p_two_orderavg`: the order-averaged shift, the partition-level
-  statistic for unordered classes;
-- `strat_p_two` where a nuisance map exists (`axes/language_type.strata.json`): the
-  shift against the nuisance-preserving null, which is the difference between "the
-  labels organize this representation" and "the labels happen to preserve composition".
+- `delta`, `p_two`: the shift along the declared class order and its exact permutation p-value
+  (500 permutations by default);
+- `delta_orderavg`, `p_two_orderavg`: the shift averaged over random class orders, the
+  partition-level statistic for unordered classes;
+- `strat_p_two` when a strata file exists: the shift against the nuisance-preserving null, the
+  difference between "the labels organize this representation" and "the labels happen to
+  preserve composition".
 
-The plot shows one panel per axis: both statistics against their null bands. `summarize`
-applies the paper's reading rules for you: certification after Benjamini-Hochberg under both
-statistics, the declared-path shape (embedding sign, peak, zero crossing), and, when a strata
-file exists, whether the signal is label-linked or nuisance composition.
-
-## What it measures
-
-A dimensionality scaling exponent is not a property of a system. On the same
-ten-thousand-neuron patch of mouse V1 it reads 0.25, 0.31, and 0.35 along three probe
-axes, and the three numbers mean three different things: pure sampling floor, mostly
-orientation structure, a weak spatial redundancy. `theta-zoom` decomposes any exponent
-exactly into a label-blind sampling floor plus a shift delta earned against a declared
-axis, tests the shift with exact permutation nulls, and, when you tell it what nuisance
-structure your partition preserves, with a second null that isolates what the labels add.
+`theta-zoom plot` draws one panel per axis with both statistics against their null bands.
+`theta-zoom summarize` applies the paper's reading rules: certification under
+Benjamini-Hochberg for both statistics, the declared-path shape (embedding sign, peak, zero
+crossing), and, with strata, whether the signal is label-linked or composition.
 
 ![One recording, two axes](figures_canonical/fig_zoom_ladder_dir.png)
 
-## Automate it
+### Use cases
 
-**Checkpoint sweeps** (any Hugging Face revision; Pythia publishes 154 per model):
+**A neural recording with labels.** Trials x neurons with a stimulus label per trial
+(direction, orientation, category), or frames x neurons with a state label (running speed
+octiles, pupil, session-time blocks). Pass the session or animal as strata when trials are not
+exchangeable across it.
+
+```python
+from theta_zoom import zoom
+r = zoom(X, labels, n_perm=500)                     # declared order + order-averaged
+r = zoom(X, labels, strata=session_ids, n_perm=500) # + nuisance-preserving null
+r["delta"], r["p_two"], r["delta_orderavg"], r["p_two_orderavg"], r["strat_p_two"]
+```
+
+`theta-zoom data X.npy labels.npy --strata strata.npy` is the same from the shell.
+
+**A language model, every layer.** The paper's prompt battery ships in `axes/`: seven declared
+eight-class axes of sixteen prompts (world-knowledge domains, sentence-construction types,
+ethical concepts, TruthfulQA categories, HellaSwag activities, ARC topics, and a random control),
+plus `language_type.strata.json`, a topic map that turns on the second null for the
+construction axis. Point `--axis` at the folder or at one file.
+
+**Checkpoint and model sweeps.** Any Hugging Face revision; every JSON has the same shape.
 
 ```bash
 for r in step1000 step4000 step16000 step64000 step143000; do
@@ -53,95 +73,96 @@ for r in step1000 step4000 step16000 step64000 step143000; do
 done
 ```
 
-**Model sweeps**: loop `--model`; every JSON has the same shape, so a few lines of
-pandas give the cross-model table. `--paper-seeds` reproduces the paper's Table 5
-cells to the last digit (tested: max |CLI - artifact| = 0).
+`--paper-seeds` reproduces the paper's Table 5 cells to the last digit (max |CLI - artifact| = 0).
 
-**Your own axes.** An axis is a JSON file `{class_name: [prompt, ...]}`. Six or more
-classes, sixteen or more prompts each, prompts within a class coherent in structure and
-varied in content. To use the second null, add `<name>.strata.json` with the same shape
-holding one nuisance label per prompt (topic, template, carrier, session); the tool picks
-it up automatically.
+**Your own axes.** An axis is a JSON file `{class_name: [prompt, ...]}`. Six or more classes,
+sixteen or more prompts each, prompts within a class coherent in structure and varied in
+content. Add `<name>.strata.json` with one nuisance label per prompt (topic, template, carrier,
+session) and the tool picks it up.
 
-**Python.**
+**Python API.** `llm_battery("EleutherAI/pythia-160m", ["axes/"], device="mps", out_path="b.json")`
+runs the whole battery; `zoom(...)` is the core.
 
-```python
-from theta_zoom import zoom, llm_battery
-
-res = llm_battery("EleutherAI/pythia-160m", ["axes/"], device="mps", out_path="b.json")
-
-# any samples-by-features array: trials x neurons, frames x units, prompts x hidden
-r = zoom(X, labels, n_perm=500)                    # declared order + order-averaged
-r = zoom(X, labels, strata=session_ids, n_perm=500) # + nuisance-preserving null
-r["delta"], r["p_two"], r["delta_orderavg"], r["p_two_orderavg"], r["strat_p_two"]
-```
-
-`theta-zoom data X.npy labels.npy --strata strata.npy` is the same from the shell.
-
-## Using it right
-
-The instrument is easy to fool, and the paper documents each way:
-
-1. **Declare before you look.** Classes, class count, and accumulation order are fixed
-   first; everything downstream is conditional on that declaration.
-2. **Six or more classes.** Two-class designs fit a slope through two points and are
-   noise regardless of prompt count.
-3. **For unordered classes, read the order-averaged shift.** The declared-path profile,
-   including its sign at any one layer, is a property of one path through the classes.
-4. **Pass your nuisance structure as strata.** If the shift survives the within-stratum
-   permutation, the label is doing work; if not, the ordinary floor was reading
-   composition. On BLiMP minimal pairs a |z| near 20 vanished under this null.
-5. **Counts are descriptive; profile statistics are inferential.** Expect about 1.7
-   false positives per 33 uncorrected layers; the order-averaged statistic survives
-   Benjamini-Hochberg control intact, the declared-path counts partly do not.
-6. **Coherence beats prompt count.** Prompts that widen within-class topic diversity
-   raise within-class dimensionality and weaken structural axes.
-
-## The paper in five results
+### What it shows (the paper in six results)
 
 - **Cortex.** The direction-aligned shift is positive in all eight grating recordings and
   exceeds every one of 200 label permutations (p = 1/201 each); it replicates across 167
-  Neuropixels populations from 32 mice in a second laboratory and tracks orientation-
-  tuning strength (r = +0.41, mixed model p = 3e-7). Where the declared axis is
-  degenerate the instrument screens candidate axes and finds departures along session
-  time, spatial frequency, and behavioral state.
-- **Symmetry.** The working axis follows the code's approximate O(2) symmetry; ladder
-  orderings read the even (orientation) and odd (direction) harmonic sectors separately,
-  and the measured harmonics predicted two of three registered ordering effects in
-  advance, on cortex and on a rotation-equivariant CNN.
-- **Ground truth.** Ising and nematic lattices and the equivariant network fix the sign:
-  conditioning on a scalar order parameter removes dimensions, accumulating a group orbit
-  adds them, architectural invariance gives exactly zero.
+  Neuropixels populations from 32 mice in a second laboratory and tracks orientation-tuning
+  strength (r = +0.41, mixed model p = 3e-7). Where the declared axis is degenerate the
+  instrument screens candidate axes and finds session time, spatial frequency, and behavioral
+  state.
+- **Symmetry.** The working axis follows the code's approximate O(2) symmetry. The eight-class
+  harmonic decomposition of the class-mean correlation is exact; full-field gratings are
+  quadrupole-dominant (orientation), localized gratings dipole-dominant (direction) because
+  single neurons become more direction-selective, and the balance is additive over neurons,
+  invariant under random coarse-graining, and steered by label-aware coarse-graining
+  (orientation-sorted blocks amplify the quadrupole: the Z2 quotient at the mesoscale).
+- **Ground truth.** Ising and nematic lattices and a rotation-equivariant CNN fix the sign:
+  conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds
+  them, architectural invariance gives exactly zero; the measured harmonics predicted the
+  network's ordering in advance at two of three depths.
 - **Language models.** Across six model families the instrument separates content axes
-  inherited from tokens from construction axes built along the declared path; label
-  linkage is certified at nearly every depth under the order-free statistic, while the
-  profile shape belongs to the class arrangement. A pre-registered alignment probe fails
-  informatively: instruction tuning does not measurably reorganize moral-category
-  covariance at 0.5-1B on two taxonomies.
-- **Two null levels.** The methodological lesson: a nonzero shift means the partition
-  changes covariance accumulation relative to its declared null; reading it as
-  representation of the label needs a null that preserves nuisance composition.
+  inherited from tokens from construction axes built along the declared path; label linkage
+  is certified at nearly every depth under the order-free statistic, while the profile shape
+  belongs to the class arrangement. A pre-registered alignment probe fails informatively:
+  instruction tuning does not measurably reorganize moral-category covariance at 0.5-1B on two
+  taxonomies. The kernel-harmonic additivity and the blocking flow replicate on Pythia-160m's
+  planted axes; a prepended neutral context does not move them.
+- **Two null levels.** A nonzero shift means the partition changes covariance accumulation
+  relative to its declared null; reading it as representation of the label needs a null that
+  preserves nuisance composition. On BLiMP minimal pairs a |z| near 20 vanished under that null.
+- **Predictions.** A size ladder at fixed contrast should move the dipole/quadrupole balance
+  monotonically; mesoscale signals in orientation-columnar cortex should be
+  quadrupole-amplified relative to their single units, cortex with direction maps should keep
+  the mesoscale dipole.
 
 ![Inferential results](figures_canonical/fig_nulls.png)
+
+### Using it right
+
+1. **Declare before you look.** Classes, class count, and accumulation order are fixed first.
+2. **Six or more classes.** Two-class designs fit a slope through two points.
+3. **For unordered classes, read the order-averaged shift.** The declared-path profile is a
+   property of one path through the classes.
+4. **Pass your nuisance structure as strata.** If the shift survives the within-stratum
+   permutation, the label is doing work.
+5. **Counts are descriptive; profile statistics are inferential.** Expect about 1.7 false
+   positives per 33 uncorrected layers.
+6. **Coherence beats prompt count.** Prompts that widen within-class topic diversity weaken
+   structural axes.
+
+## What is where
+
+```
+theta_zoom.py            the instrument: zoom(), llm_battery(), and the theta-zoom CLI
+                         (data | llm | plot | summarize); numpy core, optional torch+transformers
+render_all.py            prints the paper's tables and headline numbers from the artifacts
+axes/                    the prompt battery (7 axes x 8 classes x 16 prompts) + strata sidecar
+scripts_canonical/       one script per registered run; the docstring is the registration
+                         (expectations written before the run) and names the artifact it writes
+   run1..run47_*.py      the numbered runs cited in the paper
+   accumulation_order.py, shuffle_label_control.py, allen_*.py, ising_*.py, nematic_*.py
+   multipole_harmonics_8dir.py, local_vs_fullfield_tuning.py, sector_balance_scale.py,
+   llm_sector_blocking.py     the harmonic-sector analyses (Sec 4, App I)
+   make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py, make_fig5_mechanism.py,
+   make_fig6_llm.py, make_fig7_nulls.py   regenerate the seven figures from the artifacts
+data_canonical/          the result JSONs (one per script) that every reported number traces to
+figures_canonical/       the seven figures in the paper
+pyproject.toml           pip install -e . gives the theta-zoom command
+```
+
+Raw neural data are public (Stringer et al. figshare releases; Allen Brain Observatory
+Neuropixels) and are not included; the scripts that read them expect the paths documented in
+their docstrings. Folder names mirror the scripts' relative paths so every script runs
+unmodified from a clone.
 
 ## Reproduce every number
 
 ```bash
-python render_all.py        # the paper's tables from the committed artifacts
+python render_all.py
 ```
 
-Every reported number traces to a JSON artifact in `data_canonical/` produced by a
-script in `scripts_canonical/`; registered expectations are in each script's docstring
-and were committed before the run. Folder names mirror the scripts' relative paths so
-every script runs unmodified from a clone. Raw neural data are public (Stringer et al.
-figshare releases; Allen Brain Observatory Neuropixels) and are not included.
-
-- `theta_zoom.py` — the instrument and CLI (`theta-zoom`, `theta-zoom-render`)
-- `axes/` — the paper's prompt battery (+ `language_type.strata.json`, the topic map)
-- `scripts_canonical/` — 85 analysis scripts · `data_canonical/` — 91 result JSONs
-- `figures_canonical/` — the paper's figures; `make_fig*` scripts write here
-
-### Headline claim -> artifact
+### Claim -> artifact -> script
 
 | Claim | Artifact | Script |
 |---|---|---|
@@ -176,6 +197,12 @@ figshare releases; Allen Brain Observatory Neuropixels) and are not included.
 | Static-session axis search (discovery mode) | run27_static_axis_search.json | run27_static_axis_search.py |
 | Planted-C8 axes (compass/clock) | run28_cyclic_axis_llm.json | run28_cyclic_axis_llm.py |
 | Figures 5-6 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py |
+| Exact 8-direction harmonic decomposition of C(dphi), every recording (Sec 4, App I) | multipole_harmonics_8dir.json | multipole_harmonics_8dir.py |
+| Why localized gratings are dipole-dominant: per-neuron OSI/DSI, cardinal test, spatial clustering, coverage terciles | local_vs_fullfield_tuning.json | local_vs_fullfield_tuning.py |
+| Sector balance across scales: additivity, coarse-graining flow, Allen per-area | sector_balance_scale.json | sector_balance_scale.py |
+| LLM analogue: kernel-harmonic additivity, unit blocking, context-length knob (Pythia-160m) | llm_sector_blocking.json | llm_sector_blocking.py |
+| Figures 1-4 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
+| Figures 5-7 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
 
 ## Citation
 

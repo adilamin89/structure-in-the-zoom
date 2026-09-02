@@ -80,6 +80,22 @@ def scale_summary():
     print("  verdict:", d["verdict"])
 
 
+def ai_sector_summary():
+    """LLM and CNN analogues of the sector results (App. I)."""
+    print("\n== LLM planted-axis kernels (llm_sector_blocking, Pythia-160m) ==")
+    d = j("llm_sector_blocking.json"); v = d["verdict"]
+    print(f"  additivity max rel dev: compass {v['A_additivity_max_rel_dev_compass']:.1e} clock {v['A_additivity_max_rel_dev_clock']:.1e}")
+    for k in v:
+        if k.startswith("B_") or k.startswith("C_"):
+            print(f"  {k}: {v[k]}")
+    print("\n== CNN C4 kernel under unit blocking (cnn_unit_blocking) ==")
+    c = j("cnn_unit_blocking.json")
+    for net, layers in c.items():
+        for layer, r in layers.items():
+            last = [x for x in r["blocking"]["freq1_sorted"] if x is not None][-1]
+            print(f"  {net:12s} {layer:12s} a2 share {r['a2_share']:.3f} | freq1-sorted K=max {last['a2_share']:.3f}")
+
+
 def certified_summary():
     """Permutation-certified layer counts (paper Table 5, run37 artifact)."""
     print("\n== LLM battery: certified layers, declared order . order-averaged "
@@ -135,6 +151,7 @@ def main():
     multipole_summary()
     tuning_summary()
     scale_summary()
+    ai_sector_summary()
     cnn_summary()
     axis_search_summary()
     cyclic_summary()
