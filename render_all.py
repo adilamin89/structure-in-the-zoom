@@ -50,6 +50,20 @@ def multipole_summary():
     print("  verdict:", d["verdict"])
 
 
+def tuning_summary():
+    """Per-neuron tuning behind the localized-grating dipole (App. I)."""
+    print("\n== Localized vs full-field gratings: per-neuron tuning (local_vs_fullfield_tuning) ==")
+    d = j("local_vs_fullfield_tuning.json")
+    for r in d["rows"]:
+        if r["status"] != "ok":
+            continue
+        print(f"  {r['name'][:32]:32s} OSI {r['median_osi_tuned']:.2f} DSI {r['median_dsi_tuned']:.2f} "
+              f"DSI>0.5 {r['frac_dsi_gt_0p5_tuned']:.2f} cardinal {r['cardinal_direction_fraction']:.2f} "
+              f"spatial r OSI {r['spatial_r_osi']:+.2f} DSI {r['spatial_r_dsi']:+.2f} "
+              f"b2/c1 tuned-only {r['b2_over_c1']['tuned_only']:.2f}")
+    print("  verdict:", d["verdict"])
+
+
 def certified_summary():
     """Permutation-certified layer counts (paper Table 5, run37 artifact)."""
     print("\n== LLM battery: certified layers, declared order . order-averaged "
@@ -103,6 +117,7 @@ def main():
     llm_summary()
     certified_summary()
     multipole_summary()
+    tuning_summary()
     cnn_summary()
     axis_search_summary()
     cyclic_summary()
