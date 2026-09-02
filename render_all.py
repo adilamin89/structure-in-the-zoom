@@ -33,6 +33,23 @@ def llm_summary():
                   f"final {de[-1]:+.2f} sig/shuffle {r:.1f}x")
 
 
+def multipole_summary():
+    """Exact 8-direction harmonic decomposition of C(dphi) (paper Sec. 4, App. I)."""
+    print("\n== V1 class-mean correlation harmonics (8 direction classes; "
+          "multipole_harmonics_8dir) ==")
+    d = j("multipole_harmonics_8dir.json")
+    for r in d["rows"]:
+        if r["status"] != "ok":
+            print(f"  {r['name'][:32]:32s} degenerate direction bins")
+            continue
+        c = r["coef"]
+        print(f"  {r['name'][:32]:32s} a {c['a']:.3f} b2 {c['b2']:+.3f} c1 {c['c1']:+.3f} "
+              f"b4 {c['b4']:+.3f} c3 {c['c3']:+.3f} | b2/c1 {r['b2_over_c1']:.2f} "
+              f"even/odd {r['even_over_odd_variance']:.2f} | quadrupole-dominant "
+              f"{r['quadrupole_dominant']}")
+    print("  verdict:", d["verdict"])
+
+
 def certified_summary():
     """Permutation-certified layer counts (paper Table 5, run37 artifact)."""
     print("\n== LLM battery: certified layers, declared order . order-averaged "
@@ -85,6 +102,7 @@ def ranking_summary():
 def main():
     llm_summary()
     certified_summary()
+    multipole_summary()
     cnn_summary()
     axis_search_summary()
     cyclic_summary()

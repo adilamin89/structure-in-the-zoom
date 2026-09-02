@@ -83,12 +83,12 @@ plt.close(fig)
 print("fig_allen_expansion.png written")
 
 # ---------------- Fig 4: multipoles and order effects ----------------
-fit = json.load(open(DATA / "cos2theta_fit.json"))
-a0, b, c = fit["a"], fit["b_cos2theta"], fit["c_costheta"]
-# higher harmonics of the paper's five-term fit (Sec. 4): even b4, odd c3;
-# (b^2 + b4^2)/(c^2 + c3^2) = 4.80 is the quoted even/odd variance ratio
-b4 = 0.0716
-c3 = 0.0638
+# five harmonic coefficients of the GT3 class-mean correlation profile: the
+# exact 8-direction decomposition (multipole_harmonics_8dir.json, Sec. 4);
+# a, b2, c1 equal cos2theta_fit.json; (b2^2 + b4^2)/(c1^2 + c3^2) = 4.80
+mh = json.load(open(DATA / "multipole_harmonics_8dir.json"))
+gt3 = next(r for r in mh["rows"] if "drifting_GT3" in r["name"])["coef"]
+a0, b, c, b4, c3 = gt3["a"], gt3["b2"], gt3["c1"], gt3["b4"], gt3["c3"]
 
 ao = json.load(open(DATA / "antipodal_order.json"))
 seq = [r["delta_sequential"] for r in ao["rows"]]
