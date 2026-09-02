@@ -64,7 +64,8 @@ def _ladder(K, members, order, bin_counts):
 
 
 def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
-         n_floor_draws=20, bin_counts=None, strata=None, seed=0):
+         n_floor_draws=20, bin_counts=None, strata=None, seed=0,
+         floor_seed=None, perm_seed=None, order_seed=None):
     """Axis-resolved decomposition of the dimensionality-scaling exponent.
 
     Parameters
@@ -83,7 +84,10 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     strata : optional (n,) array of nuisance-stratum ids. When given, a
         second null permutes labels only within strata (nuisance-preserving);
         significance against it supports a label reading beyond composition.
-    seed : rng seed.
+    seed : rng seed (single stream) unless the three explicit seeds are
+        given. floor_seed / perm_seed / order_seed reproduce the paper's
+        convention (scripts/run37): floor rng = 100*layer+1, permutations
+        rng 3700, orders rng 3701, each an independent stream.
 
     Returns dict with delta, theta_obs, theta_floor, p_two, z,
     delta_orderavg (+sd, p_two_orderavg, z_orderavg), and, when strata is
@@ -105,7 +109,13 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     if len(bc) < 3:
         raise ValueError("need >=3 ladder rungs; use >=3 classes")
 
-    rng = np.random.default_rng(seed)
+    if floor_seed is None and perm_seed is None and order_seed is None:
+        rng = np.random.default_rng(seed)
+        frng = prng = orng = rng
+    else:
+        frng = np.random.default_rng(floor_seed if floor_seed is not None else seed)
+        prng = np.random.default_rng(perm_seed if perm_seed is not None else seed)
+        orng = np.random.default_rng(order_seed if order_seed is not None else seed)
     K = X @ X.T
     members = [np.where(lab == c)[0] for c in range(n_classes)]
     canonical = list(range(n_classes))
@@ -115,14 +125,14 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     for i in range(n_floor_draws):
         for k, s in enumerate(sizes):
             logs[i, k] = np.log(max(
-                _subset_pr(K, rng.choice(n, s, replace=False)), 1e-9))
+                _subset_pr(K, frng.choice(n, s, replace=False)), 1e-9))
     th_floor = _slope(sizes, np.exp(logs.mean(axis=0)))
     d_obs = th_obs - th_floor
 
     out = {"delta": d_obs, "theta_obs": th_obs, "theta_floor": th_floor,
            "rung_sizes": sizes, "n_classes": n_classes}
 
-    orders = [rng.permutation(n_classes).tolist() for _ in range(k_orders)]
+    orders = [orng.permutation(n_classes).tolist() for _ in range(k_orders)]
     d_orders = [_ladder(K, members, o, bc)[0] - th_floor for o in orders]
     out["delta_orderavg"] = float(np.mean(d_orders))
     out["delta_orderavg_sd"] = float(np.std(d_orders))
@@ -130,7 +140,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     if n_perm:
         null_c, null_a = [], []
         for _ in range(n_perm):
-            pl = lab[rng.permutation(n)]
+            pl = lab[prng.permutation(n)]
             mem = [np.where(pl == c)[0] for c in range(n_classes)]
             null_c.append(_ladder(K, mem, canonical, bc)[0] - th_floor)
             null_a.append(np.mean(
@@ -153,7 +163,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         for _ in range(n_perm):
             sl = lab.copy()
             for idx in smem.values():
-                sl[idx] = sl[idx[rng.permutation(len(idx))]]
+                sl[idx] = sl[idx[prng.permutation(len(idx))]]
             mem = [np.where(sl == c)[0] for c in range(n_classes)]
             null_s.append(_ladder(K, mem, canonical, bc)[0] - th_floor)
         null_s = np.asarray(null_s)
@@ -176,7 +186,7 @@ def _load_array(path):
 
 
 def _llm_battery(model_name, axis_file, device, n_perm, k_orders, max_len,
-                 out_path):
+                 out_path, paper_seeds=False):
     """Per-layer zoom() over last-token hidden states for a prompt battery.
 
     axis_file: JSON mapping class name -> list of prompts, e.g.
@@ -215,7 +225,11 @@ def _llm_battery(model_name, axis_file, device, n_perm, k_orders, max_len,
                "n_perm": n_perm, "k_orders": k_orders, "layers": []}
     for l in range(len(states[0])):
         X = np.stack([s[l] for s in states])
-        r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, seed=l)
+        if paper_seeds:
+            r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders,
+                     floor_seed=100 * l + 1, perm_seed=3700, order_seed=3701)
+        else:
+            r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, seed=l)
         row = {"layer": l,
                **{k: r[k] for k in ("delta", "p_two", "z", "delta_orderavg",
                                     "delta_orderavg_sd", "p_two_orderavg")
@@ -257,6 +271,8 @@ def main():
     m.add_argument("--k-orders", type=int, default=50)
     m.add_argument("--max-len", type=int, default=128)
     m.add_argument("--out", default=None, help="write per-layer JSON here")
+    m.add_argument("--paper-seeds", action="store_true",
+                   help="use the paper's seeding convention (reproduces run37 cells)")
 
     a = ap.parse_args()
     if a.cmd == "data":
@@ -269,7 +285,7 @@ def main():
             print(f"{k}: {v}")
     else:
         _llm_battery(a.model, a.axis, a.device, a.n_perm, a.k_orders,
-                     a.max_len, a.out)
+                     a.max_len, a.out, paper_seeds=a.paper_seeds)
 
 
 if __name__ == "__main__":

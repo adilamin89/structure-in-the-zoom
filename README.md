@@ -35,6 +35,11 @@ theta-zoom llm --model EleutherAI/pythia-160m --axis axes.json \
     --device mps --out battery.json     # axes.json: {class: [prompts...]}
 ```
 
+Add `--paper-seeds` to reproduce the paper's Table 5 cells exactly (tested:
+max |CLI − run37 artifact| = 0 on every per-layer statistic for the
+Pythia-160m world-knowledge axis; without it, results agree to within
+order-sampling noise, ~0.02).
+
 For a language model: collect last-token hidden states per layer for a
 prompt battery (one forward pass per prompt) and call `zoom()` per layer;
 `scripts_canonical/run37_inferential_nulls.py` is the full worked example. Before
