@@ -1,65 +1,145 @@
-# Supplementary code and data — "Structure is in the zoom"
+# Structure is in the zoom
 
-Every number in the paper traces to a JSON artifact in `data_canonical/` produced by a
-script in `scripts_canonical/`. The mapping below covers the paper's headline claims;
-the full number -> artifact -> script manifest ships with the repository.
+**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs.
+arXiv preprint, 2026 (identifier added on posting); a shorter version appeared at the
+NeurReps workshop, NeurIPS 2026. This repository holds the code, the data artifacts
+behind every number in the paper, and `theta-zoom`, the measurement as a tool.
 
-## Two ways to use this repository
+## The finding in one paragraph
 
-**Reproduce the paper.** `scripts_canonical/` + `data_canonical/` trace every number to its
-generating script and committed artifact (table below); registered
-expectations are in each script's docstring, committed before the run.
+Dimensionality scaling exponents are treated as properties of a neural population or
+of a network layer. They are not. Measured three ways on the same ten-thousand-neuron
+patch of mouse V1, the exponent comes out 0.25, 0.31, and 0.35, and the three numbers
+mean three different things: the first is pure sampling floor, the second is mostly
+orientation structure, the third is a weak spatial redundancy. An exponent cannot be
+read without the axis it was measured along. The paper decomposes every exponent,
+exactly, into a label-blind sampling floor plus a shift **delta** earned only against a
+declared probe axis, and tests the shift with exact permutation nulls and a second,
+nuisance-preserving null.
 
-**Use the instrument on your own data.** `theta_zoom.py` is a single-file,
-numpy-only implementation of the estimator: declared-axis shift, label-blind
-floor, 500-permutation per-layer null, order-averaged statistic for
-unordered axes, and the nuisance-preserving stratified null. Rows-by-features
-in, statistics out:
+![One recording, two axes](figures_canonical/fig_zoom_ladder_dir.png)
 
-```python
-import numpy as np
-from theta_zoom import zoom
+*Same recording (GT3, 11,311 neurons). Random stimulus subsets (gray) define the
+empirical floor. The direction-aligned ladder (red) starts low and climbs steeply; the
+slope difference is the shift, delta = +0.24.*
 
-res = zoom(X, labels, n_perm=500)          # X: (n_samples, n_features)
-res["delta"], res["p_two"]                 # declared-order shift + exact null
-res["delta_orderavg"], res["p_two_orderavg"]   # order-free partition statistic
-res = zoom(X, labels, strata=carrier_ids)  # label reading beyond composition
-res["strat_p_two"]
+## What the paper shows
+
+- **Cortex.** The direction-aligned shift is positive in all eight grating recordings and
+  exceeds every one of 200 label permutations in each (p = 1/201). It replicates across
+  167 Neuropixels populations from 32 mice in a second laboratory and tracks
+  orientation-tuning strength (r = +0.41, mixed model p = 3e-7). Where the declared axis
+  is degenerate, the instrument screens candidate axes and finds departures along
+  session time, spatial frequency, and behavioral state.
+- **Symmetry.** The axis that works follows the code's approximate O(2) symmetry. The
+  even (orientation) and odd (direction) harmonic sectors are read out separately by
+  ladder orderings, and the measured harmonics predicted two of three registered
+  accumulation-order effects in advance, on cortex and on a rotation-equivariant CNN
+  whose invariant layers give the exact null the theory demands.
+- **Ground truth.** Ising and nematic lattices and the equivariant network fix the sign
+  of the shift: conditioning on a scalar order parameter removes dimensions, accumulating
+  the classes of a group orbit adds them, architectural invariance gives zero.
+- **Language models.** Carried per layer into six model families, the instrument separates
+  content axes inherited from tokens from construction axes built along the declared
+  path. Label linkage is certified at nearly every depth under an order-free statistic;
+  the depth profile's shape belongs to the declared class arrangement. A pre-registered
+  alignment probe fails informatively: instruction tuning does not measurably reorganize
+  moral-category covariance at 0.5-1B, on two taxonomies.
+- **Two null levels.** The paper's sharpest methodological lesson: a nonzero shift means
+  the partition changes covariance accumulation relative to its declared null, and reading
+  it as representation of the label requires a null that preserves nuisance composition.
+  On BLiMP minimal pairs a |z| of about 20 against the label-free permutation is absorbed
+  entirely by a within-pair swap null; on the Baroni complexity contrasts a genuine
+  label-linked signal survives it.
+
+![Inferential results](figures_canonical/fig_nulls.png)
+
+*(a) Pythia-2.8B: declared-path shift and order-averaged shift against their permutation
+nulls. (b) BLiMP: composition only. (c) Baroni contrasts: signal beyond carriers.
+(d) Spontaneous V1 sessions: circular-shift z against frame-permutation z.*
+
+## The tool: `theta-zoom`
+
+`theta_zoom.py` is a single-file, numpy-only implementation of the estimator: the
+declared-axis shift, the label-blind floor, the 500-permutation null, the order-averaged
+statistic for unordered class axes, and the stratified second null. It works on any
+samples-by-features array and on any Hugging Face model.
+
+```bash
+pip install -e .            # numpy only; add [models] for torch + transformers
 ```
 
-Or from the command line (`pip install -e .`):
+```python
+from theta_zoom import zoom
+
+res = zoom(X, labels, n_perm=500)              # X: (n_samples, n_features)
+res["delta"], res["p_two"]                     # declared-order shift, exact null
+res["delta_orderavg"], res["p_two_orderavg"]   # order-free partition statistic
+res = zoom(X, labels, strata=carrier_ids)      # second null: label vs composition
+res["strat_p_two"]
+```
 
 ```bash
 theta-zoom data X.npy labels.npy --strata strata.npy --n-perm 500
 theta-zoom llm --model EleutherAI/pythia-160m --axis axes.json \
-    --device mps --out battery.json     # axes.json: {class: [prompts...]}
+    --device mps --out battery.json          # axes.json: {class: [prompts...]}
+theta-zoom llm ... --paper-seeds             # reproduces the paper's Table 5 cells exactly
+theta-zoom plot battery.json --out profile.png   # depth profile with null bands
 ```
 
-Add `--paper-seeds` to reproduce the paper's Table 5 cells exactly (tested:
-max |CLI − run37 artifact| = 0 on every per-layer statistic for the
-Pythia-160m world-knowledge axis; without it, results agree to within
-order-sampling noise, ~0.02).
+The paper's prompt battery ships in `axes/` (seven axes, eight classes of sixteen
+prompts: world_knowledge, language_type, ethical, tqa_category, hs_activity,
+arc_topic, plus INDEX.json), so `theta-zoom llm --model M --axis
+axes/language_type.json` runs the paper's measurement on any model out of the box.
 
-For a language model: collect last-token hidden states per layer for a
-prompt battery (one forward pass per prompt) and call `zoom()` per layer;
-`scripts_canonical/run37_inferential_nulls.py` is the full worked example. Before
-reading any nonzero shift as label representation, ask what nuisance
-structure your partition preserves (carriers, topics, sessions) and pass it
-as `strata` — the paper's two-null-levels rule.
+### Using it right
 
-## Layout
+The instrument is easy to fool, and the paper documents each way. Follow these and
+the numbers mean what they say:
 
-The folder names mirror the scripts' hard-coded relative paths
-(`HERE.parent / "data_canonical"`), so every script runs unmodified from a
-clone. `figures_canonical/` holds the paper figures and is where the
-`make_fig*` scripts write.
+1. **Declare the axis before you look.** Classes, class count, and accumulation order are
+   fixed first; everything downstream is conditional on that declaration.
+2. **Use six or more classes.** Two-class designs fit a slope through two points and are
+   noise regardless of prompt count (the paper retired them).
+3. **For unordered classes, read the order-averaged shift.** The declared-path profile is
+   a property of one path through the classes; its shape, including its embedding-layer
+   sign, can change with the order. The order-averaged statistic is the partition-level
+   claim. Both are reported by `zoom()`.
+4. **Ask what nuisance structure your partition preserves, and pass it as `strata`.**
+   Templates, carriers, topics, sessions, minimal pairs. If the shift survives the
+   within-stratum permutation, the label is doing work; if not, the ordinary floor was
+   reading composition. This is the two-null-levels rule.
+5. **Read counts as descriptive, profile statistics as inferential.** Per-layer p-values
+   at alpha 0.05 carry about 1.7 false positives per 33 layers; the paper's inference rests
+   on pre-registered profile statistics and on the order-averaged statistic, which survives
+   Benjamini-Hochberg control intact.
+6. **Within-class coherence beats prompt count.** Adding prompts that widen within-class
+   topic diversity raises within-class dimensionality and weakens structural axes. Match
+   final tokens across classes where you can.
 
-- `scripts_canonical/` — 82 analysis scripts. Registered expectations, where used, are
-  recorded in each script's docstring and were written before the run.
-- `data_canonical/` — 90 result JSONs (committed outputs of the scripts).
-- Raw data are not included; all sources are public (below).
+## Reproduce the paper
 
-## Headline claim -> artifact
+```bash
+python render_all.py        # headline tables and numbers from the committed artifacts
+```
+
+Every reported number traces to a JSON artifact in `data_canonical/` produced by a
+script in `scripts_canonical/`. Registered expectations, where used, are in each
+script's docstring and were committed before the run. The folder names mirror the
+scripts' relative paths, so every script runs unmodified from a clone. Raw neural data
+are public (Stringer et al. figshare releases; Allen Brain Observatory Neuropixels) and
+are not included; `run3*`-`run4*` language-model scripts download models from the
+Hugging Face Hub.
+
+### Repository layout
+
+- `theta_zoom.py` — the instrument and CLI (`theta-zoom`, `theta-zoom-render`).
+- `scripts_canonical/` — 84 analysis scripts (V1, Allen, lattices, CNN, LLM battery).
+- `data_canonical/` — 91 result JSONs, the committed outputs of the scripts.
+- `figures_canonical/` — the paper's figures and where the `make_fig*` scripts write.
+- `render_all.py` — prints the paper's tables from the artifacts.
+
+### Headline claim -> artifact
 
 | Claim | Artifact | Script |
 |---|---|---|
@@ -95,28 +175,7 @@ clone. `figures_canonical/` holds the paper figures and is where the
 | Planted-C8 axes (compass/clock) | run28_cyclic_axis_llm.json | run28_cyclic_axis_llm.py |
 | Figures 5-6 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py |
 
-## Raw data sources (all public)
-
-- Stringer et al. V1 recordings: figshare (stringer_v1 releases).
-- Allen Brain Observatory Neuropixels: AllenSDK / brain-map.org.
-- MNIST: torchvision.
-- LLMs: EleutherAI Pythia + allenai OLMo on Hugging Face; TruthfulQA,
-  HellaSwag, ARC-Challenge via their public repositories.
-- All LLM prompts appear verbatim inside the run scripts.
-
-## Environment
-
-See `requirements.txt`. Scripts run on CPU except where noted (LLM batteries
-use MPS/CUDA if available; every model fits in 16 GB at fp16 except
-Pythia-2.8B, which wants ~8 GB for weights alone).
-- Scripts keep their original relative output paths; all committed outputs are provided in data_canonical/.
-
 ## Citation
-
-Adil Amin. *Structure is in the zoom: probing neural symmetry through
-dimensionality scaling.* arXiv preprint, 2026 (identifier added on posting;
-bioRxiv mirror in Neuroscience). A shorter version appeared at the NeurReps
-workshop, NeurIPS 2026.
 
 ```bibtex
 @article{amin2026zoom,
@@ -128,3 +187,8 @@ workshop, NeurIPS 2026.
   note    = {Code and data: https://github.com/adilamin89/structure-in-the-zoom}
 }
 ```
+
+## License
+
+Code is released under the MIT License (see `LICENSE`). Result artifacts in
+`data_canonical/` may be reused with attribution to the paper.

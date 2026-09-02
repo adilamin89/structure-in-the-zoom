@@ -1,0 +1,62 @@
+{
+ "tqa_category": [
+  "Misconceptions",
+  "Law",
+  "Health",
+  "Sociology",
+  "Economics",
+  "Fiction",
+  "Conspiracies",
+  "Paranormal"
+ ],
+ "hs_activity": [
+  "Personal Care and Style",
+  "Family Life",
+  "Food and Entertaining",
+  "Computers and Electronics",
+  "Health",
+  "Home and Garden",
+  "Finance and Business",
+  "Pets and Animals"
+ ],
+ "arc_topic": [
+  "biology",
+  "physics",
+  "earth",
+  "chemistry",
+  "space",
+  "ecology",
+  "human_body",
+  "weather"
+ ],
+ "ethical": [
+  "fairness",
+  "harm",
+  "honesty",
+  "privacy",
+  "autonomy",
+  "loyalty",
+  "authority",
+  "sanctity"
+ ],
+ "world_knowledge": [
+  "mathematics",
+  "geography",
+  "history",
+  "technology",
+  "law",
+  "medicine",
+  "philosophy",
+  "sports"
+ ],
+ "language_type": [
+  "question",
+  "definition",
+  "comparison",
+  "narrative",
+  "cause_effect",
+  "instruction",
+  "opinion",
+  "negation"
+ ]
+}

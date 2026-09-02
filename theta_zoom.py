@@ -27,7 +27,10 @@ Quick start on your own data (any modality; rows = samples, cols = features):
     print(res["delta"], res["strat_p_two"])    # label reading beyond nuisance
 
 For a language model, collect last-token hidden states at a layer for a
-prompt battery (one forward pass per prompt) and call zoom() per layer.
+prompt battery (one forward pass per prompt) and call zoom() per layer, or
+use the CLI with the paper's battery shipped in axes/ (7 axes, 8 classes x 16
+prompts): `theta-zoom llm --model M --axis axes/language_type.json`, then
+`theta-zoom plot battery.json --out profile.png`.
 The paper's full batteries, artifacts, and registered expectations live in
 scripts/ and data/ of this repository.
 """
@@ -244,6 +247,36 @@ def _llm_battery(model_name, axis_file, device, n_perm, k_orders, max_len,
     return results
 
 
+
+def _plot_battery(path, out_png):
+    """Depth profile from a `theta-zoom llm` JSON: declared-path delta and
+    order-averaged deltabar with their permutation-null bands."""
+    import json as _json
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    d = _json.load(open(path))
+    L = d["layers"]
+    x = np.arange(len(L)) / max(len(L) - 1, 1)
+    dl = np.array([l["delta"] for l in L])
+    da = np.array([l["delta_orderavg"] for l in L])
+    fig, ax = plt.subplots(figsize=(6, 3.6))
+    if "null_sd" in L[0]:
+        nm = np.array([l.get("null_mean", 0.0) for l in L]); ns = np.array([l["null_sd"] for l in L])
+        ax.fill_between(x, nm - 2 * ns, nm + 2 * ns, color="0.75", alpha=0.35, lw=0,
+                        label="declared-path null ($\\pm 2$ SD)")
+    ax.plot(x, dl, "-o", ms=3, color="#c0392b", label="declared path $\\delta$")
+    ax.plot(x, da, "--s", ms=3, color="#2c3e50", label="order-averaged $\\bar\\delta$")
+    ax.axhline(0, color="k", lw=0.6)
+    ax.set_xlabel("normalized depth"); ax.set_ylabel("$\\delta$")
+    ax.set_title(f"{d.get('model', '')}: {', '.join(d.get('classes', [])[:3])}...", fontsize=9)
+    ax.legend(fontsize=8, frameon=False)
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    fig.tight_layout(); fig.savefig(out_png, dpi=200)
+    print(f"wrote {out_png}", flush=True)
+
+
 def main():
     import argparse
     ap = argparse.ArgumentParser(
@@ -274,8 +307,14 @@ def main():
     m.add_argument("--paper-seeds", action="store_true",
                    help="use the paper's seeding convention (reproduces run37 cells)")
 
+    p = sub.add_parser("plot", help="depth-profile figure from a `theta-zoom llm` JSON")
+    p.add_argument("battery_json")
+    p.add_argument("--out", default="battery.png")
+
     a = ap.parse_args()
-    if a.cmd == "data":
+    if a.cmd == "plot":
+        _plot_battery(a.battery_json, a.out)
+    elif a.cmd == "data":
         X = _load_array(a.X)
         labels = _load_array(a.labels).astype(int)
         strata = _load_array(a.strata).astype(int) if a.strata else None
