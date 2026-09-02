@@ -119,6 +119,12 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         frng = np.random.default_rng(floor_seed if floor_seed is not None else seed)
         prng = np.random.default_rng(perm_seed if perm_seed is not None else seed)
         orng = np.random.default_rng(order_seed if order_seed is not None else seed)
+    n_samples = X.shape[0]
+    if n_samples > 5000:
+        import warnings
+        warnings.warn(f"zoom: {n_samples} samples -> full Gram of {8*n_samples**2/1e9:.1f} GB in float64 and "
+                      f"time growing as n^2 (about {(n_samples/6400)**2*3.4:.0f} min per 100 permutations on one core); "
+                      "subsample stimuli per class (rung sizes stay matched) or run per-layer jobs in parallel.", stacklevel=2)
     K = X @ X.T
     members = [np.where(lab == c)[0] for c in range(n_classes)]
     canonical = list(range(n_classes))
