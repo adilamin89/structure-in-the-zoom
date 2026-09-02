@@ -58,12 +58,13 @@ def _slope(sizes, prs):
 
 
 def _ladder(K, members, order, bin_counts):
+    """Accumulate classes in `order`; return (slope, rung sizes, rung PRs)."""
     sizes, prs = [], []
     for c in bin_counts:
         sel = np.concatenate([members[o] for o in order[:c]])
         sizes.append(len(sel))
         prs.append(_subset_pr(K, sel))
-    return _slope(sizes, prs), sizes
+    return _slope(sizes, prs), sizes, prs
 
 
 def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
@@ -129,7 +130,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     members = [np.where(lab == c)[0] for c in range(n_classes)]
     canonical = list(range(n_classes))
 
-    th_obs, sizes = _ladder(K, members, canonical, bc)
+    th_obs, sizes, pr_obs = _ladder(K, members, canonical, bc)
     logs = np.zeros((n_floor_draws, len(sizes)))
     for i in range(n_floor_draws):
         for k, s in enumerate(sizes):
@@ -139,7 +140,12 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     d_obs = th_obs - th_floor
 
     out = {"delta": d_obs, "theta_obs": th_obs, "theta_floor": th_floor,
-           "rung_sizes": sizes, "n_classes": n_classes}
+           "rung_sizes": sizes, "n_classes": n_classes,
+           "pr_obs": [float(v) for v in pr_obs],
+           "pr_floor": [float(v) for v in np.exp(logs.mean(axis=0))],
+           "n_perm": int(n_perm), "k_orders": int(k_orders),
+           "n_floor_draws": int(n_floor_draws), "n_samples": int(n_samples),
+           "n_features": int(X.shape[1])}
 
     orders = [orng.permutation(n_classes).tolist() for _ in range(k_orders)]
     d_orders = [_ladder(K, members, o, bc)[0] - th_floor for o in orders]
@@ -184,6 +190,117 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         out["strat_null_mean"], out["strat_null_sd"] = nm, ns
 
     return out
+
+
+def _plot_data(result, out_png, title=None):
+    """Ladder figure for one `zoom` result: observed rungs against the matched
+    floor on log-log axes, with the shift and its permutation p annotated."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    sizes = result["rung_sizes"]
+    fig, ax = plt.subplots(figsize=(4.2, 3.2))
+    ax.plot(sizes, result["pr_floor"], "o-", color="0.55", label="matched floor (random subsets)")
+    ax.plot(sizes, result["pr_obs"], "o-", color="#c23b3b", label="declared axis (classes accumulated)")
+    ax.set_xscale("log"); ax.set_yscale("log")
+    ax.set_xlabel("samples in rung"); ax.set_ylabel("participation ratio")
+    p = result.get("p_two"); ptxt = f"; permutation p = {p:.3f}" if p is not None else ""
+    ax.set_title(title or f"shift delta = {result['delta']:+.3f}{ptxt}\n"
+                 f"theta_obs {result['theta_obs']:+.3f} = floor {result['theta_floor']:+.3f} + delta", fontsize=8)
+    from matplotlib.ticker import ScalarFormatter, NullFormatter
+    for axis_ in (ax.xaxis, ax.yaxis):
+        axis_.set_major_formatter(ScalarFormatter()); axis_.set_minor_formatter(NullFormatter())
+    ax.set_xticks(sizes); ax.set_xticklabels([str(v) for v in sizes], fontsize=7)
+    ax.legend(fontsize=7, frameon=False)
+    fig.tight_layout(); fig.savefig(out_png, dpi=200); plt.close(fig)
+    return out_png
+
+
+def summarize_data(result, verbose=True):
+    """Plain-language reading of one `zoom` result (the paper's rules for a
+    single array): sign, certification at the permutation resolution, the
+    order-averaged statistic, and the stratified verdict when present."""
+    n_perm = int(result.get("n_perm", 0)); floor_p = 1.0 / (n_perm + 1) if n_perm else None
+    lines = [f"theta_obs = {result['theta_obs']:+.3f} = floor {result['theta_floor']:+.3f} + shift {result['delta']:+.3f} "
+             f"({result['n_classes']} classes, rungs {result['rung_sizes']})"]
+    verdict = {"delta": result["delta"]}
+    if "p_two" in result:
+        cert = result["p_two"] < 0.05
+        lines.append(f"declared order: z = {result['z']:+.1f}, two-sided Monte Carlo p = {result['p_two']:.3f} "
+                     f"(resolution {floor_p:.3f}); {'label-linked at p < 0.05' if cert else 'not separated from the label-permutation null'}")
+        verdict["certified"] = bool(cert)
+    if "delta_orderavg" in result:
+        oa = result["delta_orderavg"]; same = (oa > 0) == (result["delta"] > 0)
+        txt = f"order-averaged shift {oa:+.3f} (SD over orders {result['delta_orderavg_sd']:.3f})"
+        if "p_two_orderavg" in result:
+            txt += f", p = {result['p_two_orderavg']:.3f}"
+        txt += "; same sign as the declared order" if same else "; OPPOSITE sign to the declared order: the declared-order value is a path property, report the order-averaged one for the partition"
+        lines.append(txt); verdict["orderavg_same_sign"] = bool(same)
+    if "strat_p_two" in result:
+        absorbed = result["strat_p_two"] >= 0.05
+        lines.append(f"nuisance-preserving null: p = {result['strat_p_two']:.3f}; "
+                     + ("the shift is ABSORBED by within-stratum relabeling: it reads nuisance composition, not the labels"
+                        if absorbed else "the shift survives within-stratum relabeling: label-linked beyond the nuisance"))
+        verdict["label_linked_beyond_strata"] = bool(not absorbed)
+    if result["delta"] < 0:
+        lines.append("negative shift: accumulating the declared classes adds fewer dimensions than random draws (conditioning branch; low-rank between-class structure with isotropic within-class variability gives this sign)")
+    if verbose:
+        for l in lines:
+            print(l)
+    return {"lines": lines, "verdict": verdict}
+
+
+def build_axis(rows, text_field, label_field, n_classes=8, n_per_class=16,
+               strata_field=None, classes=None, min_chars=20, max_chars=400, seed=0):
+    """Turn labelled records into an axis JSON ({class: [prompts]}) and an
+    optional strata sidecar. `rows` is any iterable of dicts (a Hugging Face
+    dataset split works). Classes are the `n_classes` most frequent labels
+    unless `classes` is given; `n_per_class` texts are drawn per class with a
+    fixed seed; texts shorter than `min_chars` are skipped and longer than
+    `max_chars` are cut at the last space before the limit."""
+    from collections import defaultdict
+    rng = np.random.default_rng(seed)
+    pool = defaultdict(list)
+    for r in rows:
+        t = r.get(text_field); lab = r.get(label_field)
+        if t is None or lab is None:
+            continue
+        t = str(t).strip()
+        if len(t) < min_chars:
+            continue
+        if len(t) > max_chars:
+            cut = t[:max_chars]
+            t = cut[:cut.rfind(" ")] if " " in cut else cut
+        pool[str(lab)].append((t, None if strata_field is None else str(r.get(strata_field))))
+    if classes is None:
+        classes = [c for c, _ in sorted(pool.items(), key=lambda kv: -len(kv[1]))[:n_classes]]
+    axis, strata = {}, {}
+    for c in classes:
+        items = pool.get(str(c), [])
+        if len(items) < n_per_class:
+            raise ValueError(f"class {c!r} has {len(items)} usable texts, fewer than n_per_class={n_per_class}")
+        pick = rng.choice(len(items), n_per_class, replace=False)
+        axis[str(c)] = [items[i][0] for i in pick]
+        if strata_field is not None:
+            strata[str(c)] = [items[i][1] for i in pick]
+    return axis, (strata if strata_field is not None else None)
+
+
+def axis_from_dataset(name, text_field, label_field, out_json, config=None, split="train",
+                      n_classes=8, n_per_class=16, strata_field=None, classes=None,
+                      min_chars=20, max_chars=400, seed=0):
+    """`theta-zoom axis`: build an axis JSON (+ strata sidecar) from a Hugging
+    Face dataset. Requires the `datasets` package (`pip install -e ".[models]"`)."""
+    import json as _json
+    from datasets import load_dataset
+    ds = load_dataset(name, config, split=split) if config else load_dataset(name, split=split)
+    axis, strata = build_axis(ds, text_field, label_field, n_classes, n_per_class, strata_field, classes, min_chars, max_chars, seed)
+    _json.dump(axis, open(out_json, "w"), indent=1)
+    if strata is not None:
+        side = out_json[:-5] + ".strata.json" if out_json.endswith(".json") else out_json + ".strata.json"
+        _json.dump(strata, open(side, "w"), indent=1)
+    print(f"wrote {out_json}: {len(axis)} classes x {n_per_class} prompts" + (" + strata sidecar" if strata is not None else ""))
+    return axis, strata
 
 
 # ----------------------------- command line -----------------------------
@@ -451,6 +568,8 @@ def main():
     d.add_argument("--n-perm", type=int, default=500)
     d.add_argument("--k-orders", type=int, default=50)
     d.add_argument("--seed", type=int, default=0)
+    d.add_argument("--out", default=None, help="write the result JSON here")
+    d.add_argument("--plot", default=None, help="write a ladder figure (PNG) here")
 
     m = sub.add_parser("llm", help="per-layer battery on a Hugging Face model")
     m.add_argument("--model", required=True)
@@ -466,26 +585,64 @@ def main():
     m.add_argument("--paper-seeds", action="store_true",
                    help="use the paper's seeding convention (reproduces Table 5 cells)")
 
-    s = sub.add_parser("summarize", help="plain-language reading of a `theta-zoom llm` JSON (the paper's rules)")
+    s = sub.add_parser("summarize", help="plain-language reading of a `theta-zoom llm` or `theta-zoom data` JSON (the paper's rules)")
     s.add_argument("battery_json")
     s.add_argument("--out", default=None, help="also write the report as JSON")
 
-    p = sub.add_parser("plot", help="depth-profile figure(s) from a `theta-zoom llm` JSON")
+    x = sub.add_parser("axis", help="build an axis JSON (+ strata sidecar) from a Hugging Face dataset")
+    x.add_argument("--dataset", required=True, help="dataset name, e.g. Rowan/hellaswag")
+    x.add_argument("--config", default=None)
+    x.add_argument("--split", default="train")
+    x.add_argument("--text-field", required=True)
+    x.add_argument("--label-field", required=True)
+    x.add_argument("--strata-field", default=None, help="nuisance field written to the .strata.json sidecar")
+    x.add_argument("--classes", nargs="*", default=None, help="explicit class values (default: the most frequent)")
+    x.add_argument("--n-classes", type=int, default=8)
+    x.add_argument("--n-per-class", type=int, default=16)
+    x.add_argument("--min-chars", type=int, default=20)
+    x.add_argument("--max-chars", type=int, default=400)
+    x.add_argument("--seed", type=int, default=0)
+    x.add_argument("--out", required=True)
+
+    p = sub.add_parser("plot", help="depth-profile figure(s) from a `theta-zoom llm` JSON, or the ladder figure from a `theta-zoom data` JSON")
     p.add_argument("battery_json")
     p.add_argument("--out", default="battery.png")
 
     a = ap.parse_args()
     if a.cmd == "summarize":
-        summarize(a.battery_json, a.out)
+        import json as _json
+        d = _json.load(open(a.battery_json))
+        if "layers" in d or "axes" in d:
+            summarize(a.battery_json, a.out)
+        else:
+            rep = summarize_data(d)
+            if a.out:
+                _json.dump(rep, open(a.out, "w"), indent=1)
     elif a.cmd == "plot":
-        _plot_battery(a.battery_json, a.out)
+        import json as _json
+        d = _json.load(open(a.battery_json))
+        if "layers" in d or "axes" in d:
+            _plot_battery(a.battery_json, a.out)
+        else:
+            _plot_data(d, a.out); print("wrote", a.out)
+    elif a.cmd == "axis":
+        axis_from_dataset(a.dataset, a.text_field, a.label_field, a.out, config=a.config, split=a.split,
+                          n_classes=a.n_classes, n_per_class=a.n_per_class, strata_field=a.strata_field,
+                          classes=a.classes, min_chars=a.min_chars, max_chars=a.max_chars, seed=a.seed)
     elif a.cmd == "data":
         X = _load_array(a.X)
         labels = _load_array(a.labels).astype(int)
         strata = _load_array(a.strata).astype(int) if a.strata else None
         r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed)
         for k, v in r.items():
-            print(f"{k}: {v}")
+            if not isinstance(v, list):
+                print(f"{k}: {v}")
+        if a.out:
+            import json as _json
+            _json.dump({k: (v if not isinstance(v, np.ndarray) else v.tolist()) for k, v in r.items()}, open(a.out, "w"), indent=1)
+            print("wrote", a.out)
+        if a.plot:
+            _plot_data(r, a.plot); print("wrote", a.plot)
     else:
         llm_battery(a.model, a.axis, a.device, a.n_perm, a.k_orders, a.max_len,
                     a.out, paper_seeds=a.paper_seeds, revision=a.revision,

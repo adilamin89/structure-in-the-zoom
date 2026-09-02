@@ -56,7 +56,27 @@ r = zoom(X, labels, strata=session_ids, n_perm=500) # + nuisance-preserving null
 r["delta"], r["p_two"], r["delta_orderavg"], r["p_two_orderavg"], r["strat_p_two"]
 ```
 
-`theta-zoom data X.npy labels.npy --strata strata.npy` is the same from the shell.
+`theta-zoom data X.npy labels.npy --strata strata.npy --out r.json --plot r.png` is the same from
+the shell: the JSON carries every statistic plus both ladders (`pr_obs`, `pr_floor`), the PNG is
+the ladder figure (observed against the matched floor, shift and p annotated), and
+`theta-zoom summarize r.json` reads it in plain language (sign, certification at the permutation
+resolution, order-averaged agreement, and the stratified verdict when strata were given).
+
+**Your own axis from a public dataset.** Any Hugging Face dataset with a text column and a label
+column becomes an axis JSON (and, with `--strata-field`, a nuisance sidecar) in one command:
+
+```bash
+theta-zoom axis --dataset Rowan/hellaswag --split validation \
+  --text-field ctx --label-field activity_label --n-classes 8 --n-per-class 16 --out hs_axis.json
+theta-zoom llm --model EleutherAI/pythia-160m --axis hs_axis.json --device mps --out hs.json
+```
+
+Classes default to the most frequent labels; pass `--classes` to choose them. The same builder is a
+Python function, `build_axis(rows, text_field, label_field, ...)`, for records you already hold.
+
+**Tests.** `pip install -e ".[test]" && pytest -q tests` runs the numpy-only suite: the
+decomposition identity, certification on structured labels and its absence on shuffled ones, the
+stratified null, the command line end to end, and the axis builder.
 
 **A language model, every layer.** The paper's prompt battery ships in `axes/`: seven declared
 eight-class axes of sixteen prompts (world-knowledge domains, sentence-construction types,
