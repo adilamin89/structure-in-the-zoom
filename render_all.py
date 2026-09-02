@@ -64,6 +64,22 @@ def tuning_summary():
     print("  verdict:", d["verdict"])
 
 
+def scale_summary():
+    """Sector balance across scales (App. I): additivity, graining flow, Allen per-area."""
+    print("\n== Sector balance across scales (sector_balance_scale) ==")
+    d = j("sector_balance_scale.json")
+    for rr in d["rows"]:
+        if rr["status"] != "ok":
+            continue
+        fl = rr["graining_flow"]
+        print(f"  {rr['name'][:32]:32s} b2/c1 {rr['b2_over_c1_measured']:.2f} (from neuron harmonics "
+              f"{rr['b2_over_c1_from_neuron_harmonics']:.2f}) | K=64: ori-sorted {fl['ori_sorted'][-1]:.1f} "
+              f"dir-sorted {fl['dir_sorted'][-1]:.2f} random {fl['random'][-1]:.2f}")
+    for area, a in sorted(d["allen_per_area"].items(), key=lambda kv: -kv[1]["n"]):
+        print(f"  Allen {area:6s} n={a['n']:3d} median b2/|c1| {a['median_b2_over_c1']:.1f} quadrupole-dominant {a['frac_quadrupole_dominant']:.2f}")
+    print("  verdict:", d["verdict"])
+
+
 def certified_summary():
     """Permutation-certified layer counts (paper Table 5, run37 artifact)."""
     print("\n== LLM battery: certified layers, declared order . order-averaged "
@@ -118,6 +134,7 @@ def main():
     certified_summary()
     multipole_summary()
     tuning_summary()
+    scale_summary()
     cnn_summary()
     axis_search_summary()
     cyclic_summary()
