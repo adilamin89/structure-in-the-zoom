@@ -329,6 +329,91 @@ def _plot_battery(path, out_png):
     print(f"wrote {out_png}", flush=True)
 
 
+
+def _bh_count(ps, q=0.05):
+    ps = np.asarray(ps, float); n = len(ps)
+    if n == 0:
+        return 0
+    order = np.argsort(ps); thresh = q * np.arange(1, n + 1) / n
+    passed = ps[order] <= thresh
+    if not passed.any():
+        return 0
+    k = int(np.max(np.where(passed)[0])) + 1
+    return int((ps <= thresh[k - 1]).sum())
+
+
+def summarize(path, out_json=None, verbose=True):
+    """Apply the paper's reading rules to a `theta-zoom llm` JSON and print a
+    plain-language verdict per axis. Rules: certification counts at two-sided
+    p<0.05 and after Benjamini-Hochberg (q<0.05) for the declared path and the
+    order-averaged statistic; declared-path profile shape (embedding sign, peak,
+    zero crossing); when a stratified null exists, whether the declared-path
+    signal survives it (label-linked) or is absorbed (nuisance composition)."""
+    import json as _json
+    d = _json.load(open(path))
+    axes_d = d["axes"] if "axes" in d else {"battery": {"layers": d["layers"]}}
+    report = {"model": d.get("model"), "revision": d.get("revision"), "axes": {}}
+    for name, a in axes_d.items():
+        L = a["layers"]; n = len(L)
+        pd_ = [l.get("p_two", 1.0) for l in L]; pa = [l.get("p_two_orderavg", 1.0) for l in L]
+        kd, kd_bh = sum(p < 0.05 for p in pd_), _bh_count(pd_)
+        ka, ka_bh = sum(p < 0.05 for p in pa), _bh_count(pa)
+        dl = np.array([l["delta"] for l in L]); da = np.array([l["delta_orderavg"] for l in L])
+        emb, fin = dl[0], dl[-1]
+        exc = dl - emb; peak_l = int(np.argmax(exc)); peak = float(exc[peak_l])
+        cross = next((i for i in range(1, n) if np.sign(dl[i]) != np.sign(emb) and dl[i] != 0), None)
+        lines = []
+        # partition-level reading
+        frac = ka_bh / n
+        if frac >= 0.5:
+            lines.append(f"label-linked at most depths: order-averaged statistic certified at {ka}/{n} layers "
+                         f"({ka_bh}/{n} after BH), mean deltabar {da.mean():+.3f}.")
+        elif ka_bh > 0:
+            lines.append(f"weakly label-linked: order-averaged statistic certified at {ka}/{n} layers "
+                         f"({ka_bh}/{n} after BH), mean deltabar {da.mean():+.3f}.")
+        else:
+            lines.append(f"no certified label linkage under the order-free statistic ({ka}/{n} raw, 0 after BH); "
+                         f"treat this partition as unorganized at this design.")
+        # declared-path shape
+        shape = (f"declared path: embedding {emb:+.3f} -> final {fin:+.3f}, peak excess {peak:+.3f} at layer {peak_l}"
+                 f"/{n-1}, certified {kd}/{n} ({kd_bh}/{n} after BH)")
+        if emb < 0 and fin > 0:
+            shape += (f"; negative-to-positive crossover at layer {cross} — a PATH property (the order-averaged "
+                      f"line is the partition-level claim; the crossover shape depends on the class order).")
+        elif emb > 0 and fin < emb - 0.02:
+            shape += "; positive at the embedding and declining — content-like: organization inherited from tokens, diluted with depth."
+        elif abs(emb) < 0.02 and abs(fin) < 0.02 and kd_bh == 0:
+            shape += "; flat near zero along the declared path."
+        else:
+            shape += "."
+        lines.append(shape)
+        # stratified null
+        if "strat_p_two" in L[0]:
+            ps_ = [l["strat_p_two"] for l in L]; ks, ks_bh = sum(p < 0.05 for p in ps_), _bh_count(ps_)
+            if kd_bh > 0 and ks_bh == 0:
+                lines.append(f"stratified null ABSORBS the declared-path signal ({ks}/{n} layers survive, 0 after BH): "
+                             f"the ordinary floor was reading nuisance composition, not the label.")
+            elif ks_bh > 0:
+                lines.append(f"survives the stratified null at {ks}/{n} layers ({ks_bh}/{n} after BH): "
+                             f"label-linked beyond the declared nuisance structure.")
+            else:
+                lines.append(f"stratified null: nothing to absorb ({ks}/{n} layers).")
+        else:
+            lines.append("no strata given: the ordinary floor cannot separate label from nuisance composition; "
+                         "add <axis>.strata.json (topics/templates/carriers) before reading this as representation.")
+        lines.append(f"caveat: per-layer counts are descriptive (~{0.05*n:.1f} false positives expected at p<0.05); "
+                     f"the BH counts and the order-averaged statistic carry the inference.")
+        report["axes"][name] = {"certified_declared": [kd, kd_bh], "certified_orderavg": [ka, ka_bh],
+                                "embedding": float(emb), "final": float(fin), "peak_excess": peak,
+                                "peak_layer": peak_l, "crossover_layer": cross, "reading": lines}
+        if verbose:
+            hdr = f"== {report['model'] or ''}{' @ ' + report['revision'] if report.get('revision') else ''} :: {name} ({n} layers) =="
+            print(hdr); [print("  - " + s) for s in lines]
+    if out_json:
+        _json.dump(report, open(out_json, "w"), indent=1)
+    return report
+
+
 def main():
     import argparse
     ap = argparse.ArgumentParser(
@@ -360,12 +445,18 @@ def main():
     m.add_argument("--paper-seeds", action="store_true",
                    help="use the paper's seeding convention (reproduces Table 5 cells)")
 
+    s = sub.add_parser("summarize", help="plain-language reading of a `theta-zoom llm` JSON (the paper's rules)")
+    s.add_argument("battery_json")
+    s.add_argument("--out", default=None, help="also write the report as JSON")
+
     p = sub.add_parser("plot", help="depth-profile figure(s) from a `theta-zoom llm` JSON")
     p.add_argument("battery_json")
     p.add_argument("--out", default="battery.png")
 
     a = ap.parse_args()
-    if a.cmd == "plot":
+    if a.cmd == "summarize":
+        summarize(a.battery_json, a.out)
+    elif a.cmd == "plot":
         _plot_battery(a.battery_json, a.out)
     elif a.cmd == "data":
         X = _load_array(a.X)

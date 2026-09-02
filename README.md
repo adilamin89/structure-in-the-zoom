@@ -10,6 +10,7 @@ Code, data, and `theta-zoom`, the measurement as a tool.
 pip install -e ".[models]"                       # numpy core; [models] adds torch + transformers
 theta-zoom llm --model EleutherAI/pythia-160m --axis axes/ --device mps --out pythia160m.json
 theta-zoom plot pythia160m.json --out pythia160m.png
+theta-zoom summarize pythia160m.json           # plain-language reading, the paper's rules applied
 ```
 
 That runs the paper's whole prompt battery (seven declared axes, eight classes of
@@ -24,7 +25,10 @@ per layer and per axis:
   shift against the nuisance-preserving null, which is the difference between "the
   labels organize this representation" and "the labels happen to preserve composition".
 
-The plot shows one panel per axis: both statistics against their null bands.
+The plot shows one panel per axis: both statistics against their null bands. `summarize`
+applies the paper's reading rules for you: certification after Benjamini-Hochberg under both
+statistics, the declared-path shape (embedding sign, peak, zero crossing), and, when a strata
+file exists, whether the signal is label-linked or nuisance composition.
 
 ## What it measures
 
