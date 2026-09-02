@@ -353,11 +353,17 @@ def summarize(path, out_json=None, verbose=True):
     d = _json.load(open(path))
     axes_d = d["axes"] if "axes" in d else {"battery": {"layers": d["layers"]}}
     report = {"model": d.get("model"), "revision": d.get("revision"), "axes": {}}
+    n_perm = d.get("n_perm", 500)
+    floor_p = 1.0 / (n_perm + 1)
     for name, a in axes_d.items():
         L = a["layers"]; n = len(L)
+        bh_possible = floor_p <= 0.05 / n
         pd_ = [l.get("p_two", 1.0) for l in L]; pa = [l.get("p_two_orderavg", 1.0) for l in L]
         kd, kd_bh = sum(p < 0.05 for p in pd_), _bh_count(pd_)
         ka, ka_bh = sum(p < 0.05 for p in pa), _bh_count(pa)
+        if not bh_possible:
+            # BH cannot certify any layer at this permutation count; fall back to raw counts
+            kd_bh, ka_bh = kd, ka
         dl = np.array([l["delta"] for l in L]); da = np.array([l["delta_orderavg"] for l in L])
         emb, fin = dl[0], dl[-1]
         exc = dl - emb; peak_l = int(np.argmax(exc)); peak = float(exc[peak_l])
@@ -367,16 +373,16 @@ def summarize(path, out_json=None, verbose=True):
         frac = ka_bh / n
         if frac >= 0.5:
             lines.append(f"label-linked at most depths: order-averaged statistic certified at {ka}/{n} layers "
-                         f"({ka_bh}/{n} after BH), mean deltabar {da.mean():+.3f}.")
+                         f"({ka_bh}/{n} {'after BH' if bh_possible else 'raw'}), mean deltabar {da.mean():+.3f}.")
         elif ka_bh > 0:
             lines.append(f"weakly label-linked: order-averaged statistic certified at {ka}/{n} layers "
-                         f"({ka_bh}/{n} after BH), mean deltabar {da.mean():+.3f}.")
+                         f"({ka_bh}/{n} {'after BH' if bh_possible else 'raw'}), mean deltabar {da.mean():+.3f}.")
         else:
             lines.append(f"no certified label linkage under the order-free statistic ({ka}/{n} raw, 0 after BH); "
                          f"treat this partition as unorganized at this design.")
         # declared-path shape
         shape = (f"declared path: embedding {emb:+.3f} -> final {fin:+.3f}, peak excess {peak:+.3f} at layer {peak_l}"
-                 f"/{n-1}, certified {kd}/{n} ({kd_bh}/{n} after BH)")
+                 f"/{n-1}, certified {kd}/{n} ({kd_bh}/{n} {'after BH' if bh_possible else 'raw'})")
         if emb < 0 and fin > 0:
             shape += (f"; negative-to-positive crossover at layer {cross} — a PATH property (the order-averaged "
                       f"line is the partition-level claim; the crossover shape depends on the class order).")
@@ -390,20 +396,29 @@ def summarize(path, out_json=None, verbose=True):
         # stratified null
         if "strat_p_two" in L[0]:
             ps_ = [l["strat_p_two"] for l in L]; ks, ks_bh = sum(p < 0.05 for p in ps_), _bh_count(ps_)
-            if kd_bh > 0 and ks_bh == 0:
-                lines.append(f"stratified null ABSORBS the declared-path signal ({ks}/{n} layers survive, 0 after BH): "
-                             f"the ordinary floor was reading nuisance composition, not the label.")
+            if not bh_possible:
+                ks_bh = ks
+            tag = "after BH" if bh_possible else "raw, BH not resolvable"
+            if kd > 0 and ks_bh == 0:
+                lines.append(f"stratified null absorbs the declared-path signal ({ks}/{n} layers survive; {tag}): "
+                             f"consistent with the ordinary floor reading nuisance composition rather than the label.")
             elif ks_bh > 0:
-                lines.append(f"survives the stratified null at {ks}/{n} layers ({ks_bh}/{n} after BH): "
+                lines.append(f"survives the stratified null at {ks}/{n} layers ({ks_bh}/{n} {tag}): "
                              f"label-linked beyond the declared nuisance structure.")
             else:
                 lines.append(f"stratified null: nothing to absorb ({ks}/{n} layers).")
         else:
             lines.append("no strata given: the ordinary floor cannot separate label from nuisance composition; "
                          "add <axis>.strata.json (topics/templates/carriers) before reading this as representation.")
-        lines.append(f"caveat: per-layer counts are descriptive (~{0.05*n:.1f} false positives expected at p<0.05); "
-                     f"the BH counts and the order-averaged statistic carry the inference.")
-        report["axes"][name] = {"certified_declared": [kd, kd_bh], "certified_orderavg": [ka, ka_bh],
+        if bh_possible:
+            lines.append(f"caveat: per-layer counts are descriptive (~{0.05*n:.1f} false positives expected at p<0.05); "
+                         f"the BH counts and the order-averaged statistic carry the inference.")
+        else:
+            lines.append(f"RESOLUTION WARNING: n_perm={n_perm} gives a p floor of {floor_p:.4f}, above the BH threshold "
+                         f"{0.05/n:.4f} for {n} layers, so no layer can be BH-certified at this run; counts above are raw. "
+                         f"Rerun with --n-perm 500 (the paper's setting) or more before drawing conclusions.")
+        report["axes"][name] = {"n_perm": n_perm, "bh_resolvable": bh_possible,
+                                "certified_declared": [kd, kd_bh], "certified_orderavg": [ka, ka_bh],
                                 "embedding": float(emb), "final": float(fin), "peak_excess": peak,
                                 "peak_layer": peak_l, "crossover_layer": cross, "reading": lines}
         if verbose:
