@@ -234,8 +234,10 @@ def _llm_battery(model_name, axis_file, device, n_perm, k_orders, max_len,
         else:
             r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, seed=l)
         row = {"layer": l,
-               **{k: r[k] for k in ("delta", "p_two", "z", "delta_orderavg",
-                                    "delta_orderavg_sd", "p_two_orderavg")
+               **{k: r[k] for k in ("delta", "p_two", "z", "null_mean", "null_sd",
+                                    "delta_orderavg", "delta_orderavg_sd",
+                                    "p_two_orderavg", "z_orderavg",
+                                    "null_mean_orderavg", "null_sd_orderavg")
                   if k in r}}
         results["layers"].append(row)
         print(f"  L{l:02d} delta={r['delta']:+.3f} p={r.get('p_two', 1):.4f}"
@@ -262,9 +264,13 @@ def _plot_battery(path, out_png):
     da = np.array([l["delta_orderavg"] for l in L])
     fig, ax = plt.subplots(figsize=(6, 3.6))
     if "null_sd" in L[0]:
-        nm = np.array([l.get("null_mean", 0.0) for l in L]); ns = np.array([l["null_sd"] for l in L])
-        ax.fill_between(x, nm - 2 * ns, nm + 2 * ns, color="0.75", alpha=0.35, lw=0,
+        nm = np.array([l["null_mean"] for l in L]); ns = np.array([l["null_sd"] for l in L])
+        ax.fill_between(x, nm - 2 * ns, nm + 2 * ns, color="#c0392b", alpha=0.12, lw=0,
                         label="declared-path null ($\\pm 2$ SD)")
+    if "null_sd_orderavg" in L[0]:
+        nma = np.array([l["null_mean_orderavg"] for l in L]); nsa = np.array([l["null_sd_orderavg"] for l in L])
+        ax.fill_between(x, nma - 2 * nsa, nma + 2 * nsa, color="#2c3e50", alpha=0.18, lw=0,
+                        label="order-averaged null ($\\pm 2$ SD)")
     ax.plot(x, dl, "-o", ms=3, color="#c0392b", label="declared path $\\delta$")
     ax.plot(x, da, "--s", ms=3, color="#2c3e50", label="order-averaged $\\bar\\delta$")
     ax.axhline(0, color="k", lw=0.6)
