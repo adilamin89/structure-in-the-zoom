@@ -151,6 +151,7 @@ scripts_canonical/       one script per registered run; the docstring is the reg
                          make_fig3_4 draws Figures 3 and 5, make_fig5/6/7 draw Figures 6, 7, 8,
                          make_fig9 draws Figure 9 in the appendix)
    run51_spatial_blocking.py   anatomical (spatial k-means) blocking on all eight recordings
+   run52_blocking_factor_check.py, run52b_identity_equal_blocks.py   the blocking factor B(K) and its identity
 data_canonical/          the result JSONs (one per script) that every reported number traces to
 figures_canonical/       the nine figures in the paper
 pyproject.toml           pip install -e . gives the theta-zoom command
@@ -212,6 +213,8 @@ python render_all.py
 | Sector-resolved graining (orientation-, direction-sorted, random blocks) on all eight recordings (App E table) | run50b_graining_sectors.json | run50b_graining_sectors.py |
 | Two-key (footprint x phase) blocking test of the App E explanation (registered miss) | run50c_twokey_blocking.json | run50c_twokey_blocking.py |
 | Anatomical (spatial k-means) blocking on all eight recordings: the intermediate point of the correlation-length hypothesis (Sec 4.1, App E) | run51_spatial_blocking.json | run51_spatial_blocking.py |
+| Blocking factor B(K): within-block products rho_1, rho_2 per blocking scheme; raw vs correlation-profile flow (Sec 4.1, App I) | run52_blocking_factor_check.json | run52_blocking_factor_check.py |
+| Blocking identity on equal-size blocks (to 1e-16) | run52b_identity_equal_blocks.json | run52b_identity_equal_blocks.py |
 | Figures 1-3 and 5 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
 | Figure 4 (sector balance across scales) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json, allen_expansion_all_sessions.json | make_fig8_sector_flow.py |
 | Figures 6-8 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
