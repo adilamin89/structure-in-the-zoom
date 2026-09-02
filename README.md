@@ -201,6 +201,10 @@ python render_all.py
 | Why localized gratings are dipole-dominant: per-neuron OSI/DSI, cardinal test, spatial clustering, coverage terciles | local_vs_fullfield_tuning.json | local_vs_fullfield_tuning.py |
 | Sector balance across scales: additivity, coarse-graining flow, Allen per-area | sector_balance_scale.json | sector_balance_scale.py |
 | LLM analogue: kernel-harmonic additivity, unit blocking, context-length knob (Pythia-160m) | llm_sector_blocking.json | llm_sector_blocking.py |
+| Calibrated-model overshoot across recordings (registered miss: under-predicts GT1/GT2, overshoots GT3) | run48_overshoot_across_recordings.json | run48_overshoot_across_recordings.py |
+| Split-half control for the sorted-blocking flow | run49_blocking_splithalf.json | run49_blocking_splithalf.py |
+| Graining delta(K) and Chun agreement on all eight recordings | run50_perrecording_anchors.json | run50_perrecording_anchors.py |
+| Sector-resolved graining (orientation-, direction-sorted, random blocks) on all eight recordings (App E table) | run50b_graining_sectors.json | run50b_graining_sectors.py |
 | Figures 1-4 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
 | Figures 5-7 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
 
