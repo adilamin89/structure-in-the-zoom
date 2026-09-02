@@ -256,4 +256,8 @@ python render_all.py
 ## License
 
 Code: MIT (see `LICENSE`). Result artifacts in `data_canonical/` may be reused with
-attribution to the paper.
+attribution to the paper. Prompts and stimuli carry their own terms: the three axes composed for the
+paper are CC BY 4.0; the benchmark-derived axes and stored stimuli inherit their sources' licenses
+(TruthfulQA Apache-2.0, HellaSwag MIT, ARC CC BY-SA 4.0, ETHICS MIT, BLiMP CC BY 4.0, Baroni et al.
+per their release). Origins, authorship (including language-model assistance in drafting the composed
+axes) and licenses are listed item by item in `axes/PROVENANCE.md`.
