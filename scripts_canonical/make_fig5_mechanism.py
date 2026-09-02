@@ -92,9 +92,24 @@ ax.set_xticklabels([b[0] for b in bars], fontsize=6.2)
 ax.set_ylabel(r"model $\delta$")
 ax.set_ylim(0, 0.56)
 ax.set_title("(b) two knobs bracket GT3")
-ax.annotate("overshoot\n(known defect)", xy=(2, run11b["boot_mean"]),
-            xytext=(1.15, 0.44), fontsize=6.8,
+ax.annotate("overshoot\n(GT3 only)", xy=(2, run11b["boot_mean"]),
+            xytext=(1.25, 0.44), fontsize=6.8,
             arrowprops={"arrowstyle": "->", "lw": 0.8})
+# inset: the registered cross-recording refit (run48). Predicted against
+# observed shift on the three drifting recordings: the calibration
+# overshoots GT3 and under-predicts GT1 and GT2, so the model brackets one
+# recording and does not order the shift across recordings.
+run48 = j("run48_overshoot_across_recordings.json")
+ins = ax.inset_axes([0.16, 0.60, 0.36, 0.34])
+for key, mk in (("GT1", "s"), ("GT2", "^"), ("GT3", "o")):
+    r = run48["rows"][key]
+    ins.plot(r["observed_delta"], r["delta_pred"], mk, ms=3.2, color="#08519c")
+    ins.text(r["observed_delta"] + 0.008, r["delta_pred"], key, fontsize=4.8, va="center")
+ins.plot([0.15, 0.40], [0.15, 0.40], "-", color="0.5", lw=0.6)
+ins.set_xlim(0.15, 0.42); ins.set_ylim(0.15, 0.42)
+ins.set_xticks([0.2, 0.3, 0.4]); ins.set_yticks([0.2, 0.3, 0.4])
+ins.tick_params(labelsize=4.8, pad=1, length=2)
+ins.set_xlabel("observed", fontsize=5, labelpad=0.5); ins.set_ylabel("predicted", fontsize=5, labelpad=0.5)
 
 # ---------------- (c) CNN dissociation ----------------
 ax = axes[2]

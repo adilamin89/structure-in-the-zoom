@@ -1,0 +1,13 @@
+  gratings_drifting_GT1_2019_04_12 N 20616 | K=1 +0.356 | ret K32 spatial 0.85 random 0.90 ori 0.86 dir 1.20 | b2/c1 flow spatial 1.01 random 1.16 ori 6.18
+  gratings_drifting_GT2_2019_04_05 N 14034 | K=1 +0.290 | ret K32 spatial 0.53 random 0.55 ori 0.31 dir 0.78 | b2/c1 flow spatial 1.15 random 0.96 ori 8.33
+  gratings_drifting_GT3_2019_04_05 N 11311 | K=1 +0.232 | ret K32 spatial 0.17 random 0.06 ori 0.96 dir 1.13 | b2/c1 flow spatial 1.05 random 1.02 ori 7.27
+  gratings_local_GT1_2019_04_27_2  N 22482 | K=1 +0.458 | ret K32 spatial 0.31 random 0.28 ori 0.34 dir 0.41 | b2/c1 flow spatial 1.19 random 0.95 ori 7.44
+  gratings_local_GT2_2019_04_23_2  N 17750 | K=1 +0.395 | ret K32 spatial 0.08 random 0.03 ori 0.27 dir 0.41 | b2/c1 flow spatial 1.12 random 1.01 ori 7.63
+/opt/homebrew/lib/python3.14/site-packages/scipy/_lib/_util.py:307: UserWarning: One of the clusters is empty. Re-run kmeans with a different initialization.
+  return fun(*args, **kwargs)
+  gratings_local_GT3_2019_04_24_2  N 15640 | K=1 +0.456 | ret K32 spatial 0.37 random 0.35 ori 0.52 dir 0.56 | b2/c1 flow spatial 1.20 random 1.11 ori 6.79
+  gratings_low_contrast_GT1_2019_0 N 22565 | K=1 +0.202 | ret K32 spatial 0.74 random 0.64 ori 1.08 dir 1.44 | b2/c1 flow spatial 0.94 random 1.01 ori 5.84
+  gratings_low_contrast_GT2_2019_0 N 16159 | K=1 +0.213 | ret K32 spatial 0.49 random 0.54 ori 0.77 dir 1.08 | b2/c1 flow spatial 1.02 random 0.99 ori 6.61
+VERDICT {"S1_spatial_ge_random_count": 5, "S1_pass": false, "S2_balance_flow_spatial": [1.005, 1.153, 1.05, 1.189, 1.123, 1.199, 0.936, 1.019], "S2_pass": true, "S3_gap_localized": [0.028, 0.045, 0.025], "S3_gap_fullfield": [-0.049, -0.015, 0.108, 0.098, -0.054], "S3_descriptive_localized_gap_larger": true, "spatial_retention": [0.85, 0.53, 0.17, 0.31, 0.08, 0.37, 0.74, 0.49], "random_retention": [0.9, 0.55, 0.06, 0.28, 0.03, 0.35, 0.64, 0.54]}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run51_spatial_blocking.json
+run51 exit 0

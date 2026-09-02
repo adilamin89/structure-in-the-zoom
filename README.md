@@ -144,10 +144,15 @@ scripts_canonical/       one script per registered run; the docstring is the reg
    accumulation_order.py, shuffle_label_control.py, allen_*.py, ising_*.py, nematic_*.py
    multipole_harmonics_8dir.py, local_vs_fullfield_tuning.py, sector_balance_scale.py,
    llm_sector_blocking.py     the harmonic-sector analyses (Sec 4, App I)
-   make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py, make_fig5_mechanism.py,
-   make_fig6_llm.py, make_fig7_nulls.py   regenerate the seven figures from the artifacts
+   make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py, make_fig8_sector_flow.py,
+   make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py,
+   make_fig9_stimulus_sector.py   regenerate the nine figures from the artifacts (script
+                         numbers predate the S75 renumbering: make_fig8 draws paper Figure 4,
+                         make_fig3_4 draws Figures 3 and 5, make_fig5/6/7 draw Figures 6, 7, 8,
+                         make_fig9 draws Figure 9 in the appendix)
+   run51_spatial_blocking.py   anatomical (spatial k-means) blocking on all eight recordings
 data_canonical/          the result JSONs (one per script) that every reported number traces to
-figures_canonical/       the seven figures in the paper
+figures_canonical/       the nine figures in the paper
 pyproject.toml           pip install -e . gives the theta-zoom command
 ```
 
@@ -206,8 +211,11 @@ python render_all.py
 | Graining delta(K) and Chun agreement on all eight recordings | run50_perrecording_anchors.json | run50_perrecording_anchors.py |
 | Sector-resolved graining (orientation-, direction-sorted, random blocks) on all eight recordings (App E table) | run50b_graining_sectors.json | run50b_graining_sectors.py |
 | Two-key (footprint x phase) blocking test of the App E explanation (registered miss) | run50c_twokey_blocking.json | run50c_twokey_blocking.py |
-| Figures 1-4 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
-| Figures 5-7 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
+| Anatomical (spatial k-means) blocking on all eight recordings: the intermediate point of the correlation-length hypothesis (Sec 4.1, App E) | run51_spatial_blocking.json | run51_spatial_blocking.py |
+| Figures 1-3 and 5 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
+| Figure 4 (sector balance across scales) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json, allen_expansion_all_sessions.json | make_fig8_sector_flow.py |
+| Figures 6-8 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
+| Figure 9 (sector balance against single-neuron tuning by stimulus type, App I) | local_vs_fullfield_tuning.json | make_fig9_stimulus_sector.py |
 
 ## Citation
 

@@ -44,9 +44,9 @@ def profile(data, axis):
     return x, y, sh
 
 
-fig, axes = plt.subplots(1, 3, figsize=(6.0, 2.4))
-plt.subplots_adjust(wspace=0.40, left=0.08, right=0.99, top=0.89,
-                    bottom=0.20)
+fig, axes = plt.subplots(1, 3, figsize=(6.0, 2.75))
+plt.subplots_adjust(wspace=0.50, left=0.10, right=0.985, top=0.90,
+                    bottom=0.31)
 
 all_sh = []
 for panel, axis, title, cmap in [
@@ -95,17 +95,18 @@ for axis, (lab, c) in AXCOL.items():
             label=lab, alpha=0.95 if lw > 1 else 0.55)
 ax.axhline(0, color="k", lw=0.6)
 ax.set_xlabel("normalized depth $\\ell/L$")
-ax.set_ylabel(r"embedding excess $\delta(\ell)-\delta(0)$")
-ax.set_title("(c) 2.8B: embedding excess")
-ax.legend(fontsize=5.6, frameon=False, ncol=2, loc="lower right",
-          columnspacing=0.8, handlelength=1.4)  # sits below every curve (ylim opened)
+ax.set_ylabel("excess over layer 0")
+ax.set_title(r"(c) 2.8B: $\delta(\ell)-\delta(0)$")
+handles, labels = ax.get_legend_handles_labels()
+fig.legend(handles, labels, loc="lower center", ncol=3, fontsize=6.3, frameon=False,
+           columnspacing=1.2, handlelength=1.6, bbox_to_anchor=(0.5, 0.0))  # the six-axis key sits under the whole figure
 ax.set_ylim(-0.34, 0.42)
 
 # inset: cross-family (OLMo, solid) vs same-corpus different-architecture
 # (GPT-Neo, dashed) — the rise tracks the corpus, the shape the architecture
 d25 = json.load(open(DATA / "run25_olmo1b_16pc_battery.json"))
 d29 = json.load(open(DATA / "run29_gptneo_battery.json"))
-ins = ax.inset_axes([0.13, 0.60, 0.40, 0.33])
+ins = ax.inset_axes([0.10, 0.56, 0.42, 0.28])
 for d, style in [(d25, "-"), (d29, "--")]:
     for axis, c in [("world_knowledge", "#e6550d"),
                     ("language_type", "#3182bd")]:
@@ -116,7 +117,7 @@ for d, style in [(d25, "-"), (d29, "--")]:
         ins.plot(x, y, style, lw=1.0, color=c)
 ins.axhline(0, color="k", lw=0.5)
 ins.tick_params(labelsize=5.5)
-ins.set_title("OLMo-1B solid, GPT-Neo dashed", fontsize=5.4)
+ax.text(0.10, 0.86, "OLMo-1B solid, GPT-Neo dashed", fontsize=5.2, transform=ax.transAxes, va="bottom")
 ins.set_ylim(-0.35, 0.30)
 
 for out in OUTS:
