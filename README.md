@@ -110,3 +110,21 @@ See `requirements.txt`. Scripts run on CPU except where noted (LLM batteries
 use MPS/CUDA if available; every model fits in 16 GB at fp16 except
 Pythia-2.8B, which wants ~8 GB for weights alone).
 - Scripts keep their original relative output paths; all committed outputs are provided in data_canonical/.
+
+## Citation
+
+Adil Amin. *Structure is in the zoom: probing neural symmetry through
+dimensionality scaling.* arXiv preprint, 2026 (identifier added on posting;
+bioRxiv mirror in Neuroscience). A shorter version appeared at the NeurReps
+workshop, NeurIPS 2026.
+
+```bibtex
+@article{amin2026zoom,
+  author  = {Amin, Adil},
+  title   = {Structure is in the zoom: probing neural symmetry through
+             dimensionality scaling},
+  journal = {arXiv preprint},
+  year    = {2026},
+  note    = {Code and data: https://github.com/adilamin89/structure-in-the-zoom}
+}
+```
