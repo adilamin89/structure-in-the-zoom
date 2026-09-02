@@ -188,97 +188,143 @@ def _load_array(path):
     return np.loadtxt(path, delimiter="," if path.endswith(".csv") else None)
 
 
-def _llm_battery(model_name, axis_file, device, n_perm, k_orders, max_len,
-                 out_path, paper_seeds=False):
-    """Per-layer zoom() over last-token hidden states for a prompt battery.
+def _expand_axis_paths(paths):
+    """Files, or directories (all *.json except INDEX.json and *.strata.json)."""
+    import glob, os
+    out = []
+    for p in paths:
+        if os.path.isdir(p):
+            for f in sorted(glob.glob(os.path.join(p, "*.json"))):
+                b = os.path.basename(f)
+                if b == "INDEX.json" or b.endswith(".strata.json"):
+                    continue
+                out.append(f)
+        else:
+            out.append(p)
+    return out
 
-    axis_file: JSON mapping class name -> list of prompts, e.g.
-      {"question": ["What causes...", ...], "definition": ["A molecule is...", ...]}
+
+def _load_axis(axis_file, use_strata=True):
+    """axis_file: JSON {class_name: [prompt, ...]}. Optional sidecar
+    <name>.strata.json with the same shape holding a nuisance stratum per
+    prompt (topic, template, carrier id) for the second null."""
+    import json as _json, os
+    axes = _json.load(open(axis_file))
+    prompts, labels, strata = [], [], []
+    side = axis_file[:-5] + ".strata.json" if axis_file.endswith(".json") else None
+    smap = _json.load(open(side)) if (use_strata and side and os.path.exists(side)) else None
+    for ci, (cname, plist) in enumerate(axes.items()):
+        for k, p in enumerate(plist):
+            prompts.append(p)
+            labels.append(ci)
+            if smap is not None:
+                strata.append(smap[cname][k])
+    name = os.path.splitext(os.path.basename(axis_file))[0]
+    return name, list(axes.keys()), prompts, np.array(labels), (np.array(strata) if smap is not None else None)
+
+
+def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
+                max_len=128, out_path=None, paper_seeds=False, revision=None,
+                use_strata=True):
+    """Per-layer zoom() over last-token hidden states for one or more axes.
+
+    axis_files: list of axis JSON paths and/or directories. The model is loaded
+    once (optionally at a Hugging Face `revision`, e.g. a Pythia checkpoint
+    "step10000") and every axis is encoded and analyzed. If <axis>.strata.json
+    exists next to an axis file, the stratified (nuisance-preserving) null is
+    computed as well. Returns {"model", "revision", "axes": {name: {...}}}.
     """
     import json as _json
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
-    axes = _json.load(open(axis_file))
-    prompts, labels = [], []
-    for ci, (cname, plist) in enumerate(axes.items()):
-        for p in plist:
-            prompts.append(p)
-            labels.append(ci)
-    labels = np.array(labels)
-    print(f"{len(axes)} classes, {len(prompts)} prompts; loading "
-          f"{model_name} on {device}...", flush=True)
+    files = _expand_axis_paths(list(axis_files))
+    print(f"{len(files)} axis file(s); loading {model_name}"
+          f"{' @ ' + revision if revision else ''} on {device}...", flush=True)
     dtype = torch.float16 if device in ("mps", "cuda") else torch.float32
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name, torch_dtype=dtype).to(device)
-    tok = AutoTokenizer.from_pretrained(model_name)
+    kw = {"torch_dtype": dtype}
+    if revision:
+        kw["revision"] = revision
+    model = AutoModelForCausalLM.from_pretrained(model_name, **kw).to(device)
+    tok = AutoTokenizer.from_pretrained(model_name, revision=revision) if revision \
+        else AutoTokenizer.from_pretrained(model_name)
     model.eval()
 
-    states = []
-    with torch.no_grad():
-        for i, p in enumerate(prompts):
-            ids = tok(p, return_tensors="pt", truncation=True,
-                      max_length=max_len).input_ids.to(device)
-            hs = model(ids, output_hidden_states=True).hidden_states
-            states.append([h[0, -1, :].float().cpu().numpy() for h in hs])
-            if i and i % 50 == 0:
-                print(f"  encoded {i}/{len(prompts)}", flush=True)
-
-    results = {"model": model_name, "classes": list(axes.keys()),
-               "n_perm": n_perm, "k_orders": k_orders, "layers": []}
-    for l in range(len(states[0])):
-        X = np.stack([s[l] for s in states])
-        if paper_seeds:
-            r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders,
-                     floor_seed=100 * l + 1, perm_seed=3700, order_seed=3701)
-        else:
-            r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, seed=l)
-        row = {"layer": l,
-               **{k: r[k] for k in ("delta", "p_two", "z", "null_mean", "null_sd",
-                                    "delta_orderavg", "delta_orderavg_sd",
-                                    "p_two_orderavg", "z_orderavg",
-                                    "null_mean_orderavg", "null_sd_orderavg")
-                  if k in r}}
-        results["layers"].append(row)
-        print(f"  L{l:02d} delta={r['delta']:+.3f} p={r.get('p_two', 1):.4f}"
-              f" | avg={r['delta_orderavg']:+.3f}"
-              f" p={r.get('p_two_orderavg', 1):.4f}", flush=True)
+    results = {"model": model_name, "revision": revision, "n_perm": n_perm,
+               "k_orders": k_orders, "axes": {}}
+    for af in files:
+        name, classes, prompts, labels, strata = _load_axis(af, use_strata)
+        print(f"[{name}] {len(classes)} classes, {len(prompts)} prompts"
+              f"{' + strata' if strata is not None else ''}", flush=True)
+        states = []
+        with torch.no_grad():
+            for i, p in enumerate(prompts):
+                ids = tok(p, return_tensors="pt", truncation=True,
+                          max_length=max_len).input_ids.to(device)
+                hs = model(ids, output_hidden_states=True).hidden_states
+                states.append([h[0, -1, :].float().cpu().numpy() for h in hs])
+                if i and i % 50 == 0:
+                    print(f"    encoded {i}/{len(prompts)}", flush=True)
+        layers = []
+        for l in range(len(states[0])):
+            X = np.stack([s[l] for s in states])
+            if paper_seeds:
+                r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata,
+                         floor_seed=100 * l + 1, perm_seed=3700, order_seed=3701)
+            else:
+                r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata, seed=l)
+            keys = ("delta", "p_two", "z", "null_mean", "null_sd", "delta_orderavg",
+                    "delta_orderavg_sd", "p_two_orderavg", "z_orderavg",
+                    "null_mean_orderavg", "null_sd_orderavg",
+                    "strat_p_two", "strat_z", "strat_null_mean", "strat_null_sd")
+            row = {"layer": l, **{k: r[k] for k in keys if k in r}}
+            layers.append(row)
+            msg = (f"    L{l:02d} delta={r['delta']:+.3f} p={r.get('p_two', 1):.4f}"
+                   f" | avg={r['delta_orderavg']:+.3f} p={r.get('p_two_orderavg', 1):.4f}")
+            if "strat_p_two" in r:
+                msg += f" | strat p={r['strat_p_two']:.4f}"
+            print(msg, flush=True)
+        results["axes"][name] = {"classes": classes, "n_prompts": len(prompts),
+                                 "stratified": strata is not None, "layers": layers}
     if out_path:
         _json.dump(results, open(out_path, "w"), indent=1)
         print(f"wrote {out_path}", flush=True)
     return results
 
 
-
 def _plot_battery(path, out_png):
-    """Depth profile from a `theta-zoom llm` JSON: declared-path delta and
-    order-averaged deltabar with their permutation-null bands."""
+    """One panel per axis from a `theta-zoom llm` JSON: declared-path delta,
+    order-averaged deltabar, and their permutation-null bands (plus the
+    stratified-null band when present)."""
     import json as _json
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     d = _json.load(open(path))
-    L = d["layers"]
-    x = np.arange(len(L)) / max(len(L) - 1, 1)
-    dl = np.array([l["delta"] for l in L])
-    da = np.array([l["delta_orderavg"] for l in L])
-    fig, ax = plt.subplots(figsize=(6, 3.6))
-    if "null_sd" in L[0]:
-        nm = np.array([l["null_mean"] for l in L]); ns = np.array([l["null_sd"] for l in L])
-        ax.fill_between(x, nm - 2 * ns, nm + 2 * ns, color="#c0392b", alpha=0.12, lw=0,
-                        label="declared-path null ($\\pm 2$ SD)")
-    if "null_sd_orderavg" in L[0]:
-        nma = np.array([l["null_mean_orderavg"] for l in L]); nsa = np.array([l["null_sd_orderavg"] for l in L])
-        ax.fill_between(x, nma - 2 * nsa, nma + 2 * nsa, color="#2c3e50", alpha=0.18, lw=0,
-                        label="order-averaged null ($\\pm 2$ SD)")
-    ax.plot(x, dl, "-o", ms=3, color="#c0392b", label="declared path $\\delta$")
-    ax.plot(x, da, "--s", ms=3, color="#2c3e50", label="order-averaged $\\bar\\delta$")
-    ax.axhline(0, color="k", lw=0.6)
-    ax.set_xlabel("normalized depth"); ax.set_ylabel("$\\delta$")
-    ax.set_title(f"{d.get('model', '')}: {', '.join(d.get('classes', [])[:3])}...", fontsize=9)
-    ax.legend(fontsize=8, frameon=False)
-    for s in ("top", "right"):
-        ax.spines[s].set_visible(False)
+    axes_d = d["axes"] if "axes" in d else {"battery": {"layers": d["layers"], "classes": d.get("classes", [])}}
+    n = len(axes_d)
+    fig, axs = plt.subplots(1, n, figsize=(5.2 * n, 3.6), squeeze=False)
+    for ax, (name, a) in zip(axs[0], axes_d.items()):
+        L = a["layers"]
+        x = np.arange(len(L)) / max(len(L) - 1, 1)
+        def arr(k):
+            return np.array([l[k] for l in L]) if k in L[0] else None
+        for mk, sk, col, al, lab in (("null_mean", "null_sd", "#c0392b", 0.12, "declared-path null"),
+                                     ("null_mean_orderavg", "null_sd_orderavg", "#2c3e50", 0.18, "order-averaged null"),
+                                     ("strat_null_mean", "strat_null_sd", "#8e44ad", 0.18, "stratified null")):
+            m, s = arr(mk), arr(sk)
+            if m is not None and s is not None:
+                ax.fill_between(x, m - 2 * s, m + 2 * s, color=col, alpha=al, lw=0,
+                                label=f"{lab} ($\\pm 2$ SD)")
+        ax.plot(x, arr("delta"), "-o", ms=3, color="#c0392b", label="declared path $\\delta$")
+        ax.plot(x, arr("delta_orderavg"), "--s", ms=3, color="#2c3e50", label="order-averaged $\\bar\\delta$")
+        ax.axhline(0, color="k", lw=0.6)
+        ax.set_xlabel("normalized depth"); ax.set_ylabel("$\\delta$")
+        ax.set_title(f"{d.get('model', '')}{' @ ' + d['revision'] if d.get('revision') else ''}\n{name}",
+                     fontsize=9)
+        ax.legend(fontsize=7, frameon=False)
+        for sp in ("top", "right"):
+            ax.spines[sp].set_visible(False)
     fig.tight_layout(); fig.savefig(out_png, dpi=200)
     print(f"wrote {out_png}", flush=True)
 
@@ -288,32 +334,33 @@ def main():
     ap = argparse.ArgumentParser(
         prog="theta-zoom",
         description="Axis-resolved dimensionality scaling: "
-                    "theta_obs = theta_floor + delta, with exact "
-                    "permutation nulls (see the paper for conventions).")
+                    "theta_obs = theta_floor + delta, with exact permutation "
+                    "nulls and a nuisance-preserving second null.")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     d = sub.add_parser("data", help="run on arrays (npy/csv/txt)")
     d.add_argument("X", help="samples-by-features array")
     d.add_argument("labels", help="integer class labels, one per sample")
-    d.add_argument("--strata", default=None,
-                   help="nuisance stratum ids for the second null")
+    d.add_argument("--strata", default=None, help="nuisance stratum ids for the second null")
     d.add_argument("--n-perm", type=int, default=500)
     d.add_argument("--k-orders", type=int, default=50)
     d.add_argument("--seed", type=int, default=0)
 
     m = sub.add_parser("llm", help="per-layer battery on a Hugging Face model")
     m.add_argument("--model", required=True)
-    m.add_argument("--axis", required=True,
-                   help="JSON: {class_name: [prompt, ...], ...}")
+    m.add_argument("--axis", required=True, nargs="+",
+                   help="axis JSON file(s) {class: [prompts]} and/or directories of them")
+    m.add_argument("--revision", default=None, help="HF revision, e.g. a training checkpoint")
     m.add_argument("--device", default="cpu", choices=["cpu", "mps", "cuda"])
     m.add_argument("--n-perm", type=int, default=500)
     m.add_argument("--k-orders", type=int, default=50)
     m.add_argument("--max-len", type=int, default=128)
-    m.add_argument("--out", default=None, help="write per-layer JSON here")
+    m.add_argument("--no-strata", action="store_true", help="ignore *.strata.json sidecars")
+    m.add_argument("--out", default=None, help="write JSON here")
     m.add_argument("--paper-seeds", action="store_true",
-                   help="use the paper's seeding convention (reproduces run37 cells)")
+                   help="use the paper's seeding convention (reproduces Table 5 cells)")
 
-    p = sub.add_parser("plot", help="depth-profile figure from a `theta-zoom llm` JSON")
+    p = sub.add_parser("plot", help="depth-profile figure(s) from a `theta-zoom llm` JSON")
     p.add_argument("battery_json")
     p.add_argument("--out", default="battery.png")
 
@@ -324,13 +371,13 @@ def main():
         X = _load_array(a.X)
         labels = _load_array(a.labels).astype(int)
         strata = _load_array(a.strata).astype(int) if a.strata else None
-        r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders,
-                 strata=strata, seed=a.seed)
+        r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed)
         for k, v in r.items():
             print(f"{k}: {v}")
     else:
-        _llm_battery(a.model, a.axis, a.device, a.n_perm, a.k_orders,
-                     a.max_len, a.out, paper_seeds=a.paper_seeds)
+        llm_battery(a.model, a.axis, a.device, a.n_perm, a.k_orders, a.max_len,
+                    a.out, paper_seeds=a.paper_seeds, revision=a.revision,
+                    use_strata=not a.no_strata)
 
 
 if __name__ == "__main__":
