@@ -58,5 +58,31 @@
   "instruction",
   "opinion",
   "negation"
+ ],
+ "ethics_benchmark": [
+  "commonsense",
+  "deontology",
+  "justice",
+  "utilitarianism"
+ ],
+ "compass": [
+  "north",
+  "northeast",
+  "east",
+  "southeast",
+  "south",
+  "southwest",
+  "west",
+  "northwest"
+ ],
+ "clock": [
+  "midnight",
+  "three in the morning",
+  "six in the morning",
+  "nine in the morning",
+  "noon",
+  "three in the afternoon",
+  "six in the evening",
+  "nine at night"
  ]
 }

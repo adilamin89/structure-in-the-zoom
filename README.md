@@ -11,7 +11,7 @@ a property of a system: on one ten-thousand-neuron patch of mouse V1 it reads 0.
 0.35 along three probe axes, and the three numbers mean three different things. `theta-zoom`
 decomposes any such exponent exactly into a **label-blind sampling floor** plus a **shift
 delta earned against a declared axis** (the classes you accumulate and the order you add them
-in), and tests that shift two ways: against an exact label-permutation null, and, when you
+in), and tests that shift two ways: against a label-permutation null (Monte Carlo, 500 draws by default), and, when you
 tell it what nuisance structure your partition preserves, against a **nuisance-preserving
 null** that isolates what the labels add. It runs on any samples-by-features array and on any
 Hugging Face language model layer by layer.
@@ -27,8 +27,8 @@ theta-zoom summarize pythia160m.json           # plain-language reading, the pap
 
 ### What it returns, per layer and per axis
 
-- `delta`, `p_two`: the shift along the declared class order and its exact permutation p-value
-  (500 permutations by default);
+- `delta`, `p_two`: the shift along the declared class order and its permutation p-value
+  (Monte Carlo, 500 permutations by default);
 - `delta_orderavg`, `p_two_orderavg`: the shift averaged over random class orders, the
   partition-level statistic for unordered classes;
 - `strat_p_two` when a strata file exists: the shift against the nuisance-preserving null, the
@@ -78,11 +78,14 @@ Python function, `build_axis(rows, text_field, label_field, ...)`, for records y
 decomposition identity, certification on structured labels and its absence on shuffled ones, the
 stratified null, the command line end to end, and the axis builder.
 
-**A language model, every layer.** The paper's prompt battery ships in `axes/`: seven declared
-eight-class axes of sixteen prompts (world-knowledge domains, sentence-construction types,
-ethical concepts, TruthfulQA categories, HellaSwag activities, ARC topics, and a random control),
-plus `language_type.strata.json`, a topic map that turns on the second null for the
-construction axis. Point `--axis` at the folder or at one file.
+**A language model, every layer.** Every prompt in the paper ships in `axes/` as a ready-to-run
+axis file: the seven battery axes (world-knowledge domains, sentence-construction types, ethical
+concepts, TruthfulQA categories, HellaSwag activities, ARC topics, and a random control), the
+ETHICS benchmark axis (`ethics_benchmark.json`, four normative domains x 32), and the two planted
+C8 axes (`compass.json`, `clock.json`, eight classes x 16 shared carriers). Three strata sidecars
+turn on the second null where the paper used it: `language_type.strata.json` (topics) and
+`compass.strata.json` / `clock.strata.json` (carrier ids, the carrier-stratified floor of Sec 8.5).
+Point `--axis` at the folder or at one file; run any subset, any model, any checkpoint.
 
 **Checkpoint and model sweeps.** Any Hugging Face revision; every JSON has the same shape.
 
@@ -116,7 +119,9 @@ runs the whole battery; `zoom(...)` is the core.
   quadrupole-dominant (orientation), localized gratings dipole-dominant (direction) because
   single neurons become more direction-selective, and the balance is additive over neurons,
   invariant under random coarse-graining, and steered by label-aware coarse-graining
-  (orientation-sorted blocks amplify the quadrupole: the Z2 quotient at the mesoscale).
+  (orientation-sorted blocks amplify the quadrupole: the Z2 quotient at the mesoscale). The
+  blocking factor B(K) = [1/K + (1-1/K) rho2] / [1/K + (1-1/K) rho1] makes that quantitative; mouse
+  anatomy sits at its random limit (registered run 51).
 - **Ground truth.** Ising and nematic lattices and a rotation-equivariant CNN fix the sign:
   conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds
   them, architectural invariance gives exactly zero; the measured harmonics predicted the
@@ -154,13 +159,15 @@ runs the whole battery; `zoom(...)` is the core.
 ## What is where
 
 ```
-theta_zoom.py            the instrument: zoom(), llm_battery(), and the theta-zoom CLI
-                         (data | llm | plot | summarize); numpy core, optional torch+transformers
+theta_zoom.py            the instrument: zoom(), llm_battery(), build_axis(), and the theta-zoom CLI
+                         (data | llm | axis | plot | summarize); numpy core, optional torch+transformers
+tests/                   numpy-only pytest suite (pytest -q tests)
 render_all.py            prints the paper's tables and headline numbers from the artifacts
-axes/                    the prompt battery (7 axes x 8 classes x 16 prompts) + strata sidecar
+axes/                    every prompt in the paper: 7 battery axes + ETHICS + compass + clock, with
+                         strata sidecars; PROVENANCE.md gives origin and license per file
 scripts_canonical/       one script per registered run; the docstring is the registration
                          (expectations written before the run) and names the artifact it writes
-   run1..run47_*.py      the numbered runs cited in the paper
+   run1..run52b_*.py     the numbered runs cited in the paper
    accumulation_order.py, shuffle_label_control.py, allen_*.py, ising_*.py, nematic_*.py
    multipole_harmonics_8dir.py, local_vs_fullfield_tuning.py, sector_balance_scale.py,
    llm_sector_blocking.py     the harmonic-sector analyses (Sec 4, App I)
@@ -205,7 +212,7 @@ python render_all.py
 | CNN double dissociation (5 seeds) | run5b_cnn_seeds.json | run5b_cnn_seeds.py |
 | CNN sector content + stimulus baseline | run5c_cnn_multipole_fixed.json, run14_stimulus_baseline.json | run5c_cnn_multipole_fixed.py |
 | CNN prospective ordering | run12_cnn_ordering.json | run12_cnn_ordering.py |
-| V1 label-permutation exact test (16/16, p=1/201) | run38_v1_label_permutations.json | run38_v1_label_permutations.py |
+| V1 label-permutation test (16/16, Monte Carlo p=1/201) | run38_v1_label_permutations.json | run38_v1_label_permutations.py |
 | LLM 500-permutation nulls + order-averaged shift (6 models, 3 axes) | run37_inferential_nulls.json | run37_inferential_nulls.py (+37b/37c wrappers) |
 | Allen A_even/A_odd direct mixed model | run39_allen_aeven_mixed.json | run39_allen_aeven_mixed.py |
 | Spont state axes, permutation + circular-shift nulls | run40_spont_state_axis.json | run40_spont_state_axis.py |
@@ -259,5 +266,4 @@ Code: MIT (see `LICENSE`). Result artifacts in `data_canonical/` may be reused w
 attribution to the paper. Prompts and stimuli carry their own terms: the three axes composed for the
 paper are CC BY 4.0; the benchmark-derived axes and stored stimuli inherit their sources' licenses
 (TruthfulQA Apache-2.0, HellaSwag MIT, ARC CC BY-SA 4.0, ETHICS MIT, BLiMP CC BY 4.0, Baroni et al.
-per their release). Origins, authorship (including language-model assistance in drafting the composed
-axes) and licenses are listed item by item in `axes/PROVENANCE.md`.
+per their release). Origins, authorship and licenses are listed item by item in `axes/PROVENANCE.md`.
