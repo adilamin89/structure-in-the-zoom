@@ -1,0 +1,174 @@
+[D1] target PR 18.5 (round 19) -> K 47 realized 18.9 | run60 delta +0.324 (realized PR 14.1) | obs +0.347 | 3s
+  seed  1: delta +0.216 | PR 24.6 | align180 0.230 | thirds DS/rand/OS +0.346/+0.179/+0.260 | 8s
+  seed  2: delta +0.298 | PR 20.7 | align180 0.300 | thirds DS/rand/OS +0.124/+0.050/+0.228 | 14s
+  seed  3: delta +0.022 | PR 19.7 | align180 0.260 | thirds DS/rand/OS -0.186/+0.045/-0.182 | 19s
+  seed  4: delta +0.050 | PR 22.9 | align180 0.219 | thirds DS/rand/OS -0.108/-0.060/-0.064 | 25s
+  seed  5: delta +0.182 | PR 18.3 | align180 0.289 | thirds DS/rand/OS +0.232/+0.253/+0.069 | 31s
+  seed  6: delta +0.293 | PR 19.8 | align180 0.215 | thirds DS/rand/OS +0.033/+0.604/+0.542 | 37s
+  seed  7: delta +0.461 | PR 18.2 | align180 0.190 | thirds DS/rand/OS +0.368/+0.293/+0.688 | 42s
+  seed  8: delta +0.088 | PR 17.8 | align180 0.340 | thirds DS/rand/OS -0.042/-0.098/+0.167 | 48s
+  seed  9: delta +0.185 | PR 12.6 | align180 0.381 | thirds DS/rand/OS +0.470/-0.030/-0.059 | 53s
+  seed 10: delta +0.255 | PR 21.1 | align180 0.152 | thirds DS/rand/OS +0.429/+0.415/+0.157 | 59s
+  => D1: delta +0.205 ± 0.125 (SE 0.040) vs obs +0.347, err -0.142; run60 +0.324 | align180 0.257 (meas 0.103) | thirds DS/rand/OS +0.167/+0.165/+0.181
+[D2] target PR 23.3 (round 23) -> K 38 realized 24.0 | run60 delta +0.313 (realized PR 15.2) | obs +0.280 | 61s
+  seed  1: delta +0.254 | PR 20.8 | align180 0.244 | thirds DS/rand/OS -0.107/+0.320/+0.301 | 67s
+  seed  2: delta +0.297 | PR 16.0 | align180 0.281 | thirds DS/rand/OS +0.397/+0.205/+0.206 | 73s
+  seed  3: delta +0.335 | PR 18.5 | align180 0.223 | thirds DS/rand/OS +0.384/+0.386/+0.347 | 79s
+  seed  4: delta +0.209 | PR 25.0 | align180 0.238 | thirds DS/rand/OS +0.306/+0.181/+0.050 | 85s
+  seed  5: delta +0.119 | PR 21.5 | align180 0.242 | thirds DS/rand/OS +0.060/-0.295/+0.343 | 91s
+  seed  6: delta +0.301 | PR 13.5 | align180 0.348 | thirds DS/rand/OS +0.033/+0.273/+0.194 | 97s
+  seed  7: delta +0.170 | PR 24.0 | align180 0.216 | thirds DS/rand/OS +0.184/+0.074/+0.066 | 103s
+  seed  8: delta +0.538 | PR 19.2 | align180 0.216 | thirds DS/rand/OS +0.704/+0.686/-0.037 | 109s
+  seed  9: delta +0.310 | PR 18.8 | align180 0.289 | thirds DS/rand/OS +0.005/+0.011/+0.477 | 116s
+  seed 10: delta +0.259 | PR 21.8 | align180 0.261 | thirds DS/rand/OS +0.307/+0.520/+0.235 | 123s
+  => D2: delta +0.279 ± 0.108 (SE 0.034) vs obs +0.280, err -0.001; run60 +0.313 | align180 0.256 (meas 0.138) | thirds DS/rand/OS +0.227/+0.236/+0.218
+[D3] target PR 20.1 (round 20) -> K 51 realized 19.1 | run60 delta +0.246 (realized PR 15.9) | obs +0.240 | 124s
+  seed  1: delta -0.163 | PR 21.2 | align180 0.222 | thirds DS/rand/OS +0.217/-0.562/+0.102 | 131s
+  seed  2: delta +0.333 | PR 29.0 | align180 0.193 | thirds DS/rand/OS +0.343/+0.298/+0.201 | 136s
+  seed  3: delta +0.217 | PR 25.6 | align180 0.235 | thirds DS/rand/OS +0.241/+0.060/+0.172 | 142s
+  seed  4: delta +0.235 | PR 29.9 | align180 0.198 | thirds DS/rand/OS +0.131/+0.245/+0.198 | 148s
+  seed  5: delta +0.594 | PR 17.3 | align180 0.260 | thirds DS/rand/OS +0.179/+0.072/+0.473 | 153s
+  seed  6: delta +0.103 | PR 12.8 | align180 0.367 | thirds DS/rand/OS +0.574/+0.177/+0.070 | 159s
+  seed  7: delta +0.232 | PR 27.7 | align180 0.239 | thirds DS/rand/OS +0.324/+0.115/+0.342 | 166s
+  seed  8: delta +0.309 | PR 30.6 | align180 0.178 | thirds DS/rand/OS +0.311/+0.352/+0.337 | 171s
+  seed  9: delta +0.269 | PR 28.4 | align180 0.187 | thirds DS/rand/OS +0.417/+0.257/+0.187 | 177s
+  seed 10: delta +0.215 | PR 29.7 | align180 0.189 | thirds DS/rand/OS +0.260/+0.261/+0.211 | 183s
+  => D3: delta +0.234 ± 0.179 (SE 0.057) vs obs +0.240, err -0.005; run60 +0.246 | align180 0.227 (meas 0.185) | thirds DS/rand/OS +0.300/+0.128/+0.229
+[L1] target PR 30.4 (round 30) -> K 101 realized 29.8 | run60 delta +0.409 (realized PR 20.7) | obs +0.461 | 186s
+  seed  1: delta +0.232 | PR 35.9 | align180 0.153 | thirds DS/rand/OS +0.176/+0.415/+0.295 | 194s
+  seed  2: delta +0.407 | PR 35.0 | align180 0.141 | thirds DS/rand/OS +0.656/+0.299/+0.337 | 202s
+  seed  3: delta +0.395 | PR 32.0 | align180 0.099 | thirds DS/rand/OS +0.258/+0.602/+0.596 | 210s
+  seed  4: delta +0.313 | PR 33.9 | align180 0.099 | thirds DS/rand/OS +0.375/+0.238/+0.460 | 218s
+  seed  5: delta +0.314 | PR 29.6 | align180 0.175 | thirds DS/rand/OS +0.259/+0.364/+0.293 | 226s
+  seed  6: delta +0.427 | PR 28.5 | align180 0.065 | thirds DS/rand/OS +0.614/+0.646/+0.294 | 235s
+  seed  7: delta +0.229 | PR 26.1 | align180 0.187 | thirds DS/rand/OS +0.731/+0.552/-0.147 | 244s
+  seed  8: delta +0.258 | PR 30.8 | align180 0.099 | thirds DS/rand/OS +0.258/+0.235/+0.473 | 251s
+  seed  9: delta +0.376 | PR 28.3 | align180 0.164 | thirds DS/rand/OS +0.432/+0.466/+0.261 | 258s
+  seed 10: delta +0.334 | PR 29.9 | align180 0.129 | thirds DS/rand/OS +0.250/+0.250/+0.448 | 268s
+  => L1: delta +0.329 ± 0.069 (SE 0.022) vs obs +0.461, err -0.133; run60 +0.409 | align180 0.131 (meas 0.056) | thirds DS/rand/OS +0.401/+0.407/+0.331
+[L2] target PR 26.3 (round 26) -> K 63 realized 27.5 | run60 delta +0.421 (realized PR 17.9) | obs +0.394 | 270s
+  seed  1: delta +0.370 | PR 24.2 | align180 0.199 | thirds DS/rand/OS +0.415/+0.452/+0.091 | 275s
+  seed  2: delta +0.234 | PR 30.9 | align180 0.099 | thirds DS/rand/OS +0.107/+0.321/+0.464 | 281s
+  seed  3: delta +0.436 | PR 28.3 | align180 0.147 | thirds DS/rand/OS +0.692/+0.708/+0.280 | 287s
+  seed  4: delta +0.509 | PR 22.4 | align180 0.191 | thirds DS/rand/OS +0.122/+0.494/+0.615 | 292s
+  seed  5: delta +0.541 | PR 27.5 | align180 0.151 | thirds DS/rand/OS +0.552/+0.314/+0.608 | 297s
+  seed  6: delta +0.177 | PR 31.2 | align180 0.153 | thirds DS/rand/OS +0.211/+0.201/+0.085 | 303s
+  seed  7: delta +0.093 | PR 23.2 | align180 0.168 | thirds DS/rand/OS +0.153/+0.033/-0.100 | 309s
+  seed  8: delta +0.068 | PR 23.7 | align180 0.132 | thirds DS/rand/OS +0.301/-0.109/+0.011 | 316s
+  seed  9: delta +0.237 | PR 27.3 | align180 0.127 | thirds DS/rand/OS +0.468/+0.162/+0.088 | 320s
+  seed 10: delta +0.331 | PR 27.1 | align180 0.147 | thirds DS/rand/OS +0.405/+0.233/+0.081 | 326s
+  => L2: delta +0.300 ± 0.157 (SE 0.050) vs obs +0.394, err -0.094; run60 +0.421 | align180 0.151 (meas 0.042) | thirds DS/rand/OS +0.343/+0.281/+0.222
+[L3] target PR 19.3 (round 19) -> K 38 realized 20.0 | run60 delta +0.401 (realized PR 13.3) | obs +0.460 | 328s
+  seed  1: delta +0.338 | PR 20.0 | align180 0.197 | thirds DS/rand/OS +0.274/+0.004/+0.127 | 331s
+  seed  2: delta +0.183 | PR 20.7 | align180 0.180 | thirds DS/rand/OS -0.062/+0.243/+0.096 | 334s
+  seed  3: delta +0.473 | PR 18.7 | align180 0.138 | thirds DS/rand/OS +0.621/+0.447/+0.400 | 337s
+  seed  4: delta +0.472 | PR 17.7 | align180 0.131 | thirds DS/rand/OS +0.004/+0.082/+0.408 | 341s
+  seed  5: delta +0.452 | PR 18.4 | align180 0.152 | thirds DS/rand/OS +0.575/+0.527/+0.450 | 344s
+  seed  6: delta +0.477 | PR 18.2 | align180 0.136 | thirds DS/rand/OS +0.464/+0.556/+0.197 | 348s
+  seed  7: delta +0.285 | PR 19.7 | align180 0.193 | thirds DS/rand/OS +0.444/+0.314/+0.115 | 351s
+  seed  8: delta +0.513 | PR 17.6 | align180 0.179 | thirds DS/rand/OS +0.421/+0.227/+0.110 | 354s
+  seed  9: delta +0.303 | PR 15.9 | align180 0.173 | thirds DS/rand/OS +0.154/-0.076/+0.383 | 358s
+  seed 10: delta +0.335 | PR 19.0 | align180 0.202 | thirds DS/rand/OS +0.404/+0.622/+0.217 | 361s
+  => L3: delta +0.383 ± 0.103 (SE 0.033) vs obs +0.460, err -0.077; run60 +0.401 | align180 0.168 (meas 0.045) | thirds DS/rand/OS +0.330/+0.295/+0.250
+[C1] target PR 38.0 (round 38) -> K 400 realized 19.6 | run60 delta +0.268 (realized PR 16.9) | obs +0.196 | 363s
+  seed  1: delta +0.172 | PR 35.8 | align180 0.255 | thirds DS/rand/OS +0.219/+0.173/+0.205 | 368s
+  seed  2: delta +0.075 | PR 14.5 | align180 0.263 | thirds DS/rand/OS +0.406/+0.041/+0.060 | 374s
+  seed  3: delta +0.343 | PR 27.5 | align180 0.301 | thirds DS/rand/OS -0.078/+0.073/-0.015 | 379s
+  seed  4: delta +0.283 | PR 29.8 | align180 0.298 | thirds DS/rand/OS +0.560/+0.236/+0.207 | 385s
+  seed  5: delta +0.153 | PR 19.5 | align180 0.248 | thirds DS/rand/OS +0.889/-0.196/+0.409 | 391s
+  seed  6: delta +0.254 | PR 20.4 | align180 0.322 | thirds DS/rand/OS -0.232/+0.020/+0.344 | 396s
+  seed  7: delta -0.404 | PR 16.6 | align180 0.284 | thirds DS/rand/OS -0.432/+0.188/-0.521 | 401s
+  seed  8: delta +0.277 | PR 30.8 | align180 0.340 | thirds DS/rand/OS +0.784/-0.171/+0.024 | 407s
+  seed  9: delta +0.206 | PR 31.9 | align180 0.298 | thirds DS/rand/OS +0.673/+0.206/+0.115 | 413s
+  seed 10: delta +0.333 | PR 25.2 | align180 0.273 | thirds DS/rand/OS +0.351/+0.081/+0.274 | 418s
+  => C1: delta +0.169 ± 0.207 (SE 0.065) vs obs +0.196, err -0.026; run60 +0.268 | align180 0.288 (meas 0.162) | thirds DS/rand/OS +0.314/+0.065/+0.110
+[C2] target PR 46.0 (round 46) -> K 400 realized 29.4 | run60 delta +0.173 (realized PR 20.9) | obs +0.217 | 420s
+  seed  1: delta +0.258 | PR 32.6 | align180 0.241 | thirds DS/rand/OS -0.039/+0.265/-0.136 | 426s
+  seed  2: delta -0.212 | PR 32.5 | align180 0.306 | thirds DS/rand/OS +0.150/-0.272/-0.258 | 433s
+  seed  3: delta +0.147 | PR 30.4 | align180 0.363 | thirds DS/rand/OS +0.292/+0.298/+0.344 | 440s
+  seed  4: delta +0.177 | PR 42.3 | align180 0.191 | thirds DS/rand/OS +0.502/-0.019/+0.078 | 447s
+  seed  5: delta +0.144 | PR 42.3 | align180 0.302 | thirds DS/rand/OS +0.570/+0.099/-0.029 | 453s
+  seed  6: delta +0.178 | PR 42.6 | align180 0.183 | thirds DS/rand/OS +0.360/+0.077/+0.145 | 460s
+  seed  7: delta +0.502 | PR 37.2 | align180 0.227 | thirds DS/rand/OS -0.088/+0.143/+0.128 | 466s
+  seed  8: delta +0.311 | PR 30.8 | align180 0.338 | thirds DS/rand/OS +0.399/+0.380/+0.204 | 473s
+  seed  9: delta +0.659 | PR 34.1 | align180 0.242 | thirds DS/rand/OS +0.683/+0.575/-0.066 | 480s
+  seed 10: delta +0.478 | PR 34.3 | align180 0.173 | thirds DS/rand/OS +0.680/+0.502/+0.053 | 487s
+  => C2: delta +0.264 ± 0.230 (SE 0.073) vs obs +0.217, err +0.047; run60 +0.173 | align180 0.257 (meas 0.220) | thirds DS/rand/OS +0.351/+0.205/+0.046
+VERDICT {
+ "arm": "B",
+ "predicted": [
+  0.20492275166026214,
+  0.2790439711827365,
+  0.23446362351376493,
+  0.3285050125627487,
+  0.29958411631465237,
+  0.3831151328846957,
+  0.16915756337374996,
+  0.2642060339686696
+ ],
+ "observed": [
+  0.3468249541078426,
+  0.28000536722215447,
+  0.23970072080707694,
+  0.4611692741898112,
+  0.39374025095244863,
+  0.46028900165386427,
+  0.19553155944570494,
+  0.21679304996348564
+ ],
+ "errors": [
+  -0.14190220244758045,
+  -0.0009613960394179721,
+  -0.00523709729331201,
+  -0.13266426162706246,
+  -0.09415613463779626,
+  -0.0771738687691686,
+  -0.02637399607195498,
+  0.047412984005183956
+ ],
+ "se": [
+  0.03957489938080424,
+  0.0340263579043999,
+  0.056699826867136115,
+  0.021693992918644496,
+  0.04963498136132818,
+  0.03272479295305568,
+  0.06545847176441526,
+  0.0728425615340836
+ ],
+ "K_matched": {
+  "D1": 47,
+  "D2": 38,
+  "D3": 51,
+  "L1": 101,
+  "L2": 63,
+  "L3": 38,
+  "C1": 400,
+  "C2": 400
+ },
+ "K1_lowered_count": 7,
+ "K1_drop": {
+  "D1": 0.11860282185798732,
+  "D2": 0.034247419410860236,
+  "D3": 0.011899802897771927,
+  "L1": 0.0809735608903725,
+  "L2": 0.1215484241605237,
+  "L3": 0.01753399279441975,
+  "C1": 0.09856512739680198,
+  "C2": -0.09085759945671334
+ },
+ "K1": false,
+ "K2_errors_le_0.06_count": 4,
+ "K2_orders_D1_D2_D3": false,
+ "K2_rho": 0.8095238095238096,
+ "K2_top2": [
+  "L3",
+  "L1"
+ ],
+ "K2": false,
+ "K3_D3_error": -0.00523709729331201,
+ "K3": false,
+ "K4_DS_gt_OS_count": 7,
+ "K4": false
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run60b_mixture_matchedK_armB.json in 487s

@@ -90,7 +90,8 @@ def spectrum(X):
 
 def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
          n_floor_draws=20, bin_counts=None, strata=None, seed=0,
-         floor_seed=None, perm_seed=None, order_seed=None, standardize=False):
+         floor_seed=None, perm_seed=None, order_seed=None, standardize=False,
+         antipode=None):
     """Axis-resolved decomposition of the dimensionality-scaling exponent.
 
     Parameters
@@ -117,8 +118,16 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         convention (scripts/run37): floor rng = 100*layer+1, permutations
         rng 3700, orders rng 3701, each an independent stream.
 
+    antipode : optional dict {class: its antipodal class}. The stall test of
+        the paper's Section 7 reads `late_fraction` (the deficit at half the
+        classes over the deficit at one class) as the share of the climb the
+        second half of the classes carries; that reading needs the first half
+        of the declared order to hold one member of each pair, which this
+        checks and reports as `antipode_first_half_has_no_pair`.
+
     Returns dict with delta, theta_obs, theta_floor, p_two, z,
-    delta_orderavg (+sd, p_two_orderavg, z_orderavg), and, when strata is
+    delta_orderavg (+sd, p_two_orderavg, z_orderavg), the per-rung ladders
+    (pr_obs, pr_floor, deficit) with late_fraction, and, when strata is
     given, strat_p_two / strat_z.
     """
     X = np.asarray(X, dtype=np.float64)
@@ -168,13 +177,35 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     th_floor = _slope(sizes, np.exp(logs.mean(axis=0)))
     d_obs = th_obs - th_floor
 
+    floor_means = np.exp(logs.mean(axis=0))
+    deficit = [float(np.log(max(o, 1e-9)) - np.log(max(f, 1e-9))) for o, f in zip(pr_obs, floor_means)]
     out = {"delta": d_obs, "theta_obs": th_obs, "theta_floor": th_floor,
-           "rung_sizes": sizes, "n_classes": n_classes,
+           "rung_sizes": sizes, "rung_classes": list(bc), "n_classes": n_classes,
            "pr_obs": [float(v) for v in pr_obs],
-           "pr_floor": [float(v) for v in np.exp(logs.mean(axis=0))],
+           "pr_floor": [float(v) for v in floor_means],
+           # per-rung log-PR deficit below the floor (zero at the top rung, where the
+           # ladder and the floor hold the same samples) and the share of the climb
+           # that remains after half the classes: the stall test of the paper's
+           # Section 7 when the declared order lists one member of each antipodal
+           # pair before any of their partners
+           "deficit": deficit,
            "n_perm": int(n_perm), "k_orders": int(k_orders),
            "n_floor_draws": int(n_floor_draws), "n_samples": int(n_samples),
            "n_features": int(X.shape[1])}
+    half = n_classes // 2
+    if half in bc and deficit[0] != 0:
+        out["late_rung_classes"] = int(half)
+        out["late_fraction"] = float(deficit[bc.index(half)] / deficit[0])
+    if antipode is not None:
+        pairs = {int(np.searchsorted(classes, k)): int(np.searchsorted(classes, v)) for k, v in antipode.items()}
+        first = list(range(half))
+        clash = [(a, pairs[a]) for a in first if a in pairs and pairs[a] in first]
+        out["antipode_first_half_has_no_pair"] = not clash
+        if clash:
+            import warnings
+            warnings.warn("zoom: the first half of the declared order holds an antipodal pair "
+                          f"{clash[:3]}; the stall test needs one member of each pair before any partner "
+                          "(relabel the classes so the pairs sit half a cycle apart).", stacklevel=2)
 
     orders = [orng.permutation(n_classes).tolist() for _ in range(k_orders)]
     d_orders = [_ladder(K, members, o, bc)[0] - th_floor for o in orders]
@@ -218,6 +249,29 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
             / (len(null_s) + 1))
         out["strat_null_mean"], out["strat_null_sd"] = nm, ns
 
+    return out
+
+
+def split_by(X, labels, score, n_subsets=3, seed=0, **zoom_kwargs):
+    """The paper's run 59 as one call: sort the features by a per-feature
+    score (a direction-selectivity index, a tuning strength, a weight norm),
+    take the top and bottom 1/n_subsets of them and a random subset of the
+    same size, and run zoom() on each with its own floor. The shift depends on
+    the number of features (run 59: a random third differs from the full
+    population by -0.08 to +0.14), so subsets are compared with each other at
+    this matched size and never with the full population."""
+    X = np.asarray(X); score = np.asarray(score, dtype=float)
+    if score.shape != (X.shape[1],):
+        raise ValueError(f"score must have one value per feature ({X.shape[1]}); got {score.shape}")
+    m = X.shape[1] // n_subsets
+    order = np.argsort(score)
+    rng = np.random.default_rng(seed)
+    subsets = {"top": order[-m:], "bottom": order[:m], "random": rng.choice(X.shape[1], m, replace=False)}
+    out = {"n_features_per_subset": int(m), "n_features_total": int(X.shape[1]), "subsets": {}}
+    for name, idx in subsets.items():
+        r = zoom(X[:, np.sort(idx)], labels, **zoom_kwargs)
+        r["median_score"] = float(np.median(score[idx]))
+        out["subsets"][name] = r
     return out
 
 
@@ -271,6 +325,19 @@ def summarize_data(result, verbose=True):
                      + ("the shift is ABSORBED by within-stratum relabeling: it reads nuisance composition, not the labels"
                         if absorbed else "the shift survives within-stratum relabeling: label-linked beyond the nuisance"))
         verdict["label_linked_beyond_strata"] = bool(not absorbed)
+    if "deficit" in result:
+        lines.append("per-rung log-PR deficit below the floor, by classes accumulated "
+                     + ", ".join(f"{c}: {d:+.3f}" for c, d in zip(result.get("rung_classes", []), result["deficit"])))
+        if "late_fraction" in result:
+            lf = result["late_fraction"]; h = result["late_rung_classes"]
+            txt = f"share of the climb remaining after {h} of {result['n_classes']} classes: {lf:.2f}"
+            if "antipode_first_half_has_no_pair" in result:
+                if result["antipode_first_half_has_no_pair"]:
+                    txt += (" (stall test: the first half holds one member of each antipodal pair; near 0 = the code has every class mean by half the classes, "
+                            "it reads the quotient; large = the second half still adds directions, the code distinguishes a class from its antipode)")
+                else:
+                    txt += " (the first half of the declared order holds an antipodal pair, so this is not the stall test; relabel)"
+            lines.append(txt); verdict["late_fraction"] = float(lf)
     if result["delta"] < 0:
         lines.append("negative shift: accumulating the declared classes adds fewer dimensions than random draws (conditioning branch; low-rank between-class structure with isotropic within-class variability gives this sign)")
     if verbose:
@@ -600,6 +667,8 @@ def main():
     d.add_argument("--out", default=None, help="write the result JSON here")
     d.add_argument("--plot", default=None, help="write a ladder figure (PNG) here")
     d.add_argument("--standardize", action="store_true", help="z-score every feature first (rogue-dimension repair; run 55)")
+    d.add_argument("--split-by", default=None, help="per-feature score file (npy/csv/txt, one value per feature): also run the top, bottom and a random third of the features at matched size, each with its own floor (the paper's run 59)")
+    d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks the declared order for the stall test and reports late_fraction as it")
 
     m = sub.add_parser("llm", help="per-layer battery on a Hugging Face model")
     m.add_argument("--model", required=True)
@@ -666,10 +735,22 @@ def main():
         sp = spectrum(X)
         print(f"spectrum: d_eff_full={sp['d_eff_full']:.1f} top1_eig_frac={sp['top1_eig_frac']:.2f} top1_dim_var_frac={sp['top1_dim_var_frac']:.2f}"
               + ("  <- one dimension dominates; consider --standardize" if sp["top1_eig_frac"] > 0.5 else ""))
-        r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed, standardize=a.standardize)
+        antipode = None
+        if a.antipode:
+            import json as _json
+            antipode = {int(k): int(v) for k, v in _json.load(open(a.antipode)).items()}
+        r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed, standardize=a.standardize, antipode=antipode)
         for k, v in r.items():
             if not isinstance(v, list):
                 print(f"{k}: {v}")
+        if a.split_by:
+            score = _load_array(a.split_by).astype(float).ravel()
+            sp_r = split_by(X, labels, score, seed=a.seed, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, standardize=a.standardize, antipode=antipode)
+            r["split_by"] = sp_r
+            print(f"split by score, {sp_r['n_features_per_subset']} of {sp_r['n_features_total']} features per subset (matched size, own floors):")
+            for name, rr in sp_r["subsets"].items():
+                print(f"  {name:7s}: delta {rr['delta']:+.3f}" + (f", p = {rr['p_two']:.3f}" if "p_two" in rr else "")
+                      + (f", late fraction {rr['late_fraction']:.2f}" if "late_fraction" in rr else "") + f", median score {rr['median_score']:.3g}")
         if a.out:
             import json as _json
             _json.dump({k: (v if not isinstance(v, np.ndarray) else v.tolist()) for k, v in r.items()}, open(a.out, "w"), indent=1)

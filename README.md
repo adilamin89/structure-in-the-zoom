@@ -16,14 +16,15 @@ numbers at every layer from one command, with every prompt in the paper shipped 
 A dimensionality scaling exponent (how the participation ratio grows as you add data) is not
 a property of a system: on one ten-thousand-neuron patch of mouse V1 it reads 0.25, 0.31, and
 0.35 along three probe axes, and the three numbers mean three different things. `rung`
-decomposes any such exponent exactly into a **label-blind sampling floor** plus a **shift
-delta earned against a declared axis** (the classes you accumulate and the order you add them
+decomposes any such exponent exactly into a **sampling floor** (what random subsets of the same
+sizes return) plus a **shift delta earned against a declared axis** (the classes you accumulate and the order you add them
 in), and tests that shift two ways: against a label-permutation null (Monte Carlo, 500 draws by default), and, when you
-tell it what nuisance structure your partition preserves, against a **nuisance-preserving
-null** that isolates what the labels add. It runs on any samples-by-features array and on any
+tell it what nuisance structure your partition preserves, against a **stratified null** (labels
+permuted only within strata) that isolates what the labels add. It runs on any samples-by-features array and on any
 Hugging Face language model layer by layer. A rung is one step of the subsampling ladder; the tool
 reads every rung against its matched floor. (Released as `theta-zoom` through 1.1.0; `theta_zoom` and the
-`theta-zoom` command stay as aliases for one release.)
+`theta-zoom` command stay as aliases for one release; 1.3.0 adds the per-rung deficit, the late
+fraction with the antipode check, and `--split-by`.)
 
 ### Install and run (sixty seconds)
 
@@ -48,14 +49,24 @@ rung summarize pythia160m.json                 # plain-language reading, the pap
   (Monte Carlo, 500 permutations by default);
 - `delta_orderavg`, `p_two_orderavg`: the shift averaged over random class orders, the
   partition-level statistic for unordered classes;
-- `strat_p_two` when a strata file exists: the shift against the nuisance-preserving null, the
+- `strat_p_two` when a strata file exists: the shift against the stratified null, the
   difference between "the labels organize this representation" and "the labels happen to
   preserve composition".
 
 `rung plot` draws one panel per axis with both statistics against their null bands.
-`rung summarize` applies the paper's reading rules: certification under
-Benjamini-Hochberg for both statistics, the declared-path shape (embedding sign, peak, zero
+`rung summarize` applies the paper's reading rules: significance against the label null under
+Benjamini-Hochberg for both statistics, the declared-order shape (embedding sign, valley, last zero
 crossing), and, with strata, whether the signal is label-linked or composition.
+
+**Since 1.3.0, the ladder itself is reported.** Every result carries `deficit`, the log participation ratio
+of the accumulated classes below the floor at each rung (zero at the top rung, where the ladder and the
+floor hold the same samples), and `late_fraction`, the deficit at half the classes over the deficit at
+one class: the share of the climb that the second half of the classes carries. With `--antipode map.json`
+(`{class: its antipodal class}`) that number is the paper's stall test (Section 7): a code that has every
+class mean by half the classes, one that reads the quotient of the circle, has nothing left to climb
+there, and a code that distinguishes a class from its antipode still does. `--split-by scores.npy` (one
+score per feature, such as a direction-selectivity index) runs the top, bottom and a random third of the
+features at matched size, each with its own floor, which is the paper's run 59 as one command.
 
 ![One population, three axes](figures_canonical/fig_three_axes.png)
 
@@ -69,15 +80,16 @@ exchangeable across it.
 ```python
 from rung import zoom
 r = zoom(X, labels, n_perm=500)                     # declared order + order-averaged
-r = zoom(X, labels, strata=session_ids, n_perm=500) # + nuisance-preserving null
+r = zoom(X, labels, strata=session_ids, n_perm=500) # + stratified null
 r["delta"], r["p_two"], r["delta_orderavg"], r["p_two_orderavg"], r["strat_p_two"]
 ```
 
 `rung data X.npy labels.npy --strata strata.npy --out r.json --plot r.png` is the same from
 the shell: the JSON carries every statistic plus both ladders (`pr_obs`, `pr_floor`), the PNG is
 the ladder figure (observed against the matched floor, shift and p annotated), and
-`rung summarize r.json` reads it in plain language (sign, certification at the permutation
-resolution, order-averaged agreement, and the stratified verdict when strata were given).
+`rung summarize r.json` reads it in plain language (sign, significance at the permutation
+resolution, the per-rung deficit and the late fraction, order-averaged agreement, and the stratified
+verdict when strata were given).
 
 **Your own axis from a public dataset.** Any Hugging Face dataset with a text column and a label
 column becomes an axis JSON (and, with `--strata-field`, a nuisance sidecar) in one command:
@@ -98,7 +110,8 @@ when one dimension dominates; `--standardize` (or `zoom(..., standardize=True)`)
 which restores OLMo-1B's content axis. Off by default so `--paper-seeds` reproduces the published cells.
 
 **Tests.** `pip install -e ".[test]" && pytest -q tests` runs the numpy-only suite: the
-decomposition identity, certification on structured labels and its absence on shuffled ones, the
+decomposition identity, significance on structured labels and its absence on shuffled ones, the
+per-rung deficit and the stall test, the split at matched size, the
 stratified null, the command line end to end, and the axis builder.
 
 **A language model, every layer.** Every prompt in the paper ships in `axes/` as a ready-to-run
@@ -146,20 +159,23 @@ runs the whole battery; `zoom(...)` is the core.
   harmonic decomposition of the class-mean correlation is exact; full-field gratings are
   quadrupole-dominant (orientation), localized gratings dipole-dominant (direction) because
   single neurons become more direction-selective, and the balance is additive over neurons,
-  invariant under random coarse-graining, and steered by label-aware coarse-graining
+  invariant under random coarse-graining, and steered by sorted coarse-graining
   (orientation-sorted blocks amplify the quadrupole: the Z2 quotient at the mesoscale). The
   blocking factor B(K) = [1/K + (1-1/K) rho2] / [1/K + (1-1/K) rho1] makes that quantitative; mouse
-  anatomy sits at its random limit (registered run 51).
+  anatomy sits at its random limit (run 51). The shift reads both sectors: the even sector sets the
+  rungs up to four classes, and the odd sector, carried by the direction-selective neurons, the rungs
+  beyond (runs 59 and 59b: the orientation-only third of the neurons has nothing left to climb after
+  four classes, the direction-selective third has most of its climb ahead); the shift's variation across
+  recordings is the direction-selective fraction (rho = 0.86).
 - **Ground truth.** Ising and nematic lattices and a rotation-equivariant CNN fix the sign:
   conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds
   them, architectural invariance gives exactly zero; the measured harmonics predicted the
   network's ordering in advance at two of three depths.
 - **Language models.** Across seven model families, including a state-space model (Mamba-2.8B on the Pile, the fifth corpus-by-architecture cell), the instrument separates content axes
-  inherited from tokens from construction axes built along the declared path; label linkage
-  is certified at nearly every depth under the order-free statistic, while the profile shape
-  belongs to the class arrangement. A pre-registered alignment probe fails informatively:
-  instruction tuning does not measurably reorganize moral-category covariance at 0.5-1B on two
-  taxonomies. The kernel-harmonic additivity and the blocking flow replicate on Pythia-160m's
+  inherited from tokens from construction axes built along the declared order; label linkage
+  is significant at nearly every depth under the order-averaged statistic, while the profile shape
+  belongs to the class arrangement. The base-instruct comparison on the ethical axis is null at
+  0.5-1B on two taxonomies. The kernel-harmonic additivity and the blocking flow replicate on Pythia-160m's
   planted axes; a prepended neutral context does not move them.
 - **Two null levels.** A nonzero shift means the partition changes covariance accumulation
   relative to its declared null; reading it as representation of the label needs a null that
@@ -182,7 +198,14 @@ runs the whole battery; `zoom(...)` is the core.
 5. **Counts are descriptive; profile statistics are inferential.** Expect about 1.7 false
    positives per 33 uncorrected layers.
 6. **Coherence beats prompt count.** Prompts that widen within-class topic diversity weaken
-   structural axes.
+   construction axes.
+7. **Read the spectrum first.** `rung data` prints the spectrum diagnostics before anything else
+   (paper run 55: one rogue dimension blinds the linear participation ratio); standardize when one
+   dimension dominates.
+8. **Compare subsets at matched size only.** The shift depends on the number of features (paper run
+   59: a random third of the neurons differs from the full population by -0.08 to +0.14), so
+   `--split-by` compares the top, bottom and a random subset at one size, each with its own floor, and
+   never a subset with the whole.
 
 ### Extending it
 
@@ -222,7 +245,7 @@ tests/                   numpy-only pytest suite (pytest -q tests)
 render_all.py            prints the paper's tables and headline numbers from the artifacts
 axes/                    every prompt in the paper: 7 battery axes + ETHICS + compass + clock, with
                          strata sidecars; PROVENANCE.md gives origin and license per file
-scripts_canonical/       one script per registered run; the docstring is the registration
+scripts_canonical/       one script per run; the docstring holds the expectations written before the run
                          (expectations written before the run) and names the artifact it writes
    run1..run52b_*.py     the numbered runs cited in the paper
    accumulation_order.py, shuffle_label_control.py, allen_*.py, ising_*.py, nematic_*.py
@@ -305,6 +328,8 @@ python render_all.py
 | Figure 13 (the two nulls on natural text: BLiMP and Baroni at 64 pairs) | run42_blimp_battery.json, run43b_baroni_64pairs.json | make_fig_two_nulls_text.py |
 | Appendix figures: state axes (App C), blocking flow per recording (App E), the model bracket (App I), sector balance by stimulus (App J) | run40_spont_state_axis.json; sector_balance_scale.json; run2b/run11b/run48 JSONs; local_vs_fullfield_tuning.json | make_fig_state_axes.py, make_fig_sector_flow_full.py, make_fig_model_bracket.py, make_fig9_stimulus_sector.py |
 | Runs 56–59 (Sec 7 / App I: the calibrated model across GT1/GT2/GT3 and the direction-selective subpopulation) | run56_odd_gain_across_recordings.json, run57_driven_gain_across_recordings.json, run58_within_class_spectrum_vs_trials.json, run59_shift_by_direction_selectivity.json (+ .log each; expectations in every docstring) | run56_odd_gain_across_recordings.py, run57_driven_gain_across_recordings.py, run58_within_class_spectrum_vs_trials.py, run59_shift_by_direction_selectivity.py |
+| Run 59b (Sec 7, Figure: the per-rung deficit of the DSI-sorted thirds, the rung-four stall) | run59b_per_rung_thirds.json (+ .log) | run59b_per_rung_thirds.py; figure: make_fig_ds_thirds.py |
+| Runs 60 and 60b (Sec 7 / App I: the heterogeneous mixture model, three seeds; matched within-class dimensionality, ten seeds) | run60_mixture_model.json, run60b_mixture_matchedK_armA.json, run60b_mixture_matchedK_armB.json (+ .log each) | run60_mixture_model.py, run60b_mixture_matchedK.py |
 
 ## Citation
 
