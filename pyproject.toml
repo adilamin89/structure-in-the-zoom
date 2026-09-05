@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rung"
-version = "1.2.0"
+version = "1.2.1"
 description = "rung: axis-resolved dimensionality scaling (matched floor, permutation null, nuisance-preserving null); code and data for 'Structure is in the zoom'"
 requires-python = ">=3.10"
 dependencies = [

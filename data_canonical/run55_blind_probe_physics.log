@@ -1,0 +1,346 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+loading allenai/OLMo-1B-hf (mps)...
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/113 [00:00<?, ?it/s]Loading weights:   1%|          | 1/113 [00:00<00:39,  2.86it/s]Loading weights:  33%|███▎      | 37/113 [00:00<00:00, 105.72it/s]Loading weights:  51%|█████▏    | 58/113 [00:00<00:00, 99.59it/s] Loading weights:  65%|██████▌   | 74/113 [00:00<00:00, 99.22it/s]Loading weights:  78%|███████▊  | 88/113 [00:00<00:00, 96.23it/s]Loading weights:  88%|████████▊ | 100/113 [00:01<00:00, 89.69it/s]Loading weights: 100%|██████████| 113/113 [00:01<00:00, 90.73it/s]
+[OLMo-1B-hf / world_knowledge] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=+0.000(p1.00) zscore=+0.000(p1.00) pc1=+0.000(p1.00) pc4=+0.000(p1.00) kernel=+0.000(p1.00) (0s)
+  L01 linear=+0.256(p0.07) zscore=+0.176(p0.01) pc1=+0.017(p0.79) pc4=+0.111(p0.02) kernel=+0.169(p0.01) (0s)
+  L02 linear=+0.043(p0.35) zscore=+0.081(p0.20) pc1=+0.053(p0.53) pc4=+0.093(p0.02) kernel=-0.107(p0.15) (0s)
+  L03 linear=+0.020(p0.48) zscore=+0.055(p0.27) pc1=+0.096(p0.17) pc4=+0.065(p0.02) kernel=-0.102(p0.24) (1s)
+  L04 linear=+0.019(p0.47) zscore=+0.041(p0.27) pc1=+0.093(p0.10) pc4=+0.069(p0.02) kernel=-0.093(p0.25) (1s)
+  L05 linear=+0.015(p0.48) zscore=+0.053(p0.26) pc1=+0.092(p0.09) pc4=+0.065(p0.02) kernel=-0.049(p0.25) (1s)
+  L06 linear=+0.012(p0.49) zscore=+0.053(p0.41) pc1=+0.098(p0.09) pc4=+0.059(p0.02) kernel=-0.064(p0.25) (1s)
+  L07 linear=+0.020(p0.68) zscore=+0.154(p0.14) pc1=+0.125(p0.10) pc4=+0.052(p0.03) kernel=-0.067(p0.42) (1s)
+  L08 linear=+0.025(p0.66) zscore=+0.156(p0.15) pc1=+0.121(p0.08) pc4=+0.054(p0.03) kernel=-0.053(p0.43) (1s)
+  L09 linear=+0.071(p0.65) zscore=+0.096(p0.07) pc1=+0.117(p0.10) pc4=+0.070(p0.02) kernel=-0.032(p0.45) (2s)
+  L10 linear=+0.002(p0.74) zscore=-0.015(p0.76) pc1=-0.054(p0.34) pc4=+0.287(p0.01) kernel=+0.054(p0.48) (2s)
+  L11 linear=+0.098(p0.35) zscore=+0.027(p0.86) pc1=-0.033(p0.63) pc4=+0.057(p0.32) kernel=+0.037(p0.59) (2s)
+  L12 linear=+0.085(p0.31) zscore=-0.001(p0.80) pc1=-0.080(p0.49) pc4=+0.064(p0.22) kernel=+0.069(p0.58) (2s)
+  L13 linear=+0.124(p0.30) zscore=+0.052(p0.81) pc1=-0.078(p0.45) pc4=+0.061(p0.23) kernel=+0.059(p0.54) (2s)
+  L14 linear=+0.124(p0.28) zscore=+0.061(p0.77) pc1=-0.049(p0.37) pc4=+0.055(p0.27) kernel=+0.063(p0.50) (2s)
+  L15 linear=+0.134(p0.29) zscore=+0.029(p0.74) pc1=-0.132(p0.32) pc4=+0.053(p0.17) kernel=+0.081(p0.49) (2s)
+  L16 linear=+0.004(p0.85) zscore=+0.075(p0.55) pc1=+0.046(p0.65) pc4=+0.104(p0.01) kernel=+0.070(p0.44) (3s)
+[OLMo-1B-hf / language_type] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+/Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/arxiv_supplement/scripts_canonical/run55_blind_probe_physics.py:70: RuntimeWarning: invalid value encountered in scalar divide
+  return {"d_eff_full": float(tot ** 2 / (lam ** 2).sum()),
+/Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/arxiv_supplement/scripts_canonical/run55_blind_probe_physics.py:71: RuntimeWarning: invalid value encountered in scalar divide
+  "top1_eig_frac": float(lam[0] / tot), "top3_eig_frac": float(lam[:3].sum() / tot),
+/Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/arxiv_supplement/scripts_canonical/run55_blind_probe_physics.py:72: RuntimeWarning: invalid value encountered in scalar divide
+  "top1_dim_var_frac": float(vs[0] / v.sum()), "top1pct_dims_var_frac": float(vs[:k1].sum() / v.sum()),
+  L00 linear=+0.000(p1.00) zscore=+0.000(p1.00) pc1=+0.000(p1.00) pc4=+0.000(p1.00) kernel=+0.000(p1.00) | d_eff=nan top1eig=nan top1dim=nan (0s)
+  L01 linear=-0.274(p0.03) zscore=-0.149(p0.12) pc1=-0.030(p0.74) pc4=+0.030(p0.74) kernel=+0.017(p0.54) | d_eff=1.9 top1eig=0.71 top1dim=0.53 (0s)
+  L02 linear=+0.058(p0.22) zscore=-0.041(p0.89) pc1=-0.126(p0.15) pc4=-0.020(p0.66) kernel=+0.092(p0.11) | d_eff=1.4 top1eig=0.84 top1dim=0.74 (0s)
+  L03 linear=+0.031(p0.18) zscore=-0.016(p0.71) pc1=-0.142(p0.09) pc4=+0.011(p0.85) kernel=+0.080(p0.28) | d_eff=1.2 top1eig=0.92 top1dim=0.82 (1s)
+  L04 linear=+0.039(p0.18) zscore=+0.005(p0.72) pc1=-0.111(p0.12) pc4=+0.010(p0.85) kernel=+0.083(p0.29) | d_eff=1.2 top1eig=0.92 top1dim=0.82 (1s)
+  L05 linear=+0.025(p0.19) zscore=+0.007(p0.70) pc1=-0.109(p0.12) pc4=+0.002(p0.76) kernel=+0.085(p0.29) | d_eff=1.2 top1eig=0.92 top1dim=0.82 (1s)
+  L06 linear=+0.039(p0.19) zscore=+0.016(p0.62) pc1=-0.119(p0.12) pc4=+0.004(p0.66) kernel=+0.079(p0.30) | d_eff=1.2 top1eig=0.92 top1dim=0.83 (1s)
+  L07 linear=+0.070(p0.17) zscore=+0.098(p0.19) pc1=-0.092(p0.12) pc4=+0.022(p0.55) kernel=+0.076(p0.20) | d_eff=1.3 top1eig=0.88 top1dim=0.78 (1s)
+  L08 linear=+0.060(p0.16) zscore=+0.105(p0.18) pc1=-0.076(p0.13) pc4=+0.017(p0.48) kernel=+0.084(p0.19) | d_eff=1.3 top1eig=0.88 top1dim=0.78 (1s)
+  L09 linear=+0.073(p0.66) zscore=+0.005(p0.61) pc1=-0.069(p0.41) pc4=+0.017(p0.50) kernel=+0.106(p0.11) | d_eff=4.2 top1eig=0.47 top1dim=0.32 (2s)
+  L10 linear=-0.100(p0.11) zscore=-0.079(p0.25) pc1=-0.005(p0.94) pc4=+0.005(p0.75) kernel=+0.031(p0.80) | d_eff=1.4 top1eig=0.83 top1dim=0.79 (2s)
+  L11 linear=-0.049(p0.30) zscore=-0.018(p0.59) pc1=-0.084(p0.33) pc4=+0.071(p0.07) kernel=+0.072(p0.18) | d_eff=2.7 top1eig=0.47 top1dim=0.40 (2s)
+  L12 linear=-0.074(p0.31) zscore=-0.020(p0.66) pc1=-0.075(p0.28) pc4=+0.066(p0.06) kernel=+0.057(p0.18) | d_eff=2.7 top1eig=0.48 top1dim=0.42 (2s)
+  L13 linear=-0.044(p0.36) zscore=-0.003(p0.91) pc1=-0.061(p0.35) pc4=+0.071(p0.03) kernel=+0.084(p0.15) | d_eff=2.7 top1eig=0.47 top1dim=0.42 (2s)
+  L14 linear=-0.055(p0.35) zscore=-0.020(p0.89) pc1=-0.098(p0.33) pc4=+0.064(p0.03) kernel=+0.090(p0.16) | d_eff=2.7 top1eig=0.47 top1dim=0.43 (2s)
+  L15 linear=-0.047(p0.35) zscore=-0.010(p0.79) pc1=-0.095(p0.32) pc4=+0.047(p0.05) kernel=+0.068(p0.17) | d_eff=2.7 top1eig=0.47 top1dim=0.43 (3s)
+  L16 linear=-0.052(p0.43) zscore=-0.055(p0.36) pc1=-0.045(p0.50) pc4=+0.015(p0.45) kernel=+0.054(p0.58) | d_eff=3.2 top1eig=0.55 top1dim=0.28 (3s)
+
+loading EleutherAI/pythia-160m (cpu)...
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 2376.37it/s]
+[pythia-160m / world_knowledge] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=+0.117(p0.10) zscore=+0.094(p0.15) pc1=+0.097(p0.11) pc4=+0.117(p0.08) kernel=+0.125(p0.10) (0s)
+  L01 linear=+0.127(p0.07) zscore=+0.103(p0.06) pc1=+0.092(p0.06) pc4=+0.088(p0.09) kernel=+0.133(p0.07) (0s)
+  L02 linear=+0.127(p0.05) zscore=+0.104(p0.06) pc1=+0.085(p0.10) pc4=+0.087(p0.10) kernel=+0.129(p0.07) (0s)
+  L03 linear=+0.108(p0.04) zscore=+0.076(p0.06) pc1=+0.060(p0.11) pc4=+0.061(p0.12) kernel=+0.102(p0.04) (1s)
+  L04 linear=+0.088(p0.01) zscore=+0.065(p0.01) pc1=+0.042(p0.06) pc4=+0.031(p0.10) kernel=+0.073(p0.01) (1s)
+  L05 linear=+0.105(p0.01) zscore=+0.081(p0.03) pc1=+0.059(p0.04) pc4=+0.046(p0.06) kernel=+0.094(p0.03) (1s)
+  L06 linear=+0.097(p0.03) zscore=+0.065(p0.05) pc1=+0.039(p0.20) pc4=+0.040(p0.17) kernel=+0.082(p0.04) (1s)
+  L07 linear=+0.111(p0.02) zscore=+0.082(p0.02) pc1=+0.040(p0.10) pc4=+0.035(p0.07) kernel=+0.097(p0.02) (1s)
+  L08 linear=+0.138(p0.01) zscore=+0.102(p0.01) pc1=+0.054(p0.12) pc4=+0.035(p0.03) kernel=+0.117(p0.01) (1s)
+  L09 linear=+0.048(p0.19) zscore=+0.054(p0.01) pc1=+0.025(p0.25) pc4=+0.048(p0.01) kernel=+0.050(p0.09) (2s)
+  L10 linear=+0.072(p0.02) zscore=+0.066(p0.01) pc1=+0.049(p0.05) pc4=+0.056(p0.02) kernel=+0.067(p0.02) (2s)
+  L11 linear=+0.068(p0.09) zscore=+0.062(p0.01) pc1=+0.054(p0.15) pc4=+0.063(p0.01) kernel=+0.065(p0.02) (2s)
+  L12 linear=+0.055(p0.50) zscore=+0.053(p0.50) pc1=+0.046(p0.50) pc4=+0.042(p0.13) kernel=+0.048(p0.09) (2s)
+[pythia-160m / language_type] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=-0.074(p0.08) zscore=-0.092(p0.03) pc1=-0.085(p0.03) pc4=-0.096(p0.02) kernel=-0.070(p0.10) | d_eff=61.7 top1eig=0.07 top1dim=0.02 (0s)
+  L01 linear=-0.086(p0.06) zscore=-0.064(p0.04) pc1=-0.068(p0.03) pc4=-0.068(p0.01) kernel=-0.070(p0.10) | d_eff=42.8 top1eig=0.10 top1dim=0.04 (0s)
+  L02 linear=-0.081(p0.17) zscore=-0.060(p0.08) pc1=-0.079(p0.05) pc4=-0.048(p0.13) kernel=-0.069(p0.17) | d_eff=42.0 top1eig=0.09 top1dim=0.05 (0s)
+  L03 linear=-0.040(p0.14) zscore=-0.024(p0.21) pc1=-0.029(p0.08) pc4=-0.014(p0.56) kernel=-0.034(p0.17) | d_eff=48.9 top1eig=0.08 top1dim=0.02 (1s)
+  L04 linear=-0.012(p0.49) zscore=+0.002(p0.86) pc1=-0.006(p0.49) pc4=-0.003(p0.55) kernel=-0.009(p0.52) | d_eff=51.4 top1eig=0.08 top1dim=0.02 (1s)
+  L05 linear=+0.010(p0.79) zscore=+0.015(p0.36) pc1=+0.004(p0.99) pc4=+0.000(p0.94) kernel=+0.007(p0.84) | d_eff=53.5 top1eig=0.08 top1dim=0.02 (1s)
+  L06 linear=+0.018(p0.20) zscore=+0.022(p0.09) pc1=+0.004(p0.51) pc4=+0.014(p0.18) kernel=+0.012(p0.25) | d_eff=46.1 top1eig=0.09 top1dim=0.02 (1s)
+  L07 linear=+0.021(p0.29) zscore=+0.024(p0.10) pc1=+0.005(p0.70) pc4=+0.010(p0.29) kernel=+0.015(p0.33) | d_eff=41.0 top1eig=0.10 top1dim=0.03 (1s)
+  L08 linear=+0.033(p0.50) zscore=+0.016(p0.53) pc1=+0.002(p0.89) pc4=+0.018(p0.17) kernel=+0.030(p0.35) | d_eff=32.0 top1eig=0.13 top1dim=0.06 (1s)
+  L09 linear=+0.053(p0.33) zscore=+0.051(p0.01) pc1=+0.028(p0.24) pc4=+0.026(p0.09) kernel=+0.058(p0.10) | d_eff=23.6 top1eig=0.17 top1dim=0.08 (2s)
+  L10 linear=+0.109(p0.01) zscore=+0.103(p0.01) pc1=+0.056(p0.13) pc4=+0.067(p0.02) kernel=+0.100(p0.01) | d_eff=37.4 top1eig=0.09 top1dim=0.02 (2s)
+  L11 linear=+0.131(p0.01) zscore=+0.117(p0.01) pc1=+0.127(p0.01) pc4=+0.077(p0.01) kernel=+0.130(p0.01) | d_eff=30.2 top1eig=0.13 top1dim=0.03 (2s)
+  L12 linear=+0.123(p0.01) zscore=+0.119(p0.01) pc1=+0.112(p0.01) pc4=+0.129(p0.01) kernel=+0.116(p0.01) | d_eff=56.6 top1eig=0.05 top1dim=0.00 (2s)
+
+loading allenai/OLMo-2-0425-1B (mps)...
+Loading weights:   0%|          | 0/179 [00:00<?, ?it/s]Loading weights:   1%|          | 2/179 [00:00<01:08,  2.57it/s]Loading weights:  57%|█████▋    | 102/179 [00:00<00:00, 152.69it/s]Loading weights:  85%|████████▍ | 152/179 [00:01<00:00, 203.61it/s]Loading weights: 100%|██████████| 179/179 [00:01<00:00, 172.37it/s]
+[OLMo-2-0425-1B / world_knowledge] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=+0.107(p0.19) zscore=+0.105(p0.19) pc1=+0.099(p0.20) pc4=+0.150(p0.06) kernel=+0.137(p0.09) (0s)
+  L01 linear=+0.133(p0.13) zscore=+0.122(p0.16) pc1=+0.113(p0.20) pc4=+0.132(p0.06) kernel=+0.140(p0.10) (0s)
+  L02 linear=+0.140(p0.09) zscore=+0.124(p0.12) pc1=+0.118(p0.13) pc4=+0.139(p0.05) kernel=+0.145(p0.07) (0s)
+  L03 linear=+0.163(p0.02) zscore=+0.151(p0.02) pc1=+0.135(p0.02) pc4=+0.136(p0.01) kernel=+0.153(p0.02) (1s)
+  L04 linear=+0.140(p0.02) zscore=+0.119(p0.02) pc1=+0.108(p0.03) pc4=+0.077(p0.09) kernel=+0.124(p0.04) (1s)
+  L05 linear=+0.090(p0.03) zscore=+0.065(p0.03) pc1=+0.061(p0.07) pc4=+0.043(p0.19) kernel=+0.084(p0.05) (1s)
+  L06 linear=+0.087(p0.01) zscore=+0.059(p0.02) pc1=+0.048(p0.05) pc4=+0.047(p0.10) kernel=+0.079(p0.01) (1s)
+  L07 linear=+0.079(p0.01) zscore=+0.041(p0.08) pc1=+0.036(p0.13) pc4=+0.027(p0.22) kernel=+0.066(p0.02) (1s)
+  L08 linear=+0.084(p0.01) zscore=+0.052(p0.07) pc1=+0.041(p0.18) pc4=+0.028(p0.36) kernel=+0.071(p0.01) (1s)
+  L09 linear=+0.079(p0.01) zscore=+0.049(p0.03) pc1=+0.037(p0.04) pc4=+0.028(p0.13) kernel=+0.065(p0.01) (2s)
+  L10 linear=+0.096(p0.01) zscore=+0.061(p0.02) pc1=+0.053(p0.02) pc4=+0.043(p0.06) kernel=+0.081(p0.01) (2s)
+  L11 linear=+0.063(p0.01) zscore=+0.042(p0.06) pc1=+0.034(p0.07) pc4=+0.031(p0.10) kernel=+0.056(p0.02) (2s)
+  L12 linear=+0.058(p0.01) zscore=+0.047(p0.04) pc1=+0.038(p0.03) pc4=+0.029(p0.06) kernel=+0.052(p0.01) (2s)
+  L13 linear=+0.037(p0.05) zscore=+0.038(p0.07) pc1=+0.032(p0.02) pc4=+0.024(p0.08) kernel=+0.033(p0.04) (2s)
+  L14 linear=+0.026(p0.17) zscore=+0.029(p0.11) pc1=+0.028(p0.12) pc4=+0.017(p0.24) kernel=+0.023(p0.16) (2s)
+  L15 linear=+0.009(p0.60) zscore=+0.017(p0.36) pc1=+0.010(p0.46) pc4=+0.008(p0.50) kernel=+0.009(p0.50) (2s)
+  L16 linear=-0.045(p0.30) zscore=+0.011(p0.20) pc1=-0.024(p0.20) pc4=-0.011(p0.32) kernel=-0.033(p0.29) (3s)
+[OLMo-2-0425-1B / language_type] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=-0.172(p0.02) zscore=-0.175(p0.02) pc1=-0.170(p0.02) pc4=-0.173(p0.03) kernel=-0.157(p0.03) | d_eff=63.3 top1eig=0.04 top1dim=0.00 (0s)
+  L01 linear=-0.174(p0.01) zscore=-0.179(p0.01) pc1=-0.176(p0.01) pc4=-0.171(p0.01) kernel=-0.157(p0.01) | d_eff=64.5 top1eig=0.06 top1dim=0.03 (0s)
+  L02 linear=-0.150(p0.01) zscore=-0.153(p0.01) pc1=-0.155(p0.01) pc4=-0.151(p0.01) kernel=-0.136(p0.03) | d_eff=65.1 top1eig=0.06 top1dim=0.03 (0s)
+  L03 linear=-0.102(p0.04) zscore=-0.100(p0.02) pc1=-0.101(p0.01) pc4=-0.095(p0.01) kernel=-0.092(p0.03) | d_eff=67.3 top1eig=0.06 top1dim=0.03 (1s)
+  L04 linear=-0.042(p0.19) zscore=-0.040(p0.12) pc1=-0.042(p0.08) pc4=-0.040(p0.08) kernel=-0.036(p0.19) | d_eff=72.7 top1eig=0.05 top1dim=0.03 (1s)
+  L05 linear=-0.176(p0.23) zscore=-0.114(p0.23) pc1=-0.009(p0.71) pc4=-0.012(p0.43) kernel=-0.069(p0.21) | d_eff=52.3 top1eig=0.09 top1dim=0.02 (1s)
+  L06 linear=-0.226(p0.29) zscore=-0.150(p0.30) pc1=-0.008(p0.82) pc4=-0.010(p0.66) kernel=-0.062(p0.24) | d_eff=33.0 top1eig=0.14 top1dim=0.02 (1s)
+  L07 linear=-0.256(p0.34) zscore=-0.177(p0.32) pc1=-0.001(p0.94) pc4=-0.012(p0.49) kernel=-0.057(p0.33) | d_eff=24.1 top1eig=0.18 top1dim=0.03 (1s)
+  L08 linear=-0.249(p0.34) zscore=-0.174(p0.35) pc1=+0.012(p0.42) pc4=-0.005(p0.73) kernel=-0.045(p0.40) | d_eff=30.3 top1eig=0.15 top1dim=0.02 (1s)
+  L09 linear=-0.054(p0.38) zscore=-0.049(p0.39) pc1=+0.017(p0.24) pc4=+0.002(p0.89) kernel=-0.010(p0.50) | d_eff=47.2 top1eig=0.10 top1dim=0.02 (2s)
+  L10 linear=-0.012(p0.69) zscore=-0.022(p0.49) pc1=-0.025(p0.52) pc4=+0.009(p0.62) kernel=+0.002(p0.96) | d_eff=57.7 top1eig=0.07 top1dim=0.02 (2s)
+  L11 linear=+0.032(p0.11) zscore=+0.025(p0.08) pc1=+0.035(p0.04) pc4=+0.013(p0.15) kernel=+0.023(p0.09) | d_eff=59.1 top1eig=0.07 top1dim=0.02 (2s)
+  L12 linear=+0.026(p0.10) zscore=+0.022(p0.09) pc1=+0.032(p0.04) pc4=+0.022(p0.04) kernel=+0.023(p0.06) | d_eff=59.3 top1eig=0.07 top1dim=0.02 (2s)
+  L13 linear=+0.044(p0.03) zscore=+0.041(p0.01) pc1=+0.036(p0.03) pc4=+0.025(p0.03) kernel=+0.040(p0.02) | d_eff=59.1 top1eig=0.07 top1dim=0.02 (2s)
+  L14 linear=+0.068(p0.01) zscore=+0.064(p0.01) pc1=+0.047(p0.03) pc4=+0.045(p0.02) kernel=+0.062(p0.01) | d_eff=63.5 top1eig=0.07 top1dim=0.02 (2s)
+  L15 linear=+0.078(p0.01) zscore=+0.076(p0.01) pc1=+0.062(p0.01) pc4=+0.053(p0.01) kernel=+0.073(p0.01) | d_eff=60.8 top1eig=0.07 top1dim=0.02 (3s)
+  L16 linear=+0.054(p0.50) zscore=+0.069(p0.01) pc1=+0.036(p0.15) pc4=+0.061(p0.02) kernel=+0.062(p0.20) | d_eff=25.5 top1eig=0.16 top1dim=0.04 (3s)
+
+loading EleutherAI/pythia-2.8b-deduped (mps)...
+Loading weights:   0%|          | 0/388 [00:00<?, ?it/s]Loading weights: 100%|██████████| 388/388 [00:00<00:00, 10351.04it/s]
+[pythia-2.8b-deduped / world_knowledge] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=+0.121(p0.08) zscore=+0.095(p0.12) pc1=+0.095(p0.10) pc4=+0.118(p0.12) kernel=+0.129(p0.09) (0s)
+  L01 linear=+0.151(p0.08) zscore=+0.095(p0.13) pc1=+0.080(p0.16) pc4=+0.096(p0.10) kernel=+0.154(p0.07) (0s)
+  L02 linear=+0.104(p0.08) zscore=+0.091(p0.08) pc1=+0.084(p0.11) pc4=+0.093(p0.07) kernel=+0.110(p0.07) (0s)
+  L03 linear=+0.092(p0.08) zscore=+0.085(p0.06) pc1=+0.067(p0.12) pc4=+0.068(p0.10) kernel=+0.094(p0.08) (1s)
+  L04 linear=+0.089(p0.06) zscore=+0.081(p0.04) pc1=+0.062(p0.09) pc4=+0.056(p0.13) kernel=+0.087(p0.05) (1s)
+  L05 linear=+0.068(p0.05) zscore=+0.063(p0.05) pc1=+0.045(p0.11) pc4=+0.043(p0.15) kernel=+0.066(p0.05) (1s)
+  L06 linear=+0.073(p0.02) zscore=+0.069(p0.01) pc1=+0.055(p0.04) pc4=+0.046(p0.14) kernel=+0.068(p0.03) (1s)
+  L07 linear=+0.060(p0.02) zscore=+0.058(p0.02) pc1=+0.047(p0.02) pc4=+0.050(p0.04) kernel=+0.055(p0.03) (1s)
+  L08 linear=+0.062(p0.03) zscore=+0.060(p0.03) pc1=+0.048(p0.08) pc4=+0.048(p0.08) kernel=+0.056(p0.05) (1s)
+  L09 linear=+0.052(p0.02) zscore=+0.050(p0.03) pc1=+0.037(p0.08) pc4=+0.035(p0.16) kernel=+0.046(p0.05) (2s)
+  L10 linear=+0.067(p0.01) zscore=+0.063(p0.01) pc1=+0.043(p0.08) pc4=+0.044(p0.10) kernel=+0.061(p0.02) (2s)
+  L11 linear=+0.056(p0.01) zscore=+0.052(p0.01) pc1=+0.037(p0.03) pc4=+0.037(p0.02) kernel=+0.050(p0.01) (2s)
+  L12 linear=+0.058(p0.01) zscore=+0.053(p0.01) pc1=+0.036(p0.02) pc4=+0.033(p0.03) kernel=+0.048(p0.01) (2s)
+  L13 linear=+0.048(p0.01) zscore=+0.044(p0.01) pc1=+0.029(p0.04) pc4=+0.028(p0.03) kernel=+0.039(p0.01) (2s)
+  L14 linear=+0.041(p0.02) zscore=+0.035(p0.02) pc1=+0.021(p0.03) pc4=+0.023(p0.04) kernel=+0.034(p0.01) (2s)
+  L15 linear=+0.056(p0.01) zscore=+0.048(p0.01) pc1=+0.038(p0.02) pc4=+0.039(p0.01) kernel=+0.045(p0.01) (3s)
+  L16 linear=+0.043(p0.01) zscore=+0.037(p0.01) pc1=+0.028(p0.01) pc4=+0.033(p0.01) kernel=+0.031(p0.01) (3s)
+  L17 linear=+0.042(p0.01) zscore=+0.039(p0.01) pc1=+0.043(p0.01) pc4=+0.031(p0.01) kernel=+0.031(p0.01) (3s)
+  L18 linear=+0.035(p0.01) zscore=+0.035(p0.01) pc1=+0.032(p0.01) pc4=+0.028(p0.01) kernel=+0.025(p0.01) (3s)
+  L19 linear=+0.038(p0.01) zscore=+0.037(p0.01) pc1=+0.034(p0.01) pc4=+0.032(p0.01) kernel=+0.027(p0.01) (3s)
+  L20 linear=+0.039(p0.01) zscore=+0.040(p0.01) pc1=+0.039(p0.01) pc4=+0.035(p0.01) kernel=+0.029(p0.01) (3s)
+  L21 linear=+0.037(p0.03) zscore=+0.043(p0.01) pc1=+0.043(p0.01) pc4=+0.038(p0.01) kernel=+0.028(p0.02) (3s)
+  L22 linear=+0.031(p0.04) zscore=+0.037(p0.01) pc1=+0.038(p0.01) pc4=+0.036(p0.01) kernel=+0.024(p0.03) (4s)
+  L23 linear=+0.027(p0.21) zscore=+0.042(p0.01) pc1=+0.044(p0.01) pc4=+0.036(p0.01) kernel=+0.023(p0.10) (4s)
+  L24 linear=+0.025(p0.21) zscore=+0.042(p0.01) pc1=+0.041(p0.01) pc4=+0.036(p0.01) kernel=+0.022(p0.10) (4s)
+  L25 linear=+0.034(p0.19) zscore=+0.039(p0.01) pc1=+0.038(p0.01) pc4=+0.028(p0.01) kernel=+0.028(p0.08) (4s)
+  L26 linear=+0.037(p0.19) zscore=+0.040(p0.01) pc1=+0.039(p0.01) pc4=+0.028(p0.01) kernel=+0.030(p0.08) (4s)
+  L27 linear=+0.038(p0.17) zscore=+0.042(p0.01) pc1=+0.041(p0.02) pc4=+0.028(p0.01) kernel=+0.032(p0.08) (4s)
+  L28 linear=+0.027(p0.16) zscore=+0.036(p0.01) pc1=+0.034(p0.02) pc4=+0.026(p0.01) kernel=+0.024(p0.09) (5s)
+  L29 linear=+0.035(p0.12) zscore=+0.035(p0.01) pc1=+0.033(p0.01) pc4=+0.026(p0.01) kernel=+0.029(p0.07) (5s)
+  L30 linear=+0.038(p0.15) zscore=+0.037(p0.01) pc1=+0.035(p0.01) pc4=+0.030(p0.01) kernel=+0.032(p0.07) (5s)
+  L31 linear=+0.045(p0.03) zscore=+0.037(p0.02) pc1=+0.033(p0.03) pc4=+0.029(p0.01) kernel=+0.037(p0.03) (5s)
+  L32 linear=+0.030(p0.08) zscore=+0.038(p0.03) pc1=+0.019(p0.19) pc4=+0.019(p0.16) kernel=+0.022(p0.09) (5s)
+[pythia-2.8b-deduped / language_type] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=-0.070(p0.09) zscore=-0.091(p0.04) pc1=-0.080(p0.03) pc4=-0.097(p0.02) kernel=-0.066(p0.11) | d_eff=65.3 top1eig=0.07 top1dim=0.01 (0s)
+  L01 linear=-0.115(p0.03) zscore=-0.096(p0.02) pc1=-0.102(p0.02) pc4=-0.100(p0.01) kernel=-0.089(p0.03) | d_eff=46.6 top1eig=0.10 top1dim=0.03 (0s)
+  L02 linear=-0.072(p0.03) zscore=-0.073(p0.02) pc1=-0.074(p0.01) pc4=-0.076(p0.01) kernel=-0.059(p0.04) | d_eff=73.6 top1eig=0.05 top1dim=0.02 (0s)
+  L03 linear=-0.048(p0.04) zscore=-0.050(p0.03) pc1=-0.053(p0.02) pc4=-0.052(p0.03) kernel=-0.038(p0.08) | d_eff=76.8 top1eig=0.05 top1dim=0.02 (1s)
+  L04 linear=-0.025(p0.12) zscore=-0.021(p0.12) pc1=-0.023(p0.08) pc4=-0.023(p0.05) kernel=-0.021(p0.14) | d_eff=78.9 top1eig=0.05 top1dim=0.02 (1s)
+  L05 linear=-0.005(p0.48) zscore=-0.004(p0.56) pc1=-0.004(p0.53) pc4=-0.004(p0.57) kernel=-0.007(p0.41) | d_eff=82.2 top1eig=0.04 top1dim=0.01 (1s)
+  L06 linear=-0.004(p0.78) zscore=-0.002(p0.95) pc1=-0.006(p0.80) pc4=-0.006(p0.81) kernel=-0.006(p0.65) | d_eff=85.3 top1eig=0.04 top1dim=0.01 (1s)
+  L07 linear=-0.001(p0.94) zscore=+0.000(p0.85) pc1=-0.002(p0.98) pc4=-0.003(p0.87) kernel=-0.002(p0.99) | d_eff=87.1 top1eig=0.04 top1dim=0.01 (1s)
+  L08 linear=+0.018(p0.42) zscore=+0.019(p0.31) pc1=+0.016(p0.45) pc4=+0.015(p0.47) kernel=+0.011(p0.57) | d_eff=87.8 top1eig=0.03 top1dim=0.01 (1s)
+  L09 linear=+0.006(p0.50) zscore=+0.009(p0.33) pc1=+0.007(p0.52) pc4=+0.003(p0.60) kernel=+0.003(p0.61) | d_eff=86.0 top1eig=0.04 top1dim=0.01 (2s)
+  L10 linear=+0.015(p0.26) zscore=+0.016(p0.20) pc1=+0.011(p0.33) pc4=+0.010(p0.47) kernel=+0.009(p0.33) | d_eff=83.8 top1eig=0.04 top1dim=0.01 (2s)
+  L11 linear=+0.017(p0.13) zscore=+0.018(p0.11) pc1=+0.015(p0.12) pc4=+0.008(p0.37) kernel=+0.009(p0.19) | d_eff=85.4 top1eig=0.04 top1dim=0.01 (2s)
+  L12 linear=+0.017(p0.16) zscore=+0.021(p0.08) pc1=+0.022(p0.09) pc4=+0.007(p0.45) kernel=+0.010(p0.19) | d_eff=84.9 top1eig=0.04 top1dim=0.01 (2s)
+  L13 linear=+0.019(p0.14) zscore=+0.022(p0.06) pc1=+0.020(p0.06) pc4=+0.006(p0.39) kernel=+0.011(p0.17) | d_eff=83.1 top1eig=0.04 top1dim=0.02 (2s)
+  L14 linear=+0.015(p0.27) zscore=+0.018(p0.10) pc1=+0.018(p0.11) pc4=+0.008(p0.38) kernel=+0.010(p0.30) | d_eff=82.7 top1eig=0.04 top1dim=0.02 (2s)
+  L15 linear=+0.013(p0.44) zscore=+0.015(p0.14) pc1=+0.013(p0.17) pc4=+0.007(p0.33) kernel=+0.009(p0.40) | d_eff=79.9 top1eig=0.05 top1dim=0.02 (3s)
+  L16 linear=+0.016(p0.21) zscore=+0.020(p0.07) pc1=+0.019(p0.08) pc4=+0.012(p0.19) kernel=+0.012(p0.18) | d_eff=80.2 top1eig=0.05 top1dim=0.02 (3s)
+  L17 linear=+0.028(p0.05) zscore=+0.029(p0.04) pc1=+0.027(p0.04) pc4=+0.017(p0.06) kernel=+0.021(p0.04) | d_eff=81.0 top1eig=0.05 top1dim=0.02 (3s)
+  L18 linear=+0.022(p0.03) zscore=+0.024(p0.04) pc1=+0.020(p0.05) pc4=+0.017(p0.04) kernel=+0.017(p0.04) | d_eff=82.6 top1eig=0.04 top1dim=0.02 (3s)
+  L19 linear=+0.031(p0.02) zscore=+0.033(p0.03) pc1=+0.026(p0.05) pc4=+0.023(p0.04) kernel=+0.026(p0.04) | d_eff=80.6 top1eig=0.05 top1dim=0.02 (3s)
+  L20 linear=+0.037(p0.01) zscore=+0.039(p0.01) pc1=+0.029(p0.05) pc4=+0.027(p0.04) kernel=+0.031(p0.01) | d_eff=79.1 top1eig=0.05 top1dim=0.02 (3s)
+  L21 linear=+0.044(p0.03) zscore=+0.045(p0.01) pc1=+0.032(p0.04) pc4=+0.029(p0.04) kernel=+0.037(p0.01) | d_eff=73.5 top1eig=0.06 top1dim=0.02 (4s)
+  L22 linear=+0.049(p0.03) zscore=+0.051(p0.01) pc1=+0.035(p0.03) pc4=+0.029(p0.04) kernel=+0.041(p0.01) | d_eff=69.1 top1eig=0.06 top1dim=0.02 (4s)
+  L23 linear=+0.057(p0.05) zscore=+0.053(p0.01) pc1=+0.035(p0.02) pc4=+0.032(p0.04) kernel=+0.048(p0.02) | d_eff=63.2 top1eig=0.07 top1dim=0.03 (4s)
+  L24 linear=+0.044(p0.05) zscore=+0.050(p0.01) pc1=+0.033(p0.02) pc4=+0.030(p0.03) kernel=+0.040(p0.01) | d_eff=61.9 top1eig=0.07 top1dim=0.03 (4s)
+  L25 linear=+0.055(p0.05) zscore=+0.066(p0.01) pc1=+0.054(p0.02) pc4=+0.037(p0.02) kernel=+0.051(p0.01) | d_eff=60.7 top1eig=0.07 top1dim=0.03 (4s)
+  L26 linear=+0.063(p0.04) zscore=+0.070(p0.01) pc1=+0.061(p0.01) pc4=+0.040(p0.02) kernel=+0.057(p0.01) | d_eff=60.2 top1eig=0.07 top1dim=0.03 (4s)
+  L27 linear=+0.059(p0.02) zscore=+0.069(p0.01) pc1=+0.063(p0.01) pc4=+0.040(p0.02) kernel=+0.053(p0.01) | d_eff=60.8 top1eig=0.07 top1dim=0.04 (5s)
+  L28 linear=+0.061(p0.01) zscore=+0.069(p0.01) pc1=+0.064(p0.01) pc4=+0.041(p0.02) kernel=+0.056(p0.01) | d_eff=61.5 top1eig=0.07 top1dim=0.03 (5s)
+  L29 linear=+0.074(p0.01) zscore=+0.077(p0.01) pc1=+0.072(p0.01) pc4=+0.044(p0.01) kernel=+0.064(p0.01) | d_eff=63.0 top1eig=0.07 top1dim=0.03 (5s)
+  L30 linear=+0.069(p0.01) zscore=+0.078(p0.01) pc1=+0.072(p0.02) pc4=+0.049(p0.02) kernel=+0.062(p0.01) | d_eff=63.1 top1eig=0.07 top1dim=0.03 (5s)
+  L31 linear=+0.070(p0.01) zscore=+0.064(p0.01) pc1=+0.028(p0.05) pc4=+0.040(p0.02) kernel=+0.061(p0.01) | d_eff=59.6 top1eig=0.07 top1dim=0.03 (5s)
+  L32 linear=+0.060(p0.07) zscore=+0.050(p0.02) pc1=+0.021(p0.10) pc4=+0.036(p0.01) kernel=+0.057(p0.05) | d_eff=43.4 top1eig=0.09 top1dim=0.01 (5s)
+
+loading state-spaces/mamba-2.8b-hf (mps)...
+[transformers] The fast path is not available because one of `(selective_state_update, selective_scan_fn, causal_conv1d_fn, causal_conv1d_update, mamba_inner_fn)` is None. Falling back to the sequential implementation of Mamba, as use_mambapy is set to False. To install follow https://github.com/state-spaces/mamba/#installation for mamba-ssm and install the kernels library using `pip install kernels` or https://github.com/Dao-AILab/causal-conv1d for causal-conv1d. For the mamba.py backend, follow https://github.com/alxndrTL/mamba.py.
+Loading weights:   0%|          | 0/642 [00:00<?, ?it/s]Loading weights:   0%|          | 1/642 [00:00<02:34,  4.16it/s]Loading weights:  14%|█▎        | 88/642 [00:00<00:01, 321.72it/s]Loading weights:  21%|██▏       | 138/642 [00:00<00:01, 328.14it/s]Loading weights:  28%|██▊       | 181/642 [00:00<00:01, 344.35it/s]Loading weights:  35%|███▍      | 222/642 [00:00<00:01, 349.04it/s]Loading weights:  41%|████      | 261/642 [00:00<00:01, 348.19it/s]Loading weights:  47%|████▋     | 299/642 [00:00<00:00, 345.86it/s]Loading weights:  53%|█████▎    | 338/642 [00:01<00:00, 342.23it/s]Loading weights:  59%|█████▉    | 378/642 [00:01<00:00, 338.59it/s]Loading weights:  65%|██████▌   | 418/642 [00:01<00:00, 340.74it/s]Loading weights:  71%|███████▏  | 458/642 [00:01<00:00, 344.81it/s]Loading weights:  78%|███████▊  | 498/642 [00:01<00:00, 343.13it/s]Loading weights:  83%|████████▎ | 533/642 [00:01<00:00, 312.10it/s]Loading weights:  88%|████████▊ | 565/642 [00:01<00:00, 284.80it/s]Loading weights:  93%|█████████▎| 595/642 [00:01<00:00, 266.33it/s]Loading weights:  97%|█████████▋| 623/642 [00:02<00:00, 230.78it/s]Loading weights: 100%|██████████| 642/642 [00:02<00:00, 294.10it/s]
+[mamba-2.8b-hf / world_knowledge] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=+0.071(p0.41) zscore=+0.070(p0.37) pc1=+0.065(p0.42) pc4=+0.128(p0.23) kernel=+0.077(p0.41) (0s)
+  L01 linear=+0.091(p0.31) zscore=+0.085(p0.30) pc1=+0.081(p0.32) pc4=+0.106(p0.29) kernel=+0.091(p0.34) (0s)
+  L02 linear=+0.104(p0.27) zscore=+0.098(p0.28) pc1=+0.093(p0.31) pc4=+0.099(p0.29) kernel=+0.106(p0.28) (0s)
+  L03 linear=+0.111(p0.23) zscore=+0.110(p0.23) pc1=+0.108(p0.23) pc4=+0.120(p0.24) kernel=+0.111(p0.26) (1s)
+  L04 linear=+0.099(p0.20) zscore=+0.098(p0.18) pc1=+0.093(p0.18) pc4=+0.108(p0.21) kernel=+0.092(p0.22) (1s)
+  L05 linear=+0.084(p0.17) zscore=+0.081(p0.18) pc1=+0.077(p0.20) pc4=+0.048(p0.43) kernel=+0.078(p0.24) (1s)
+  L06 linear=+0.122(p0.26) zscore=+0.118(p0.28) pc1=+0.105(p0.27) pc4=+0.097(p0.36) kernel=+0.116(p0.30) (1s)
+  L07 linear=+0.115(p0.17) zscore=+0.115(p0.16) pc1=+0.101(p0.18) pc4=+0.042(p0.48) kernel=+0.100(p0.21) (1s)
+  L08 linear=+0.148(p0.15) zscore=+0.146(p0.14) pc1=+0.133(p0.17) pc4=+0.067(p0.53) kernel=+0.134(p0.20) (1s)
+  L09 linear=+0.147(p0.14) zscore=+0.147(p0.13) pc1=+0.137(p0.13) pc4=+0.051(p0.64) kernel=+0.124(p0.20) (2s)
+  L10 linear=+0.156(p0.14) zscore=+0.153(p0.13) pc1=+0.153(p0.11) pc4=+0.104(p0.27) kernel=+0.153(p0.13) (2s)
+  L11 linear=+0.135(p0.12) zscore=+0.133(p0.12) pc1=+0.135(p0.10) pc4=+0.098(p0.23) kernel=+0.136(p0.12) (2s)
+  L12 linear=+0.127(p0.14) zscore=+0.125(p0.14) pc1=+0.142(p0.11) pc4=+0.109(p0.18) kernel=+0.141(p0.10) (2s)
+  L13 linear=+0.100(p0.14) zscore=+0.097(p0.14) pc1=+0.099(p0.13) pc4=+0.056(p0.41) kernel=+0.099(p0.11) (2s)
+  L14 linear=+0.107(p0.15) zscore=+0.104(p0.16) pc1=+0.107(p0.14) pc4=+0.073(p0.41) kernel=+0.114(p0.13) (2s)
+  L15 linear=+0.125(p0.15) zscore=+0.121(p0.15) pc1=+0.120(p0.12) pc4=+0.079(p0.41) kernel=+0.126(p0.13) (3s)
+  L16 linear=+0.141(p0.15) zscore=+0.137(p0.15) pc1=+0.133(p0.13) pc4=+0.098(p0.30) kernel=+0.135(p0.14) (3s)
+  L17 linear=+0.134(p0.14) zscore=+0.128(p0.16) pc1=+0.120(p0.18) pc4=+0.080(p0.37) kernel=+0.122(p0.14) (3s)
+  L18 linear=+0.109(p0.15) zscore=+0.102(p0.16) pc1=+0.093(p0.23) pc4=+0.068(p0.33) kernel=+0.102(p0.13) (3s)
+  L19 linear=+0.103(p0.14) zscore=+0.095(p0.14) pc1=+0.070(p0.27) pc4=+0.052(p0.35) kernel=+0.088(p0.11) (3s)
+  L20 linear=+0.116(p0.15) zscore=+0.106(p0.16) pc1=+0.069(p0.42) pc4=+0.067(p0.35) kernel=+0.098(p0.16) (3s)
+  L21 linear=+0.090(p0.20) zscore=+0.085(p0.22) pc1=+0.055(p0.50) pc4=+0.057(p0.37) kernel=+0.083(p0.19) (4s)
+  L22 linear=+0.114(p0.10) zscore=+0.111(p0.13) pc1=+0.136(p0.04) pc4=+0.096(p0.16) kernel=+0.106(p0.09) (4s)
+  L23 linear=+0.089(p0.19) zscore=+0.087(p0.19) pc1=+0.113(p0.05) pc4=+0.072(p0.22) kernel=+0.087(p0.13) (4s)
+  L24 linear=+0.096(p0.13) zscore=+0.092(p0.14) pc1=+0.121(p0.03) pc4=+0.065(p0.19) kernel=+0.090(p0.06) (4s)
+  L25 linear=+0.094(p0.14) zscore=+0.088(p0.16) pc1=+0.118(p0.02) pc4=+0.061(p0.24) kernel=+0.087(p0.08) (4s)
+  L26 linear=+0.081(p0.25) zscore=+0.075(p0.27) pc1=+0.100(p0.05) pc4=+0.063(p0.17) kernel=+0.080(p0.12) (4s)
+  L27 linear=+0.083(p0.25) zscore=+0.075(p0.30) pc1=+0.097(p0.04) pc4=+0.070(p0.11) kernel=+0.078(p0.13) (4s)
+  L28 linear=+0.062(p0.27) zscore=+0.056(p0.31) pc1=+0.080(p0.07) pc4=+0.059(p0.15) kernel=+0.068(p0.13) (5s)
+  L29 linear=+0.050(p0.36) zscore=+0.043(p0.40) pc1=+0.058(p0.19) pc4=+0.055(p0.11) kernel=+0.058(p0.16) (5s)
+  L30 linear=+0.065(p0.38) zscore=+0.057(p0.40) pc1=+0.059(p0.20) pc4=+0.062(p0.08) kernel=+0.063(p0.16) (5s)
+  L31 linear=+0.039(p0.36) zscore=+0.032(p0.41) pc1=+0.064(p0.15) pc4=+0.055(p0.11) kernel=+0.056(p0.15) (5s)
+  L32 linear=+0.048(p0.39) zscore=+0.041(p0.49) pc1=+0.064(p0.11) pc4=+0.057(p0.10) kernel=+0.056(p0.15) (5s)
+  L33 linear=+0.016(p0.42) zscore=+0.010(p0.49) pc1=+0.047(p0.15) pc4=+0.049(p0.12) kernel=+0.041(p0.15) (5s)
+  L34 linear=+0.032(p0.50) zscore=+0.026(p0.56) pc1=+0.040(p0.25) pc4=+0.052(p0.11) kernel=+0.048(p0.18) (6s)
+  L35 linear=+0.040(p0.56) zscore=+0.032(p0.68) pc1=+0.038(p0.34) pc4=+0.045(p0.17) kernel=+0.046(p0.16) (6s)
+  L36 linear=+0.032(p0.51) zscore=+0.022(p0.66) pc1=+0.020(p0.53) pc4=+0.038(p0.12) kernel=+0.040(p0.12) (6s)
+  L37 linear=+0.013(p0.83) zscore=+0.004(p0.97) pc1=-0.007(p0.77) pc4=+0.022(p0.48) kernel=+0.030(p0.24) (6s)
+  L38 linear=+0.015(p0.62) zscore=+0.004(p0.83) pc1=-0.015(p0.77) pc4=+0.011(p0.57) kernel=+0.024(p0.15) (6s)
+  L39 linear=+0.020(p0.55) zscore=+0.010(p0.77) pc1=-0.006(p0.89) pc4=+0.010(p0.70) kernel=+0.029(p0.09) (6s)
+  L40 linear=+0.033(p0.21) zscore=+0.021(p0.40) pc1=+0.000(p1.00) pc4=+0.005(p0.78) kernel=+0.034(p0.06) (7s)
+  L41 linear=+0.029(p0.16) zscore=+0.019(p0.34) pc1=+0.001(p0.92) pc4=+0.008(p0.62) kernel=+0.031(p0.04) (7s)
+  L42 linear=+0.038(p0.03) zscore=+0.031(p0.05) pc1=+0.021(p0.10) pc4=+0.011(p0.31) kernel=+0.031(p0.02) (7s)
+  L43 linear=+0.048(p0.06) zscore=+0.039(p0.07) pc1=+0.028(p0.30) pc4=+0.021(p0.46) kernel=+0.039(p0.02) (7s)
+  L44 linear=+0.034(p0.15) zscore=+0.030(p0.18) pc1=+0.024(p0.37) pc4=+0.015(p0.45) kernel=+0.029(p0.08) (7s)
+  L45 linear=+0.018(p0.20) zscore=+0.019(p0.18) pc1=+0.016(p0.30) pc4=+0.021(p0.08) kernel=+0.021(p0.08) (7s)
+  L46 linear=+0.023(p0.49) zscore=+0.026(p0.41) pc1=+0.023(p0.46) pc4=+0.031(p0.16) kernel=+0.023(p0.15) (7s)
+  L47 linear=+0.027(p0.40) zscore=+0.031(p0.24) pc1=+0.029(p0.36) pc4=+0.040(p0.04) kernel=+0.026(p0.11) (8s)
+  L48 linear=+0.026(p0.38) zscore=+0.033(p0.19) pc1=+0.029(p0.26) pc4=+0.043(p0.05) kernel=+0.025(p0.12) (8s)
+  L49 linear=+0.011(p0.50) zscore=+0.018(p0.30) pc1=+0.015(p0.41) pc4=+0.036(p0.04) kernel=+0.017(p0.16) (8s)
+  L50 linear=+0.019(p0.33) zscore=+0.027(p0.21) pc1=+0.026(p0.24) pc4=+0.041(p0.02) kernel=+0.023(p0.12) (8s)
+  L51 linear=+0.015(p0.35) zscore=+0.024(p0.21) pc1=+0.022(p0.28) pc4=+0.042(p0.03) kernel=+0.022(p0.12) (8s)
+  L52 linear=+0.020(p0.37) zscore=+0.027(p0.22) pc1=+0.031(p0.23) pc4=+0.042(p0.03) kernel=+0.023(p0.12) (8s)
+  L53 linear=+0.020(p0.44) zscore=+0.027(p0.22) pc1=+0.031(p0.22) pc4=+0.042(p0.03) kernel=+0.025(p0.15) (9s)
+  L54 linear=+0.022(p0.34) zscore=+0.032(p0.14) pc1=+0.035(p0.14) pc4=+0.053(p0.03) kernel=+0.029(p0.09) (9s)
+  L55 linear=+0.021(p0.34) zscore=+0.028(p0.16) pc1=+0.031(p0.14) pc4=+0.044(p0.03) kernel=+0.024(p0.11) (9s)
+  L56 linear=+0.027(p0.31) zscore=+0.037(p0.16) pc1=+0.041(p0.10) pc4=+0.050(p0.02) kernel=+0.028(p0.10) (9s)
+  L57 linear=+0.020(p0.35) zscore=+0.035(p0.12) pc1=+0.039(p0.14) pc4=+0.046(p0.01) kernel=+0.024(p0.11) (9s)
+  L58 linear=+0.017(p0.50) zscore=+0.030(p0.19) pc1=+0.033(p0.21) pc4=+0.047(p0.03) kernel=+0.025(p0.14) (9s)
+  L59 linear=+0.027(p0.47) zscore=+0.039(p0.20) pc1=+0.042(p0.18) pc4=+0.051(p0.03) kernel=+0.031(p0.13) (10s)
+  L60 linear=+0.014(p0.57) zscore=+0.024(p0.26) pc1=+0.025(p0.24) pc4=+0.045(p0.02) kernel=+0.022(p0.18) (10s)
+  L61 linear=+0.001(p0.72) zscore=+0.020(p0.28) pc1=+0.019(p0.32) pc4=+0.038(p0.03) kernel=+0.014(p0.25) (10s)
+  L62 linear=-0.002(p0.97) zscore=+0.025(p0.27) pc1=+0.017(p0.42) pc4=+0.039(p0.12) kernel=+0.016(p0.52) (10s)
+  L63 linear=-0.001(p0.75) zscore=+0.026(p0.53) pc1=+0.001(p0.92) pc4=+0.013(p0.75) kernel=+0.024(p0.62) (10s)
+  L64 linear=+0.033(p0.53) zscore=+0.040(p0.01) pc1=+0.028(p0.64) pc4=-0.032(p0.54) kernel=+0.034(p0.42) (10s)
+[mamba-2.8b-hf / language_type] encoding 128 prompts...
+    encoded 50/128
+    encoded 100/128
+  L00 linear=-0.108(p0.04) zscore=-0.115(p0.04) pc1=-0.119(p0.04) pc4=-0.134(p0.02) kernel=-0.098(p0.08) | d_eff=75.6 top1eig=0.05 top1dim=0.02 (0s)
+  L01 linear=-0.151(p0.04) zscore=-0.157(p0.03) pc1=-0.158(p0.03) pc4=-0.163(p0.02) kernel=-0.141(p0.05) | d_eff=71.2 top1eig=0.05 top1dim=0.02 (0s)
+  L02 linear=-0.178(p0.03) zscore=-0.184(p0.03) pc1=-0.185(p0.03) pc4=-0.195(p0.02) kernel=-0.169(p0.05) | d_eff=70.7 top1eig=0.05 top1dim=0.02 (1s)
+  L03 linear=-0.178(p0.03) zscore=-0.182(p0.03) pc1=-0.183(p0.03) pc4=-0.185(p0.02) kernel=-0.165(p0.05) | d_eff=71.4 top1eig=0.05 top1dim=0.02 (1s)
+  L04 linear=-0.151(p0.05) zscore=-0.154(p0.04) pc1=-0.154(p0.03) pc4=-0.165(p0.02) kernel=-0.147(p0.05) | d_eff=71.2 top1eig=0.05 top1dim=0.02 (1s)
+  L05 linear=-0.136(p0.04) zscore=-0.139(p0.04) pc1=-0.138(p0.03) pc4=-0.148(p0.02) kernel=-0.128(p0.05) | d_eff=71.1 top1eig=0.04 top1dim=0.02 (1s)
+  L06 linear=-0.137(p0.05) zscore=-0.141(p0.05) pc1=-0.141(p0.04) pc4=-0.143(p0.02) kernel=-0.133(p0.05) | d_eff=71.0 top1eig=0.04 top1dim=0.02 (1s)
+  L07 linear=-0.149(p0.05) zscore=-0.151(p0.05) pc1=-0.152(p0.04) pc4=-0.155(p0.02) kernel=-0.143(p0.05) | d_eff=71.2 top1eig=0.04 top1dim=0.02 (1s)
+  L08 linear=-0.141(p0.05) zscore=-0.142(p0.05) pc1=-0.141(p0.05) pc4=-0.139(p0.03) kernel=-0.129(p0.05) | d_eff=71.1 top1eig=0.04 top1dim=0.02 (2s)
+  L09 linear=-0.159(p0.04) zscore=-0.160(p0.04) pc1=-0.159(p0.03) pc4=-0.168(p0.02) kernel=-0.148(p0.05) | d_eff=70.1 top1eig=0.04 top1dim=0.01 (2s)
+  L10 linear=-0.142(p0.04) zscore=-0.143(p0.04) pc1=-0.138(p0.04) pc4=-0.138(p0.04) kernel=-0.130(p0.04) | d_eff=67.9 top1eig=0.04 top1dim=0.01 (2s)
+  L11 linear=-0.158(p0.02) zscore=-0.157(p0.03) pc1=-0.157(p0.02) pc4=-0.153(p0.04) kernel=-0.147(p0.03) | d_eff=68.4 top1eig=0.04 top1dim=0.01 (2s)
+  L12 linear=-0.182(p0.02) zscore=-0.181(p0.02) pc1=-0.173(p0.02) pc4=-0.169(p0.03) kernel=-0.165(p0.02) | d_eff=70.1 top1eig=0.04 top1dim=0.01 (2s)
+  L13 linear=-0.129(p0.02) zscore=-0.128(p0.02) pc1=-0.128(p0.02) pc4=-0.126(p0.04) kernel=-0.113(p0.02) | d_eff=71.0 top1eig=0.04 top1dim=0.01 (2s)
+  L14 linear=-0.147(p0.02) zscore=-0.147(p0.02) pc1=-0.145(p0.02) pc4=-0.142(p0.02) kernel=-0.129(p0.02) | d_eff=71.0 top1eig=0.03 top1dim=0.01 (3s)
+  L15 linear=-0.140(p0.02) zscore=-0.140(p0.02) pc1=-0.140(p0.02) pc4=-0.138(p0.02) kernel=-0.123(p0.02) | d_eff=71.0 top1eig=0.03 top1dim=0.01 (3s)
+  L16 linear=-0.134(p0.02) zscore=-0.133(p0.02) pc1=-0.136(p0.02) pc4=-0.134(p0.03) kernel=-0.118(p0.03) | d_eff=71.3 top1eig=0.03 top1dim=0.01 (3s)
+  L17 linear=-0.123(p0.02) zscore=-0.123(p0.02) pc1=-0.127(p0.02) pc4=-0.122(p0.03) kernel=-0.104(p0.03) | d_eff=72.8 top1eig=0.03 top1dim=0.01 (3s)
+  L18 linear=-0.124(p0.02) zscore=-0.123(p0.02) pc1=-0.128(p0.03) pc4=-0.119(p0.04) kernel=-0.106(p0.04) | d_eff=73.7 top1eig=0.03 top1dim=0.01 (3s)
+  L19 linear=-0.104(p0.02) zscore=-0.103(p0.02) pc1=-0.107(p0.02) pc4=-0.101(p0.03) kernel=-0.085(p0.02) | d_eff=75.9 top1eig=0.03 top1dim=0.01 (3s)
+  L20 linear=-0.116(p0.02) zscore=-0.116(p0.02) pc1=-0.117(p0.02) pc4=-0.109(p0.03) kernel=-0.097(p0.02) | d_eff=76.6 top1eig=0.03 top1dim=0.01 (4s)
+  L21 linear=-0.099(p0.02) zscore=-0.101(p0.02) pc1=-0.100(p0.02) pc4=-0.099(p0.02) kernel=-0.082(p0.04) | d_eff=77.1 top1eig=0.03 top1dim=0.01 (4s)
+  L22 linear=-0.094(p0.03) zscore=-0.094(p0.02) pc1=-0.096(p0.02) pc4=-0.097(p0.03) kernel=-0.076(p0.04) | d_eff=77.7 top1eig=0.03 top1dim=0.01 (4s)
+  L23 linear=-0.085(p0.03) zscore=-0.085(p0.03) pc1=-0.090(p0.03) pc4=-0.078(p0.02) kernel=-0.066(p0.04) | d_eff=78.3 top1eig=0.03 top1dim=0.01 (4s)
+  L24 linear=-0.083(p0.04) zscore=-0.086(p0.04) pc1=-0.090(p0.03) pc4=-0.083(p0.02) kernel=-0.067(p0.06) | d_eff=80.0 top1eig=0.03 top1dim=0.01 (4s)
+  L25 linear=-0.065(p0.06) zscore=-0.069(p0.04) pc1=-0.072(p0.04) pc4=-0.071(p0.02) kernel=-0.058(p0.05) | d_eff=80.1 top1eig=0.03 top1dim=0.01 (4s)
+  L26 linear=-0.069(p0.09) zscore=-0.071(p0.05) pc1=-0.075(p0.03) pc4=-0.069(p0.02) kernel=-0.057(p0.04) | d_eff=81.3 top1eig=0.03 top1dim=0.01 (5s)
+  L27 linear=-0.046(p0.27) zscore=-0.049(p0.24) pc1=-0.067(p0.06) pc4=-0.063(p0.05) kernel=-0.048(p0.15) | d_eff=80.8 top1eig=0.04 top1dim=0.01 (5s)
+  L28 linear=-0.048(p0.19) zscore=-0.050(p0.14) pc1=-0.059(p0.05) pc4=-0.054(p0.02) kernel=-0.046(p0.09) | d_eff=80.5 top1eig=0.04 top1dim=0.01 (5s)
+  L29 linear=-0.034(p0.27) zscore=-0.037(p0.21) pc1=-0.049(p0.08) pc4=-0.047(p0.07) kernel=-0.036(p0.14) | d_eff=80.6 top1eig=0.04 top1dim=0.01 (5s)
+  L30 linear=-0.038(p0.27) zscore=-0.040(p0.21) pc1=-0.049(p0.09) pc4=-0.047(p0.06) kernel=-0.038(p0.14) | d_eff=81.0 top1eig=0.04 top1dim=0.01 (5s)
+  L31 linear=-0.018(p0.47) zscore=-0.022(p0.34) pc1=-0.036(p0.15) pc4=-0.038(p0.09) kernel=-0.027(p0.18) | d_eff=81.3 top1eig=0.04 top1dim=0.01 (6s)
+  L32 linear=-0.023(p0.46) zscore=-0.025(p0.35) pc1=-0.037(p0.14) pc4=-0.037(p0.10) kernel=-0.028(p0.18) | d_eff=80.3 top1eig=0.04 top1dim=0.01 (6s)
+  L33 linear=-0.022(p0.43) zscore=-0.025(p0.36) pc1=-0.038(p0.13) pc4=-0.035(p0.11) kernel=-0.028(p0.18) | d_eff=80.2 top1eig=0.04 top1dim=0.01 (6s)
+  L34 linear=-0.020(p0.71) zscore=-0.023(p0.56) pc1=-0.041(p0.11) pc4=-0.038(p0.13) kernel=-0.026(p0.33) | d_eff=81.6 top1eig=0.04 top1dim=0.01 (6s)
+  L35 linear=-0.020(p0.89) zscore=-0.023(p0.72) pc1=-0.034(p0.16) pc4=-0.031(p0.17) kernel=-0.023(p0.39) | d_eff=80.4 top1eig=0.04 top1dim=0.01 (6s)
+  L36 linear=-0.003(p0.81) zscore=-0.005(p0.94) pc1=-0.021(p0.30) pc4=-0.016(p0.32) kernel=-0.014(p0.46) | d_eff=80.6 top1eig=0.04 top1dim=0.01 (6s)
+  L37 linear=+0.003(p0.57) zscore=+0.001(p0.65) pc1=-0.016(p0.32) pc4=-0.009(p0.63) kernel=-0.008(p0.77) | d_eff=80.8 top1eig=0.04 top1dim=0.01 (7s)
+  L38 linear=-0.005(p0.73) zscore=-0.006(p0.78) pc1=-0.018(p0.57) pc4=-0.012(p0.80) kernel=-0.011(p0.91) | d_eff=80.5 top1eig=0.04 top1dim=0.01 (7s)
+  L39 linear=+0.009(p0.58) zscore=+0.007(p0.62) pc1=-0.009(p0.67) pc4=-0.008(p0.61) kernel=+0.000(p0.84) | d_eff=80.3 top1eig=0.04 top1dim=0.01 (7s)
+  L40 linear=+0.007(p0.32) zscore=+0.005(p0.34) pc1=-0.009(p0.90) pc4=-0.012(p0.69) kernel=+0.001(p0.48) | d_eff=80.3 top1eig=0.04 top1dim=0.01 (7s)
+  L41 linear=+0.003(p0.32) zscore=+0.003(p0.34) pc1=-0.002(p0.62) pc4=-0.007(p0.84) kernel=+0.000(p0.41) | d_eff=80.3 top1eig=0.04 top1dim=0.01 (7s)
+  L42 linear=+0.021(p0.15) zscore=+0.021(p0.13) pc1=+0.011(p0.31) pc4=+0.001(p0.60) kernel=+0.014(p0.10) | d_eff=80.8 top1eig=0.04 top1dim=0.01 (7s)
+  L43 linear=+0.018(p0.43) zscore=+0.021(p0.31) pc1=+0.016(p0.50) pc4=+0.007(p0.65) kernel=+0.014(p0.34) | d_eff=75.9 top1eig=0.05 top1dim=0.02 (8s)
+  L44 linear=+0.018(p0.59) zscore=+0.023(p0.41) pc1=+0.013(p0.59) pc4=+0.009(p0.30) kernel=+0.015(p0.45) | d_eff=69.0 top1eig=0.06 top1dim=0.02 (8s)
+  L45 linear=+0.031(p0.14) zscore=+0.037(p0.07) pc1=+0.023(p0.21) pc4=+0.011(p0.30) kernel=+0.022(p0.09) | d_eff=70.7 top1eig=0.06 top1dim=0.02 (8s)
+  L46 linear=+0.044(p0.06) zscore=+0.050(p0.02) pc1=+0.025(p0.11) pc4=+0.015(p0.15) kernel=+0.030(p0.05) | d_eff=67.9 top1eig=0.06 top1dim=0.03 (8s)
+  L47 linear=+0.045(p0.09) zscore=+0.050(p0.05) pc1=+0.013(p0.32) pc4=+0.019(p0.14) kernel=+0.032(p0.05) | d_eff=64.6 top1eig=0.06 top1dim=0.03 (8s)
+  L48 linear=+0.051(p0.11) zscore=+0.054(p0.07) pc1=+0.022(p0.34) pc4=+0.024(p0.13) kernel=+0.036(p0.05) | d_eff=66.1 top1eig=0.06 top1dim=0.03 (8s)
+  L49 linear=+0.051(p0.05) zscore=+0.054(p0.02) pc1=+0.016(p0.31) pc4=+0.019(p0.12) kernel=+0.038(p0.03) | d_eff=65.9 top1eig=0.06 top1dim=0.03 (9s)
+  L50 linear=+0.052(p0.07) zscore=+0.056(p0.03) pc1=+0.028(p0.27) pc4=+0.031(p0.10) kernel=+0.041(p0.03) | d_eff=65.0 top1eig=0.06 top1dim=0.03 (9s)
+  L51 linear=+0.048(p0.08) zscore=+0.051(p0.04) pc1=+0.028(p0.27) pc4=+0.024(p0.16) kernel=+0.039(p0.03) | d_eff=63.0 top1eig=0.06 top1dim=0.03 (9s)
+  L52 linear=+0.050(p0.07) zscore=+0.053(p0.02) pc1=+0.058(p0.03) pc4=+0.023(p0.12) kernel=+0.041(p0.02) | d_eff=63.3 top1eig=0.06 top1dim=0.04 (9s)
+  L53 linear=+0.049(p0.18) zscore=+0.053(p0.16) pc1=+0.062(p0.14) pc4=+0.019(p0.30) kernel=+0.042(p0.02) | d_eff=62.3 top1eig=0.06 top1dim=0.04 (9s)
+  L54 linear=+0.044(p0.15) zscore=+0.052(p0.06) pc1=+0.061(p0.03) pc4=+0.022(p0.44) kernel=+0.039(p0.03) | d_eff=60.7 top1eig=0.06 top1dim=0.04 (9s)
+  L55 linear=+0.035(p0.19) zscore=+0.043(p0.07) pc1=+0.053(p0.04) pc4=+0.006(p0.52) kernel=+0.035(p0.03) | d_eff=61.3 top1eig=0.06 top1dim=0.04 (10s)
+  L56 linear=+0.049(p0.15) zscore=+0.057(p0.05) pc1=+0.067(p0.03) pc4=+0.018(p0.51) kernel=+0.048(p0.02) | d_eff=61.3 top1eig=0.06 top1dim=0.04 (10s)
+  L57 linear=+0.044(p0.21) zscore=+0.051(p0.07) pc1=+0.063(p0.03) pc4=+0.017(p0.47) kernel=+0.043(p0.02) | d_eff=59.9 top1eig=0.07 top1dim=0.05 (10s)
+  L58 linear=+0.045(p0.21) zscore=+0.050(p0.09) pc1=+0.061(p0.02) pc4=+0.019(p0.60) kernel=+0.046(p0.02) | d_eff=59.6 top1eig=0.07 top1dim=0.05 (10s)
+  L59 linear=+0.036(p0.19) zscore=+0.041(p0.09) pc1=+0.053(p0.02) pc4=+0.012(p0.58) kernel=+0.042(p0.02) | d_eff=59.3 top1eig=0.07 top1dim=0.05 (10s)
+  L60 linear=+0.042(p0.22) zscore=+0.052(p0.12) pc1=+0.063(p0.03) pc4=+0.020(p0.60) kernel=+0.046(p0.02) | d_eff=58.3 top1eig=0.07 top1dim=0.05 (10s)
+  L61 linear=+0.036(p0.36) zscore=+0.050(p0.15) pc1=+0.058(p0.08) pc4=+0.028(p0.44) kernel=+0.045(p0.04) | d_eff=52.1 top1eig=0.08 top1dim=0.05 (11s)
+  L62 linear=+0.023(p0.54) zscore=+0.037(p0.18) pc1=+0.043(p0.09) pc4=+0.024(p0.40) kernel=+0.040(p0.17) | d_eff=39.7 top1eig=0.11 top1dim=0.05 (11s)
+  L63 linear=+0.081(p0.24) zscore=+0.063(p0.09) pc1=+0.093(p0.04) pc4=+0.029(p0.61) kernel=+0.086(p0.04) | d_eff=23.9 top1eig=0.14 top1dim=0.04 (11s)
+  L64 linear=+0.048(p0.54) zscore=+0.078(p0.02) pc1=+0.158(p0.04) pc4=+0.034(p0.75) kernel=+0.068(p0.17) | d_eff=9.9 top1eig=0.22 top1dim=0.14 (11s)
+
+DONE run55

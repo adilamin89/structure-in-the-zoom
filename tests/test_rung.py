@@ -65,3 +65,13 @@ def test_build_axis_offline_with_strata():
 def test_theta_zoom_alias_is_rung():
     import theta_zoom
     assert theta_zoom.zoom is tz.zoom and theta_zoom.main is tz.main
+
+
+def test_spectrum_flags_a_rogue_dimension_and_standardize_repairs_it():
+    X, labels = _gaussian_classes()
+    Xr = X.copy(); Xr[:, 0] += 200.0 * np.random.default_rng(5).normal(size=len(X))   # one rogue dimension
+    sp = tz.spectrum(Xr)
+    assert sp["top1_eig_frac"] > 0.9 and sp["d_eff_full"] < 2
+    blind = tz.zoom(Xr, labels, n_perm=0, k_orders=3, n_floor_draws=3)
+    fixed = tz.zoom(Xr, labels, n_perm=0, k_orders=3, n_floor_draws=3, standardize=True)
+    assert abs(fixed["delta"]) > abs(blind["delta"])

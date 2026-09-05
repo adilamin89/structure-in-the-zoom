@@ -91,6 +91,12 @@ rung llm --model EleutherAI/pythia-160m --axis hs_axis.json --device mps --out h
 Classes default to the most frequent labels; pass `--classes` to choose them. The same builder is a
 Python function, `build_axis(rows, text_field, label_field, ...)`, for records you already hold.
 
+**Blind probes.** A linear participation ratio cannot see past a rogue dimension (paper Sec 8.4, run 55:
+OLMo-1B has one feature carrying two thirds of the variance and reads zero on every axis). `rung data` prints
+`spectrum()` first (effective dimension, leading-eigenvalue fraction, largest single-feature fraction) and warns
+when one dimension dominates; `--standardize` (or `zoom(..., standardize=True)`) z-scores every feature first,
+which restores OLMo-1B's content axis. Off by default so `--paper-seeds` reproduces the published cells.
+
 **Tests.** `pip install -e ".[test]" && pytest -q tests` runs the numpy-only suite: the
 decomposition identity, certification on structured labels and its absence on shuffled ones, the
 stratified null, the command line end to end, and the axis builder.

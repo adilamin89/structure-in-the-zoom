@@ -71,9 +71,26 @@ def _ladder(K, members, order, bin_counts):
     return _slope(sizes, prs), sizes, prs
 
 
+def spectrum(X):
+    """Blind-probe diagnostics for a samples-by-features array (paper run 55):
+    full-set effective dimension, leading-eigenvalue variance fraction, and
+    the variance fraction of the single largest feature. An effective
+    dimension near 1 with a leading fraction near 1 means a rogue dimension
+    dominates and the linear participation ratio is blind to any declared
+    axis; standardize=True in zoom() is the repair."""
+    X = np.asarray(X, dtype=np.float64)
+    Xc = X - X.mean(axis=0, keepdims=True)
+    lam = np.linalg.svd(Xc, compute_uv=False) ** 2
+    v = Xc.var(axis=0)
+    tot = lam.sum()
+    return {"d_eff_full": float(tot ** 2 / (lam ** 2).sum()) if tot > 0 else float("nan"),
+            "top1_eig_frac": float(lam[0] / tot) if tot > 0 else float("nan"),
+            "top1_dim_var_frac": float(v.max() / v.sum()) if v.sum() > 0 else float("nan")}
+
+
 def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
          n_floor_draws=20, bin_counts=None, strata=None, seed=0,
-         floor_seed=None, perm_seed=None, order_seed=None):
+         floor_seed=None, perm_seed=None, order_seed=None, standardize=False):
     """Axis-resolved decomposition of the dimensionality-scaling exponent.
 
     Parameters
@@ -89,6 +106,9 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     n_floor_draws : random same-size subset draws defining the floor.
     bin_counts : ladder rung class counts; defaults to (1,2,3,4,6,8)
         truncated to the number of classes.
+    standardize : z-score every feature before the Gram (default False). Use
+        it when the spectrum diagnostics show one dimension dominating the
+        variance (effective dimension near 1); see spectrum().
     strata : optional (n,) array of nuisance-stratum ids. When given, a
         second null permutes labels only within strata (nuisance-preserving);
         significance against it supports a label reading beyond composition.
@@ -102,6 +122,11 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     given, strat_p_two / strat_z.
     """
     X = np.asarray(X, dtype=np.float64)
+    if standardize:
+        # per-feature z-score: the repair for populations dominated by a rogue
+        # dimension (paper Sec 8.4, run 55); off by default so --paper-seeds
+        # still reproduces the published cells
+        X = (X - X.mean(axis=0, keepdims=True)) / (X.std(axis=0, keepdims=True) + 1e-9)
     X = X / (X.std() + 1e-9)
     labels = np.asarray(labels)
     classes = np.unique(labels)
@@ -574,6 +599,7 @@ def main():
     d.add_argument("--seed", type=int, default=0)
     d.add_argument("--out", default=None, help="write the result JSON here")
     d.add_argument("--plot", default=None, help="write a ladder figure (PNG) here")
+    d.add_argument("--standardize", action="store_true", help="z-score every feature first (rogue-dimension repair; run 55)")
 
     m = sub.add_parser("llm", help="per-layer battery on a Hugging Face model")
     m.add_argument("--model", required=True)
@@ -637,7 +663,10 @@ def main():
         X = _load_array(a.X)
         labels = _load_array(a.labels).astype(int)
         strata = _load_array(a.strata).astype(int) if a.strata else None
-        r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed)
+        sp = spectrum(X)
+        print(f"spectrum: d_eff_full={sp['d_eff_full']:.1f} top1_eig_frac={sp['top1_eig_frac']:.2f} top1_dim_var_frac={sp['top1_dim_var_frac']:.2f}"
+              + ("  <- one dimension dominates; consider --standardize" if sp["top1_eig_frac"] > 0.5 else ""))
+        r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed, standardize=a.standardize)
         for k, v in r.items():
             if not isinstance(v, list):
                 print(f"{k}: {v}")
