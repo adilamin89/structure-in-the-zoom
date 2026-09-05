@@ -1,0 +1,26 @@
+[GT1] n=60: within-class PR 15.9 | random-subset PR 23.0
+[GT1] n=120: within-class PR 19.7 | random-subset PR 30.7
+[GT1] n=250: within-class PR 22.3 | random-subset PR 37.9
+[GT1] n=500: within-class PR 24.0 | random-subset PR 43.8
+  => GT1: within growth 120->500 = 1.22x (floor 1.43x); within/floor at 500 = 0.55
+[GT2] n=60: within-class PR 19.6 | random-subset PR 24.0
+[GT2] n=120: within-class PR 24.2 | random-subset PR 33.1
+[GT2] n=250: within-class PR 27.7 | random-subset PR 39.7
+[GT2] n=500: within-class PR 29.6 | random-subset PR 44.3
+  => GT2: within growth 120->500 = 1.22x (floor 1.34x); within/floor at 500 = 0.67
+[GT3] n=60: within-class PR 14.9 | random-subset PR 20.3
+[GT3] n=120: within-class PR 19.2 | random-subset PR 27.6
+[GT3] n=250: within-class PR 22.4 | random-subset PR 39.4
+[GT3] n=500: within-class PR 24.5 | random-subset PR 44.9
+  => GT3: within growth 120->500 = 1.28x (floor 1.62x); within/floor at 500 = 0.55
+VERDICT {
+ "W1_growth_gt_1.30_all": false,
+ "growth": {
+  "GT1": 1.2158384466325562,
+  "GT2": 1.2246599611316265,
+  "GT3": 1.2762755182112318
+ },
+ "W2_orders_GT1_GT2_GT3": false,
+ "W3_growth_lt_1.15_all": false
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run58_within_class_spectrum_vs_trials.json

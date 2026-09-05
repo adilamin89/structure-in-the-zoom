@@ -304,6 +304,7 @@ python render_all.py
 | Figure 12 (the construction axis across architectures with the last zero crossing; the blind probe's leading-eigenvalue fraction) | run37_inferential_nulls.json, run47_fourth_cell_redpajama.json, run53_mamba_fifth_cell.json, run54_olmo2_1b_construction.json, run55_blind_probe_physics.json | make_fig_architectures.py |
 | Figure 13 (the two nulls on natural text: BLiMP and Baroni at 64 pairs) | run42_blimp_battery.json, run43b_baroni_64pairs.json | make_fig_two_nulls_text.py |
 | Appendix figures: state axes (App C), blocking flow per recording (App E), the model bracket (App I), sector balance by stimulus (App J) | run40_spont_state_axis.json; sector_balance_scale.json; run2b/run11b/run48 JSONs; local_vs_fullfield_tuning.json | make_fig_state_axes.py, make_fig_sector_flow_full.py, make_fig_model_bracket.py, make_fig9_stimulus_sector.py |
+| Runs 56–59 (Sec 7 / App I: the calibrated model across GT1/GT2/GT3 and the direction-selective subpopulation) | run56_odd_gain_across_recordings.json, run57_driven_gain_across_recordings.json, run58_within_class_spectrum_vs_trials.json, run59_shift_by_direction_selectivity.json (+ .log each; expectations in every docstring) | run56_odd_gain_across_recordings.py, run57_driven_gain_across_recordings.py, run58_within_class_spectrum_vs_trials.py, run59_shift_by_direction_selectivity.py |
 
 ## Citation
 

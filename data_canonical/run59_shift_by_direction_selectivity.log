@@ -1,0 +1,126 @@
+[D1] trials 4282 neurons 20616 tuned 19942 sub 6647 | DS frac 0.61 median DSI 0.36 | full delta +0.347
+  DS    : delta +0.351 (shuffle +0.009) b2/c1 0.64 median DSI 0.62 OSI 0.56 | 4s
+  nonDS : delta +0.235 (shuffle -0.006) b2/c1 5.16 median DSI 0.18 OSI 0.45 | 7s
+  random: delta +0.412 (shuffle +0.003) b2/c1 1.36 median DSI 0.37 OSI 0.46 | 10s
+[D2] trials 4469 neurons 14034 tuned 13871 sub 4623 | DS frac 0.58 median DSI 0.35 | full delta +0.280
+  DS    : delta +0.359 (shuffle +0.003) b2/c1 0.67 median DSI 0.61 OSI 0.57 | 13s
+  nonDS : delta +0.079 (shuffle +0.004) b2/c1 7.18 median DSI 0.16 OSI 0.51 | 16s
+  random: delta +0.416 (shuffle -0.010) b2/c1 1.58 median DSI 0.35 OSI 0.50 | 18s
+[D3] trials 4442 neurons 11311 tuned 10773 sub 3591 | DS frac 0.55 median DSI 0.33 | full delta +0.240
+  DS    : delta +0.222 (shuffle +0.004) b2/c1 0.73 median DSI 0.61 OSI 0.59 | 21s
+  nonDS : delta +0.083 (shuffle -0.000) b2/c1 7.47 median DSI 0.15 OSI 0.48 | 23s
+  random: delta +0.181 (shuffle -0.006) b2/c1 1.69 median DSI 0.32 OSI 0.48 | 25s
+[L1] trials 5170 neurons 22482 tuned 20685 sub 6895 | DS frac 0.72 median DSI 0.41 | full delta +0.461
+  DS    : delta +0.524 (shuffle -0.011) b2/c1 0.39 median DSI 0.61 OSI 0.40 | 31s
+  nonDS : delta +0.304 (shuffle -0.007) b2/c1 2.82 median DSI 0.23 OSI 0.42 | 35s
+  random: delta +0.411 (shuffle -0.002) b2/c1 0.84 median DSI 0.41 OSI 0.38 | 40s
+[L2] trials 4139 neurons 17750 tuned 17240 sub 5746 | DS frac 0.76 median DSI 0.45 | full delta +0.394
+  DS    : delta +0.354 (shuffle +0.010) b2/c1 0.41 median DSI 0.65 OSI 0.45 | 44s
+  nonDS : delta +0.303 (shuffle +0.008) b2/c1 2.39 median DSI 0.25 OSI 0.41 | 46s
+  random: delta +0.334 (shuffle +0.009) b2/c1 0.79 median DSI 0.45 OSI 0.39 | 49s
+[L3] trials 3278 neurons 15640 tuned 13948 sub 4649 | DS frac 0.78 median DSI 0.46 | full delta +0.460
+  DS    : delta +0.480 (shuffle +0.006) b2/c1 0.39 median DSI 0.66 OSI 0.46 | 51s
+  nonDS : delta +0.263 (shuffle +0.013) b2/c1 1.85 median DSI 0.27 OSI 0.38 | 52s
+  random: delta +0.378 (shuffle +0.012) b2/c1 0.66 median DSI 0.47 OSI 0.38 | 53s
+[C1] trials 4270 neurons 22565 tuned 19151 sub 6383 | DS frac 0.56 median DSI 0.33 | full delta +0.196
+  DS    : delta +0.254 (shuffle +0.005) b2/c1 0.56 median DSI 0.57 OSI 0.47 | 58s
+  nonDS : delta +0.095 (shuffle -0.008) b2/c1 7.95 median DSI 0.15 OSI 0.49 | 61s
+  random: delta +0.172 (shuffle +0.000) b2/c1 1.55 median DSI 0.33 OSI 0.46 | 63s
+[C2] trials 4573 neurons 16159 tuned 13906 sub 4635 | DS frac 0.38 median DSI 0.24 | full delta +0.217
+  DS    : delta +0.336 (shuffle -0.015) b2/c1 0.79 median DSI 0.47 OSI 0.47 | 67s
+  nonDS : delta +0.114 (shuffle -0.006) b2/c1 17.75 median DSI 0.11 OSI 0.53 | 69s
+  random: delta +0.198 (shuffle -0.011) b2/c1 2.53 median DSI 0.24 OSI 0.49 | 72s
+VERDICT {
+ "tags": [
+  "D1",
+  "D2",
+  "D3",
+  "L1",
+  "L2",
+  "L3",
+  "C1",
+  "C2"
+ ],
+ "delta_DS": [
+  0.3510739514982446,
+  0.35925744670680104,
+  0.22164214891993478,
+  0.5243295420655905,
+  0.353877515195008,
+  0.4802872220345574,
+  0.2535591615697995,
+  0.3362480027207777
+ ],
+ "delta_nonDS": [
+  0.23521384027213785,
+  0.07908676875900675,
+  0.0827024435834921,
+  0.3037081620613537,
+  0.30271262454846515,
+  0.26332618034654504,
+  0.095348737951234,
+  0.1136710058907445
+ ],
+ "delta_random": [
+  0.4124873430138639,
+  0.41646381756661016,
+  0.18137643480219873,
+  0.41068259591942247,
+  0.334021640107492,
+  0.37827217862130647,
+  0.17178726452629767,
+  0.19800877862050564
+ ],
+ "delta_full": [
+  0.3468249541078426,
+  0.28000536722215447,
+  0.23970072080707694,
+  0.4611692741898112,
+  0.39374025095244863,
+  0.46028900165386427,
+  0.19553155944570494,
+  0.21679304996348564
+ ],
+ "H1_DS_gt_nonDS_count": 8,
+ "H2_sorting_count": 8,
+ "b2c1_DS": [
+  0.6438801528269225,
+  0.6726014794440608,
+  0.731971805341117,
+  0.38628703289723587,
+  0.4093255714974791,
+  0.3906267006322274,
+  0.5568897755498446,
+  0.7941353156924008
+ ],
+ "b2c1_nonDS": [
+  5.158733180224184,
+  7.179307407858307,
+  7.474405085366778,
+  2.8221363191164466,
+  2.3909482334595435,
+  1.8506600059907825,
+  7.950101917541297,
+  17.751901128256232
+ ],
+ "H3_bracket_count": 6,
+ "H3_random_within_0.05_count": 2,
+ "H4_rho_full_vs_DSfrac": 0.8571428571428572,
+ "H4_rho_full_vs_medianDSI": 0.8571428571428572,
+ "rho_DSdelta_vs_DSfrac": 0.7619047619047621,
+ "ds_fraction": [
+  0.607010329956875,
+  0.5849614303222551,
+  0.547851109254618,
+  0.7203287406333092,
+  0.7597447795823666,
+  0.7836248924577001,
+  0.5561067307190225,
+  0.3822091183661729
+ ],
+ "H1": true,
+ "H2": true,
+ "H3": false,
+ "H4": true
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run59_shift_by_direction_selectivity.json in 72s
