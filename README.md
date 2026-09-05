@@ -57,7 +57,7 @@ rung summarize pythia160m.json                 # plain-language reading, the pap
 Benjamini-Hochberg for both statistics, the declared-path shape (embedding sign, peak, zero
 crossing), and, with strata, whether the signal is label-linked or composition.
 
-![One recording, two axes](figures_canonical/fig_zoom_ladder_dir.png)
+![One population, three axes](figures_canonical/fig_three_axes.png)
 
 ### Use cases
 
@@ -169,7 +169,7 @@ runs the whole battery; `zoom(...)` is the core.
   quadrupole-amplified relative to their single units, cortex with direction maps should keep
   the mesoscale dipole.
 
-![Inferential results](figures_canonical/fig_nulls.png)
+![The two nulls on natural text](figures_canonical/fig_two_nulls_text.png)
 
 ### Using it right
 
@@ -290,26 +290,20 @@ python render_all.py
 | OLMo-1B matched 16/class battery | run25_olmo1b_16pc_battery.json | run25_olmo1b_16pc_battery.py |
 | Static-session axis search (discovery mode) | run27_static_axis_search.json | run27_static_axis_search.py |
 | Planted-C8 axes (compass/clock) | run28_cyclic_axis_llm.json | run28_cyclic_axis_llm.py |
-| Figures 8 and 11 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py |
-| Exact 8-direction harmonic decomposition of C(dphi), every recording (Sec 4, App I) | multipole_harmonics_8dir.json | multipole_harmonics_8dir.py |
-| Why localized gratings are dipole-dominant: per-neuron OSI/DSI, cardinal test, spatial clustering, coverage terciles | local_vs_fullfield_tuning.json | local_vs_fullfield_tuning.py |
-| Sector balance across scales: additivity, coarse-graining flow, Allen per-area | sector_balance_scale.json | sector_balance_scale.py |
-| LLM analogue: kernel-harmonic additivity, unit blocking, context-length knob (Pythia-160m) | llm_sector_blocking.json | llm_sector_blocking.py |
-| Calibrated-model overshoot across recordings (registered miss: under-predicts GT1/GT2, overshoots GT3) | run48_overshoot_across_recordings.json | run48_overshoot_across_recordings.py |
-| Split-half control for the sorted-blocking flow | run49_blocking_splithalf.json | run49_blocking_splithalf.py |
-| Graining delta(K) and Chun agreement on all eight recordings | run50_perrecording_anchors.json | run50_perrecording_anchors.py |
-| Sector-resolved graining (orientation-, direction-sorted, random blocks) on all eight recordings (App E table) | run50b_graining_sectors.json | run50b_graining_sectors.py |
-| Two-key (footprint x phase) blocking test of the App E explanation (registered miss) | run50c_twokey_blocking.json | run50c_twokey_blocking.py |
-| Anatomical (spatial k-means) blocking on all eight recordings: the intermediate point of the correlation-length hypothesis (Sec 4.1, App E) | run51_spatial_blocking.json | run51_spatial_blocking.py |
-| Blocking factor B(K): within-block products rho_1, rho_2 per blocking scheme; raw vs correlation-profile flow (Sec 4.1, App I) | run52_blocking_factor_check.json | run52_blocking_factor_check.py |
-| Blocking identity on equal-size blocks (to 1e-16) | run52b_identity_equal_blocks.json | run52b_identity_equal_blocks.py |
 | Figure 1 (the instrument in five steps; drawn, no data) | — | make_fig0_instrument.py |
-| Figure 4 (the orientation quotient and the two ladder orders; schematic, amplitudes from cos2theta_fit.json) | cos2theta_fit.json | make_fig4b_orientation_quotient.py |
+| Figure 2 (one population, three axes: schematic + GT3 ladders + per-recording shifts) | orientation_zoom.json, bootstrap_all_10_orient_fullneuron.json | make_fig_three_axes.py |
+| Figure 3 (the orientation quotient and the two ladder orders; schematic, amplitudes from cos2theta_fit.json) | cos2theta_fit.json | make_fig4b_orientation_quotient.py |
+| Figure 4 (multipole content and the order effect) | cos2theta_fit.json, accumulation_order.json, allen_multipoles_all_sessions.json | make_fig3_4_allen_multipole.py |
+| Figure 5 (the sector balance across scales: block cartoon, measured blocking factor, retention at K = 32, B(K) by map type) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json | make_fig_blocking.py |
+| Figure 6 (replication in a second laboratory) | allen_expansion_all_sessions.json | make_fig3_4_allen_multipole.py |
+| Figure 7 (architectural ground truth: architecture panel, delta_rot by layer, tuned fraction) | run5b_cnn_seeds.json, run5c_cnn_multipole_fixed.json, run14_stimulus_baseline.json | make_fig_cnn.py |
+| Figure 8 (what sets the sign: three-regime cartoon + measured alignment) | run9_alignment_225.json, run3b_principal_angles_residualized.json, run11_bootstrap_prediction.json | make_fig_sign_rule.py |
 | Figure 9 (the language-model battery pipeline; schematic, no data) | — | make_fig8b_llm_pipeline.py |
-| Figures 2, 3, 5, 7 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
-| Figure 6 (sector balance across scales) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json, allen_expansion_all_sessions.json | make_fig8_sector_flow.py |
-| Figures 8, 10, 11 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig7_nulls.py, make_fig6_llm.py |
-| Figure 12 (sector balance against single-neuron tuning by stimulus type, App I) | local_vs_fullfield_tuning.json | make_fig9_stimulus_sector.py |
+| Figure 10 (content and construction depth profiles at four Pythia scales) | run17/18/19/26 battery JSONs | make_fig_llm_depth.py |
+| Figure 11 (the declared order and the partition on Pythia-2.8B) | run37_inferential_nulls.json | make_fig_path_partition.py |
+| Figure 12 (the construction axis across architectures with the last zero crossing; the blind probe's leading-eigenvalue fraction) | run37_inferential_nulls.json, run47_fourth_cell_redpajama.json, run53_mamba_fifth_cell.json, run54_olmo2_1b_construction.json, run55_blind_probe_physics.json | make_fig_architectures.py |
+| Figure 13 (the two nulls on natural text: BLiMP and Baroni at 64 pairs) | run42_blimp_battery.json, run43b_baroni_64pairs.json | make_fig_two_nulls_text.py |
+| Appendix figures: state axes (App C), blocking flow per recording (App E), the model bracket (App I), sector balance by stimulus (App J) | run40_spont_state_axis.json; sector_balance_scale.json; run2b/run11b/run48 JSONs; local_vs_fullfield_tuning.json | make_fig_state_axes.py, make_fig_sector_flow_full.py, make_fig_model_bracket.py, make_fig9_stimulus_sector.py |
 
 ## Citation
 
