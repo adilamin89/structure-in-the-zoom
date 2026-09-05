@@ -1,7 +1,7 @@
 """Render the paper's key tables and headline numbers from the committed
 JSON artifacts in data_canonical/. Requires only numpy; no model downloads.
 
-Usage: theta-zoom-render (after pip install .) or python render_all.py
+Usage: rung-render (after pip install .) or python render_all.py
 """
 import json
 from pathlib import Path

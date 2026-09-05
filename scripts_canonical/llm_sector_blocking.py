@@ -21,7 +21,7 @@ MEASURES (per layer):
   C. CONTEXT LENGTH: prepend a fixed 38-word neutral preamble to every prompt
      ("long") vs the paper's prompts ("short"); compare kernel effective rank
      and harmonic shares on compass/clock, and the declared-path delta profile
-     (theta_zoom.zoom, n_perm=100, declared order, k_orders=20) on the
+     (rung.zoom, n_perm=100, declared order, k_orders=20) on the
      world-knowledge and construction axes: does the crossover depth move?
 EXPECTATIONS: A is an identity (exact) once the per-unit curves are formed from the
 class-centred, unit-standardised means that define the kernel (first two runs compared a squared
@@ -44,7 +44,7 @@ HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
 AXES = HERE.parent.parent / "arxiv_supplement" / "axes"
 sys.path.insert(0, str(HERE.parent.parent / "arxiv_supplement"))
-from theta_zoom import zoom  # noqa: E402
+from rung import zoom  # noqa: E402
 
 spec = importlib.util.spec_from_file_location("r17", HERE / "run17_multiclass_battery.py")
 r17 = importlib.util.module_from_spec(spec); spec.loader.exec_module(r17)

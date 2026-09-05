@@ -1,10 +1,10 @@
-"""Tests for theta_zoom (numpy only; no network). Run: pytest -q tests"""
+"""Tests for rung (numpy only; no network). Run: pytest -q tests"""
 import json, os, subprocess, sys
 import numpy as np
 import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import theta_zoom as tz
+import rung as tz
 
 
 def _gaussian_classes(n=640, d=96, C=8, sep=0.8, seed=0):
@@ -41,7 +41,7 @@ def test_cli_data_writes_json_plot_and_summary(tmp_path):
     X, labels = _gaussian_classes(n=320, d=48)
     np.save(tmp_path / "X.npy", X); np.save(tmp_path / "labels.npy", labels)
     out, png = tmp_path / "r.json", tmp_path / "r.png"
-    cmd = [sys.executable, os.path.join(os.path.dirname(tz.__file__), "theta_zoom.py"), "data",
+    cmd = [sys.executable, os.path.join(os.path.dirname(tz.__file__), "rung.py"), "data",
            str(tmp_path / "X.npy"), str(tmp_path / "labels.npy"), "--n-perm", "30", "--k-orders", "5",
            "--out", str(out), "--plot", str(png)]
     res = subprocess.run(cmd, capture_output=True, text=True)
@@ -60,3 +60,8 @@ def test_build_axis_offline_with_strata():
     assert set(strata) == set(axis) and all(len(v) == 16 for v in strata.values())
     with pytest.raises(ValueError):
         tz.build_axis(rows[:40], "text", "label", n_classes=8, n_per_class=16)
+
+
+def test_theta_zoom_alias_is_rung():
+    import theta_zoom
+    assert theta_zoom.zoom is tz.zoom and theta_zoom.main is tz.main

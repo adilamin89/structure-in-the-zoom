@@ -34,4 +34,4 @@ prompts (short declarative carriers, matched final tokens) are part of that desi
 | `run42_blimp_battery.json` | none (BLiMP is loaded at run time from `nyu-mll/blimp`) | Warstadt et al. 2020 | CC BY 4.0 |
 
 Reuse of any benchmark-derived file must carry the source's attribution; the ARC-derived axis must stay
-share-alike. If you build your own axis with `theta-zoom axis`, the same applies to the dataset you draw from.
+share-alike. If you build your own axis with `rung axis`, the same applies to the dataset you draw from.

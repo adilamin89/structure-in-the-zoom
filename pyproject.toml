@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "theta-zoom"
-version = "1.1.0"
-description = "Code and data for 'Structure is in the zoom: probing neural symmetry through dimensionality scaling'"
+name = "rung"
+version = "1.2.0"
+description = "rung: axis-resolved dimensionality scaling (matched floor, permutation null, nuisance-preserving null); code and data for 'Structure is in the zoom'"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.26",
@@ -18,8 +18,10 @@ models = ["torch>=2.2", "transformers>=4.40", "datasets>=2.18"]
 test = ["pytest>=8"]
 
 [project.scripts]
-theta-zoom = "theta_zoom:main"
+rung = "rung:main"
+rung-render = "render_all:main"
+theta-zoom = "rung:main"          # alias, one release
 theta-zoom-render = "render_all:main"
 
 [tool.setuptools]
-py-modules = ["render_all", "theta_zoom"]
+py-modules = ["render_all", "rung", "theta_zoom"]

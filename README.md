@@ -1,28 +1,45 @@
 # Structure is in the zoom
 
 **Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs. arXiv 2026
-(identifier added on posting). This repository is two things: `theta-zoom`, the measurement
-released as a tested tool, and the complete code and data behind every number in the paper.
+(identifier added on posting). This repository is two things: `rung`, the measurement released as a
+tested tool, and the complete code and data behind every number in the paper.
+
+**Neural door.** You have trials x neurons (or frames x neurons) and one label per row. You get the part
+of the scaling exponent that label explains, its permutation p-value, and a second null for the nuisance
+your labeling preserves.
+
+**LLM door.** You have a Hugging Face model (any checkpoint) and a category set. You get the same three
+numbers at every layer from one command, with every prompt in the paper shipped as a runnable axis.
 
 ## The tool
 
 A dimensionality scaling exponent (how the participation ratio grows as you add data) is not
 a property of a system: on one ten-thousand-neuron patch of mouse V1 it reads 0.25, 0.31, and
-0.35 along three probe axes, and the three numbers mean three different things. `theta-zoom`
+0.35 along three probe axes, and the three numbers mean three different things. `rung`
 decomposes any such exponent exactly into a **label-blind sampling floor** plus a **shift
 delta earned against a declared axis** (the classes you accumulate and the order you add them
 in), and tests that shift two ways: against a label-permutation null (Monte Carlo, 500 draws by default), and, when you
 tell it what nuisance structure your partition preserves, against a **nuisance-preserving
 null** that isolates what the labels add. It runs on any samples-by-features array and on any
-Hugging Face language model layer by layer.
+Hugging Face language model layer by layer. A rung is one step of the subsampling ladder; the tool
+reads every rung against its matched floor. (Released as `theta-zoom` through 1.1.0; `theta_zoom` and the
+`theta-zoom` command stay as aliases for one release.)
 
 ### Install and run (sixty seconds)
 
 ```bash
-pip install -e ".[models]"                       # numpy core; [models] adds torch + transformers
-theta-zoom llm --model EleutherAI/pythia-160m --axis axes/ --device mps --out pythia160m.json
-theta-zoom plot pythia160m.json --out pythia160m.png
-theta-zoom summarize pythia160m.json           # plain-language reading, the paper's rules applied
+pip install git+https://github.com/adilamin89/structure-in-the-zoom   # numpy core: rung data / summarize / plot
+rung data X.npy labels.npy --out r.json --plot r.png                   # any samples-by-features array
+```
+
+For the language-model door clone the repository (the paper's axes live in `axes/`) and add the model extras:
+
+```bash
+git clone https://github.com/adilamin89/structure-in-the-zoom && cd structure-in-the-zoom
+pip install -e ".[models]"                       # + torch, transformers, datasets
+rung llm --model EleutherAI/pythia-160m --axis axes/ --device mps --out pythia160m.json
+rung plot pythia160m.json --out pythia160m.png
+rung summarize pythia160m.json                 # plain-language reading, the paper's rules applied
 ```
 
 ### What it returns, per layer and per axis
@@ -35,8 +52,8 @@ theta-zoom summarize pythia160m.json           # plain-language reading, the pap
   difference between "the labels organize this representation" and "the labels happen to
   preserve composition".
 
-`theta-zoom plot` draws one panel per axis with both statistics against their null bands.
-`theta-zoom summarize` applies the paper's reading rules: certification under
+`rung plot` draws one panel per axis with both statistics against their null bands.
+`rung summarize` applies the paper's reading rules: certification under
 Benjamini-Hochberg for both statistics, the declared-path shape (embedding sign, peak, zero
 crossing), and, with strata, whether the signal is label-linked or composition.
 
@@ -50,25 +67,25 @@ octiles, pupil, session-time blocks). Pass the session or animal as strata when 
 exchangeable across it.
 
 ```python
-from theta_zoom import zoom
+from rung import zoom
 r = zoom(X, labels, n_perm=500)                     # declared order + order-averaged
 r = zoom(X, labels, strata=session_ids, n_perm=500) # + nuisance-preserving null
 r["delta"], r["p_two"], r["delta_orderavg"], r["p_two_orderavg"], r["strat_p_two"]
 ```
 
-`theta-zoom data X.npy labels.npy --strata strata.npy --out r.json --plot r.png` is the same from
+`rung data X.npy labels.npy --strata strata.npy --out r.json --plot r.png` is the same from
 the shell: the JSON carries every statistic plus both ladders (`pr_obs`, `pr_floor`), the PNG is
 the ladder figure (observed against the matched floor, shift and p annotated), and
-`theta-zoom summarize r.json` reads it in plain language (sign, certification at the permutation
+`rung summarize r.json` reads it in plain language (sign, certification at the permutation
 resolution, order-averaged agreement, and the stratified verdict when strata were given).
 
 **Your own axis from a public dataset.** Any Hugging Face dataset with a text column and a label
 column becomes an axis JSON (and, with `--strata-field`, a nuisance sidecar) in one command:
 
 ```bash
-theta-zoom axis --dataset Rowan/hellaswag --split validation \
+rung axis --dataset Rowan/hellaswag --split validation \
   --text-field ctx --label-field activity_label --n-classes 8 --n-per-class 16 --out hs_axis.json
-theta-zoom llm --model EleutherAI/pythia-160m --axis hs_axis.json --device mps --out hs.json
+rung llm --model EleutherAI/pythia-160m --axis hs_axis.json --device mps --out hs.json
 ```
 
 Classes default to the most frequent labels; pass `--classes` to choose them. The same builder is a
@@ -91,7 +108,7 @@ Point `--axis` at the folder or at one file; run any subset, any model, any chec
 
 ```bash
 for r in step1000 step4000 step16000 step64000 step143000; do
-  theta-zoom llm --model EleutherAI/pythia-410m-deduped --revision $r \
+  rung llm --model EleutherAI/pythia-410m-deduped --revision $r \
       --axis axes/language_type.json --device mps --out lt_410m_$r.json
 done
 ```
@@ -156,11 +173,40 @@ runs the whole battery; `zoom(...)` is the core.
 6. **Coherence beats prompt count.** Prompts that widen within-class topic diversity weaken
    structural axes.
 
+### Extending it
+
+Everything the paper measures goes through one function, `zoom(X, labels, strata=None)`, and the pieces
+you would change are small and named.
+
+- **A new null.** The two shipped nulls are label permutation and permutation within `strata`. A null is
+  a rule for relabeling at fixed rung sizes, so a third one is a loop that draws relabelings and re-runs
+  the observed ladder against the shared floor. The circular-shift null for time-series labels (the
+  paper's spontaneous sessions, Section 3) is written out in `scripts_canonical/run40_spont_state_axis.py`
+  and is the template.
+- **A nonlinear estimator.** `zoom()` builds one Gram matrix and every rung is `_subset_pr(K, idx)`, the
+  centered Gram-trace participation ratio of that subset. A kernel PR is the same call on a kernel matrix;
+  a local intrinsic dimension (TwoNN, MLE) replaces `_subset_pr` with a function of the subset rows. The
+  identity theta_obs = theta_floor + delta holds for any functional evaluated on both arms; the paper's
+  sign rule and ordering results have been checked for the linear estimator only (Limitations).
+- **Other modalities.** `rung data` reads `.npy`, `.csv`, and whitespace text through `_load_array`. For
+  NWB files build the trials x units count matrix with `pynwb` and save it as `.npy`; for `.mat`,
+  `scipy.io.loadmat`. A vision model is the LLM door with a different encoder: collect one feature vector
+  per image at each layer (forward hooks) and call `zoom(X, labels)` per layer, passing the image-level
+  nuisance (template, scene, photographer) as `strata`.
+- **Multi-token probes.** `llm_battery` reads the last-token hidden state (`h[0, -1, :]`). Mean over a
+  span, or a specific token position, is a one-line change there; the paper's mean-pooling result
+  (Section 8.2: the construction axis collapses, the content axis survives) is the reference point.
+- **Checkpoints and revisions.** `--revision` takes any Hugging Face revision, so `rung llm` over a
+  training run is a shell loop (above).
+
+Tests are numpy-only and run in ten seconds (`pytest -q tests`); add one per extension.
+
 ## What is where
 
 ```
-theta_zoom.py            the instrument: zoom(), llm_battery(), build_axis(), and the theta-zoom CLI
+rung.py                  the instrument: zoom(), llm_battery(), build_axis(), and the rung CLI
                          (data | llm | axis | plot | summarize); numpy core, optional torch+transformers
+theta_zoom.py            alias of rung (the name through 1.1.0), kept for one release
 tests/                   numpy-only pytest suite (pytest -q tests)
 render_all.py            prints the paper's tables and headline numbers from the artifacts
 axes/                    every prompt in the paper: 7 battery axes + ETHICS + compass + clock, with
@@ -181,7 +227,7 @@ scripts_canonical/       one script per registered run; the docstring is the reg
    run52_blocking_factor_check.py, run52b_identity_equal_blocks.py   the blocking factor B(K) and its identity
 data_canonical/          the result JSONs (one per script) that every reported number traces to
 figures_canonical/       the nine figures in the paper
-pyproject.toml           pip install -e . gives the theta-zoom command
+pyproject.toml           pip install -e . gives the rung command (and theta-zoom as an alias)
 ```
 
 Raw neural data are public (Stringer et al. figshare releases; Allen Brain Observatory
