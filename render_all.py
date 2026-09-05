@@ -99,14 +99,27 @@ def ai_sector_summary():
 def certified_summary():
     """Permutation-certified layer counts (paper Table 5, run37 artifact)."""
     print("\n== LLM battery: certified layers, declared order . order-averaged "
-          "(500 permutations, two-sided p<0.05; paper Table 5) ==")
-    d = j("run37_inferential_nulls.json")
-    for m, mv in d["models"].items():
-        for a, av in mv["axes"].items():
-            L = av["layers"]
-            nc = sum(1 for l in L if l["p_two"] < 0.05)
-            na = sum(1 for l in L if l["p_two_orderavg"] < 0.05)
-            print(f"  {m:24s} {a:16s} {nc:2d}/{len(L)} . {na:2d}/{len(L)}")
+          "(500 permutations, two-sided p<0.05; paper Table 5) ==\n"
+          "   (delta and peak excess here are the run37/run53 re-encodings with twenty-draw floors; "
+          "Table 5's delta columns come from the run17/26 battery artifacts, ten-draw floors, "
+          "and differ in the second decimal; IE/PE p are the registered profile statistics)")
+    files = ["run37_inferential_nulls.json"]
+    if (DATA / "run53_mamba_fifth_cell.json").exists():
+        files.append("run53_mamba_fifth_cell.json")   # the fifth cell (Mamba-2.8B on the Pile)
+    for f in files:
+        d = j(f)
+        for m, mv in d["models"].items():
+            for a, av in mv["axes"].items():
+                L = av["layers"]
+                nc = sum(1 for l in L if l["p_two"] < 0.05)
+                na = sum(1 for l in L if l["p_two_orderavg"] < 0.05)
+                pe = max(l["delta"] - L[0]["delta"] for l in L[1:])
+                ps = av.get("profile_stats", {})
+                ie_p = ps.get("IE_canonical", {}).get("p_one", float("nan"))
+                pe_p = ps.get("PE_canonical", {}).get("p_one", float("nan"))
+                print(f"  {m:24s} {a:16s} {L[0]['delta']:+.2f} -> {L[-1]['delta']:+.2f}  "
+                      f"{nc:2d}/{len(L)} . {na:2d}/{len(L)}  peak excess {pe:+.2f}  "
+                      f"IE p={ie_p:.3f} PE p={pe_p:.3f}")
 
 
 def cnn_summary():

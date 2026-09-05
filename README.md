@@ -115,6 +115,11 @@ done
 
 `--paper-seeds` reproduces the paper's Table 5 cells to the last digit (max |CLI - artifact| = 0).
 
+**Any readable site.** `zoom()` takes any samples x features array, so the features can be one
+attention head's output, an MLP's neurons, or a sparse autoencoder's latents instead of the residual
+stream, and the same axis file can be swept over checkpoints (`--revision`) and post-training stages
+(base, SFT, DPO, RLHF) with the floor and both nulls unchanged.
+
 **Your own axes.** An axis is a JSON file `{class_name: [prompt, ...]}`. Six or more classes,
 sixteen or more prompts each, prompts within a class coherent in structure and varied in
 content. Add `<name>.strata.json` with one nuisance label per prompt (topic, template, carrier,
@@ -143,7 +148,7 @@ runs the whole battery; `zoom(...)` is the core.
   conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds
   them, architectural invariance gives exactly zero; the measured harmonics predicted the
   network's ordering in advance at two of three depths.
-- **Language models.** Across six model families the instrument separates content axes
+- **Language models.** Across seven model families, including a state-space model (Mamba-2.8B on the Pile, the fifth corpus-by-architecture cell), the instrument separates content axes
   inherited from tokens from construction axes built along the declared path; label linkage
   is certified at nearly every depth under the order-free statistic, while the profile shape
   belongs to the class arrangement. A pre-registered alignment probe fails informatively:
