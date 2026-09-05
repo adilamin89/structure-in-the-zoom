@@ -101,7 +101,7 @@ concepts, TruthfulQA categories, HellaSwag activities, ARC topics, and a random 
 ETHICS benchmark axis (`ethics_benchmark.json`, four normative domains x 32), and the two planted
 C8 axes (`compass.json`, `clock.json`, eight classes x 16 shared carriers). Three strata sidecars
 turn on the second null where the paper used it: `language_type.strata.json` (topics) and
-`compass.strata.json` / `clock.strata.json` (carrier ids, the carrier-stratified floor of Sec 8.5).
+`compass.strata.json` / `clock.strata.json` (carrier ids, the carrier-stratified floor of Sec 8.6).
 Point `--axis` at the folder or at one file; run any subset, any model, any checkpoint.
 
 **Checkpoint and model sweeps.** Any Hugging Face revision; every JSON has the same shape.
@@ -217,17 +217,20 @@ scripts_canonical/       one script per registered run; the docstring is the reg
    accumulation_order.py, shuffle_label_control.py, allen_*.py, ising_*.py, nematic_*.py
    multipole_harmonics_8dir.py, local_vs_fullfield_tuning.py, sector_balance_scale.py,
    llm_sector_blocking.py     the harmonic-sector analyses (Sec 4, App I)
-   make_fig0_instrument.py, make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py,
-   make_fig8_sector_flow.py, make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py,
-   make_fig9_stimulus_sector.py   regenerate the ten figures from the artifacts (script
+   make_fig0_instrument.py, make_fig1_2_ladder.py, make_fig4b_orientation_quotient.py,
+   make_fig3_4_allen_multipole.py, make_fig8_sector_flow.py, make_fig5_mechanism.py,
+   make_fig8b_llm_pipeline.py, make_fig6_llm.py, make_fig7_nulls.py,
+   make_fig9_stimulus_sector.py   regenerate the twelve figures from the artifacts (script
                          numbers predate the renumbering: make_fig0 draws paper Figure 1, the
-                         instrument schematic; make_fig1_2 draws Figures 2 and 3; make_fig3_4
-                         draws Figures 4 and 6; make_fig8 draws Figure 5; make_fig5/6/7 draw
-                         Figures 7, 8, 9; make_fig9 draws Figure 10 in the appendix)
+                         instrument schematic; make_fig1_2 draws Figures 2 and 3; make_fig4b
+                         draws Figure 4, the orientation quotient; make_fig3_4 draws Figures 5
+                         and 7; make_fig8 draws Figure 6; make_fig5 draws Figure 8; make_fig8b
+                         draws Figure 9, the battery pipeline; make_fig7 draws Figure 10;
+                         make_fig6 draws Figure 11; make_fig9 draws Figure 12 in the appendix)
    run51_spatial_blocking.py   anatomical (spatial k-means) blocking on all eight recordings
    run52_blocking_factor_check.py, run52b_identity_equal_blocks.py   the blocking factor B(K) and its identity
 data_canonical/          the result JSONs (one per script) that every reported number traces to
-figures_canonical/       the ten figures in the paper
+figures_canonical/       the twelve figures in the paper
 pyproject.toml           pip install -e . gives the rung command (and theta-zoom as an alias)
 ```
 
@@ -276,7 +279,7 @@ python render_all.py
 | OLMo-1B matched 16/class battery | run25_olmo1b_16pc_battery.json | run25_olmo1b_16pc_battery.py |
 | Static-session axis search (discovery mode) | run27_static_axis_search.json | run27_static_axis_search.py |
 | Planted-C8 axes (compass/clock) | run28_cyclic_axis_llm.json | run28_cyclic_axis_llm.py |
-| Figures 7-8 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py |
+| Figures 8 and 11 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py |
 | Exact 8-direction harmonic decomposition of C(dphi), every recording (Sec 4, App I) | multipole_harmonics_8dir.json | multipole_harmonics_8dir.py |
 | Why localized gratings are dipole-dominant: per-neuron OSI/DSI, cardinal test, spatial clustering, coverage terciles | local_vs_fullfield_tuning.json | local_vs_fullfield_tuning.py |
 | Sector balance across scales: additivity, coarse-graining flow, Allen per-area | sector_balance_scale.json | sector_balance_scale.py |
@@ -290,10 +293,12 @@ python render_all.py
 | Blocking factor B(K): within-block products rho_1, rho_2 per blocking scheme; raw vs correlation-profile flow (Sec 4.1, App I) | run52_blocking_factor_check.json | run52_blocking_factor_check.py |
 | Blocking identity on equal-size blocks (to 1e-16) | run52b_identity_equal_blocks.json | run52b_identity_equal_blocks.py |
 | Figure 1 (the instrument in five steps; drawn, no data) | — | make_fig0_instrument.py |
-| Figures 2-4 and 6 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
-| Figure 5 (sector balance across scales) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json, allen_expansion_all_sessions.json | make_fig8_sector_flow.py |
-| Figures 7-9 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
-| Figure 10 (sector balance against single-neuron tuning by stimulus type, App I) | local_vs_fullfield_tuning.json | make_fig9_stimulus_sector.py |
+| Figure 4 (the orientation quotient and the two ladder orders; schematic, amplitudes from cos2theta_fit.json) | cos2theta_fit.json | make_fig4b_orientation_quotient.py |
+| Figure 9 (the language-model battery pipeline; schematic, no data) | — | make_fig8b_llm_pipeline.py |
+| Figures 2, 3, 5, 7 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
+| Figure 6 (sector balance across scales) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json, allen_expansion_all_sessions.json | make_fig8_sector_flow.py |
+| Figures 8, 10, 11 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig7_nulls.py, make_fig6_llm.py |
+| Figure 12 (sector balance against single-neuron tuning by stimulus type, App I) | local_vs_fullfield_tuning.json | make_fig9_stimulus_sector.py |
 
 ## Citation
 

@@ -11,7 +11,7 @@ origin and license. Code in this repository is MIT (see `LICENSE`); the items be
 | `language_type.json` | 8 construction types x 16 | same; topics deliberately mixed inside each class |
 | `language_type.strata.json` | topic stratum per prompt | assigned by hand from the prompt text alone, blind to any measured value (the nuisance-preserving null of App G) |
 | `ethical.json` | 8 ethical concepts x 16 | same as world_knowledge; the concept list is inspired by, not identical to, the moral-foundations taxonomy |
-| `compass.json`, `clock.json` (+ `.strata.json`) | 8 classes x 16 shared carriers each | the planted C8 axes of Sec 8.5: sixteen carrier sentences composed for the paper with only the class token rotated; the sidecar holds the carrier id per prompt (the carrier-stratified null) |
+| `compass.json`, `clock.json` (+ `.strata.json`) | 8 classes x 16 shared carriers each | the planted C8 axes of Sec 8.6: sixteen carrier sentences composed for the paper with only the class token rotated; the sidecar holds the carrier id per prompt (the carrier-stratified null) |
 
 The three composed axes and the strata are the paper's own instrument design. Style features of the
 prompts (short declarative carriers, matched final tokens) are part of that design and are stated in the paper.
