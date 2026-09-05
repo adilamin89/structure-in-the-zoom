@@ -217,16 +217,17 @@ scripts_canonical/       one script per registered run; the docstring is the reg
    accumulation_order.py, shuffle_label_control.py, allen_*.py, ising_*.py, nematic_*.py
    multipole_harmonics_8dir.py, local_vs_fullfield_tuning.py, sector_balance_scale.py,
    llm_sector_blocking.py     the harmonic-sector analyses (Sec 4, App I)
-   make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py, make_fig8_sector_flow.py,
-   make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py,
-   make_fig9_stimulus_sector.py   regenerate the nine figures from the artifacts (script
-                         numbers predate the S75 renumbering: make_fig8 draws paper Figure 4,
-                         make_fig3_4 draws Figures 3 and 5, make_fig5/6/7 draw Figures 6, 7, 8,
-                         make_fig9 draws Figure 9 in the appendix)
+   make_fig0_instrument.py, make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py,
+   make_fig8_sector_flow.py, make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py,
+   make_fig9_stimulus_sector.py   regenerate the ten figures from the artifacts (script
+                         numbers predate the renumbering: make_fig0 draws paper Figure 1, the
+                         instrument schematic; make_fig1_2 draws Figures 2 and 3; make_fig3_4
+                         draws Figures 4 and 6; make_fig8 draws Figure 5; make_fig5/6/7 draw
+                         Figures 7, 8, 9; make_fig9 draws Figure 10 in the appendix)
    run51_spatial_blocking.py   anatomical (spatial k-means) blocking on all eight recordings
    run52_blocking_factor_check.py, run52b_identity_equal_blocks.py   the blocking factor B(K) and its identity
 data_canonical/          the result JSONs (one per script) that every reported number traces to
-figures_canonical/       the nine figures in the paper
+figures_canonical/       the ten figures in the paper
 pyproject.toml           pip install -e . gives the rung command (and theta-zoom as an alias)
 ```
 
@@ -275,7 +276,7 @@ python render_all.py
 | OLMo-1B matched 16/class battery | run25_olmo1b_16pc_battery.json | run25_olmo1b_16pc_battery.py |
 | Static-session axis search (discovery mode) | run27_static_axis_search.json | run27_static_axis_search.py |
 | Planted-C8 axes (compass/clock) | run28_cyclic_axis_llm.json | run28_cyclic_axis_llm.py |
-| Figures 5-6 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py |
+| Figures 7-8 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py |
 | Exact 8-direction harmonic decomposition of C(dphi), every recording (Sec 4, App I) | multipole_harmonics_8dir.json | multipole_harmonics_8dir.py |
 | Why localized gratings are dipole-dominant: per-neuron OSI/DSI, cardinal test, spatial clustering, coverage terciles | local_vs_fullfield_tuning.json | local_vs_fullfield_tuning.py |
 | Sector balance across scales: additivity, coarse-graining flow, Allen per-area | sector_balance_scale.json | sector_balance_scale.py |
@@ -288,10 +289,11 @@ python render_all.py
 | Anatomical (spatial k-means) blocking on all eight recordings: the intermediate point of the correlation-length hypothesis (Sec 4.1, App E) | run51_spatial_blocking.json | run51_spatial_blocking.py |
 | Blocking factor B(K): within-block products rho_1, rho_2 per blocking scheme; raw vs correlation-profile flow (Sec 4.1, App I) | run52_blocking_factor_check.json | run52_blocking_factor_check.py |
 | Blocking identity on equal-size blocks (to 1e-16) | run52b_identity_equal_blocks.json | run52b_identity_equal_blocks.py |
-| Figures 1-3 and 5 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
-| Figure 4 (sector balance across scales) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json, allen_expansion_all_sessions.json | make_fig8_sector_flow.py |
-| Figures 6-8 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
-| Figure 9 (sector balance against single-neuron tuning by stimulus type, App I) | local_vs_fullfield_tuning.json | make_fig9_stimulus_sector.py |
+| Figure 1 (the instrument in five steps; drawn, no data) | — | make_fig0_instrument.py |
+| Figures 2-4 and 6 | (generated from JSONs above) | make_fig1_2_ladder.py, make_fig3_4_allen_multipole.py |
+| Figure 5 (sector balance across scales) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json, allen_expansion_all_sessions.json | make_fig8_sector_flow.py |
+| Figures 7-9 | (generated from JSONs above) | make_fig5_mechanism.py, make_fig6_llm.py, make_fig7_nulls.py |
+| Figure 10 (sector balance against single-neuron tuning by stimulus type, App I) | local_vs_fullfield_tuning.json | make_fig9_stimulus_sector.py |
 
 ## Citation
 
