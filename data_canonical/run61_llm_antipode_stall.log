@@ -1,0 +1,128 @@
+[compass] 8 classes, 128 prompts, strata yes | 0s
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 19443.01it/s]
+  L 0: delta -0.265 (p 0.005) | late 0.19 | strat late None | odd share 0.00 | units odd>0.5 0.00 | 4s
+  L 1: delta -0.254 (p 0.005) | late 0.18 | strat late 0.09 | odd share 0.21 | units odd>0.5 0.26 | 5s
+  L 2: delta -0.265 (p 0.005) | late 0.18 | strat late 0.64 | odd share 0.22 | units odd>0.5 0.27 | 5s
+  L 3: delta -0.230 (p 0.005) | late 0.15 | strat late 0.22 | odd share 0.14 | units odd>0.5 0.18 | 6s
+  L 4: delta -0.228 (p 0.005) | late 0.18 | strat late 0.08 | odd share 0.18 | units odd>0.5 0.22 | 6s
+  L 5: delta -0.250 (p 0.005) | late 0.17 | strat late 0.2 | odd share 0.15 | units odd>0.5 0.19 | 7s
+  L 6: delta -0.205 (p 0.005) | late 0.23 | strat late -0.28 | odd share 0.14 | units odd>0.5 0.17 | 7s
+  L 7: delta -0.203 (p 0.005) | late 0.2 | strat late 0.14 | odd share 0.13 | units odd>0.5 0.19 | 8s
+  L 8: delta -0.202 (p 0.010) | late 0.18 | strat late -0.6 | odd share 0.14 | units odd>0.5 0.18 | 8s
+  L 9: delta -0.207 (p 0.010) | late 0.17 | strat late 24.42 | odd share 0.14 | units odd>0.5 0.17 | 9s
+  L10: delta -0.193 (p 0.005) | late 0.18 | strat late 0.19 | odd share 0.13 | units odd>0.5 0.18 | 9s
+  L11: delta -0.203 (p 0.015) | late 0.17 | strat late -0.01 | odd share 0.13 | units odd>0.5 0.20 | 10s
+  L12: delta -0.203 (p 0.020) | late 0.18 | strat late 0.45 | odd share 0.12 | units odd>0.5 0.19 | 10s
+[clock] 8 classes, 128 prompts, strata yes | 10s
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 24683.17it/s]
+  L 0: delta -0.237 (p 0.005) | late 0.19 | strat late -0.0 | odd share 0.00 | units odd>0.5 0.00 | 12s
+  L 1: delta -0.249 (p 0.005) | late 0.16 | strat late 0.89 | odd share 0.30 | units odd>0.5 0.38 | 13s
+  L 2: delta -0.258 (p 0.005) | late 0.15 | strat late 0.95 | odd share 0.28 | units odd>0.5 0.40 | 13s
+  L 3: delta -0.218 (p 0.005) | late 0.15 | strat late 2.29 | odd share 0.33 | units odd>0.5 0.35 | 14s
+  L 4: delta -0.205 (p 0.005) | late 0.16 | strat late 1.12 | odd share 0.36 | units odd>0.5 0.39 | 14s
+  L 5: delta -0.226 (p 0.005) | late 0.14 | strat late 0.42 | odd share 0.36 | units odd>0.5 0.37 | 14s
+  L 6: delta -0.184 (p 0.005) | late 0.18 | strat late 0.77 | odd share 0.33 | units odd>0.5 0.36 | 15s
+  L 7: delta -0.192 (p 0.010) | late 0.18 | strat late 2.95 | odd share 0.33 | units odd>0.5 0.35 | 15s
+  L 8: delta -0.183 (p 0.010) | late 0.16 | strat late 0.45 | odd share 0.34 | units odd>0.5 0.34 | 16s
+  L 9: delta -0.193 (p 0.010) | late 0.15 | strat late -0.1 | odd share 0.35 | units odd>0.5 0.35 | 16s
+  L10: delta -0.209 (p 0.010) | late 0.16 | strat late -0.23 | odd share 0.30 | units odd>0.5 0.32 | 17s
+  L11: delta -0.180 (p 0.010) | late 0.12 | strat late -11.98 | odd share 0.26 | units odd>0.5 0.36 | 17s
+  L12: delta -0.236 (p 0.010) | late 0.13 | strat late -1.08 | odd share 0.34 | units odd>0.5 0.36 | 18s
+[language_type] 8 classes, 128 prompts, strata yes | 18s
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 23410.66it/s]
+  L 0: delta -0.096 (p 0.055) | late 0.65 | strat late 0.59 | odd share 0.44 | units odd>0.5 0.49 | 20s
+  L 1: delta -0.071 (p 0.060) | late 1.06 | strat late 0.7 | odd share 0.40 | units odd>0.5 0.46 | 20s
+  L 2: delta -0.060 (p 0.119) | late 0.57 | strat late 0.63 | odd share 0.43 | units odd>0.5 0.49 | 21s
+  L 3: delta -0.045 (p 0.149) | late 0.56 | strat late 0.79 | odd share 0.46 | units odd>0.5 0.53 | 21s
+  L 4: delta -0.007 (p 0.542) | late 0.5 | strat late 0.95 | odd share 0.47 | units odd>0.5 0.52 | 22s
+  L 5: delta +0.004 (p 0.856) | late 1.08 | strat late -0.6 | odd share 0.47 | units odd>0.5 0.54 | 22s
+  L 6: delta +0.029 (p 0.214) | late 1.49 | strat late 0.68 | odd share 0.45 | units odd>0.5 0.55 | 23s
+  L 7: delta +0.027 (p 0.299) | late 1.42 | strat late -0.51 | odd share 0.43 | units odd>0.5 0.48 | 23s
+  L 8: delta +0.028 (p 0.493) | late -0.66 | strat late -1.52 | odd share 0.43 | units odd>0.5 0.52 | 24s
+  L 9: delta +0.070 (p 0.204) | late -0.45 | strat late 0.24 | odd share 0.40 | units odd>0.5 0.50 | 24s
+  L10: delta +0.106 (p 0.005) | late 0.12 | strat late 0.07 | odd share 0.44 | units odd>0.5 0.48 | 25s
+  L11: delta +0.141 (p 0.010) | late 0.44 | strat late 0.16 | odd share 0.38 | units odd>0.5 0.46 | 25s
+  L12: delta +0.122 (p 0.005) | late 0.12 | strat late 0.16 | odd share 0.47 | units odd>0.5 0.50 | 26s
+VERDICT {
+ "P1_count": 6,
+ "P1": false,
+ "P2_count": 10,
+ "P2": true,
+ "P3_rho": 0.11578947368421053,
+ "P3": false,
+ "compass_strat_late": [
+  0.21640344475902945,
+  0.08417384375732988,
+  0.20309971008798505,
+  -0.27823569671529735,
+  0.13640443251073212,
+  -0.6001667949616237,
+  24.421275126940117,
+  0.19439885567491244,
+  -0.005573829565043268,
+  0.4532998488824824
+ ],
+ "clock_strat_late": [
+  2.294010307871841,
+  1.1216276595094534,
+  0.4156982569705282,
+  0.7737665283251731,
+  2.948081776469966,
+  0.4508894929587929,
+  -0.10008894759883899,
+  -0.2335843463520465,
+  -11.98009063299869,
+  -1.08119127866048
+ ],
+ "compass_odd_share": [
+  0.14095579087734222,
+  0.17776520550251007,
+  0.1463448703289032,
+  0.14072290062904358,
+  0.12581896781921387,
+  0.14416871964931488,
+  0.1366928070783615,
+  0.13310940563678741,
+  0.12934185564517975,
+  0.11933603137731552
+ ],
+ "clock_odd_share": [
+  0.3342033624649048,
+  0.3612644672393799,
+  0.3560093641281128,
+  0.3324170708656311,
+  0.3287121653556824,
+  0.34233832359313965,
+  0.3516104221343994,
+  0.29659304022789,
+  0.256492555141449,
+  0.3419344127178192
+ ],
+ "construction_late_ordinary": [
+  0.5566237856387038,
+  0.5038218046269366,
+  1.0831164104212485,
+  1.491949094607351,
+  1.4153349284743428,
+  -0.6644068924670533,
+  -0.4536532984464457,
+  0.1216416867639789,
+  0.4364214853379586,
+  0.11854784755142218
+ ],
+ "construction_odd_share": [
+  0.4559432864189148,
+  0.46783447265625,
+  0.46505504846572876,
+  0.45274385809898376,
+  0.4250706732273102,
+  0.42531153559684753,
+  0.39941850304603577,
+  0.44034796953201294,
+  0.3755834400653839,
+  0.47236135601997375
+ ]
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run61_llm_antipode_stall.json in 26s

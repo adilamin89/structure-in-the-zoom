@@ -1,0 +1,44 @@
+[D1] targets: PR 18.5 q 0.45 m 60 spread 1.95 corr 0.331 -> K 23 (realized 18.0) | obs +0.347 | 3s
+  seed  1: delta +0.089 | PR 19.1 corr 0.316 | align180 0.357 (meas 0.103) | thirds DS/rand/OS +0.331/-0.306/+0.108 | 10s
+  seed  2: delta +0.673 | PR 15.8 corr 0.318 | align180 0.394 (meas 0.103) | thirds DS/rand/OS +0.122/+0.541/+0.518 | 14s
+  seed  3: delta -0.156 | PR 18.8 corr 0.346 | align180 0.447 (meas 0.103) | thirds DS/rand/OS -0.301/-0.080/+0.027 | 18s
+  seed  4: delta +0.019 | PR 23.1 corr 0.343 | align180 0.375 (meas 0.103) | thirds DS/rand/OS -0.314/-0.326/-0.033 | 22s
+  seed  5: delta -0.071 | PR 23.0 corr 0.346 | align180 0.383 (meas 0.103) | thirds DS/rand/OS +0.221/-0.082/-0.104 | 26s
+  seed  6: delta -0.185 | PR 16.5 corr 0.343 | align180 0.452 (meas 0.103) | thirds DS/rand/OS -0.045/+0.102/-0.104 | 30s
+  seed  7: delta +0.064 | PR 17.9 corr 0.332 | align180 0.451 (meas 0.103) | thirds DS/rand/OS -0.000/+0.064/-0.049 | 34s
+  seed  8: delta +0.249 | PR 15.4 corr 0.324 | align180 0.506 (meas 0.103) | thirds DS/rand/OS -0.159/+0.074/+0.324 | 38s
+  seed  9: delta -0.103 | PR 28.1 corr 0.386 | align180 0.466 (meas 0.103) | thirds DS/rand/OS -0.043/-0.013/-0.056 | 42s
+  seed 10: delta +0.241 | PR 27.3 corr 0.347 | align180 0.302 (meas 0.103) | thirds DS/rand/OS -0.205/+0.476/+0.110 | 46s
+  => D1: delta +0.082 ± 0.243 (SE 0.077) vs obs +0.347, err -0.265 | align180 0.413 vs 0.103 | P slope -0.01 vs data 0.91 | top-mode PR 2 vs data 60 | diag/full 1.9 vs data 16.1 | thirds DS/rand/OS -0.039/+0.045/+0.074
+[D2] targets: PR 23.3 q 0.41 m 61 spread 2.03 corr 0.320 -> K 14 (realized 22.3) | obs +0.280 | 48s
+  seed  1: delta +0.311 | PR 13.2 corr 0.309 | align180 0.443 (meas 0.138) | thirds DS/rand/OS -0.215/-0.537/+0.256 | 55s
+  seed  2: delta +0.368 | PR 10.8 corr 0.300 | align180 0.441 (meas 0.138) | thirds DS/rand/OS -0.046/+0.210/+0.273 | 60s
+  seed  3: delta +0.436 | PR 18.6 corr 0.319 | align180 0.436 (meas 0.138) | thirds DS/rand/OS +0.428/-0.265/+0.103 | 64s
+  seed  4: delta -0.006 | PR 24.2 corr 0.315 | align180 0.399 (meas 0.138) | thirds DS/rand/OS -0.128/-0.169/+0.117 | 69s
+  seed  5: delta +0.040 | PR 24.3 corr 0.349 | align180 0.424 (meas 0.138) | thirds DS/rand/OS -0.001/-0.010/+0.057 | 73s
+  seed  6: delta +0.186 | PR 24.3 corr 0.331 | align180 0.501 (meas 0.138) | thirds DS/rand/OS -0.197/-0.081/+0.074 | 78s
+  seed  7: delta +0.169 | PR 22.7 corr 0.337 | align180 0.379 (meas 0.138) | thirds DS/rand/OS +0.129/+0.170/+0.084 | 82s
+  seed  8: delta -0.072 | PR 13.7 corr 0.311 | align180 0.433 (meas 0.138) | thirds DS/rand/OS -0.102/-0.131/-0.104 | 86s
+  seed  9: delta +0.424 | PR 16.4 corr 0.309 | align180 0.495 (meas 0.138) | thirds DS/rand/OS -0.427/+0.579/+0.581 | 91s
+  seed 10: delta +0.250 | PR 23.8 corr 0.333 | align180 0.392 (meas 0.138) | thirds DS/rand/OS +0.100/+0.166/+0.048 | 95s
+  => D2: delta +0.211 ± 0.171 (SE 0.054) vs obs +0.280, err -0.069 | align180 0.434 vs 0.138 | P slope 0.66 vs data 0.79 | top-mode PR 1 vs data 61 | diag/full 1.4 vs data 12.8 | thirds DS/rand/OS -0.046/-0.007/+0.149
+[D3] targets: PR 20.1 q 0.45 m 102 spread 1.65 corr 0.249 -> K 79 (realized 19.9) | obs +0.240 | 97s
+  seed  1: delta -0.218 | PR 21.1 corr 0.249 | align180 0.299 (meas 0.185) | thirds DS/rand/OS +0.050/-0.050/+0.104 | 104s
+  seed  2: delta +0.234 | PR 34.9 corr 0.241 | align180 0.228 (meas 0.185) | thirds DS/rand/OS +0.166/+0.092/+0.045 | 109s
+  seed  3: delta +0.111 | PR 36.9 corr 0.237 | align180 0.270 (meas 0.185) | thirds DS/rand/OS -0.030/+0.128/+0.094 | 113s
+  seed  4: delta -0.033 | PR 38.9 corr 0.242 | align180 0.213 (meas 0.185) | thirds DS/rand/OS -0.169/+0.004/+0.006 | 118s
+  seed  5: delta +0.279 | PR 25.8 corr 0.243 | align180 0.339 (meas 0.185) | thirds DS/rand/OS +0.009/+0.332/+0.257 | 122s
+  seed  6: delta +0.065 | PR 17.0 corr 0.241 | align180 0.415 (meas 0.185) | thirds DS/rand/OS +0.615/+0.001/-0.035 | 127s
+  seed  7: delta -0.008 | PR 37.7 corr 0.248 | align180 0.238 (meas 0.185) | thirds DS/rand/OS +0.137/-0.045/-0.022 | 131s
+  seed  8: delta +0.209 | PR 40.2 corr 0.252 | align180 0.227 (meas 0.185) | thirds DS/rand/OS -0.036/+0.197/+0.306 | 135s
+  seed  9: delta +0.056 | PR 32.5 corr 0.247 | align180 0.254 (meas 0.185) | thirds DS/rand/OS -0.036/+0.017/+0.030 | 140s
+  seed 10: delta +0.030 | PR 39.6 corr 0.249 | align180 0.213 (meas 0.185) | thirds DS/rand/OS +0.032/+0.229/+0.030 | 144s
+  => D3: delta +0.073 ± 0.139 (SE 0.044) vs obs +0.240, err -0.167 | align180 0.270 vs 0.185 | P slope -0.14 vs data 0.32 | top-mode PR 1 vs data 102 | diag/full 1.4 vs data 16.6 | thirds DS/rand/OS +0.074/+0.090/+0.081
+[L1] targets: PR 30.4 q 0.37 m 105 spread 1.95 corr 0.186 -> K 76 (realized 30.0) | obs +0.461 | 147s
+  seed  1: delta +0.250 | PR 38.5 corr 0.183 | align180 0.245 (meas 0.056) | thirds DS/rand/OS +0.053/+0.080/+0.266 | 156s
+  seed  2: delta +0.155 | PR 38.3 corr 0.179 | align180 0.239 (meas 0.056) | thirds DS/rand/OS +0.165/+0.097/+0.177 | 162s
+  seed  3: delta +0.181 | PR 37.4 corr 0.187 | align180 0.297 (meas 0.056) | thirds DS/rand/OS -0.026/+0.016/+0.271 | 168s
+  seed  4: delta -0.076 | PR 39.1 corr 0.185 | align180 0.162 (meas 0.056) | thirds DS/rand/OS -0.173/+0.001/+0.037 | 174s
+  seed  5: delta +0.365 | PR 37.8 corr 0.179 | align180 0.256 (meas 0.056) | thirds DS/rand/OS +0.166/+0.159/+0.246 | 180s
+  seed  6: delta +0.060 | PR 29.5 corr 0.185 | align180 0.278 (meas 0.056) | thirds DS/rand/OS -0.118/-0.068/+0.078 | 186s
+  seed  7: delta -0.090 | PR 31.0 corr 0.186 | align180 0.302 (meas 0.056) | thirds DS/rand/OS +0.148/-0.113/-0.145 | 192s

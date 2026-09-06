@@ -1,0 +1,132 @@
+[D1] data full  : at four classes deficit -0.501 = A +0.013 + P -0.513 + Cb -0.004 + Cx +0.002 | late shares A -0.03 P 1.02 Cb 0.01 Cx -0.00 | 11s
+[D1] data DS    : at four classes deficit -0.595 = A -0.036 + P -0.671 + Cb +0.110 + Cx +0.001 | late shares A 0.06 P 1.13 Cb -0.18 Cx -0.00 | 15s
+[D1] data nonDS : at four classes deficit -0.109 = A +0.076 + P -0.162 + Cb -0.019 + Cx -0.004 | late shares A -0.69 P 1.49 Cb 0.17 Cx 0.03 | 19s
+[D1] data random: at four classes deficit -0.434 = A +0.009 + P -0.434 + Cb -0.031 + Cx +0.022 | late shares A -0.02 P 1.00 Cb 0.07 Cx -0.05 | 22s
+[D1] model full  : at four classes deficit -0.318 = A -0.100 + P -0.182 + Cb -0.036 + Cx -0.000 | late shares A 0.31 P 0.57 Cb 0.11 Cx 0.00 | 26s
+[D1] model DS    : at four classes deficit -0.170 = A -0.293 + P -0.041 + Cb +0.130 + Cx +0.034 | late shares A 1.72 P 0.24 Cb -0.76 Cx -0.20 | 27s
+[D1] model nonDS : at four classes deficit -0.198 = A -0.091 + P -0.094 + Cb -0.013 + Cx +0.001 | late shares A 0.46 P 0.48 Cb 0.07 Cx -0.00 | 29s
+[D1] model random: at four classes deficit -0.315 = A -0.040 + P -0.267 + Cb -0.010 + Cx +0.003 | late shares A 0.13 P 0.85 Cb 0.03 Cx -0.01 | 30s
+[D1] exactness: max |A+P+Cb+Cx-deficit| 5.02e-15, max PR identity rel 1.69e-05
+[D2] data full  : at four classes deficit -0.389 = A +0.029 + P -0.475 + Cb +0.029 + Cx +0.027 | late shares A -0.08 P 1.22 Cb -0.08 Cx -0.07 | 38s
+[D2] data DS    : at four classes deficit -0.453 = A -0.010 + P -0.627 + Cb +0.166 + Cx +0.018 | late shares A 0.02 P 1.38 Cb -0.37 Cx -0.04 | 41s
+[D2] data nonDS : at four classes deficit +0.002 = A +0.016 + P -0.047 + Cb +0.010 + Cx +0.022 | late shares A 10.59 P -30.63 Cb 6.48 Cx 14.56 | 43s
+[D2] data random: at four classes deficit -0.385 = A +0.123 + P -0.450 + Cb -0.085 + Cx +0.027 | late shares A -0.32 P 1.17 Cb 0.22 Cx -0.07 | 46s
+[D2] model full  : at four classes deficit -0.325 = A -0.025 + P -0.289 + Cb -0.023 + Cx +0.012 | late shares A 0.08 P 0.89 Cb 0.07 Cx -0.04 | 50s
+[D2] model DS    : at four classes deficit -0.433 = A -0.010 + P -0.608 + Cb +0.186 + Cx -0.001 | late shares A 0.02 P 1.40 Cb -0.43 Cx 0.00 | 51s
+[D2] model nonDS : at four classes deficit +0.031 = A -0.131 + P +0.099 + Cb +0.000 + Cx +0.064 | late shares A -4.22 P 3.18 Cb 0.00 Cx 2.04 | 52s
+[D2] model random: at four classes deficit -0.491 = A +0.043 + P -0.612 + Cb +0.069 + Cx +0.009 | late shares A -0.09 P 1.25 Cb -0.14 Cx -0.02 | 53s
+[D2] exactness: max |A+P+Cb+Cx-deficit| 4.88e-15, max PR identity rel 9.56e-06
+[D3] data full  : at four classes deficit -0.274 = A +0.034 + P -0.226 + Cb -0.074 + Cx -0.009 | late shares A -0.12 P 0.82 Cb 0.27 Cx 0.03 | 60s
+[D3] data DS    : at four classes deficit -0.439 = A -0.034 + P -0.415 + Cb -0.005 + Cx +0.015 | late shares A 0.08 P 0.95 Cb 0.01 Cx -0.03 | 62s
+[D3] data nonDS : at four classes deficit -0.012 = A +0.003 + P -0.002 + Cb -0.008 + Cx -0.005 | late shares A -0.24 P 0.14 Cb 0.71 Cx 0.40 | 65s
+[D3] data random: at four classes deficit -0.193 = A +0.040 + P -0.210 + Cb -0.027 + Cx +0.004 | late shares A -0.21 P 1.09 Cb 0.14 Cx -0.02 | 67s
+[D3] model full  : at four classes deficit -0.313 = A -0.007 + P -0.333 + Cb +0.010 + Cx +0.018 | late shares A 0.02 P 1.07 Cb -0.03 Cx -0.06 | 70s
+[D3] model DS    : at four classes deficit -0.609 = A +0.102 + P -0.992 + Cb +0.235 + Cx +0.045 | late shares A -0.17 P 1.63 Cb -0.39 Cx -0.07 | 72s
+[D3] model nonDS : at four classes deficit -0.105 = A -0.224 + P +0.134 + Cb -0.022 + Cx +0.006 | late shares A 2.13 P -1.28 Cb 0.21 Cx -0.06 | 73s
+[D3] model random: at four classes deficit -0.346 = A +0.186 + P -0.517 + Cb -0.005 + Cx -0.009 | late shares A -0.54 P 1.50 Cb 0.02 Cx 0.03 | 74s
+[D3] exactness: max |A+P+Cb+Cx-deficit| 5.44e-15, max PR identity rel 3.62e-06
+[L1] data full  : at four classes deficit -0.423 = A -0.054 + P -0.416 + Cb +0.040 + Cx +0.007 | late shares A 0.13 P 0.98 Cb -0.09 Cx -0.02 | 90s
+[L1] data DS    : at four classes deficit -0.470 = A -0.056 + P -0.551 + Cb +0.110 + Cx +0.026 | late shares A 0.12 P 1.17 Cb -0.23 Cx -0.06 | 95s
+[L1] data nonDS : at four classes deficit -0.136 = A -0.033 + P -0.124 + Cb +0.003 + Cx +0.018 | late shares A 0.24 P 0.91 Cb -0.02 Cx -0.14 | 100s
+[L1] data random: at four classes deficit -0.420 = A -0.009 + P -0.407 + Cb -0.000 + Cx -0.003 | late shares A 0.02 P 0.97 Cb 0.00 Cx 0.01 | 105s
+[L1] model full  : at four classes deficit -0.181 = A -0.042 + P -0.168 + Cb +0.005 + Cx +0.023 | late shares A 0.23 P 0.93 Cb -0.03 Cx -0.13 | 111s
+[L1] model DS    : at four classes deficit +0.036 = A -0.357 + P +0.260 + Cb +0.077 + Cx +0.055 | late shares A -10.02 P 7.30 Cb 2.18 Cx 1.54 | 112s
+[L1] model nonDS : at four classes deficit -0.060 = A +0.089 + P -0.147 + Cb -0.017 + Cx +0.015 | late shares A -1.47 P 2.43 Cb 0.29 Cx -0.24 | 114s
+[L1] model random: at four classes deficit -0.380 = A +0.060 + P -0.504 + Cb +0.046 + Cx +0.019 | late shares A -0.16 P 1.33 Cb -0.12 Cx -0.05 | 115s
+[L1] exactness: max |A+P+Cb+Cx-deficit| 5.72e-15, max PR identity rel 1.84e-05
+[L2] data full  : at four classes deficit -0.342 = A -0.032 + P -0.405 + Cb +0.097 + Cx -0.002 | late shares A 0.09 P 1.18 Cb -0.28 Cx 0.01 | 124s
+[L2] data DS    : at four classes deficit -0.347 = A -0.079 + P -0.469 + Cb +0.211 + Cx -0.009 | late shares A 0.23 P 1.35 Cb -0.61 Cx 0.03 | 128s
+[L2] data nonDS : at four classes deficit -0.166 = A +0.032 + P -0.224 + Cb +0.009 + Cx +0.016 | late shares A -0.19 P 1.35 Cb -0.05 Cx -0.10 | 130s
+[L2] data random: at four classes deficit -0.372 = A -0.024 + P -0.424 + Cb +0.080 + Cx -0.004 | late shares A 0.06 P 1.14 Cb -0.22 Cx 0.01 | 134s
+[L2] model full  : at four classes deficit -0.182 = A -0.063 + P -0.176 + Cb +0.029 + Cx +0.028 | late shares A 0.35 P 0.96 Cb -0.16 Cx -0.15 | 137s
+[L2] model DS    : at four classes deficit -0.266 = A -0.195 + P -0.310 + Cb +0.193 + Cx +0.046 | late shares A 0.73 P 1.17 Cb -0.73 Cx -0.17 | 139s
+[L2] model nonDS : at four classes deficit -0.293 = A -0.023 + P -0.293 + Cb +0.010 + Cx +0.014 | late shares A 0.08 P 1.00 Cb -0.03 Cx -0.05 | 140s
+[L2] model random: at four classes deficit -0.371 = A -0.059 + P -0.373 + Cb +0.029 + Cx +0.031 | late shares A 0.16 P 1.00 Cb -0.08 Cx -0.08 | 141s
+[L2] exactness: max |A+P+Cb+Cx-deficit| 6.16e-15, max PR identity rel 2.60e-05
+[L3] data full  : at four classes deficit -0.324 = A -0.126 + P -0.271 + Cb +0.063 + Cx +0.011 | late shares A 0.39 P 0.84 Cb -0.19 Cx -0.03 | 146s
+[L3] data DS    : at four classes deficit -0.375 = A -0.204 + P -0.270 + Cb +0.092 + Cx +0.007 | late shares A 0.54 P 0.72 Cb -0.25 Cx -0.02 | 148s
+[L3] data nonDS : at four classes deficit -0.184 = A +0.019 + P -0.233 + Cb +0.004 + Cx +0.026 | late shares A -0.10 P 1.27 Cb -0.02 Cx -0.14 | 149s
+[L3] data random: at four classes deficit -0.293 = A -0.087 + P -0.263 + Cb +0.036 + Cx +0.020 | late shares A 0.30 P 0.90 Cb -0.12 Cx -0.07 | 151s
+[L3] model full  : at four classes deficit -0.272 = A -0.029 + P -0.300 + Cb +0.027 + Cx +0.030 | late shares A 0.11 P 1.10 Cb -0.10 Cx -0.11 | 154s
+[L3] model DS    : at four classes deficit -0.309 = A +0.014 + P -0.610 + Cb +0.230 + Cx +0.056 | late shares A -0.05 P 1.97 Cb -0.74 Cx -0.18 | 154s
+[L3] model nonDS : at four classes deficit -0.034 = A -0.103 + P +0.071 + Cb -0.029 + Cx +0.027 | late shares A 3.03 P -2.09 Cb 0.84 Cx -0.78 | 155s
+[L3] model random: at four classes deficit -0.135 = A -0.055 + P -0.164 + Cb +0.015 + Cx +0.069 | late shares A 0.41 P 1.22 Cb -0.11 Cx -0.51 | 156s
+[L3] exactness: max |A+P+Cb+Cx-deficit| 5.11e-15, max PR identity rel 1.07e-05
+[C1] data full  : at four classes deficit -0.245 = A +0.068 + P -0.235 + Cb -0.066 + Cx -0.012 | late shares A -0.28 P 0.96 Cb 0.27 Cx 0.05 | 167s
+[C1] data DS    : at four classes deficit -0.449 = A +0.136 + P -0.536 + Cb -0.061 + Cx +0.012 | late shares A -0.30 P 1.20 Cb 0.14 Cx -0.03 | 170s
+[C1] data nonDS : at four classes deficit -0.056 = A +0.041 + P -0.090 + Cb -0.011 + Cx +0.003 | late shares A -0.74 P 1.60 Cb 0.19 Cx -0.05 | 173s
+[C1] data random: at four classes deficit -0.205 = A +0.053 + P -0.207 + Cb -0.043 + Cx -0.008 | late shares A -0.26 P 1.01 Cb 0.21 Cx 0.04 | 177s
+[C1] model full  : at four classes deficit -0.046 = A -0.007 + P -0.062 + Cb -0.005 + Cx +0.028 | late shares A 0.16 P 1.34 Cb 0.11 Cx -0.61 | 182s
+[C1] model DS    : at four classes deficit +0.098 = A -0.095 + P +0.128 + Cb +0.019 + Cx +0.046 | late shares A -0.96 P 1.30 Cb 0.19 Cx 0.47 | 183s
+[C1] model nonDS : at four classes deficit -0.089 = A +0.132 + P -0.227 + Cb +0.000 + Cx +0.006 | late shares A -1.48 P 2.55 Cb -0.00 Cx -0.07 | 184s
+[C1] model random: at four classes deficit +0.067 = A -0.043 + P +0.035 + Cb +0.004 + Cx +0.071 | late shares A -0.65 P 0.53 Cb 0.06 Cx 1.06 | 185s
+[C1] exactness: max |A+P+Cb+Cx-deficit| 5.90e-15, max PR identity rel 1.14e-05
+[C2] data full  : at four classes deficit -0.203 = A +0.039 + P -0.189 + Cb -0.041 + Cx -0.012 | late shares A -0.19 P 0.93 Cb 0.20 Cx 0.06 | 195s
+[C2] data DS    : at four classes deficit -0.397 = A +0.046 + P -0.389 + Cb -0.043 + Cx -0.011 | late shares A -0.12 P 0.98 Cb 0.11 Cx 0.03 | 198s
+[C2] data nonDS : at four classes deficit -0.023 = A +0.036 + P -0.061 + Cb -0.003 + Cx +0.005 | late shares A -1.59 P 2.69 Cb 0.12 Cx -0.22 | 201s
+[C2] data random: at four classes deficit -0.231 = A +0.058 + P -0.207 + Cb -0.059 + Cx -0.022 | late shares A -0.25 P 0.90 Cb 0.26 Cx 0.10 | 204s
+[C2] model full  : at four classes deficit -0.496 = A +0.001 + P -0.517 + Cb +0.008 + Cx +0.012 | late shares A -0.00 P 1.04 Cb -0.02 Cx -0.02 | 208s
+[C2] model DS    : at four classes deficit -0.697 = A +0.100 + P -0.934 + Cb +0.067 + Cx +0.070 | late shares A -0.14 P 1.34 Cb -0.10 Cx -0.10 | 210s
+[C2] model nonDS : at four classes deficit -0.311 = A -0.160 + P -0.114 + Cb -0.010 + Cx -0.028 | late shares A 0.51 P 0.37 Cb 0.03 Cx 0.09 | 211s
+[C2] model random: at four classes deficit -0.223 = A -0.115 + P -0.085 + Cb -0.023 + Cx +0.000 | late shares A 0.52 P 0.38 Cb 0.10 Cx -0.00 | 212s
+[C2] exactness: max |A+P+Cb+Cx-deficit| 4.83e-15, max PR identity rel 7.38e-06
+VERDICT {
+ "tags": [
+  "D1",
+  "D2",
+  "D3",
+  "L1",
+  "L2",
+  "L3",
+  "C1",
+  "C2"
+ ],
+ "P_at_four_full_data": {
+  "D1": -0.5125785863450609,
+  "D2": -0.47473118411716975,
+  "D3": -0.2258143654138589,
+  "L1": -0.41587296242169103,
+  "L2": -0.4048120814850513,
+  "L3": -0.2714120693832278,
+  "C1": -0.2349335492096678,
+  "C2": -0.18875900532732182
+ },
+ "P_at_four_full_model": {
+  "D1": -0.18187832068248966,
+  "D2": -0.2885516864967581,
+  "D3": -0.3333222583124087,
+  "L1": -0.1676433866755751,
+  "L2": -0.1756310526515108,
+  "L3": -0.29952551743589595,
+  "C1": -0.061946696901818754,
+  "C2": -0.5171978671768507
+ },
+ "diff_P_data_minus_model": {
+  "D1": -0.33070026566257127,
+  "D2": -0.18617949762041164,
+  "D3": 0.10750789289854978,
+  "L1": -0.24822957574611593,
+  "L2": -0.22918102883354052,
+  "L3": 0.028113448052668133,
+  "C1": -0.17298685230784905,
+  "C2": 0.32843886184952886
+ },
+ "top4_most_negative_diff": [
+  "D1",
+  "L1",
+  "L2",
+  "D2"
+ ],
+ "D1_P_negative_count": 8,
+ "D1_DS_gt_nonDS_count": 8,
+ "D1": true,
+ "D2_count": 8,
+ "D2": true,
+ "D3_count_in_top4": 3,
+ "D3": true,
+ "D4_count": 6,
+ "D4": false,
+ "max_sum_check": 6.161737786669619e-15,
+ "max_pr_identity_rel": 2.6029637870368143e-05
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run63_deficit_decomposition.json in 212s

@@ -330,6 +330,11 @@ python render_all.py
 | Runs 56–59 (Sec 7 / App I: the calibrated model across GT1/GT2/GT3 and the direction-selective subpopulation) | run56_odd_gain_across_recordings.json, run57_driven_gain_across_recordings.json, run58_within_class_spectrum_vs_trials.json, run59_shift_by_direction_selectivity.json (+ .log each; expectations in every docstring) | run56_odd_gain_across_recordings.py, run57_driven_gain_across_recordings.py, run58_within_class_spectrum_vs_trials.py, run59_shift_by_direction_selectivity.py |
 | Run 59b (Sec 7, Figure: the per-rung deficit of the DSI-sorted thirds, the rung-four stall) | run59b_per_rung_thirds.json (+ .log) | run59b_per_rung_thirds.py; figure: make_fig_ds_thirds.py |
 | Runs 60 and 60b (Sec 7 / App I: the heterogeneous mixture model, three seeds; matched within-class dimensionality, ten seeds) | run60_mixture_model.json, run60b_mixture_matchedK_armA.json, run60b_mixture_matchedK_armB.json (+ .log each) | run60_mixture_model.py, run60b_mixture_matchedK.py |
+| Run 63 (Sec 7, Figure 10A-B: the exact four-term split of every rung's deficit; the pooling term follows log(k/8) on the direction-selective third) | run63_deficit_decomposition.json (+ .log) | run63_deficit_decomposition.py; figure: make_fig_anatomy.py |
+| Run 64a (Sec 7, Figure 10C: the leading within-class modes live on 48-121 neurons; the diagonal's effective dimension is 7-19x the within-class PR) | run64a_within_class_localization.json (+ .log) | run64a_within_class_localization.py |
+| Run 62 (Sec 6.1 / App D: the two-species XY lattice, the stall on ground truth at f = 0 and f = 1) | run62_two_species_xy.json (+ .log) | run62_two_species_xy.py |
+| Run 61 (not in the paper: the compass axis has no climb to stall; its odd share is below the clock's at 10/10 layers) | run61_llm_antipode_stall.json (+ .log) | run61_llm_antipode_stall.py |
+| Run 64b (not in the paper: two assembly-model constructions failed their own construction check, the top mode on 1-2 neurons; log only) | run64b_assembly_model.log | run64b_assembly_model.py |
 
 ## Citation
 

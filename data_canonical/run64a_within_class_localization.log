@@ -1,0 +1,64 @@
+[D1] data : PR_diag   377.2 PR_full   23.4 ratio 16.10 | neuron-space PR top1    60.3 top10    92.1 of N 19942 | top10 var 0.45 | log-var spread 1.95 | 4s
+[D1] model: PR_diag    67.5 PR_full   29.6 ratio  2.27 | neuron-space PR top1     3.6 top10    15.4 of N 4000 | top10 var 0.48 | log-var spread 1.09
+[D2] data : PR_diag   371.7 PR_full   29.5 ratio 12.75 | neuron-space PR top1    60.9 top10    83.5 of N 13871 | top10 var 0.41 | log-var spread 2.03 | 7s
+[D2] model: PR_diag    49.4 PR_full   23.3 ratio  2.08 | neuron-space PR top1     2.1 top10    17.7 of N 4000 | top10 var 0.53 | log-var spread 1.11
+[D3] data : PR_diag   386.7 PR_full   23.8 ratio 16.57 | neuron-space PR top1   101.8 top10    85.2 of N 10773 | top10 var 0.45 | log-var spread 1.65 | 9s
+[D3] model: PR_diag    46.3 PR_full   22.4 ratio  1.83 | neuron-space PR top1     1.9 top10    17.4 of N 4000 | top10 var 0.51 | log-var spread 1.10
+[L1] data : PR_diag   664.1 PR_full   45.0 ratio 14.91 | neuron-space PR top1   104.7 top10   143.8 of N 20685 | top10 var 0.37 | log-var spread 1.95 | 14s
+[L1] model: PR_diag    85.4 PR_full   47.3 ratio  1.78 | neuron-space PR top1     2.5 top10     9.7 of N 4000 | top10 var 0.37 | log-var spread 1.14
+[L2] data : PR_diag   660.9 PR_full   33.9 ratio 19.44 | neuron-space PR top1   120.7 top10   166.9 of N 17240 | top10 var 0.43 | log-var spread 2.27 | 18s
+[L2] model: PR_diag    48.8 PR_full   27.7 ratio  1.71 | neuron-space PR top1     1.5 top10    12.8 of N 4000 | top10 var 0.48 | log-var spread 1.10
+[L3] data : PR_diag   283.8 PR_full   22.2 ratio 12.78 | neuron-space PR top1    47.9 top10    84.9 of N 13948 | top10 var 0.50 | log-var spread 1.67 | 20s
+[L3] model: PR_diag    48.8 PR_full   22.4 ratio  2.15 | neuron-space PR top1     3.4 top10    15.7 of N 4000 | top10 var 0.55 | log-var spread 1.08
+[C1] data : PR_diag   688.7 PR_full   58.7 ratio 11.76 | neuron-space PR top1    70.2 top10   134.7 of N 19151 | top10 var 0.30 | log-var spread 1.91 | 25s
+[C1] model: PR_diag    53.7 PR_full   44.4 ratio  1.20 | neuron-space PR top1     1.4 top10     3.5 of N 4000 | top10 var 0.39 | log-var spread 1.10
+[C2] data : PR_diag   551.6 PR_full   78.4 ratio  6.97 | neuron-space PR top1   111.7 top10    92.8 of N 13906 | top10 var 0.28 | log-var spread 1.89 | 28s
+[C2] model: PR_diag    49.9 PR_full   41.3 ratio  1.18 | neuron-space PR top1     1.2 top10     4.1 of N 4000 | top10 var 0.39 | log-var spread 1.09
+VERDICT {
+ "Z1_count": 0,
+ "Z1": false,
+ "Z2_data_within_3x_count": 0,
+ "Z2_model_beyond_3x_count": 0,
+ "Z2": false,
+ "data_pr_neuron_top1": {
+  "D1": 60.31122349000543,
+  "D2": 60.93843127862874,
+  "D3": 101.76324321369361,
+  "L1": 104.72389846073077,
+  "L2": 120.65203076355976,
+  "L3": 47.898303548399966,
+  "C1": 70.17190606764666,
+  "C2": 111.67683667116083
+ },
+ "model_pr_neuron_top1": {
+  "D1": 3.6445820325847023,
+  "D2": 2.1272318910925123,
+  "D3": 1.863194297309989,
+  "L1": 2.4782024290579647,
+  "L2": 1.50712799234431,
+  "L3": 3.3943324135232285,
+  "C1": 1.357788110771454,
+  "C2": 1.1772371723512651
+ },
+ "data_ratio": {
+  "D1": 16.098888826894292,
+  "D2": 12.752704915683694,
+  "D3": 16.573103506831224,
+  "L1": 14.90825919124306,
+  "L2": 19.44220148034327,
+  "L3": 12.784386397309689,
+  "C1": 11.75973297903686,
+  "C2": 6.965079622491833
+ },
+ "model_ratio": {
+  "D1": 2.267981675668132,
+  "D2": 2.0813978822389294,
+  "D3": 1.830519769308797,
+  "L1": 1.7803876684609947,
+  "L2": 1.7086002855211757,
+  "L3": 2.1499271377754328,
+  "C1": 1.2021452047280472,
+  "C2": 1.177491531535868
+ }
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run64a_within_class_localization.json in 28s

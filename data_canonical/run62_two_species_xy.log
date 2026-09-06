@@ -1,0 +1,59 @@
+T=1.0 f=0.00: S2 0.53 |P| 0.03 | valid 2/12 | late -0.01±0.29 | delta8 -0.004 | director -0.050 | 13s
+T=1.0 f=0.25: S2 0.63 |P| 0.08 | valid 3/12 | late 0.84±0.24 | delta8 +0.161 | director +0.001 | 26s
+T=1.0 f=0.50: S2 0.51 |P| 0.26 | valid 3/12 | late 0.66±0.47 | delta8 -0.154 | director -0.081 | 38s
+T=1.0 f=0.75: S2 0.54 |P| 0.75 | valid 2/12 | late 0.29±0.13 | delta8 +0.001 | director -0.048 | 50s
+T=1.0 f=1.00: S2 0.73 |P| 0.92 | valid 2/12 | late 0.50±0.50 | delta8 -0.105 | director -0.079 | 62s
+T=1.2 f=0.00: S2 0.19 |P| 0.03 | valid 8/12 | late 0.01±2.47 | delta8 +0.014 | director +0.029 | 75s
+T=1.2 f=0.25: S2 0.27 |P| 0.06 | valid 5/12 | late 0.70±0.28 | delta8 +0.093 | director +0.077 | 88s
+T=1.2 f=0.50: S2 0.47 |P| 0.30 | valid 2/12 | late 0.94±0.06 | delta8 -0.057 | director +0.112 | 101s
+T=1.2 f=0.75: S2 0.55 |P| 0.76 | valid 2/12 | late -0.00±0.00 | delta8 -0.153 | director +0.047 | 113s
+T=1.2 f=1.00: S2 0.65 |P| 0.84 | valid 3/12 | late 0.79±0.87 | delta8 +0.134 | director +0.058 | 125s
+T=1.4 f=0.00: S2 0.11 |P| 0.03 | valid 11/12 | late 0.07±0.22 | delta8 +0.007 | director +0.011 | 139s
+T=1.4 f=0.25: S2 0.12 |P| 0.05 | valid 10/12 | late 0.71±0.63 | delta8 +0.033 | director +0.042 | 152s
+T=1.4 f=0.50: S2 0.18 |P| 0.14 | valid 5/12 | late 0.51±0.59 | delta8 +0.116 | director +0.088 | 165s
+T=1.4 f=0.75: S2 0.44 |P| 0.67 | valid 2/12 | late 0.52±0.52 | delta8 -0.276 | director -0.016 | 178s
+T=1.4 f=1.00: S2 0.58 |P| 0.82 | valid 0/12 | late n/a | delta8 +nan | director +0.197 | 190s
+VERDICT {
+ "1.0": {
+  "n_valid_by_f": {
+   "0.0": 2,
+   "0.25": 3,
+   "0.5": 3,
+   "0.75": 2,
+   "1.0": 2
+  },
+  "X1": null,
+  "late_at_f1": null,
+  "X4": false
+ },
+ "1.2": {
+  "n_valid_by_f": {
+   "0.0": 8,
+   "0.25": 5,
+   "0.5": 2,
+   "0.75": 2,
+   "1.0": 3
+  },
+  "X1": true,
+  "late_at_f1": 0.7913909777971039,
+  "X4": true
+ },
+ "1.4": {
+  "n_valid_by_f": {
+   "0.0": 11,
+   "0.25": 10,
+   "0.5": 5,
+   "0.75": 2,
+   "1.0": 0
+  },
+  "X1": true,
+  "late_at_f1": null,
+  "X4": false
+ },
+ "X2_late_gt_0.3_at_best_T": {
+  "T": 1.2,
+  "late": 0.7913909777971039,
+  "pass": true
+ }
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run62_two_species_xy.json in 190s
