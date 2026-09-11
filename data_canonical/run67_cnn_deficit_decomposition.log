@@ -1,0 +1,176 @@
+/opt/homebrew/lib/python3.14/site-packages/numpy/_core/fromnumeric.py:3824: RuntimeWarning: Mean of empty slice
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/opt/homebrew/lib/python3.14/site-packages/numpy/_core/_methods.py:142: RuntimeWarning: invalid value encountered in scalar divide
+  ret = ret.dtype.type(ret / rcount)
+seed0 plain/conv1             : rot delta +0.013 (run5 +0.013, shuffle +0.000) | excess A +0.062 P -0.049 Cb -0.000 Cx -0.000 -> A | free D +0.005 Tb +0.008 S +0.054 -> Tb | dim slope +0.01 | digit delta -0.001 free D +0.007 Tb +0.260 S -0.374 dim slope +0.01 | 2s
+seed0 plain/conv2             : rot delta +0.053 (run5 +0.053, shuffle +0.002) | excess A +0.116 P -0.064 Cb -0.000 Cx -0.000 -> A | free D +0.024 Tb +0.027 S +0.088 -> Tb | dim slope +0.03 | digit delta -0.033 free D +0.019 Tb +0.317 S -0.165 dim slope +0.05 | 5s
+seed0 plain/conv3             : rot delta +0.088 (run5 +0.088, shuffle -0.010) | excess A +0.127 P +0.089 Cb -0.023 Cx -0.096 -> A | free D +0.085 Tb +0.132 S -0.004 -> Tb | dim slope +0.11 | digit delta +0.025 free D -0.017 Tb +0.121 S -0.017 dim slope -0.09 | 7s
+seed0 equivariant/conv1_equi  : rot delta +0.016 (run5 +0.016, shuffle +0.001) | excess A +0.047 P -0.031 Cb -0.000 Cx -0.001 -> A | free D +0.003 Tb +0.013 S +0.035 -> Tb | dim slope +0.00 | digit delta -0.002 free D +0.007 Tb +0.260 S -0.377 dim slope +0.01 | 10s
+seed0 equivariant/conv2_equi  : rot delta +0.102 (run5 +0.102, shuffle +0.005) | excess A +0.080 P +0.033 Cb -0.002 Cx -0.014 -> A | free D +0.051 Tb +0.061 S +0.018 -> Tb | dim slope +0.07 | digit delta -0.042 free D +0.039 Tb +0.265 S -0.167 dim slope +0.06 | 13s
+seed0 equivariant/conv3_equi  : rot delta +0.099 (run5 +0.099, shuffle -0.010) | excess A +0.122 P +0.127 Cb -0.028 Cx -0.112 -> P | free D +0.105 Tb +0.145 S -0.022 -> Tb | dim slope +0.13 | digit delta +0.048 free D +0.019 Tb +0.091 S +0.003 dim slope -0.05 | 17s
+seed0 equivariant/conv1_inv   : rot delta +0.000 (run5 +0.000, shuffle +0.000) | excess A +0.037 P -0.036 Cb -0.000 Cx -0.001 -> A | free D +0.000 Tb +0.001 S +0.036 -> Cx | dim slope +0.00 | digit delta +0.001 free D +0.001 Tb +0.268 S -0.383 dim slope +0.00 | 19s
+seed0 equivariant/conv2_inv   : rot delta -0.001 (run5 -0.001, shuffle -0.000) | excess A +0.030 P -0.029 Cb -0.000 Cx -0.001 -> A | free D -0.000 Tb +0.001 S +0.029 -> Cx | dim slope -0.00 | digit delta -0.003 free D -0.001 Tb +0.354 S -0.200 dim slope -0.00 | 21s
+seed0 equivariant/conv3_inv   : rot delta +0.010 (run5 +0.010, shuffle +0.005) | excess A -0.017 P +0.022 Cb +0.000 Cx +0.001 -> P | free D +0.005 Tb -0.000 S -0.017 -> D | dim slope +0.01 | digit delta +0.057 free D +0.024 Tb +0.272 S -0.240 dim slope +0.04 | 24s
+seed1 plain/conv1             : rot delta +0.010 (run5 +0.010, shuffle +0.001) | excess A -0.019 P +0.028 Cb -0.000 Cx -0.000 -> P | free D +0.003 Tb +0.006 S -0.025 -> Tb | dim slope +0.00 | digit delta -0.000 free D +0.005 Tb +0.279 S -0.352 dim slope +0.01 | 26s
+seed1 plain/conv2             : rot delta +0.094 (run5 +0.094, shuffle +0.004) | excess A +0.101 P +0.000 Cb -0.002 Cx -0.009 -> A | free D +0.032 Tb +0.069 S +0.032 -> Tb | dim slope +0.04 | digit delta -0.040 free D +0.024 Tb +0.298 S -0.222 dim slope +0.05 | 28s
+seed1 plain/conv3             : rot delta -0.022 (run5 -0.022, shuffle +0.003) | excess A +0.291 P -0.112 Cb -0.046 Cx -0.157 -> A | free D -0.019 Tb +0.198 S +0.093 -> Tb | dim slope +0.00 | digit delta +0.023 free D -0.009 Tb +0.108 S +0.007 dim slope -0.06 | 30s
+seed1 equivariant/conv1_equi  : rot delta +0.020 (run5 +0.020, shuffle +0.002) | excess A -0.031 P +0.050 Cb -0.000 Cx -0.001 -> P | free D +0.007 Tb +0.013 S -0.044 -> Tb | dim slope +0.01 | digit delta -0.002 free D +0.008 Tb +0.274 S -0.334 dim slope +0.01 | 33s
+seed1 equivariant/conv2_equi  : rot delta +0.144 (run5 +0.144, shuffle +0.006) | excess A +0.052 P +0.110 Cb -0.004 Cx -0.020 -> P | free D +0.079 Tb +0.083 S -0.031 -> Tb | dim slope +0.10 | digit delta -0.044 free D +0.039 Tb +0.255 S -0.153 dim slope +0.05 | 36s
+seed1 equivariant/conv3_equi  : rot delta +0.086 (run5 +0.086, shuffle -0.003) | excess A +0.167 P +0.121 Cb -0.039 Cx -0.160 -> A | free D +0.112 Tb +0.176 S -0.009 -> Tb | dim slope +0.14 | digit delta +0.055 free D +0.008 Tb +0.102 S -0.048 dim slope -0.05 | 39s
+seed1 equivariant/conv1_inv   : rot delta +0.000 (run5 +0.000, shuffle -0.000) | excess A -0.044 P +0.045 Cb -0.000 Cx -0.001 -> P | free D +0.000 Tb +0.001 S -0.045 -> Tb | dim slope +0.00 | digit delta +0.001 free D +0.000 Tb +0.285 S -0.342 dim slope +0.00 | 41s
+seed1 equivariant/conv2_inv   : rot delta +0.001 (run5 +0.001, shuffle +0.000) | excess A -0.034 P +0.036 Cb -0.000 Cx -0.002 -> P | free D +0.000 Tb +0.002 S -0.035 -> Cx | dim slope +0.00 | digit delta -0.003 free D -0.002 Tb +0.365 S -0.190 dim slope -0.00 | 43s
+seed1 equivariant/conv3_inv   : rot delta +0.001 (run5 +0.001, shuffle +0.001) | excess A -0.021 P +0.022 Cb -0.000 Cx -0.001 -> P | free D -0.000 Tb +0.001 S -0.022 -> Tb | dim slope +0.00 | digit delta +0.056 free D +0.014 Tb +0.331 S -0.183 dim slope +0.03 | 46s
+seed2 plain/conv1             : rot delta +0.025 (run5 +0.025, shuffle -0.002) | excess A -0.012 P +0.040 Cb -0.000 Cx -0.000 -> P | free D +0.013 Tb +0.015 S -0.027 -> Tb | dim slope +0.02 | digit delta -0.008 free D +0.005 Tb +0.270 S -0.279 dim slope +0.02 | 48s
+seed2 plain/conv2             : rot delta +0.120 (run5 +0.120, shuffle -0.006) | excess A +0.080 P +0.063 Cb -0.003 Cx -0.014 -> A | free D +0.072 Tb +0.071 S +0.009 -> D | dim slope +0.09 | digit delta -0.069 free D +0.020 Tb +0.289 S -0.129 dim slope +0.04 | 50s
+seed2 plain/conv3             : rot delta +0.079 (run5 +0.079, shuffle -0.007) | excess A +0.190 P -0.007 Cb -0.011 Cx -0.086 -> A | free D +0.082 Tb +0.101 S +0.089 -> Tb | dim slope +0.12 | digit delta +0.018 free D -0.046 Tb +0.118 S +0.029 dim slope -0.11 | 52s
+seed2 equivariant/conv1_equi  : rot delta +0.010 (run5 +0.010, shuffle -0.001) | excess A -0.047 P +0.058 Cb -0.000 Cx -0.000 -> P | free D +0.004 Tb +0.007 S -0.055 -> Tb | dim slope +0.00 | digit delta -0.004 free D +0.000 Tb +0.275 S -0.307 dim slope +0.00 | 55s
+seed2 equivariant/conv2_equi  : rot delta +0.065 (run5 +0.065, shuffle -0.004) | excess A +0.020 P +0.053 Cb -0.001 Cx -0.003 -> P | free D +0.029 Tb +0.043 S -0.023 -> Tb | dim slope +0.04 | digit delta -0.033 free D +0.006 Tb +0.312 S -0.206 dim slope +0.03 | 58s
+seed2 equivariant/conv3_equi  : rot delta +0.014 (run5 +0.014, shuffle -0.006) | excess A +0.244 P +0.043 Cb -0.055 Cx -0.211 -> A | free D +0.058 Tb +0.228 S +0.016 -> Tb | dim slope +0.08 | digit delta +0.039 free D -0.007 Tb +0.067 S +0.011 dim slope -0.07 | 61s
+seed2 equivariant/conv1_inv   : rot delta -0.000 (run5 -0.000, shuffle -0.000) | excess A -0.056 P +0.056 Cb -0.000 Cx -0.000 -> P | free D -0.000 Tb +0.000 S -0.056 -> Tb | dim slope -0.00 | digit delta +0.001 free D +0.001 Tb +0.280 S -0.307 dim slope +0.00 | 63s
+seed2 equivariant/conv2_inv   : rot delta -0.001 (run5 -0.001, shuffle -0.000) | excess A -0.029 P +0.029 Cb -0.000 Cx -0.000 -> A | free D -0.000 Tb +0.000 S -0.030 -> D | dim slope -0.00 | digit delta -0.001 free D -0.000 Tb +0.346 S -0.202 dim slope -0.00 | 65s
+seed2 equivariant/conv3_inv   : rot delta -0.024 (run5 -0.024, shuffle -0.003) | excess A +0.008 P -0.029 Cb -0.000 Cx -0.000 -> P | free D -0.021 Tb +0.000 S +0.008 -> D | dim slope -0.02 | digit delta +0.051 free D +0.035 Tb +0.226 S -0.169 dim slope +0.05 | 68s
+seed3 plain/conv1             : rot delta +0.017 (run5 +0.017, shuffle -0.001) | excess A +0.071 P -0.053 Cb -0.000 Cx -0.000 -> A | free D +0.003 Tb +0.016 S +0.056 -> Tb | dim slope +0.00 | digit delta -0.007 free D +0.001 Tb +0.284 S -0.286 dim slope +0.01 | 70s
+seed3 plain/conv2             : rot delta +0.104 (run5 +0.104, shuffle -0.002) | excess A +0.143 P -0.020 Cb -0.003 Cx -0.014 -> A | free D +0.048 Tb +0.075 S +0.068 -> Tb | dim slope +0.05 | digit delta -0.048 free D +0.023 Tb +0.316 S -0.166 dim slope +0.05 | 72s
+seed3 plain/conv3             : rot delta +0.033 (run5 +0.033, shuffle +0.001) | excess A +0.359 P -0.123 Cb -0.042 Cx -0.162 -> A | free D +0.051 Tb +0.185 S +0.174 -> Tb | dim slope +0.07 | digit delta +0.048 free D +0.019 Tb +0.134 S -0.064 dim slope -0.02 | 74s
+seed3 equivariant/conv1_equi  : rot delta +0.012 (run5 +0.012, shuffle -0.001) | excess A +0.051 P -0.038 Cb -0.000 Cx -0.000 -> A | free D +0.004 Tb +0.009 S +0.042 -> Tb | dim slope +0.00 | digit delta -0.002 free D +0.005 Tb +0.288 S -0.283 dim slope +0.01 | 77s
+seed3 equivariant/conv2_equi  : rot delta +0.071 (run5 +0.071, shuffle -0.003) | excess A +0.120 P -0.043 Cb -0.001 Cx -0.003 -> A | free D +0.027 Tb +0.050 S +0.070 -> Tb | dim slope +0.03 | digit delta -0.043 free D +0.009 Tb +0.320 S -0.158 dim slope +0.03 | 80s
+seed3 equivariant/conv3_equi  : rot delta +0.171 (run5 +0.171, shuffle +0.012) | excess A +0.235 P +0.034 Cb -0.034 Cx -0.075 -> A | free D +0.106 Tb +0.163 S +0.072 -> Tb | dim slope +0.13 | digit delta +0.005 free D -0.013 Tb +0.127 S +0.049 dim slope -0.08 | 83s
+seed3 equivariant/conv1_inv   : rot delta -0.000 (run5 -0.000, shuffle -0.000) | excess A +0.041 P -0.042 Cb +0.000 Cx -0.000 -> P | free D -0.000 Tb +0.000 S +0.041 -> D | dim slope -0.00 | digit delta +0.000 free D +0.000 Tb +0.297 S -0.287 dim slope +0.00 | 85s
+seed3 equivariant/conv2_inv   : rot delta -0.001 (run5 -0.001, shuffle +0.000) | excess A +0.070 P -0.071 Cb -0.000 Cx -0.000 -> P | free D -0.001 Tb +0.000 S +0.070 -> D | dim slope -0.00 | digit delta -0.001 free D -0.001 Tb +0.378 S -0.156 dim slope -0.00 | 87s
+seed3 equivariant/conv3_inv   : rot delta -0.024 (run5 -0.024, shuffle -0.005) | excess A +0.074 P -0.093 Cb +0.000 Cx +0.000 -> P | free D -0.019 Tb -0.000 S +0.074 -> D | dim slope -0.02 | digit delta +0.027 free D +0.034 Tb +0.368 S -0.135 dim slope +0.05 | 89s
+seed4 plain/conv1             : rot delta +0.008 (run5 +0.008, shuffle +0.000) | excess A -0.024 P +0.035 Cb -0.000 Cx -0.002 -> P | free D +0.002 Tb +0.008 S -0.033 -> Tb | dim slope +0.00 | digit delta -0.006 free D -0.004 Tb +0.210 S -0.155 dim slope -0.00 | 92s
+seed4 plain/conv2             : rot delta +0.089 (run5 +0.089, shuffle +0.001) | excess A -0.028 P +0.126 Cb -0.002 Cx -0.009 -> P | free D +0.041 Tb +0.058 S -0.085 -> Tb | dim slope +0.05 | digit delta -0.060 free D -0.017 Tb +0.235 S -0.093 dim slope +0.01 | 94s
+seed4 plain/conv3             : rot delta +0.159 (run5 +0.159, shuffle +0.014) | excess A +0.021 P +0.315 Cb -0.043 Cx -0.148 -> P | free D +0.141 Tb +0.195 S -0.174 -> Tb | dim slope +0.16 | digit delta +0.061 free D +0.034 Tb +0.066 S -0.051 dim slope -0.02 | 96s
+seed4 equivariant/conv1_equi  : rot delta +0.013 (run5 +0.013, shuffle +0.001) | excess A -0.019 P +0.034 Cb -0.000 Cx -0.003 -> P | free D +0.004 Tb +0.011 S -0.030 -> Tb | dim slope +0.00 | digit delta -0.006 free D -0.004 Tb +0.209 S -0.155 dim slope -0.00 | 99s
+seed4 equivariant/conv2_equi  : rot delta +0.082 (run5 +0.082, shuffle +0.003) | excess A -0.002 P +0.087 Cb -0.001 Cx -0.005 -> P | free D +0.047 Tb +0.039 S -0.040 -> D | dim slope +0.06 | digit delta -0.050 free D -0.005 Tb +0.266 S -0.042 dim slope +0.02 | 102s
+seed4 equivariant/conv3_equi  : rot delta +0.108 (run5 +0.108, shuffle +0.010) | excess A +0.163 P +0.126 Cb -0.038 Cx -0.152 -> A | free D +0.107 Tb +0.182 S -0.019 -> Tb | dim slope +0.13 | digit delta +0.058 free D +0.018 Tb +0.075 S -0.011 dim slope -0.04 | 105s
+seed4 equivariant/conv1_inv   : rot delta +0.000 (run5 +0.000, shuffle +0.000) | excess A -0.028 P +0.031 Cb -0.000 Cx -0.003 -> P | free D +0.000 Tb +0.003 S -0.030 -> Cx | dim slope +0.00 | digit delta +0.001 free D +0.001 Tb +0.213 S -0.150 dim slope +0.00 | 107s
+seed4 equivariant/conv2_inv   : rot delta +0.001 (run5 +0.001, shuffle +0.001) | excess A -0.039 P +0.042 Cb -0.000 Cx -0.003 -> P | free D +0.001 Tb +0.003 S -0.042 -> Cx | dim slope +0.00 | digit delta -0.001 free D +0.000 Tb +0.309 S -0.022 dim slope -0.00 | 109s
+seed4 equivariant/conv3_inv   : rot delta -0.009 (run5 -0.009, shuffle -0.004) | excess A -0.007 P +0.001 Cb +0.000 Cx +0.001 -> A | free D -0.006 Tb +0.000 S -0.007 -> D | dim slope -0.01 | digit delta +0.043 free D -0.008 Tb +0.239 S -0.090 dim slope +0.01 | 112s
+plain/conv1             : rot delta +0.015±0.006 (run5b +0.015±0.006) | excess A +0.016 P +0.000 Cb -0.000 Cx -0.001 -> A | free D +0.005±0.004 Tb +0.011±0.004 S +0.005 -> Tb dim slope +0.01 | digit -0.005 free D +0.003 Tb +0.260 S -0.289 -> Cx dim slope +0.01
+plain/conv2             : rot delta +0.092±0.022 (run5b +0.092±0.022) | excess A +0.082 P +0.021 Cb -0.002 Cx -0.009 -> A | free D +0.043±0.017 Tb +0.060±0.017 S +0.022 -> Tb dim slope +0.05 | digit -0.050 free D +0.014 Tb +0.291 S -0.155 -> Tb dim slope +0.04
+plain/conv3             : rot delta +0.068±0.060 (run5b +0.068±0.060) | excess A +0.198 P +0.032 Cb -0.033 Cx -0.130 -> A | free D +0.068±0.052 Tb +0.162±0.039 S +0.036 -> Tb dim slope +0.09 | digit +0.035 free D -0.004 Tb +0.109 S -0.019 -> Tb dim slope -0.06
+equivariant/conv1_equi  : rot delta +0.014±0.004 (run5b +0.014±0.004) | excess A +0.000 P +0.015 Cb -0.000 Cx -0.001 -> P | free D +0.004±0.001 Tb +0.011±0.002 S -0.010 -> Tb dim slope +0.00 | digit -0.003 free D +0.003 Tb +0.261 S -0.291 -> Cx dim slope +0.01
+equivariant/conv2_equi  : rot delta +0.093±0.029 (run5b +0.093±0.029) | excess A +0.054 P +0.048 Cb -0.002 Cx -0.009 -> A | free D +0.047±0.019 Tb +0.055±0.016 S -0.001 -> Tb dim slope +0.06 | digit -0.042 free D +0.018 Tb +0.284 S -0.145 -> Tb dim slope +0.04
+equivariant/conv3_equi  : rot delta +0.096±0.050 (run5b +0.096±0.050) | excess A +0.186 P +0.090 Cb -0.039 Cx -0.142 -> A | free D +0.097±0.020 Tb +0.179±0.028 S +0.007 -> Tb dim slope +0.12 | digit +0.041 free D +0.005 Tb +0.092 S +0.001 -> Tb dim slope -0.06
+equivariant/conv1_inv   : rot delta +0.000±0.000 (run5b +0.000±0.000) | excess A -0.010 P +0.011 Cb -0.000 Cx -0.001 -> P | free D +0.000±0.000 Tb +0.001±0.001 S -0.011 -> Cx dim slope +0.00 | digit +0.001 free D +0.001 Tb +0.269 S -0.294 -> Cx dim slope +0.00
+equivariant/conv2_inv   : rot delta -0.000±0.001 (run5b -0.000±0.001) | excess A -0.000 P +0.002 Cb -0.000 Cx -0.001 -> P | free D -0.000±0.001 Tb +0.001±0.001 S -0.002 -> Cx dim slope -0.00 | digit -0.002 free D -0.001 Tb +0.350 S -0.154 -> Tb dim slope -0.00
+equivariant/conv3_inv   : rot delta -0.009±0.014 (run5b -0.009±0.014) | excess A +0.007 P -0.015 Cb +0.000 Cx +0.000 -> P | free D -0.008±0.010 Tb +0.000±0.000 S +0.007 -> D dim slope -0.01 | digit +0.047 free D +0.020 Tb +0.287 S -0.163 -> Tb dim slope +0.04
+VERDICT {
+ "C1_per_set": {
+  "plain/conv2": false,
+  "plain/conv3": false,
+  "equivariant/conv2_equi": false,
+  "equivariant/conv3_equi": false
+ },
+ "C1": false,
+ "C2_per_set": {
+  "equivariant/conv1_inv": true,
+  "equivariant/conv2_inv": true,
+  "equivariant/conv3_inv": true
+ },
+ "C2": true,
+ "C3_per_set": {
+  "plain/conv1": true,
+  "plain/conv2": true,
+  "plain/conv3": true,
+  "equivariant/conv1_equi": true,
+  "equivariant/conv2_equi": true,
+  "equivariant/conv3_equi": true
+ },
+ "C3": true,
+ "reproduction_per_set": {
+  "plain/conv1": true,
+  "plain/conv2": true,
+  "plain/conv3": true,
+  "equivariant/conv1_equi": true,
+  "equivariant/conv2_equi": true,
+  "equivariant/conv3_equi": true,
+  "equivariant/conv1_inv": true,
+  "equivariant/conv2_inv": true,
+  "equivariant/conv3_inv": true
+ },
+ "reproduction": true,
+ "largest_excess_term": {
+  "plain/conv1": "A",
+  "plain/conv2": "A",
+  "plain/conv3": "A",
+  "equivariant/conv1_equi": "P",
+  "equivariant/conv2_equi": "A",
+  "equivariant/conv3_equi": "A",
+  "equivariant/conv1_inv": "P",
+  "equivariant/conv2_inv": "P",
+  "equivariant/conv3_inv": "P"
+ },
+ "refined_descriptive": {
+  "rot_largest_free_term": {
+   "plain/conv1": "Tb",
+   "plain/conv2": "Tb",
+   "plain/conv3": "Tb",
+   "equivariant/conv1_equi": "Tb",
+   "equivariant/conv2_equi": "Tb",
+   "equivariant/conv3_equi": "Tb",
+   "equivariant/conv1_inv": "Cx",
+   "equivariant/conv2_inv": "Cx",
+   "equivariant/conv3_inv": "D"
+  },
+  "digit_largest_free_term": {
+   "plain/conv1": "Cx",
+   "plain/conv2": "Tb",
+   "plain/conv3": "Tb",
+   "equivariant/conv1_equi": "Cx",
+   "equivariant/conv2_equi": "Tb",
+   "equivariant/conv3_equi": "Tb",
+   "equivariant/conv1_inv": "Cx",
+   "equivariant/conv2_inv": "Tb",
+   "equivariant/conv3_inv": "Tb"
+  },
+  "rot_Tb_excess_mean": {
+   "plain/conv1": 0.010716901423277674,
+   "plain/conv2": 0.060050501337402654,
+   "plain/conv3": 0.1620421247443269,
+   "equivariant/conv1_equi": 0.010534399739976618,
+   "equivariant/conv2_equi": 0.05530109038319545,
+   "equivariant/conv3_equi": 0.1786847983689353,
+   "equivariant/conv1_inv": 0.001000112889398518,
+   "equivariant/conv2_inv": 0.001153064447911413,
+   "equivariant/conv3_inv": 0.00021700800031968138
+  },
+  "rot_D_excess_mean": {
+   "plain/conv1": 0.0052003879405797615,
+   "plain/conv2": 0.0434653082247678,
+   "plain/conv3": 0.06806933422991387,
+   "equivariant/conv1_equi": 0.004167029728751237,
+   "equivariant/conv2_equi": 0.046648424176660645,
+   "equivariant/conv3_equi": 0.09748978760840224,
+   "equivariant/conv1_inv": 0.00010577519455466735,
+   "equivariant/conv2_inv": -0.00012175296059370546,
+   "equivariant/conv3_inv": -0.008216082558803043
+  },
+  "digit_D_excess_mean": {
+   "plain/conv1": 0.0029653041431436703,
+   "plain/conv2": 0.013908023795027907,
+   "plain/conv3": -0.0038198429813923254,
+   "equivariant/conv1_equi": 0.003348163873337301,
+   "equivariant/conv2_equi": 0.0175088363260174,
+   "equivariant/conv3_equi": 0.005124264028599347,
+   "equivariant/conv1_inv": 0.000547631724605976,
+   "equivariant/conv2_inv": -0.0007076710496089673,
+   "equivariant/conv3_inv": 0.019863371788376404
+  },
+  "digit_Tb_excess_mean": {
+   "plain/conv1": 0.2604016902805797,
+   "plain/conv2": 0.2912214856418192,
+   "plain/conv3": 0.10949561487880306,
+   "equivariant/conv1_equi": 0.261086993310349,
+   "equivariant/conv2_equi": 0.2836997523285061,
+   "equivariant/conv3_equi": 0.09244958454827758,
+   "equivariant/conv1_inv": 0.2686314313758106,
+   "equivariant/conv2_inv": 0.35027434687442904,
+   "equivariant/conv3_inv": 0.28716705438490164
+  }
+ },
+ "max_sum_check": 3.4416913763379853e-15,
+ "max_pr_identity_rel": 3.018764379078497e-07
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run67_cnn_deficit_decomposition.json in 112s

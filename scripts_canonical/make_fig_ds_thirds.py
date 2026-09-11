@@ -30,12 +30,12 @@ MK = {"DS": "o", "random": "D", "nonDS": "s"}
 CLASSES = [1, 2, 3, 4, 6, 8]
 
 fig = plt.figure(figsize=(6.0, 2.4))
-axA = fig.add_axes([0.075, 0.19, 0.31, 0.66])
-axB = fig.add_axes([0.455, 0.19, 0.235, 0.66])
-axC = fig.add_axes([0.775, 0.19, 0.215, 0.66])
+axA = fig.add_axes([0.085, 0.19, 0.30, 0.66])
+axB = fig.add_axes([0.465, 0.19, 0.225, 0.66])
+axC = fig.add_axes([0.765, 0.19, 0.215, 0.66])
 for ax, letter, title in ((axA, "A", "the rung-four stall, drifting GT1"),
-                          (axB, "B", "share of the climb after four classes"),
-                          (axC, "C", "the shift tracks the DS fraction")):
+                          (axB, "B", "climb left after four classes"),
+                          (axC, "C", "shift vs DS fraction")):
     ax.set_title(f"$\\mathbf{{{letter}}}$  {title}", loc="left", fontsize=7.6)
     ax.spines[["top", "right"]].set_visible(False)
 
@@ -48,13 +48,12 @@ axA.plot(CLASSES, row["full"]["deficit"], "-", color=INK, lw=0.9, alpha=0.55, la
 for s in ("DS", "random", "nonDS"):
     axA.plot(CLASSES, row["subsets"][s]["deficit"], MK[s] + "-", ms=3.3, lw=1.4, color=COL[s], label=LAB[s], zorder=3)
 y4 = row["subsets"]["nonDS"]["deficit"][3]
-axA.annotate("an even code has every class\nmean it will have by four classes:\nthe orientation-only ladder stalls",
-             xy=(4, y4), xytext=(1.0, 0.09), fontsize=6.2, color=BLUE, va="top",
-             arrowprops=dict(arrowstyle="->", color=BLUE, lw=0.7, shrinkB=2))
-axA.text(6.0, -0.985, "late rungs", ha="center", va="bottom", fontsize=6.4, color="0.35")
-axA.set_xticks(CLASSES); axA.set_xlim(0.6, 8.4); axA.set_ylim(-1.0, 0.36)
+axA.text(8.3, -0.60, "an even code has every\nclass mean by four classes:\nthe orientation-only\nladder stalls",
+         fontsize=5.7, color=BLUE, va="top", ha="right", linespacing=1.05)
+axA.text(7.9, -0.985, "late rungs", ha="right", va="bottom", fontsize=6.4, color="0.35")
+axA.set_xticks(CLASSES); axA.set_xlim(0.6, 8.4); axA.set_ylim(-1.0, 0.58)
 axA.set_xlabel("classes accumulated"); axA.set_ylabel("log PR below the floor")
-axA.legend(loc="lower right", frameon=False, handlelength=1.6, borderaxespad=0.2)
+axA.legend(loc="upper left", frameon=False, handlelength=1.6, borderaxespad=0.2, labelspacing=0.25)
 
 # ---- (B) late fraction per third, eight recordings ----
 x = np.arange(len(tags))
@@ -65,8 +64,8 @@ for s in ("DS", "random", "nonDS"):
     axB.plot(x, [rows[t]["subsets"][s]["late_fraction"] for t in tags], MK[s], ms=3.6, color=COL[s],
              mec="white", mew=0.4, label=LAB[s], zorder=3, ls="none")
 axB.axhline(0, color="k", lw=0.6, alpha=0.5)
-axB.set_xticks(x); axB.set_xticklabels(tags); axB.set_ylim(-0.12, 1.12)
-axB.set_xlabel("grating recording"); axB.set_ylabel("deficit at four classes / at one class")
+axB.set_xticks(x); axB.set_xticklabels(tags); axB.set_ylim(-0.12, 1.24)
+axB.set_xlabel("grating recording"); axB.set_ylabel("share of the climb")
 axB.text(0.02, 0.97, "D drifting  L localized  C low contrast", transform=axB.transAxes, fontsize=5.9, va="top", color="0.35")
 
 # ---- (C) full shift vs DS fraction ----
@@ -77,10 +76,10 @@ for i, t in enumerate(v["tags"]):
     axC.plot(fr[i], df[i], mark[t[0]], ms=4.2, color=INK, mfc=RED if t[0] == "L" else ("white" if t[0] == "C" else INK), mew=0.8)
     dx, dy = (0.012, 0.004) if t not in ("C1",) else (0.012, -0.014)
     axC.text(fr[i] + dx, df[i] + dy, t, fontsize=6.2, color="0.25", va="center")
-axC.text(0.03, 0.96, f"Spearman $\\rho$ = {rho:.2f}", transform=axC.transAxes, fontsize=6.6, va="top")
-axC.set_xlabel("direction-selective fraction of tuned neurons")
+axC.text(0.03, 0.97, f"Spearman $\\rho$ = {rho:.2f}", transform=axC.transAxes, fontsize=6.6, va="top")
+axC.set_xlabel("DS fraction (tuned neurons)")
 axC.set_ylabel("direction-aligned shift $\\delta$")
-axC.set_xlim(0.32, 0.86); axC.set_ylim(0.15, 0.50)
+axC.set_xlim(0.32, 0.86); axC.set_ylim(0.15, 0.55)
 
 for out in OUTS:
     if out is not OUTS[0] and not out.parent.exists():

@@ -19,8 +19,8 @@ OUTS = [HERE.parent / "figures_canonical" / "fig_sign_rule.png", HERE.parent.par
 j = lambda f: json.load(open(DATA / f)); run9 = j("run9_alignment_225.json"); run3b = j("run3b_principal_angles_residualized.json"); run11 = j("run11_bootstrap_prediction.json")
 CLASS = ["#4e79a7", "#f28e2b", "#59a14f", "#e15759", "#b07aa1", "#edc948", "#76b7b2", "#9c755f"]
 INK, GRAY = "#222222", "#8a8a8a"
-fig = plt.figure(figsize=(6.0, 2.45))
-axA = fig.add_axes([0.005, 0.02, 0.60, 0.86]); axB = fig.add_axes([0.715, 0.20, 0.275, 0.66])
+fig = plt.figure(figsize=(6.0, 2.9))
+axA = fig.add_axes([0.005, 0.02, 0.60, 0.87]); axB = fig.add_axes([0.715, 0.17, 0.275, 0.70])
 fig.text(0.005, 0.95, "A", fontsize=8.5, fontweight="bold", va="center"); fig.text(0.035, 0.95, "the within-class geometry sets the sign", fontsize=7.5, va="center")
 ax = axA; ax.set_xlim(0, 18); ax.set_ylim(0, 7.2); ax.set_aspect("equal"); ax.axis("off")
 def regime(cx, cy, r, mode, title, verdict, colv):
@@ -38,8 +38,8 @@ def regime(cx, cy, r, mode, title, verdict, colv):
         elif mode == "invariant":
             ax.add_patch(Circle((x, y), 0.8, fc="0.75", ec="none", alpha=0.35))
         ax.plot([x], [y], "o", color=CLASS[k] if mode != "invariant" else "0.3", ms=2.8, zorder=5)
-    ax.text(cx, cy + r + 1.05, title, ha="center", va="bottom", fontsize=6.4, color=INK)
-    ax.text(cx, cy - r - 0.5, verdict, ha="center", va="top", fontsize=6.3, color=colv, fontweight="bold", linespacing=1.05)
+    ax.text(cx, cy + r + 0.75, title, ha="center", va="bottom", fontsize=7.2, color=INK, linespacing=1.0)
+    ax.text(cx, cy - r - 0.45, verdict, ha="center", va="top", fontsize=7.0, color=colv, fontweight="bold", linespacing=1.05)
 regime(3.0, 3.6, 1.7, "lowrank", "orbit of class means,\nlow-rank clouds", "$\\delta > 0$: each class adds\na direction the floor\naverages away", "#b40426")
 regime(9.0, 3.6, 1.7, "isotropic", "same means,\nisotropic clouds", "$\\delta < 0$: the structured\nrung is the more\ndiffuse one", "#2166ac")
 regime(15.0, 3.6, 1.7, "invariant", "representation invariant\nto the axis", "$\\delta = 0$: nothing\nfor the ladder\nto read", "0.35")
@@ -53,7 +53,7 @@ floor = min(min(run9[r]["profile"].values()) for r in ["GT1", "GT2", "GT3"])
 ax.axhspan(floor, floor + null_mu + 2 * null_sd, color="0.85", zorder=0)
 ax.set_xlabel(r"class separation $\Delta\phi$ (deg)"); ax.set_ylabel("within-class subspace alignment")
 ax.set_xlim(15, 185); ax.set_ylim(0.02, 0.29); ax.set_xticks([45, 90, 135, 180])
-ax.legend(fontsize=5.8, frameon=False, loc="upper center", ncol=2, columnspacing=0.8)
+ax.legend(fontsize=6.5, frameon=False, loc="upper center", ncol=2, columnspacing=0.8)
 ax.set_title("B  measured alignment", loc="left", fontweight="bold")
 ax.spines[["top", "right"]].set_visible(False)
 for out in OUTS:

@@ -1,340 +1,283 @@
 # Structure is in the zoom
 
-**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs. arXiv 2026
-(identifier added on posting). This repository is two things: `rung`, the measurement released as a
-tested tool, and the complete code and data behind every number in the paper.
+**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs, 2026 (arXiv
+identifier added on posting). This repository is two things: `rung`, the paper's measurement
+released as a tested tool, and the code and data behind every number in the paper.
 
-**Neural door.** You have trials x neurons (or frames x neurons) and one label per row. You get the part
-of the scaling exponent that label explains, its permutation p-value, and a second null for the nuisance
-your labeling preserves.
+## What rung reads
 
-**LLM door.** You have a Hugging Face model (any checkpoint) and a category set. You get the same three
-numbers at every layer from one command, with every prompt in the paper shipped as a runnable axis.
+A dimensionality-scaling exponent, the slope of the participation ratio against subsample size on
+log-log axes, is reported for neural populations and for the layers of language models as if the
+number belonged to the system. It does not. On one patch of eleven thousand mouse V1 neurons the
+exponent reads 0.25 along random stimulus subsets, 0.31 along drift direction and 0.35 along
+neuron count, and only the middle number carries structure. `rung` splits any such exponent
+exactly into a **floor**, what random subsets of the same sizes return through the same estimator,
+and a **shift** δ earned along a **declared axis**, the classes you accumulate and the order you add
+them in; it then reads the shift against two nulls: **permuting the labels** at fixed rung sizes,
+which asks whether the axis is linked to the covariance at all, and **permuting them only within
+nuisance strata** (carrier sentences, topics, sessions), which asks whether the label adds anything
+beyond the composition the labeling preserves. A shift outside both bands means the label organizes
+covariance accumulation; inside the second band only, it is composition; at zero, the probe is blind
+to this axis, which is not the same as the population lacking structure.
 
-## The tool
+It runs on any samples-by-features array with one label per row, and on any Hugging Face language
+model at every layer from one command. A rung is one step of the subsampling ladder; the tool reads
+every rung against its matched floor. There is no probe to train and no dictionary to fit.
 
-A dimensionality scaling exponent (how the participation ratio grows as you add data) is not
-a property of a system: on one ten-thousand-neuron patch of mouse V1 it reads 0.25, 0.31, and
-0.35 along three probe axes, and the three numbers mean three different things. `rung`
-decomposes any such exponent exactly into a **sampling floor** (what random subsets of the same
-sizes return) plus a **shift delta earned against a declared axis** (the classes you accumulate and the order you add them
-in), and tests that shift two ways: against a label-permutation null (Monte Carlo, 500 draws by default), and, when you
-tell it what nuisance structure your partition preserves, against a **stratified null** (labels
-permuted only within strata) that isolates what the labels add. It runs on any samples-by-features array and on any
-Hugging Face language model layer by layer. A rung is one step of the subsampling ladder; the tool
-reads every rung against its matched floor. (Released as `theta-zoom` through 1.1.0; `theta_zoom` and the
-`theta-zoom` command stay as aliases for one release; 1.3.0 adds the per-rung deficit, the late
-fraction with the antipode check, and `--split-by`.)
-
-### Install and run (sixty seconds)
+## Install and run in sixty seconds
 
 ```bash
-pip install git+https://github.com/adilamin89/structure-in-the-zoom   # numpy core: rung data / summarize / plot
-rung data X.npy labels.npy --out r.json --plot r.png                   # any samples-by-features array
+pip install git+https://github.com/adilamin89/structure-in-the-zoom     # numpy core
+rung data X.npy labels.npy --out r.json --plot r.png                     # any samples-by-features array
+rung summarize r.json                                                    # the reading, in plain language
 ```
 
-For the language-model door clone the repository (the paper's axes live in `axes/`) and add the model extras:
+For a language model, clone the repository (the paper's prompt axes live in `axes/`) and add the
+model extras:
 
 ```bash
 git clone https://github.com/adilamin89/structure-in-the-zoom && cd structure-in-the-zoom
-pip install -e ".[models]"                       # + torch, transformers, datasets
-rung llm --model EleutherAI/pythia-160m --axis axes/ --device mps --out pythia160m.json
-rung plot pythia160m.json --out pythia160m.png
-rung summarize pythia160m.json                 # plain-language reading, the paper's rules applied
+pip install -e ".[models]"                                    # + torch, transformers, datasets
+rung llm --model EleutherAI/pythia-160m --axis axes/language_type.json --device mps --out lt.json
+rung plot lt.json --out lt.png                                # the depth profile with both null bands
+rung summarize lt.json                                        # the reading, layer by layer
 ```
 
-### What it returns, per layer and per axis
+`theta-zoom`, the tool's name through 1.1.0, stays as an alias for one release.
 
-- `delta`, `p_two`: the shift along the declared class order and its permutation p-value
-  (Monte Carlo, 500 permutations by default);
-- `delta_orderavg`, `p_two_orderavg`: the shift averaged over random class orders, the
-  partition-level statistic for unordered classes;
-- `strat_p_two` when a strata file exists: the shift against the stratified null, the
-  difference between "the labels organize this representation" and "the labels happen to
-  preserve composition".
+## What it returns
 
-`rung plot` draws one panel per axis with both statistics against their null bands.
-`rung summarize` applies the paper's reading rules: significance against the label null under
-Benjamini-Hochberg for both statistics, the declared-order shape (embedding sign, valley, last zero
-crossing), and, with strata, whether the signal is label-linked or composition.
+For one array and one axis (`rung data`, or `zoom(X, labels)` in Python):
 
-**Since 1.3.0, the ladder itself is reported.** Every result carries `deficit`, the log participation ratio
-of the accumulated classes below the floor at each rung (zero at the top rung, where the ladder and the
-floor hold the same samples), and `late_fraction`, the deficit at half the classes over the deficit at
-one class: the share of the climb that the second half of the classes carries. With `--antipode map.json`
-(`{class: its antipodal class}`) that number is the paper's stall test (Section 7): a code that has every
-class mean by half the classes, one that reads the quotient of the circle, has nothing left to climb
-there, and a code that distinguishes a class from its antipode still does. `--split-by scores.npy` (one
-score per feature, such as a direction-selectivity index) runs the top, bottom and a random third of the
-features at matched size, each with its own floor, which is the paper's run 59 as one command.
+- `theta_floor`, `delta`: the floor and the shift, with `theta_obs = theta_floor + delta` exact;
+- `p_two`, `z`: the shift against the label-permutation null (500 permutations by default);
+- `delta_orderavg`, `p_two_orderavg`: the shift averaged over fifty random class orders, the statistic
+  for a partition whose classes have no natural order;
+- `strat_p_two` when strata are given: the shift against the nuisance-preserving null;
+- the ladder itself: `pr_obs` and `pr_floor` at every rung, `deficit` (the log participation ratio
+  of the accumulated classes below the floor, zero at the top rung) and `late_fraction`, the share of
+  the climb that the second half of the classes still carries. With `--antipode pairs.json`
+  (`{class: its antipodal class}`) that number is the stall test of the paper's Section 7: a code that
+  has every class mean by half the classes has nothing left to climb there; a code that distinguishes
+  a class from its antipode still does.
 
-![One population, three axes](figures_canonical/fig_three_axes.png)
+Before any of that, `rung data` prints the **spectrum**: the array's full effective dimension, the
+variance fraction of its leading eigenvalue and of its largest single feature. A population dominated
+by one direction blinds any spectral functional (the paper's Section 8.3 meets one); `--standardize`
+z-scores every feature first and is the repair.
 
-### Use cases
+Three further readings, each one flag:
 
-**A neural recording with labels.** Trials x neurons with a stimulus label per trial
-(direction, orientation, category), or frames x neurons with a state label (running speed
-octiles, pupil, session-time blocks). Pass the session or animal as strata when trials are not
-exchangeable across it.
+- `--decompose` (`decompose(X, labels)`): the exact four-term split of every rung's deficit and of the
+  shift into a trace term, a fluctuation-pooling term, a between-class term and a mean-fluctuation
+  coupling (Section 7), regrouped into two scale-free pieces, the change in the pooled within-class
+  effective dimension `D` and the trace share of the class means `Tb`, with the private slope of `D`
+  against log(k/K) (1 when every class brings its own fluctuation subspace, 0 when the variability
+  recurs across classes) and, with `--n-shuffle`, every term net of label permutations. Read `D` and
+  `Tb` wherever the within-class scale changes with the class.
+- `--sectors` (`sectors(X, labels)`): for a cyclic axis, with the labels in cyclic order, the harmonics
+  of the class-mean kernel (Section 4): the coefficients (for eight classes the paper's a, c1, b2, c3, b4), the sector balance
+  b2/|c1|, the even and odd amplitudes, the coherence of adjacent and of antipodal classes, and the
+  accumulation order that entry coherence predicts will climb faster.
+- `--null-shift`: when the labels are in time order (one per frame), a circular shift of the whole
+  label sequence as the second null, which keeps the labels' autocorrelation and breaks only their
+  alignment with the frames (Section 3). A slowly drifting population passes the label permutation
+  and fails this one.
 
-```python
-from rung import zoom
-r = zoom(X, labels, n_perm=500)                     # declared order + order-averaged
-r = zoom(X, labels, strata=session_ids, n_perm=500) # + stratified null
-r["delta"], r["p_two"], r["delta_orderavg"], r["p_two_orderavg"], r["strat_p_two"]
-```
+`--order sequential|antipodal|<list>` sets the declared accumulation order (the paper's Section 4.1
+contrast); `--split-by scores.npy` runs the top, bottom and a random third of the features at matched
+size, each with its own floor. For a model, every quantity above is returned at every layer, and
+`--revision` reads any Hugging Face checkpoint.
 
-`rung data X.npy labels.npy --strata strata.npy --out r.json --plot r.png` is the same from
-the shell: the JSON carries every statistic plus both ladders (`pr_obs`, `pr_floor`), the PNG is
-the ladder figure (observed against the matched floor, shift and p annotated), and
-`rung summarize r.json` reads it in plain language (sign, significance at the permutation
-resolution, the per-rung deficit and the late fraction, order-averaged agreement, and the stratified
-verdict when strata were given).
+`rung summarize` turns a result into sentences under the paper's rules: the sign and its standing at
+the permutation resolution, whether the order-averaged statistic agrees with the declared order, the
+stratified verdict, the per-rung deficit and the late fraction, the split, the sector balance, and,
+for a model, the profile shape (embedding sign, valley, last zero crossing) and whether the signal is
+label-linked or composition. `rung plot` draws the ladder figure for an array and one panel per axis
+for a model, with both null bands.
 
-**Your own axis from a public dataset.** Any Hugging Face dataset with a text column and a label
-column becomes an axis JSON (and, with `--strata-field`, a nuisance sidecar) in one command:
+## Two worked examples
+
+**A recording.** Trials by neurons, one drift direction per trial in eight classes at 45°, in angular
+order, with the antipodal pairs written down.
 
 ```bash
-rung axis --dataset Rowan/hellaswag --split validation \
-  --text-field ctx --label-field activity_label --n-classes 8 --n-per-class 16 --out hs_axis.json
-rung llm --model EleutherAI/pythia-160m --axis hs_axis.json --device mps --out hs.json
+python -c "import json; json.dump({c: (c + 4) % 8 for c in range(8)}, open('pairs.json', 'w'))"
+rung data resp.npy direction.npy --antipode pairs.json --sectors --decompose --out v1.json --plot v1.png
+rung summarize v1.json
 ```
 
-Classes default to the most frequent labels; pass `--classes` to choose them. The same builder is a
-Python function, `build_axis(rows, text_field, label_field, ...)`, for records you already hold.
+The summary gives the floor, the shift and its permutation p; the deficit at every rung and the share
+of the climb left after four classes, read as the stall test; the sector balance of the class-mean
+kernel with the accumulation order it predicts; and the split, which says whether the shift is the
+pooling of fluctuation modes private to each class (`D`, the paper's finding on V1) or the class means
+(`Tb`). Pass the session or animal as `--strata` when trials are not exchangeable across it; pass a
+per-neuron direction-selectivity index as `--split-by` to compare the direction-selective, random and
+orientation-only thirds at matched size.
 
-**Blind probes.** A linear participation ratio cannot see past a rogue dimension (paper Sec 8.4, run 55:
-OLMo-1B has one feature carrying two thirds of the variance and reads zero on every axis). `rung data` prints
-`spectrum()` first (effective dimension, leading-eigenvalue fraction, largest single-feature fraction) and warns
-when one dimension dominates; `--standardize` (or `zoom(..., standardize=True)`) z-scores every feature first,
-which restores OLMo-1B's content axis. Off by default so `--paper-seeds` reproduces the published cells.
-
-**Tests.** `pip install -e ".[test]" && pytest -q tests` runs the numpy-only suite: the
-decomposition identity, significance on structured labels and its absence on shuffled ones, the
-per-rung deficit and the stall test, the split at matched size, the
-stratified null, the command line end to end, and the axis builder.
-
-**A language model, every layer.** Every prompt in the paper ships in `axes/` as a ready-to-run
-axis file: the seven battery axes (world-knowledge domains, sentence-construction types, ethical
-concepts, TruthfulQA categories, HellaSwag activities, ARC topics, and a random control), the
-ETHICS benchmark axis (`ethics_benchmark.json`, four normative domains x 32), and the two planted
-C8 axes (`compass.json`, `clock.json`, eight classes x 16 shared carriers). Three strata sidecars
-turn on the second null where the paper used it: `language_type.strata.json` (topics) and
-`compass.strata.json` / `clock.strata.json` (carrier ids, the carrier-stratified floor of Sec 8.6).
-Point `--axis` at the folder or at one file; run any subset, any model, any checkpoint.
-
-**Checkpoint and model sweeps.** Any Hugging Face revision; every JSON has the same shape.
+**A model.** Sixteen prompts per class, eight classes, the hidden state at the last token of every
+layer.
 
 ```bash
-for r in step1000 step4000 step16000 step64000 step143000; do
-  rung llm --model EleutherAI/pythia-410m-deduped --revision $r \
-      --axis axes/language_type.json --device mps --out lt_410m_$r.json
-done
+rung llm --model EleutherAI/pythia-2.8b --axis axes/language_type.json axes/world_knowledge.json \
+    --device mps --out p28.json
+rung summarize p28.json
 ```
 
-`--paper-seeds` reproduces the paper's Table 5 cells to the last digit (max |CLI - artifact| = 0).
+The construction axis (sentence types, topics mixed inside each class) starts negative at the
+embedding and rises to positive with depth; the content axis (world-knowledge domains) is positive at
+the embedding and dilutes. `axes/language_type.strata.json` carries a topic per prompt, so the
+construction axis is read against the second null as well. For checkpoints, add `--revision`
+(`step1000`, `step143000`); for a site other than the residual stream, collect one feature vector per
+prompt at that site (an attention head's output, an MLP's neurons, a sparse autoencoder's latents) and
+call `zoom(X, labels)` on it. `rung axis --dataset ... --text-field ... --label-field ... --out my.json`
+builds an axis from any Hugging Face dataset, with `--strata-field` for the nuisance sidecar.
 
-**Any readable site.** `zoom()` takes any samples x features array, so the features can be one
-attention head's output, an MLP's neurons, or a sparse autoencoder's latents instead of the residual
-stream, and the same axis file can be swept over checkpoints (`--revision`) and post-training stages
-(base, SFT, DPO, RLHF) with the floor and both nulls unchanged.
+The two planted axes in `axes/`, `compass.json` and `clock.json`, are what the second null is for:
+eight class tokens rotated inside sixteen shared carrier sentences. Under the ordinary floor both read
+δ ≈ −0.2 at every layer with no label information at the embedding; the carrier-stratified null (their
+`.strata.json` sidecars) returns them to zero.
 
-**Your own axes.** An axis is a JSON file `{class_name: [prompt, ...]}`. Six or more classes,
-sixteen or more prompts each, prompts within a class coherent in structure and varied in
-content. Add `<name>.strata.json` with one nuisance label per prompt (topic, template, carrier,
-session) and the tool picks it up.
+## Reading the numbers
 
-**Python API.** `llm_battery("EleutherAI/pythia-160m", ["axes/"], device="mps", out_path="b.json")`
-runs the whole battery; `zoom(...)` is the core.
-
-### What it shows (the paper in six results)
-
-- **Cortex.** The direction-aligned shift is positive in all eight grating recordings and
-  exceeds every one of 200 label permutations (p = 1/201 each); it replicates across 167
-  Neuropixels populations from 32 mice in a second laboratory and tracks orientation-tuning
-  strength (r = +0.41, mixed model p = 3e-7). Where the declared axis is degenerate the
-  instrument screens candidate axes and finds session time, spatial frequency, and behavioral
-  state.
-- **Symmetry.** The working axis follows the code's approximate O(2) symmetry. The eight-class
-  harmonic decomposition of the class-mean correlation is exact; full-field gratings are
-  quadrupole-dominant (orientation), localized gratings dipole-dominant (direction) because
-  single neurons become more direction-selective, and the balance is additive over neurons,
-  invariant under random coarse-graining, and steered by sorted coarse-graining
-  (orientation-sorted blocks amplify the quadrupole: the Z2 quotient at the mesoscale). The
-  blocking factor B(K) = [1/K + (1-1/K) rho2] / [1/K + (1-1/K) rho1] makes that quantitative; mouse
-  anatomy sits at its random limit (run 51). The shift reads both sectors: the even sector sets the
-  rungs up to four classes, and the odd sector, carried by the direction-selective neurons, the rungs
-  beyond (runs 59 and 59b: the orientation-only third of the neurons has nothing left to climb after
-  four classes, the direction-selective third has most of its climb ahead); the shift's variation across
-  recordings is the direction-selective fraction (rho = 0.86).
-- **Ground truth.** Ising and nematic lattices and a rotation-equivariant CNN fix the sign:
-  conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds
-  them, architectural invariance gives exactly zero; the measured harmonics predicted the
-  network's ordering in advance at two of three depths.
-- **Language models.** Across seven model families, including a state-space model (Mamba-2.8B on the Pile, the fifth corpus-by-architecture cell), the instrument separates content axes
-  inherited from tokens from construction axes built along the declared order; label linkage
-  is significant at nearly every depth under the order-averaged statistic, while the profile shape
-  belongs to the class arrangement. The base-instruct comparison on the ethical axis is null at
-  0.5-1B on two taxonomies. The kernel-harmonic additivity and the blocking flow replicate on Pythia-160m's
-  planted axes; a prepended neutral context does not move them.
-- **Two null levels.** A nonzero shift means the partition changes covariance accumulation
-  relative to its declared null; reading it as representation of the label needs a null that
-  preserves nuisance composition. On BLiMP minimal pairs a |z| near 20 vanished under that null.
-- **Predictions.** A size ladder at fixed contrast should move the dipole/quadrupole balance
-  monotonically; mesoscale signals in orientation-columnar cortex should be
-  quadrupole-amplified relative to their single units, cortex with direction maps should keep
-  the mesoscale dipole.
-
-![The two nulls on natural text](figures_canonical/fig_two_nulls_text.png)
-
-### Using it right
-
-1. **Declare before you look.** Classes, class count, and accumulation order are fixed first.
-2. **Six or more classes.** Two-class designs fit a slope through two points.
-3. **For unordered classes, read the order-averaged shift.** The declared-path profile is a
-   property of one path through the classes.
-4. **Pass your nuisance structure as strata.** If the shift survives the within-stratum
-   permutation, the label is doing work.
-5. **Counts are descriptive; profile statistics are inferential.** Expect about 1.7 false
-   positives per 33 uncorrected layers.
-6. **Coherence beats prompt count.** Prompts that widen within-class topic diversity weaken
+1. **Declare before you look.** Classes, class count and accumulation order are fixed first.
+2. **Six or more classes.** A two-class ladder fits a slope through two points.
+3. **For unordered classes, read the order-averaged shift.** The declared-order profile is a property
+   of one path through the classes; the crossover shape of a depth profile belongs to the path.
+4. **Pass your nuisance structure as strata.** If the shift survives the within-stratum permutation,
+   the label is doing work; if the stratified null absorbs it, the signal is composition.
+5. **Read the spectrum first**, and standardize when one direction dominates.
+6. **Compare subsets at matched size only.** The shift depends on the number of features.
+7. **Read `D` and `Tb`, not the raw pooling and trace terms,** wherever the within-class scale changes
+   with the class (a language model's construction classes tighten with depth).
+8. **For a depth profile, the inference is on the profile**, the integrated excess of the shift over
+   its embedding value against the permutation null, not on a count of significant layers.
+9. **Coherence beats prompt count.** Prompts that widen within-class topic diversity weaken
    construction axes.
-7. **Read the spectrum first.** `rung data` prints the spectrum diagnostics before anything else
-   (paper run 55: one rogue dimension blinds the linear participation ratio); standardize when one
-   dimension dominates.
-8. **Compare subsets at matched size only.** The shift depends on the number of features (paper run
-   59: a random third of the neurons differs from the full population by -0.08 to +0.14), so
-   `--split-by` compares the top, bottom and a random subset at one size, each with its own floor, and
-   never a subset with the whole.
 
-### Extending it
+## What it does not ship
+
+The blocking factor B(K) and sorted coarse-graining (they need a tuning phase per unit; the scripts
+that compute them on the paper's recordings are in `scripts_canonical/`), the calibrated and the
+cell-built population models of Section 7, and the lattice samplers of Section 6. Those are scripts,
+not commands.
+
+## Extending it
 
 Everything the paper measures goes through one function, `zoom(X, labels, strata=None)`, and the pieces
 you would change are small and named.
 
-- **A new null.** The two shipped nulls are label permutation and permutation within `strata`. A null is
-  a rule for relabeling at fixed rung sizes, so a third one is a loop that draws relabelings and re-runs
-  the observed ladder against the shared floor. The circular-shift null for time-series labels (the
-  paper's spontaneous sessions, Section 3) is written out in `scripts_canonical/run40_spont_state_axis.py`
-  and is the template.
+- **A new null** is a rule for relabeling at fixed rung sizes: a loop that draws relabelings and
+  re-runs the observed ladder against the shared floor. The circular-shift null is the template.
 - **A nonlinear estimator.** `zoom()` builds one Gram matrix and every rung is `_subset_pr(K, idx)`, the
-  centered Gram-trace participation ratio of that subset. A kernel PR is the same call on a kernel matrix;
-  a local intrinsic dimension (TwoNN, MLE) replaces `_subset_pr` with a function of the subset rows. The
-  identity theta_obs = theta_floor + delta holds for any functional evaluated on both arms; the paper's
-  sign rule and ordering results have been checked for the linear estimator only (Limitations).
-- **Other modalities.** `rung data` reads `.npy`, `.csv`, and whitespace text through `_load_array`. For
-  NWB files build the trials x units count matrix with `pynwb` and save it as `.npy`; for `.mat`,
-  `scipy.io.loadmat`. A vision model is the LLM door with a different encoder: collect one feature vector
-  per image at each layer (forward hooks) and call `zoom(X, labels)` per layer, passing the image-level
-  nuisance (template, scene, photographer) as `strata`.
-- **Multi-token probes.** `llm_battery` reads the last-token hidden state (`h[0, -1, :]`). Mean over a
-  span, or a specific token position, is a one-line change there; the paper's mean-pooling result
-  (Section 8.2: the construction axis collapses, the content axis survives) is the reference point.
-- **Checkpoints and revisions.** `--revision` takes any Hugging Face revision, so `rung llm` over a
-  training run is a shell loop (above).
+  centered Gram-trace participation ratio of that subset. A kernel PR is the same call on a kernel
+  matrix; a local intrinsic dimension replaces `_subset_pr` with a function of the subset rows. The
+  identity `theta_obs = theta_floor + delta` holds for any functional evaluated on both arms; the
+  paper's sign rule and ordering rule are established for the linear one.
+- **Other modalities.** `rung data` reads `.npy`, `.csv` and whitespace text. For NWB files build the
+  trials-by-units count matrix with `pynwb` and save it as `.npy`; for `.mat`, `scipy.io.loadmat`. A
+  vision model is the model door with a different encoder: one feature vector per image at each layer,
+  then `zoom(X, labels)` per layer with the image-level nuisance as strata.
+- **Multi-token probes.** `llm_battery` reads the last-token hidden state; a mean over a span or a
+  specific position is a one-line change there (the paper's mean-pooling result is the reference
+  point: the construction axis collapses, the content axis survives).
 
-Tests are numpy-only and run in ten seconds (`pytest -q tests`); add one per extension.
+Tests are numpy-only and run in ten seconds (`pip install -e ".[test]" && pytest -q tests`); add one
+per extension.
+
+## The paper in six results
+
+- **Cortex.** The direction-aligned shift is positive in eight of eight grating recordings and exceeds
+  every one of 200 label permutations; it is positive in 32 of 32 animals in a second laboratory and
+  tracks the even-sector amplitude of the class-mean kernel across 167 populations. Where the declared
+  axis is degenerate the instrument screens candidate axes and finds session time, spatial frequency
+  and behavioral state.
+- **Symmetry.** The grating axis works because it runs along the code's O(2) symmetry. The eight-class
+  harmonic decomposition of the class-mean kernel is exact; full-field gratings are quadrupole-dominant
+  (orientation), localized gratings dipole-dominant (direction) because single neurons become more
+  direction-selective. The even sector sets the rungs up to four classes and the odd sector, carried by
+  the direction-selective neurons, the rungs beyond: the orientation-only third of the neurons has
+  nothing left to climb after four classes, the direction-selective third has most of its climb ahead,
+  and the shift's variation across recordings is the direction-selective fraction. Adjacent classes
+  are more coherent than antipodal ones, so the sequential accumulation order climbs faster (entry
+  coherence), and under coarse-graining the sector balance flows by a closed-form blocking factor
+  B(K) = [1/K + (1 − 1/K)ρ₂] / [1/K + (1 − 1/K)ρ₁]; mouse anatomy sits at its random limit.
+- **Ground truth.** Ising and nematic lattices and a rotation-equivariant network fix the sign:
+  conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds them,
+  architectural invariance gives exactly zero; entry coherence predicts the network's reversed
+  accumulation order, found at five of five seeds in its early layers.
+- **The anatomy of the shift.** Split on the covariance itself, the shift is the pooling of fluctuation
+  modes private to each direction, each a co-fluctuation of the neurons that fire at that direction with
+  its weight on the most active hundred of them.
+- **Language models.** On nine models across five architectures the instrument separates content axes
+  inherited from the tokens (positive at the embedding, diluting with depth) from construction axes
+  built with depth (negative at the embedding, rising past the null); the shape recurs, the depth at
+  which the construction profile turns is the architecture's constant. A moral-concept axis reads zero
+  on every base model tested, before and after instruction tuning.
+- **Two nulls.** A nonzero shift means the partition changes covariance accumulation relative to its
+  declared null; reading it as representation of the label needs a null that preserves the nuisance
+  the partition preserves. On BLiMP minimal pairs a grammaticality signal of twenty standard deviations
+  is entirely carrier composition.
 
 ## What is where
 
 ```
-rung.py                  the instrument: zoom(), llm_battery(), build_axis(), and the rung CLI
-                         (data | llm | axis | plot | summarize); numpy core, optional torch+transformers
+rung.py                  the instrument: zoom(), decompose(), sectors(), llm_battery(), build_axis(),
+                         and the rung command line (data | llm | axis | plot | summarize); numpy core,
+                         torch and transformers only for the model door
 theta_zoom.py            alias of rung (the name through 1.1.0), kept for one release
-tests/                   numpy-only pytest suite (pytest -q tests)
+tests/                   numpy-only pytest suite: the decomposition identity, significance on structured
+                         labels and its absence on shuffled ones, the stratified null, the deficit ladder
+                         and the stall test, the split at matched size, the sector fit on a planted
+                         kernel, the declared orders, the circular-shift null, the command line end to end
 render_all.py            prints the paper's tables and headline numbers from the artifacts
-axes/                    every prompt in the paper: 7 battery axes + ETHICS + compass + clock, with
-                         strata sidecars; PROVENANCE.md gives origin and license per file
-scripts_canonical/       one script per run; the docstring holds the expectations written before the run
-                         (expectations written before the run) and names the artifact it writes
-   run1..run52b_*.py     the numbered runs cited in the paper
-   accumulation_order.py, shuffle_label_control.py, allen_*.py, ising_*.py, nematic_*.py
-   multipole_harmonics_8dir.py, local_vs_fullfield_tuning.py, sector_balance_scale.py,
-   llm_sector_blocking.py     the harmonic-sector analyses (Sec 4, App I)
-   make_fig0_instrument.py, make_fig1_2_ladder.py, make_fig4b_orientation_quotient.py,
-   make_fig3_4_allen_multipole.py, make_fig8_sector_flow.py, make_fig5_mechanism.py,
-   make_fig8b_llm_pipeline.py, make_fig6_llm.py, make_fig7_nulls.py,
-   make_fig9_stimulus_sector.py   regenerate the twelve figures from the artifacts (script
-                         numbers predate the renumbering: make_fig0 draws paper Figure 1, the
-                         instrument schematic; make_fig1_2 draws Figures 2 and 3; make_fig4b
-                         draws Figure 4, the orientation quotient; make_fig3_4 draws Figures 5
-                         and 7; make_fig8 draws Figure 6; make_fig5 draws Figure 8; make_fig8b
-                         draws Figure 9, the battery pipeline; make_fig7 draws Figure 10;
-                         make_fig6 draws Figure 11; make_fig9 draws Figure 12 in the appendix)
-   run51_spatial_blocking.py   anatomical (spatial k-means) blocking on all eight recordings
-   run52_blocking_factor_check.py, run52b_identity_equal_blocks.py   the blocking factor B(K) and its identity
-data_canonical/          the result JSONs (one per script) that every reported number traces to
-figures_canonical/       the twelve figures in the paper
+axes/                    every prompt in the paper: the six battery axes and a random control, the ETHICS
+                         benchmark axis, the compass and clock axes, with strata sidecars; PROVENANCE.md
+                         gives origin and license per file
+scripts_canonical/       one script per analysis, named for what it computes; each docstring names the
+                         artifact it writes. make_fig_*.py regenerate the paper's figures from the artifacts.
+data_canonical/          the result JSON behind every reported number (one per script)
+figures_canonical/       the paper's figures
 pyproject.toml           pip install -e . gives the rung command (and theta-zoom as an alias)
 ```
 
-Raw neural data are public (Stringer et al. figshare releases; Allen Brain Observatory
-Neuropixels) and are not included; the scripts that read them expect the paths documented in
-their docstrings. Folder names mirror the scripts' relative paths so every script runs
-unmodified from a clone.
+Raw neural data are public (Stringer et al. figshare releases; Allen Brain Observatory Neuropixels)
+and are not included; the scripts that read them expect the paths documented in their docstrings.
+`python render_all.py` prints every table and headline number from the artifacts in `data_canonical/`.
 
-## Reproduce every number
+### Claim, artifact, script
 
-```bash
-python render_all.py
-```
-
-### Claim -> artifact -> script
-
-| Claim | Artifact | Script |
-|---|---|---|
-| V1 direction-aligned shifts, shuffle control | (repo: stringer decomposition JSONs) | shuffle_label_control.py |
-| Ladder-design robustness (32/32 cells) | run8_ladder_robustness.json | run8_ladder_robustness.py |
-| Accumulation-order reversal (8/8) | antipodal_order.json | accumulation_order.py |
-| Allen mixed model + partials | run1_allen_partial_mixed.json | run1_allen_partial_mixed.py |
-| Allen split-half cross-fit | s69_allen_crossfit.json | allen_crossfit.py |
-| Calibrated model bracket (5 seeds) | run2b_corotating_seeds.json | run2b_corotating_seeds.py |
-| Alignment-calibrated prediction (fresh draw) | run11b_fresh_draw_prediction.json | run11_bootstrap_prediction.py |
-| pi-periodic alignment + residualized control | run9_alignment_225.json, run3b_principal_angles_residualized.json | run9_alignment_225.py, run3b_principal_angles_residualized.py |
-| Transport test (no common rotation) | run7_transport_test.json | run7_transport_test.py |
-| Ising / nematic lattices | ising_L128_tc.json, nematic_polar_delta.json | ising_L128_tc.py, nematic_polar_delta.py |
-| CNN double dissociation (5 seeds) | run5b_cnn_seeds.json | run5b_cnn_seeds.py |
-| CNN sector content + stimulus baseline | run5c_cnn_multipole_fixed.json, run14_stimulus_baseline.json | run5c_cnn_multipole_fixed.py |
-| CNN prospective ordering | run12_cnn_ordering.json | run12_cnn_ordering.py |
-| V1 label-permutation test (16/16, Monte Carlo p=1/201) | run38_v1_label_permutations.json | run38_v1_label_permutations.py |
-| LLM 500-permutation nulls + order-averaged shift (6 models, 3 axes) | run37_inferential_nulls.json | run37_inferential_nulls.py (+37b/37c wrappers) |
-| Allen A_even/A_odd direct mixed model | run39_allen_aeven_mixed.json | run39_allen_aeven_mixed.py |
-| Spont state axes, permutation + circular-shift nulls | run40_spont_state_axis.json | run40_spont_state_axis.py |
-| CNN ordering per-seed paired stats | run41_cnn_ordering_perseed.json | run41_cnn_ordering_perseed.py |
-| BLiMP native stratified floor (within-pair swaps) | run42_blimp_battery.json | run42_blimp_battery.py |
-| Baroni complexity contrasts, 16 and 64 pairs | run43_baroni_complexity.json, run43b_baroni_64pairs.json | run43_baroni_complexity.py, run43b_baroni_64pairs.py |
-| Base-instruct ethical comparison (two pairs) | run44_base_instruct_ethical.json | run44_base_instruct_ethical.py |
-| Topic-stratified floor for the construction axis | run45_lt_stratified_floor.json | run45_lt_stratified_floor.py |
-| LLM battery, Pythia 160m/410m/1B/2.8B | run17/18/19/26_*.json | run17/18/19/26_*.py |
-| LLM robustness (prompt/order/pooling) | run20_robustness_battery.json | run20_robustness_battery.py |
-| Cross-model ranking rho=1.0, slope law | run22_cross_prediction.json | run22_cross_prediction.py |
-| Prompt-diversity dilution + OLMo 32/class | run23_expanded_prompts.json | run23_expanded_prompts.py |
-| Kernel eff-rank diagnostic | run24_kernel_analysis.json | (inline; JSON committed) |
-| OLMo-1B matched 16/class battery | run25_olmo1b_16pc_battery.json | run25_olmo1b_16pc_battery.py |
-| Static-session axis search (discovery mode) | run27_static_axis_search.json | run27_static_axis_search.py |
-| Planted-C8 axes (compass/clock) | run28_cyclic_axis_llm.json | run28_cyclic_axis_llm.py |
-| Figure 1 (the instrument in five steps; drawn, no data) | — | make_fig0_instrument.py |
-| Figure 2 (one population, three axes: schematic + GT3 ladders + per-recording shifts) | orientation_zoom.json, bootstrap_all_10_orient_fullneuron.json | make_fig_three_axes.py |
-| Figure 3 (the orientation quotient and the two ladder orders; schematic, amplitudes from cos2theta_fit.json) | cos2theta_fit.json | make_fig4b_orientation_quotient.py |
-| Figure 4 (multipole content and the order effect) | cos2theta_fit.json, accumulation_order.json, allen_multipoles_all_sessions.json | make_fig3_4_allen_multipole.py |
-| Figure 5 (the sector balance across scales: block cartoon, measured blocking factor, retention at K = 32, B(K) by map type) | sector_balance_scale.json, run50b_graining_sectors.json, run51_spatial_blocking.json | make_fig_blocking.py |
-| Figure 6 (replication in a second laboratory) | allen_expansion_all_sessions.json | make_fig3_4_allen_multipole.py |
-| Figure 7 (architectural ground truth: architecture panel, delta_rot by layer, tuned fraction) | run5b_cnn_seeds.json, run5c_cnn_multipole_fixed.json, run14_stimulus_baseline.json | make_fig_cnn.py |
-| Figure 8 (what sets the sign: three-regime cartoon + measured alignment) | run9_alignment_225.json, run3b_principal_angles_residualized.json, run11_bootstrap_prediction.json | make_fig_sign_rule.py |
-| Figure 9 (the language-model battery pipeline; schematic, no data) | — | make_fig8b_llm_pipeline.py |
-| Figure 10 (content and construction depth profiles at four Pythia scales) | run17/18/19/26 battery JSONs | make_fig_llm_depth.py |
-| Figure 11 (the declared order and the partition on Pythia-2.8B) | run37_inferential_nulls.json | make_fig_path_partition.py |
-| Figure 12 (the construction axis across architectures with the last zero crossing; the blind probe's leading-eigenvalue fraction) | run37_inferential_nulls.json, run47_fourth_cell_redpajama.json, run53_mamba_fifth_cell.json, run54_olmo2_1b_construction.json, run55_blind_probe_physics.json | make_fig_architectures.py |
-| Figure 13 (the two nulls on natural text: BLiMP and Baroni at 64 pairs) | run42_blimp_battery.json, run43b_baroni_64pairs.json | make_fig_two_nulls_text.py |
-| Appendix figures: state axes (App C), blocking flow per recording (App E), the model bracket (App I), sector balance by stimulus (App J) | run40_spont_state_axis.json; sector_balance_scale.json; run2b/run11b/run48 JSONs; local_vs_fullfield_tuning.json | make_fig_state_axes.py, make_fig_sector_flow_full.py, make_fig_model_bracket.py, make_fig9_stimulus_sector.py |
-| Runs 56–59 (Sec 7 / App I: the calibrated model across GT1/GT2/GT3 and the direction-selective subpopulation) | run56_odd_gain_across_recordings.json, run57_driven_gain_across_recordings.json, run58_within_class_spectrum_vs_trials.json, run59_shift_by_direction_selectivity.json (+ .log each; expectations in every docstring) | run56_odd_gain_across_recordings.py, run57_driven_gain_across_recordings.py, run58_within_class_spectrum_vs_trials.py, run59_shift_by_direction_selectivity.py |
-| Run 59b (Sec 7, Figure: the per-rung deficit of the DSI-sorted thirds, the rung-four stall) | run59b_per_rung_thirds.json (+ .log) | run59b_per_rung_thirds.py; figure: make_fig_ds_thirds.py |
-| Runs 60 and 60b (Sec 7 / App I: the heterogeneous mixture model, three seeds; matched within-class dimensionality, ten seeds) | run60_mixture_model.json, run60b_mixture_matchedK_armA.json, run60b_mixture_matchedK_armB.json (+ .log each) | run60_mixture_model.py, run60b_mixture_matchedK.py |
-| Run 63 (Sec 7, Figure 10A-B: the exact four-term split of every rung's deficit; the pooling term follows log(k/8) on the direction-selective third) | run63_deficit_decomposition.json (+ .log) | run63_deficit_decomposition.py; figure: make_fig_anatomy.py |
-| Run 64a (Sec 7, Figure 10C: the leading within-class modes live on 48-121 neurons; the diagonal's effective dimension is 7-19x the within-class PR) | run64a_within_class_localization.json (+ .log) | run64a_within_class_localization.py |
-| Run 62 (Sec 6.1 / App D: the two-species XY lattice, the stall on ground truth at f = 0 and f = 1) | run62_two_species_xy.json (+ .log) | run62_two_species_xy.py |
-| Run 61 (not in the paper: the compass axis has no climb to stall; its odd share is below the clock's at 10/10 layers) | run61_llm_antipode_stall.json (+ .log) | run61_llm_antipode_stall.py |
-| Run 64b (not in the paper: two assembly-model constructions failed their own construction check, the top mode on 1-2 neurons; log only) | run64b_assembly_model.log | run64b_assembly_model.py |
+| Paper | Claim | Artifact | Script |
+|---|---|---|---|
+| Sec 3 | Direction-aligned shifts, 8 of 8, with the label permutation | run38_v1_label_permutations.json | run38_v1_label_permutations.py, shuffle_label_control.py |
+| Sec 3 | Ladder-design variants (32 of 32 cells) | run8_ladder_robustness.json | run8_ladder_robustness.py |
+| Sec 3 | The axis search on static and natural-image sessions | run27_static_axis_search.json | run27_static_axis_search.py |
+| Sec 3 | The state axes with the permutation and circular-shift nulls | run40_spont_state_axis.json | run40_spont_state_axis.py |
+| Sec 4 | The harmonic content of the class-mean kernel, every recording | multipole_harmonics_8dir.json, cos2theta_fit.json | multipole_harmonics_8dir.py |
+| Sec 4.1 | The accumulation-order contrast (8 of 8) | antipodal_order.json | accumulation_order.py |
+| Sec 4.2 | The sector balance under blocking, the blocking factor and its identity | sector_balance_scale.json, run50b_graining_sectors.json, run52_blocking_factor_check.json, run52b_identity_equal_blocks.json | sector_balance_scale.py, run52_blocking_factor_check.py, run52b_identity_equal_blocks.py |
+| Sec 4.2 | Anatomical (spatial k-means) blocks | run51_spatial_blocking.json | run51_spatial_blocking.py |
+| Sec 5 | The second laboratory: 32 sessions, 167 populations | allen_expansion_all_sessions.json | allen_expansion.py |
+| Sec 5 | The even-sector correlate: mixed model, partials, split-half cross-fit | run1_allen_partial_mixed.json, run39_allen_aeven_mixed.json, s69_allen_crossfit.json | run1_allen_partial_mixed.py, run39_allen_aeven_mixed.py, allen_crossfit.py |
+| Sec 6.1 | Ising and nematic lattices; the two-species lattice | ising_L128_tc.json, nematic_polar_delta.json, run62_two_species_xy.json | ising_L128_tc.py, nematic_polar_delta.py, run62_two_species_xy.py |
+| Sec 6.2 | The equivariant network: the invariant zero, the sector content, the reversed order | run5b_cnn_seeds.json, run5c_cnn_multipole_fixed.json, run14_stimulus_baseline.json, run12_cnn_ordering.json, run41_cnn_ordering_perseed.json | run5b_cnn_seeds.py, run5c_cnn_multipole_fixed.py, run14_stimulus_baseline.py, run12_cnn_ordering.py, run41_cnn_ordering_perseed.py |
+| Sec 7 | The calibrated model and its refits across recordings | run2b_corotating_seeds.json, run11b_fresh_draw_prediction.json, run56_odd_gain_across_recordings.json, run57_driven_gain_across_recordings.json, run58_within_class_spectrum_vs_trials.json | run2b_corotating_seeds.py, run11_bootstrap_prediction.py, run56_odd_gain_across_recordings.py, run57_driven_gain_across_recordings.py, run58_within_class_spectrum_vs_trials.py |
+| Sec 7 | The direction-selective thirds and the rung-four stall | run59_shift_by_direction_selectivity.json, run59b_per_rung_thirds.json | run59_shift_by_direction_selectivity.py, run59b_per_rung_thirds.py |
+| Sec 7 | The exact split of the deficit; the private modes in neuron space | run63_deficit_decomposition.json, run64a_within_class_localization.json, run68_v1_scale_and_zscore.json | run63_deficit_decomposition.py, run64a_within_class_localization.py, run68_v1_scale_and_zscore.py |
+| Sec 7 | The population model built from the cells | run60_mixture_model.json, run60b_mixture_matchedK_armA.json, run60b_mixture_matchedK_armB.json | run60_mixture_model.py, run60b_mixture_matchedK.py |
+| Sec 7 | The split in the network, the second laboratory and the language models | run67_cnn_deficit_decomposition.json, run66_allen_deficit_decomposition.json, run65_pythia_deficit_decomposition.json (+ 410m/1B) | run67_cnn_deficit_decomposition.py, run66_allen_deficit_decomposition_modal.py, run65_pythia_deficit_decomposition.py |
+| Sec 7 | The within-class subspace alignment, its controls, the transport test | run9_alignment_225.json, run3b_principal_angles_residualized.json, run7_transport_test.json | run9_alignment_225.py, run3b_principal_angles_residualized.py, run7_transport_test.py |
+| Sec 8.1–8.2 | The battery at four Pythia scales; the permutation and order-averaged nulls | run17/18/19/26 battery JSONs, run37_inferential_nulls.json | run17/18/19/26 battery scripts, run37_inferential_nulls.py |
+| Sec 8.2 | The controls on the rise: scrambling, topic strata, pooling, prompt count | run20_robustness_battery.json, run45_lt_stratified_floor.json, run23_expanded_prompts.json | run20_robustness_battery.py, run45_lt_stratified_floor.py, run23_expanded_prompts.py |
+| Sec 8.2 | The moral-concept axis, base and instruct | run44_base_instruct_ethical.json | run44_base_instruct_ethical.py |
+| Sec 8.3 | The architectures: GPT-Neo, RedPajama-INCITE, Mamba, OLMo-2; the ranking across scales | run47_fourth_cell_redpajama.json, run53_mamba_fifth_cell.json, run54_olmo2_1b_construction.json, run22_cross_prediction.json | run47_fourth_cell_redpajama.py, run53_mamba_fifth_cell.py, run54_olmo2_1b_construction.py, run22_cross_prediction.py |
+| Sec 8.3 | The blind probe and its repair | run55_blind_probe_physics.json, run25_olmo1b_16pc_battery.json | run55_blind_probe_physics.py, run25_olmo1b_16pc_battery.py |
+| Sec 8.4 | The planted axes and the carrier-stratified floor | run28_cyclic_axis_llm.json | run28_cyclic_axis_llm.py |
+| Sec 8.4 | BLiMP and the Baroni contrasts at 16 and 64 pairs | run42_blimp_battery.json, run43_baroni_complexity.json, run43b_baroni_64pairs.json | run42_blimp_battery.py, run43_baroni_complexity.py, run43b_baroni_64pairs.py |
+| App A | The random-stimulus zero on all 18 recordings | (per-recording decomposition JSONs) | random_zoom_all_recordings.py |
+| App C | The spatial neuron ladder and its exchangeable control | (per-recording JSONs) | exchangeable_neuron_zoom.py, allen_neuron_zoom.py |
+| App J | The single-neuron tuning by stimulus type | local_vs_fullfield_tuning.json | local_vs_fullfield_tuning.py |
+| App K | The floor formula against simulation | (eq1_validation output) | eq1_validation.py, chun_comparison.py |
 
 ## Citation
 
@@ -351,8 +294,8 @@ python render_all.py
 
 ## License
 
-Code: MIT (see `LICENSE`). Result artifacts in `data_canonical/` may be reused with
-attribution to the paper. Prompts and stimuli carry their own terms: the three axes composed for the
-paper are CC BY 4.0; the benchmark-derived axes and stored stimuli inherit their sources' licenses
-(TruthfulQA Apache-2.0, HellaSwag MIT, ARC CC BY-SA 4.0, ETHICS MIT, BLiMP CC BY 4.0, Baroni et al.
-per their release). Origins, authorship and licenses are listed item by item in `axes/PROVENANCE.md`.
+Code: MIT (see `LICENSE`). Result artifacts in `data_canonical/` may be reused with attribution to the
+paper. Prompts and stimuli carry their own terms: the three axes composed for the paper are CC BY 4.0;
+the benchmark-derived axes and stored stimuli inherit their sources' licenses (TruthfulQA Apache-2.0,
+HellaSwag MIT, ARC CC BY-SA 4.0, ETHICS MIT, BLiMP CC BY 4.0, Baroni et al. per their release). Origins,
+authorship and licenses are listed item by item in `axes/PROVENANCE.md`.

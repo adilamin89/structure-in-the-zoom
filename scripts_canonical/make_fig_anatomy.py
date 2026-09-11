@@ -3,8 +3,9 @@
 trace term, the fluctuation-pooling term, the between-class term and the mean-fluctuation
 coupling; (B) the pooling term of the direction-selective third against log(k/8), the value
 for fluctuations fully private to each class, on all eight recordings; (C) where the
-within-class modes live in neuron space: the neuron-space participation ratio of the top
-within-class mode (data) against the number of neurons, per recording.
+within-class modes live in neuron space: the share of the tuned population carrying the top
+within-class mode, per recording, in the recording's own units (where its amplitude sits) and at
+equal weight per neuron (its extent; run 68).
 Out: ../figures_canonical/fig_anatomy.png + ../../arxiv/figures/fig_anatomy.png
 """
 import json
@@ -27,7 +28,7 @@ RED, BLUE, GRAY, INK, GREEN, ORANGE = "#b40426", "#2166ac", "#8a8a8a", "#222222"
 CLASSES = [1, 2, 3, 4, 6, 8]
 
 fig = plt.figure(figsize=(6.0, 2.35))
-axA = fig.add_axes([0.075, 0.19, 0.30, 0.66]); axB = fig.add_axes([0.455, 0.19, 0.235, 0.66]); axC = fig.add_axes([0.775, 0.19, 0.215, 0.66])
+axA = fig.add_axes([0.095, 0.19, 0.285, 0.66]); axB = fig.add_axes([0.455, 0.19, 0.235, 0.66]); axC = fig.add_axes([0.775, 0.19, 0.215, 0.66])
 for ax, letter, title in ((axA, "A", "the deficit, term by term (GT1)"), (axB, "B", "private fluctuations: $\\log(k/8)$"), (axC, "C", "where the modes live")):
     ax.set_title(f"$\\mathbf{{{letter}}}$  {title}", loc="left", fontsize=7.6); ax.spines[["top", "right"]].set_visible(False)
 
@@ -49,21 +50,27 @@ cols = {"D": INK, "L": RED, "C": ORANGE}; mk = {"D": "o", "L": "^", "C": "s"}
 for t in tags:
     P = [r["P"] for r in dec[t]["data"]["DS"]["rungs"]]
     axB.plot(ref, P, mk[t[0]], ms=3.4, color=cols[t[0]], mfc=cols[t[0]] if t[0] != "C" else "white", mew=0.8, alpha=0.9, label=t)
-axB.text(-2.1, -0.05, "each class brings its own\nfluctuation subspace:\n$P = \\log(k/8)$", fontsize=6.0, va="top", color="0.35")
+axB.text(-2.15, -0.02, "each class brings\nits own subspace:\n$P = \\log(k/8)$", fontsize=5.6, va="top", color="0.35")
 axB.set_xlabel("$\\log(k/8)$, $k$ classes accumulated"); axB.set_ylabel("pooling term $P$, DS third")
 axB.set_xlim(-2.2, 0.1); axB.set_ylim(-2.2, 0.1)
 axB.text(0.98, 0.03, "D drifting  L localized\nC low contrast", transform=axB.transAxes, fontsize=5.8, ha="right", va="bottom", color="0.35")
 
-# (C) neuron-space participation ratio of the top within-class mode, data, per recording
+# (C) the share of the population carrying the top within-class mode: the recording's own units (filled; where
+# the amplitude sits) and equal weight per neuron (open; the extent), from runs 64a and 68
+z = json.load(open(DATA / "run68_v1_scale_and_zscore.json"))["rows"]
 x = np.arange(len(tags))
-pr1 = [loc[t]["data"]["summary"]["pr_neuron_top1_mean"] for t in tags]
-Ns = [loc[t]["data"]["summary"]["N"] for t in tags]
-axC.bar(x, pr1, color=[cols[t[0]] for t in tags], width=0.65)
-for i, (p, n) in enumerate(zip(pr1, Ns)):
-    axC.text(i, p + 4, f"{100*p/n:.1f}%", ha="center", va="bottom", fontsize=5.6, color="0.3")
-axC.set_xticks(x); axC.set_xticklabels(tags); axC.set_ylabel("neurons carrying the top mode")
-axC.set_xlabel("grating recording"); axC.set_ylim(0, 150)
-axC.text(0.03, 0.97, "of 10,000$-$21,000 tuned neurons", transform=axC.transAxes, fontsize=5.8, va="top", color="0.35")
+own = [100 * loc[t]["data"]["summary"]["pr_neuron_top1_mean"] / loc[t]["data"]["summary"]["N"] for t in tags]
+eq = [100 * z[t]["localization_zscored"]["pr_neuron_top1_mean"] / z[t]["N"] for t in tags]
+for i, t in enumerate(tags):
+    axC.plot([i, i], [own[i], eq[i]], "-", color="0.75", lw=0.8, zorder=1)
+    axC.plot(i, own[i], mk[t[0]], ms=4.0, color=cols[t[0]], mfc=cols[t[0]], mew=0.8, zorder=3)
+    axC.plot(i, eq[i], mk[t[0]], ms=4.0, color=cols[t[0]], mfc="white", mew=0.8, zorder=3)
+axC.set_yscale("log"); axC.set_ylim(0.1, 100)
+axC.set_yticks([0.1, 1, 10, 100]); axC.set_yticklabels(["0.1%", "1%", "10%", "100%"])
+axC.set_xticks(x); axC.set_xticklabels(tags); axC.set_ylabel("neurons carrying the top mode", fontsize=7)
+axC.set_xlabel("grating recording")
+axC.text(0.03, 0.97, "open: equal weight per neuron\nfilled: the recording's units", transform=axC.transAxes, fontsize=5.8, va="top", color="0.35")
+axC.text(0.97, 0.03, "of 10,000$-$21,000\ntuned neurons", transform=axC.transAxes, fontsize=5.6, ha="right", va="bottom", color="0.35")
 
 for out in OUTS:
     if out is not OUTS[0] and not out.parent.exists():

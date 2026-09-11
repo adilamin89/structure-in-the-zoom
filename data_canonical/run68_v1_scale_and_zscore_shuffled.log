@@ -1,0 +1,104 @@
+      excess split: D +0.582 Tb +0.225 S -0.266 Cb -0.326 Cx -0.127 | shuffle D +0.004 Tb +0.012 | dim slope excess +0.57
+[D1] N 19942: delta +0.359 | at four: deficit -0.501 A +0.013 P -0.513 | D -0.433 Tb -0.067 S +0.080 Cb -0.004 Cx +0.002 | slope split D +0.586 Tb +0.238 S -0.282 | private slope P 0.91 dim 0.57 | top-mode neuron PR own 60 (0.0030 N) z-scored 2724 (0.1366 N) | wc PR own 23 z 83 | diag/full own 16.1 z 119.4 | 45s
+      excess split: D +0.618 Tb +0.234 S -0.132 Cb -0.439 Cx -0.142 | shuffle D +0.021 Tb +0.012 | dim slope excess +0.62
+[D2] N 13871: delta +0.292 | at four: deficit -0.389 A +0.029 P -0.475 | D -0.368 Tb -0.077 S +0.107 Cb +0.029 Cx +0.027 | slope split D +0.639 Tb +0.247 S -0.141 | private slope P 0.79 dim 0.65 | top-mode neuron PR own 61 (0.0044 N) z-scored 1733 (0.1250 N) | wc PR own 30 z 81 | diag/full own 12.8 z 81.9 | 80s
+      excess split: D +0.371 Tb +0.144 S +0.054 Cb -0.148 Cx -0.126 | shuffle D +0.002 Tb +0.012 | dim slope excess +0.38
+[D3] N 10773: delta +0.242 | at four: deficit -0.274 A +0.034 P -0.226 | D -0.164 Tb -0.027 S +0.061 Cb -0.074 Cx -0.009 | slope split D +0.372 Tb +0.156 S +0.037 | private slope P 0.32 dim 0.37 | top-mode neuron PR own 102 (0.0094 N) z-scored 1831 (0.1699 N) | wc PR own 24 z 64 | diag/full own 16.6 z 88.9 | 107s
+      excess split: D +0.578 Tb +0.093 S +0.052 Cb -0.130 Cx -0.072 | shuffle D -0.008 Tb +0.010 | dim slope excess +0.58
+[L1] N 20685: delta +0.462 | at four: deficit -0.423 A -0.054 P -0.416 | D -0.429 Tb -0.041 S -0.013 Cb +0.040 Cx +0.007 | slope split D +0.570 Tb +0.103 S +0.039 | private slope P 0.51 dim 0.56 | top-mode neuron PR own 105 (0.0051 N) z-scored 2512 (0.1215 N) | wc PR own 45 z 106 | diag/full own 14.9 z 105.9 | 172s
+      excess split: D +0.529 Tb +0.126 S +0.061 Cb -0.189 Cx -0.072 | shuffle D +0.001 Tb +0.013 | dim slope excess +0.54
+[L2] N 17240: delta +0.396 | at four: deficit -0.342 A -0.032 P -0.405 | D -0.366 Tb -0.070 S +0.038 Cb +0.097 Cx -0.002 | slope split D +0.530 Tb +0.140 S +0.056 | private slope P 0.44 dim 0.54 | top-mode neuron PR own 121 (0.0070 N) z-scored 3477 (0.2017 N) | wc PR own 34 z 59 | diag/full own 19.4 z 141.1 | 210s
+      excess split: D +0.581 Tb +0.146 S +0.012 Cb -0.183 Cx -0.075 | shuffle D -0.016 Tb +0.017 | dim slope excess +0.62
+[L3] N 13948: delta +0.454 | at four: deficit -0.324 A -0.126 P -0.271 | D -0.328 Tb -0.069 S -0.057 Cb +0.063 Cx +0.011 | slope split D +0.565 Tb +0.163 S -0.019 | private slope P 0.64 dim 0.60 | top-mode neuron PR own 48 (0.0034 N) z-scored 1834 (0.1315 N) | wc PR own 22 z 71 | diag/full own 12.8 z 102.6 | 231s
+      excess split: D +0.324 Tb +0.081 S -0.118 Cb -0.104 Cx -0.100 | shuffle D +0.008 Tb +0.013 | dim slope excess +0.34
+[C1] N 19151: delta +0.209 | at four: deficit -0.245 A +0.068 P -0.235 | D -0.158 Tb -0.009 S +0.077 Cb -0.066 Cx -0.012 | slope split D +0.332 Tb +0.093 S -0.145 | private slope P 0.51 dim 0.35 | top-mode neuron PR own 70 (0.0037 N) z-scored 4524 (0.2362 N) | wc PR own 59 z 108 | diag/full own 11.8 z 99.0 | 276s
+      excess split: D +0.310 Tb +0.071 S -0.149 Cb -0.086 Cx -0.075 | shuffle D -0.003 Tb +0.012 | dim slope excess +0.33
+[C2] N 13906: delta +0.218 | at four: deficit -0.203 A +0.039 P -0.189 | D -0.134 Tb -0.016 S +0.055 Cb -0.041 Cx -0.012 | slope split D +0.308 Tb +0.082 S -0.166 | private slope P 0.52 dim 0.33 | top-mode neuron PR own 112 (0.0080 N) z-scored 3931 (0.2827 N) | wc PR own 78 z 127 | diag/full own 7.0 z 69.8 | 311s
+VERDICT {
+ "V1_S_below_0.15_count": 8,
+ "V1_S_below_D_count": 8,
+ "V1": true,
+ "V2_zscored_below_5pct_count": 0,
+ "V2": false,
+ "S_at_four": {
+  "D1": 0.08004053725728255,
+  "D2": 0.10691238414284499,
+  "D3": 0.06143505994757703,
+  "L1": -0.012982611927828458,
+  "L2": 0.03838768184179031,
+  "L3": -0.05662400831002756,
+  "C1": 0.07697527683284378,
+  "C2": 0.054993067206865476
+ },
+ "D_at_four": {
+  "D1": -0.43253804908777926,
+  "D2": -0.36781879997432654,
+  "D3": -0.16437930546628188,
+  "L1": -0.4288555743495195,
+  "L2": -0.36642439964325835,
+  "L3": -0.3280360776932598,
+  "C1": -0.15795827237682758,
+  "C2": -0.13376593812045723
+ },
+ "P_at_four": {
+  "D1": -0.5125785863450609,
+  "D2": -0.47473118411716975,
+  "D3": -0.2258143654138589,
+  "L1": -0.41587296242169103,
+  "L2": -0.4048120814850513,
+  "L3": -0.2714120693832278,
+  "C1": -0.2349335492096678,
+  "C2": -0.18875900532732182
+ },
+ "Tb_at_four": {
+  "D1": -0.06741924785151954,
+  "D2": -0.0774703751498067,
+  "D3": -0.02719210251407911,
+  "L1": -0.04142440831073532,
+  "L2": -0.07031544322403496,
+  "L3": -0.06931614945923392,
+  "C1": -0.009348957110579564,
+  "C2": -0.016468621332599354
+ },
+ "top_mode_frac_own": {
+  "D1": 0.0030243317365362264,
+  "D2": 0.004393225526539452,
+  "D3": 0.009446137864447564,
+  "L1": 0.005062794220968372,
+  "L2": 0.006998377654498826,
+  "L3": 0.0034340624855463122,
+  "C1": 0.003664137959774772,
+  "C2": 0.008030838247602532
+ },
+ "top_mode_frac_zscored": {
+  "D1": 0.1365801486034739,
+  "D2": 0.12496651570843895,
+  "D3": 0.16994507351128815,
+  "L1": 0.12145878023423315,
+  "L2": 0.2016579587488477,
+  "L3": 0.1315192002063024,
+  "C1": 0.23620282104850018,
+  "C2": 0.28270722986053126
+ },
+ "top_mode_neurons_zscored": {
+  "D1": 2723.681323450476,
+  "D2": 1733.4105393917566,
+  "D3": 1830.8182769371074,
+  "L1": 2512.374869145113,
+  "L2": 3476.5832088301345,
+  "L3": 1834.4298044775057,
+  "C1": 4523.520225899827,
+  "C2": 3931.326738440548
+ },
+ "private_slope_dim_full": {
+  "D1": 0.5736437167361195,
+  "D2": 0.6485618033415805,
+  "D3": 0.37489976367553574,
+  "L1": 0.5629263847000028,
+  "L2": 0.5359568404616328,
+  "L3": 0.6004770732909608,
+  "C1": 0.3510159752161549,
+  "C2": 0.3339811160382007
+ }
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run68_v1_scale_and_zscore_shuffled.json in 311s

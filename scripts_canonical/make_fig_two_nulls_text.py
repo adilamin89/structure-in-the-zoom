@@ -26,7 +26,7 @@ def panel(ax, layers, title):
     ax.spines[["top", "right"]].set_visible(False)
 panel(axes[0], r42["models"]["pythia-2.8b-deduped"]["B_grammaticality"]["layers"], "(a) BLiMP, 64 pairs: composition only")
 panel(axes[1], r43["models"]["pythia-2.8b-deduped"]["layers"], "(b) Baroni, 64 pairs: signal beyond carriers")
-axes[0].set_ylabel("$\\delta$"); axes[0].legend(fontsize=6.0, loc="lower left", frameon=False)
+axes[0].set_ylabel("$\\delta$"); axes[0].legend(fontsize=6.0, loc="lower center", bbox_to_anchor=(0.36, 0.02), frameon=False)
 fig.tight_layout(w_pad=1.5)
 for out in OUTS:
     if out is not OUTS[0] and not out.parent.exists(): continue

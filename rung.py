@@ -2,7 +2,11 @@
 
 A rung is one step of the subsampling ladder; the tool reads every rung
 against its matched floor. (Released as theta-zoom through 1.1.0; that
-name stays importable as an alias for one release.)
+name stays importable as an alias for one release. 1.3 added the per-rung
+deficit, the late fraction and the stall check; 1.4 the exact four-term
+split of the deficit; 1.5 the sector fit of the class-mean kernel, the
+declared accumulation order, and the circular-shift null for labels in
+time order.)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -35,8 +39,8 @@ prompt battery (one forward pass per prompt) and call zoom() per layer, or
 use the CLI with the paper's battery shipped in axes/ (7 axes, 8 classes x 16
 prompts): `rung llm --model M --axis axes/language_type.json`, then
 `rung plot battery.json --out profile.png`.
-The paper's full batteries, artifacts, and registered expectations live in
-scripts/ and data/ of this repository.
+The paper's full batteries and artifacts live in scripts_canonical/ and
+data_canonical/ of this repository.
 """
 import numpy as np
 
@@ -72,7 +76,7 @@ def _ladder(K, members, order, bin_counts):
 
 
 def spectrum(X):
-    """Blind-probe diagnostics for a samples-by-features array (paper run 55):
+    """Blind-probe diagnostics for a samples-by-features array (the paper's Section 8.3):
     full-set effective dimension, leading-eigenvalue variance fraction, and
     the variance fraction of the single largest feature. An effective
     dimension near 1 with a leading fraction near 1 means a rogue dimension
@@ -91,7 +95,7 @@ def spectrum(X):
 def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
          n_floor_draws=20, bin_counts=None, strata=None, seed=0,
          floor_seed=None, perm_seed=None, order_seed=None, standardize=False,
-         antipode=None):
+         antipode=None, order=None, shift_null=False):
     """Axis-resolved decomposition of the dimensionality-scaling exponent.
 
     Parameters
@@ -118,6 +122,16 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         convention (scripts/run37): floor rng = 100*layer+1, permutations
         rng 3700, orders rng 3701, each an independent stream.
 
+    order : the declared accumulation order: None (the classes in sorted
+        label order), "sequential" (the same), "antipodal" (one member of each
+        antipodal pair first: 0, K/2, 1, K/2+1, ...; the paper's Section 4.1
+        contrast), or an explicit list of class labels. The order-averaged
+        outputs do not depend on it.
+    shift_null : labels are in time order (one per frame) and a second null
+        rolls the whole label sequence by a random offset, which keeps the
+        labels' autocorrelation and breaks only their alignment with the
+        frames (the paper's Section 3, the state axes); reported as
+        shift_p_two / shift_z.
     antipode : optional dict {class: its antipodal class}. The stall test of
         the paper's Section 7 reads `late_fraction` (the deficit at half the
         classes over the deficit at one class) as the share of the climb the
@@ -133,7 +147,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     X = np.asarray(X, dtype=np.float64)
     if standardize:
         # per-feature z-score: the repair for populations dominated by a rogue
-        # dimension (paper Sec 8.4, run 55); off by default so --paper-seeds
+        # dimension (the paper's Section 8.3); off by default so --paper-seeds
         # still reproduces the published cells
         X = (X - X.mean(axis=0, keepdims=True)) / (X.std(axis=0, keepdims=True) + 1e-9)
     X = X / (X.std() + 1e-9)
@@ -166,7 +180,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
                       "subsample stimuli per class (rung sizes stay matched) or run per-layer jobs in parallel.", stacklevel=2)
     K = X @ X.T
     members = [np.where(lab == c)[0] for c in range(n_classes)]
-    canonical = list(range(n_classes))
+    canonical = declared_order(classes, order)
 
     th_obs, sizes, pr_obs = _ladder(K, members, canonical, bc)
     logs = np.zeros((n_floor_draws, len(sizes)))
@@ -192,13 +206,14 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
            "n_perm": int(n_perm), "k_orders": int(k_orders),
            "n_floor_draws": int(n_floor_draws), "n_samples": int(n_samples),
            "n_features": int(X.shape[1])}
+    out["order"] = [classes[i].item() if hasattr(classes[i], "item") else classes[i] for i in canonical]
     half = n_classes // 2
     if half in bc and deficit[0] != 0:
         out["late_rung_classes"] = int(half)
         out["late_fraction"] = float(deficit[bc.index(half)] / deficit[0])
     if antipode is not None:
         pairs = {int(np.searchsorted(classes, k)): int(np.searchsorted(classes, v)) for k, v in antipode.items()}
-        first = list(range(half))
+        first = list(canonical[:half])
         clash = [(a, pairs[a]) for a in first if a in pairs and pairs[a] in first]
         out["antipode_first_half_has_no_pair"] = not clash
         if clash:
@@ -249,17 +264,107 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
             / (len(null_s) + 1))
         out["strat_null_mean"], out["strat_null_sd"] = nm, ns
 
+    if shift_null and n_perm:
+        null_sh = []
+        for _ in range(n_perm):
+            sl = np.roll(lab, int(prng.integers(1, n)))
+            mem = [np.where(sl == c)[0] for c in range(n_classes)]
+            null_sh.append(_ladder(K, mem, canonical, bc)[0] - th_floor)
+        null_sh = np.asarray(null_sh)
+        nm, ns = float(null_sh.mean()), float(null_sh.std())
+        out["shift_z"] = (d_obs - nm) / ns if ns > 0 else 0.0
+        out["shift_p_two"] = float(
+            (1 + (np.abs(null_sh - nm) >= abs(d_obs - nm)).sum())
+            / (len(null_sh) + 1))
+        out["shift_null_mean"], out["shift_null_sd"] = nm, ns
+
     return out
 
 
+def declared_order(classes, order=None):
+    """The accumulation order as indices into the sorted class list: None or
+    "sequential" for the sorted labels, "antipodal" for one member of each
+    antipodal pair first (0, K/2, 1, K/2+1, ...), or an explicit list of class
+    labels."""
+    classes = np.asarray(classes); K = len(classes)
+    if order is None or (isinstance(order, str) and order == "sequential"):
+        return list(range(K))
+    if isinstance(order, str) and order == "antipodal":
+        if K % 2:
+            raise ValueError("the antipodal order needs an even number of classes")
+        h = K // 2
+        return [i for pair in zip(range(h), range(h, K)) for i in pair]
+    idx = [int(np.searchsorted(classes, o)) for o in order]
+    if sorted(idx) != list(range(K)):
+        raise ValueError("order must list every class exactly once")
+    return idx
+
+
+def sectors(X, labels, order=None):
+    """The harmonic content of the class-mean kernel for a cyclic axis (the
+    paper's Section 4): the classes, taken in sorted label order (or in
+    `order`) as equally spaced points on a circle,
+    have mean response vectors whose Pearson correlation across features is
+    averaged into a circular profile C(k) over class separations k; its
+    discrete Fourier transform is exact on the class grid. Reports the
+    coefficients q_l (for eight classes the paper's a, c1, b2, c3, b4), the
+    sector balance q2/|q1| (the quadrupole-to-dipole ratio b2/|c1|), the even
+    and odd amplitudes, the coherence of adjacent and antipodal classes, and
+    the entry-coherence prediction for which accumulation order climbs faster
+    (the more coherent pair first)."""
+    X = np.asarray(X, dtype=np.float64); labels = np.asarray(labels)
+    classes = np.unique(labels); K = len(classes)
+    if K < 3:
+        raise ValueError("sectors needs at least three classes on the cycle")
+    idx = declared_order(classes, order)
+    M = np.stack([X[labels == classes[i]].mean(axis=0) for i in idx])
+    Cm = np.corrcoef(M)
+    prof = np.array([np.mean([Cm[i, (i + k) % K] for i in range(K)]) for k in range(K)])
+    ang = 2 * np.pi * np.arange(K) / K
+    coef = {"a": float(prof.mean())}
+    for l in range(1, K // 2 + 1):
+        w = (1.0 if (K % 2 == 0 and l == K // 2) else 2.0) / K
+        coef[f"q{l}"] = float(w * np.sum(prof * np.cos(l * ang)))
+    even = [coef[f"q{l}"] for l in range(2, K // 2 + 1, 2)]
+    odd = [coef[f"q{l}"] for l in range(1, K // 2 + 1, 2)]
+    out = {"n_classes": K, "profile": [float(v) for v in prof], "coefficients": coef,
+           "A_even": float(np.sqrt(sum(v * v for v in even))), "A_odd": float(np.sqrt(sum(v * v for v in odd))),
+           "even_share": float(sum(v * v for v in even) / max(sum(v * v for v in even + odd), 1e-300)),
+           "C_adjacent": float(prof[1])}
+    if "q2" in coef:
+        out["balance"] = float(coef["q2"] / abs(coef["q1"])) if coef["q1"] != 0 else float("inf")
+    if K == 8:
+        out["named"] = {"a": coef["a"], "c1": coef["q1"], "b2": coef["q2"], "c3": coef["q3"], "b4": coef["q4"]}
+    if K % 2 == 0:
+        out["C_antipodal"] = float(prof[K // 2])
+        out["order_prediction"] = "sequential" if prof[1] > prof[K // 2] else "antipodal"
+    return out
+
+
+def _print_sectors(r):
+    c = r["coefficients"]
+    named = r.get("named")
+    head = (f"a {named['a']:+.3f}, c1 {named['c1']:+.3f}, b2 {named['b2']:+.3f}, c3 {named['c3']:+.3f}, b4 {named['b4']:+.3f}"
+            if named else ", ".join(f"{k} {v:+.3f}" for k, v in c.items()))
+    print(f"sectors: class-mean kernel harmonics {head}")
+    line = f"  even (orientation-like) amplitude {r['A_even']:.3f}, odd (direction-like) {r['A_odd']:.3f}, even share {r['even_share']:.2f}"
+    if "balance" in r:
+        line += f"; sector balance q2/|q1| = {r['balance']:.2f}"
+    print(line)
+    if "C_antipodal" in r:
+        print(f"  adjacent classes cohere at C = {r['C_adjacent']:.2f}, antipodal at {r['C_antipodal']:.2f}: "
+              f"entry coherence predicts the {r['order_prediction']} order climbs faster")
+
+
 def split_by(X, labels, score, n_subsets=3, seed=0, **zoom_kwargs):
-    """The paper's run 59 as one call: sort the features by a per-feature
-    score (a direction-selectivity index, a tuning strength, a weight norm),
-    take the top and bottom 1/n_subsets of them and a random subset of the
-    same size, and run zoom() on each with its own floor. The shift depends on
-    the number of features (run 59: a random third differs from the full
-    population by -0.08 to +0.14), so subsets are compared with each other at
-    this matched size and never with the full population."""
+    """The paper's Section 7 sorting as one call: sort the features by a
+    per-feature score (a direction-selectivity index, a tuning strength, a
+    weight norm), take the top and bottom 1/n_subsets of them and a random
+    subset of the same size, and run zoom() on each with its own floor. The
+    shift depends on the number of features (a random third of a recording's
+    neurons differs from the full population by -0.08 to +0.14), so subsets are
+    compared with each other at this matched size and never with the full
+    population."""
     X = np.asarray(X); score = np.asarray(score, dtype=float)
     if score.shape != (X.shape[1],):
         raise ValueError(f"score must have one value per feature ({X.shape[1]}); got {score.shape}")
@@ -338,6 +443,20 @@ def summarize_data(result, verbose=True):
                 else:
                     txt += " (the first half of the declared order holds an antipodal pair, so this is not the stall test; relabel)"
             lines.append(txt); verdict["late_fraction"] = float(lf)
+    if "shift_p_two" in result:
+        survives = result["shift_p_two"] < 0.05
+        lines.append(f"circular-shift null (labels in time order): p = {result['shift_p_two']:.3f}; "
+                     + ("the shift survives rolling the label sequence: the alignment of labels with frames matters beyond their slowness"
+                        if survives else "the shift does NOT survive rolling the label sequence: a slowly varying label would read this way by drift alone"))
+        verdict["survives_circular_shift"] = bool(survives)
+    if "sectors" in result:
+        sc = result["sectors"]
+        txt = f"class-mean kernel: even amplitude {sc['A_even']:.3f}, odd {sc['A_odd']:.3f}"
+        if "balance" in sc:
+            txt += f", sector balance {sc['balance']:.2f}"
+        if "order_prediction" in sc:
+            txt += f"; entry coherence predicts the {sc['order_prediction']} accumulation order climbs faster"
+        lines.append(txt)
     if result["delta"] < 0:
         lines.append("negative shift: accumulating the declared classes adds fewer dimensions than random draws (conditioning branch; low-rank between-class structure with isotropic within-class variability gives this sign)")
     if verbose:
@@ -648,6 +767,172 @@ def summarize(path, out_json=None, verbose=True):
     return report
 
 
+# ---- The four-term split of a rung's deficit (the paper's Section 7 and Appendix I; runs 63-68) ----
+# For trials Y (n x N) with class labels, C = B + W (the between-class covariance of the class means about the
+# subset mean, weighted by occupancy; the pooled within-class covariance) and
+#     log PR = 2 log(b1 + w1) - log(b2 + w2 + 2x),   b1 = Tr B, w1 = Tr W, b2 = Tr B^2, w2 = Tr W^2, x = Tr(BW).
+# The deficit of a ladder rung below its floor (ladder minus floor, the floor's log terms averaged over random
+# same-size draws) splits EXACTLY into A = 2 [log(b1 + w1)] (trace), P = -[log w2] (fluctuation pooling),
+# Cb = -[log(1 + b2/w2)] (between-class) and Cx (the mean-fluctuation coupling); the shift delta, the slope of the
+# deficit against log n, splits into the same four slopes. A and P each carry the within-class scale
+# S = 2 Delta log w1 with opposite signs, so they regroup exactly as A + P = D + Tb with D = Delta[2 log w1 - log w2]
+# (the pooled within-class effective dimension, scale-free) and Tb = 2 Delta log(1 + b1/w1) (the trace share of the
+# class means). The private slope is the slope of P (or D) against log(k/K) over the rungs below the top one: 1 when
+# every class brings its own fluctuation subspace, 0 when the variability recurs across classes. Label permutations
+# (n_shuffle) give each term's sampling baseline; `excess` is observed minus that mean.
+FREE = ("D", "Tb", "Cb", "Cx")
+
+
+def traces(Y, lab):
+    """The five traces of C = B + W for trials Y (n x N) with labels lab."""
+    Y = np.asarray(Y, np.float32); n = Y.shape[0]
+    xbar = Y.mean(0)
+    classes = np.unique(lab)
+    Mm = np.stack([np.sqrt((lab == c).sum() / n) * (Y[lab == c].mean(0) - xbar) for c in classes]).astype(np.float32)
+    R = np.empty_like(Y)
+    for c in classes:
+        m = lab == c
+        R[m] = Y[m] - Y[m].mean(0)
+    R /= np.sqrt(n)
+    b1 = float((Mm ** 2).sum()); w1 = float((R ** 2).sum())
+    b2 = float(((Mm @ Mm.T) ** 2).sum()); w2 = float(((R @ R.T) ** 2).sum()); x = float(((Mm @ R.T) ** 2).sum())
+    return b1, w1, b2, w2, x
+
+
+def logterms(t):
+    b1, w1, b2, w2, x = t
+    return {"lt": 2 * np.log(b1 + w1), "lw2": np.log(w2), "lb": np.log1p(b2 / w2), "lbx": np.log1p((b2 + 2 * x) / w2),
+            "ld": 2 * np.log(w1) - np.log(w2), "tb": 2 * np.log1p(b1 / w1), "lw1": 2 * np.log(w1),
+            "pr": (b1 + w1) ** 2 / (b2 + w2 + 2 * x), "traces": [float(v) for v in t]}
+
+
+def pr_centered(X):
+    """The centered participation ratio (trial-space Gram), the paper's estimator."""
+    Xc = np.asarray(X, np.float64); Xc = Xc - Xc.mean(0)
+    G = Xc @ Xc.T
+    tr, tr2 = float(np.trace(G)), float((G * G).sum())
+    return tr * tr / tr2 if tr2 > 0 else 1.0
+
+
+def _lsq_slope(x, y):
+    x = np.asarray(x, float); y = np.asarray(y, float)
+    A = np.vstack([np.ones_like(x), x]).T
+    return float(np.linalg.lstsq(A, y, rcond=None)[0][1])
+
+
+def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_size=10, n_shuffle=0):
+    """The exact split of every rung's deficit and of the shift for the ladder that accumulates the classes in
+    `order` (default: sorted labels) with `bin_counts` classes per rung (default: the paper's ladder). Returns the
+    per-rung terms, the four slopes of the shift (and the scale-free regrouping), the private slopes, exactness
+    checks, and, with n_shuffle > 0, the label-permutation baseline and the excess over it."""
+    X = np.asarray(X, np.float32); labels = np.asarray(labels)
+    if order is None:
+        order = [int(c) for c in np.unique(labels)]
+    if bin_counts is None:
+        bin_counts = tuple(c for c in BIN_COUNTS_DEFAULT if c <= len(order))
+    out = _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size)
+    if out is None or n_shuffle <= 0:
+        return out
+    keys = ("A", "P", "Cb", "Cx", "D", "Tb", "S")
+    shuf = []
+    for s in range(n_shuffle):
+        srng = np.random.default_rng(700 + s)
+        r = _decompose_once(X, labels[srng.permutation(len(labels))], order, bin_counts, n_null, seed, min_size)
+        if r is not None:
+            shuf.append(r)
+    if not shuf:
+        return out
+
+    def _sl(r, k):
+        return r["delta_split"][k] if k in r["delta_split"] else (r["delta_scale"] if k == "S" else r["delta_split_free"][k])
+    out["n_shuffle"] = len(shuf)
+    out["shuffle"] = {"delta": float(np.mean([r["delta"] for r in shuf])),
+                      "delta_split": {k: float(np.mean([_sl(r, k) for r in shuf])) for k in keys},
+                      "private_slope": float(np.mean([r["private_slope"] for r in shuf])),
+                      "private_slope_dim": float(np.mean([r["private_slope_dim"] for r in shuf])),
+                      "rungs": [{k: float(np.mean([r["rungs"][i][k] for r in shuf])) for k in ("deficit",) + keys} for i in range(len(out["rungs"]))]}
+    if "at_four" in out and all("at_four" in r for r in shuf):
+        out["shuffle"]["at_four"] = {k: float(np.mean([r["at_four"][k] for r in shuf])) for k in ("deficit",) + keys}
+    out["excess"] = {"delta": out["delta"] - out["shuffle"]["delta"],
+                     "delta_split": {k: _sl(out, k) - out["shuffle"]["delta_split"][k] for k in keys},
+                     "private_slope": out["private_slope"] - out["shuffle"]["private_slope"],
+                     "private_slope_dim": out["private_slope_dim"] - out["shuffle"]["private_slope_dim"]}
+    if "at_four" in out["shuffle"]:
+        out["excess"]["at_four"] = {k: out["at_four"][k] - out["shuffle"]["at_four"][k] for k in ("deficit",) + keys}
+    return out
+
+
+def _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size):
+    rng = np.random.default_rng(seed)
+    members = [np.where(labels == c)[0] for c in order]
+    K = len(order)
+    sizes, ks, obs = [], [], []
+    for c in bin_counts:
+        sel = np.concatenate(members[:c])
+        if len(sel) < min_size:
+            continue
+        sizes.append(int(len(sel))); ks.append(int(c))
+        t = logterms(traces(X[sel], labels[sel])); t["pr_check"] = pr_centered(X[sel]); obs.append(t)
+    if len(sizes) < 3:
+        return None
+    flo = [dict(lt=0.0, lw2=0.0, lb=0.0, lbx=0.0, ld=0.0, tb=0.0, lw1=0.0, pr=0.0, traces=np.zeros(5)) for _ in sizes]
+    for _ in range(n_null):
+        for k, s in enumerate(sizes):
+            idx = rng.choice(len(X), s, replace=False)
+            t = logterms(traces(X[idx], labels[idx]))
+            for key in flo[k]:
+                if key == "traces":
+                    flo[k][key] = flo[k][key] + np.array(t[key]) / n_null
+                else:
+                    flo[k][key] += (np.log(t["pr"]) if key == "pr" else t[key]) / n_null
+    rows = []
+    for k, s in enumerate(sizes):
+        o, f = obs[k], flo[k]
+        A = o["lt"] - f["lt"]; P = -(o["lw2"] - f["lw2"]); Cb = -(o["lb"] - f["lb"])
+        Cx = -((o["lbx"] - o["lb"]) - (f["lbx"] - f["lb"]))
+        deficit = float(np.log(o["pr"]) - f["pr"])
+        D = o["ld"] - f["ld"]; Tb = o["tb"] - f["tb"]; S = o["lw1"] - f["lw1"]
+        rows.append({"classes": ks[k], "size": s, "deficit": deficit, "A": float(A), "P": float(P), "Cb": float(Cb), "Cx": float(Cx),
+                     "D": float(D), "Tb": float(Tb), "S": float(S),
+                     "log_pr_obs": float(np.log(o["pr"])), "log_pr_floor": float(f["pr"]),
+                     "traces_obs": o["traces"], "traces_floor_mean": [float(v) for v in f["traces"]],
+                     "sum_check": float(A + P + Cb + Cx - deficit), "regroup_check": float(D + Tb - A - P),
+                     "pr_identity_rel": float(abs(o["pr"] - o["pr_check"]) / o["pr_check"])})
+    logn = np.log(sizes)
+    split = {key: _lsq_slope(logn, [r[key] for r in rows]) for key in ("deficit", "A", "P", "Cb", "Cx", "D", "Tb", "S")}
+    below = ks[-1] == K and len(ks) >= 3
+    out = {"rungs": rows, "delta": split["deficit"], "delta_split": {key: split[key] for key in ("A", "P", "Cb", "Cx")},
+           "delta_split_free": {key: split[key] for key in ("D", "Tb", "Cb", "Cx")}, "delta_scale": split["S"],
+           "delta_split_check": float(sum(split[key] for key in ("A", "P", "Cb", "Cx")) - split["deficit"]),
+           "private_slope": _lsq_slope(np.log(np.array(ks[:-1]) / K), [r["P"] for r in rows[:-1]]) if below else None,
+           "private_slope_dim": _lsq_slope(np.log(np.array(ks[:-1]) / K), [r["D"] for r in rows[:-1]]) if below else None,
+           "max_sum_check": float(max(abs(r["sum_check"]) for r in rows)), "max_regroup_check": float(max(abs(r["regroup_check"]) for r in rows)),
+           "max_pr_identity_rel": float(max(r["pr_identity_rel"] for r in rows))}
+    if 4 in ks and ks[-1] == K:
+        r4 = rows[ks.index(4)]
+        out["at_four"] = {key: r4[key] for key in ("deficit", "A", "P", "Cb", "Cx", "D", "Tb", "S")}
+        late = {key: -r4[key] for key in ("deficit", "A", "P", "Cb", "Cx")}   # the top rung is zero in every term
+        out["late_share"] = {key: (late[key] / late["deficit"] if late["deficit"] != 0 else None) for key in ("A", "P", "Cb", "Cx")}
+    return out
+
+
+def largest_term(d, keys=("A", "P", "Cb", "Cx")):
+    """The term with the largest magnitude among `keys` in a split dict."""
+    return max(keys, key=lambda k: abs(d[k]))
+
+
+def _print_decomposition(r):
+    ex = r.get("excess", {}).get("delta_split")
+    print(f"decompose: delta {r['delta']:+.3f} = A {r['delta_split']['A']:+.3f} + P {r['delta_split']['P']:+.3f} + Cb {r['delta_split']['Cb']:+.3f} + Cx {r['delta_split']['Cx']:+.3f}"
+          f"  (regrouped: D {r['delta_split_free']['D']:+.3f} + Tb {r['delta_split_free']['Tb']:+.3f}; scale S {r['delta_scale']:+.3f} cancels between A and P)")
+    if ex is not None:
+        print(f"  net of {r['n_shuffle']} label permutations: D {ex['D']:+.3f} Tb {ex['Tb']:+.3f} Cb {ex['Cb']:+.3f} Cx {ex['Cx']:+.3f} S {ex['S']:+.3f} -> largest {largest_term(ex, FREE)}; "
+              f"private slope (D vs log k/K) {r['excess']['private_slope_dim']:+.2f}")
+    else:
+        print(f"  private slope (D vs log k/K) {r['private_slope_dim']:+.2f}; run with --n-shuffle for the sampling baseline")
+    print(f"  exactness: sum {r['max_sum_check']:.1e}, regroup {r['max_regroup_check']:.1e}, PR identity {r['max_pr_identity_rel']:.1e}")
+
+
 def main():
     import argparse
     ap = argparse.ArgumentParser(
@@ -666,9 +951,14 @@ def main():
     d.add_argument("--seed", type=int, default=0)
     d.add_argument("--out", default=None, help="write the result JSON here")
     d.add_argument("--plot", default=None, help="write a ladder figure (PNG) here")
-    d.add_argument("--standardize", action="store_true", help="z-score every feature first (rogue-dimension repair; run 55)")
-    d.add_argument("--split-by", default=None, help="per-feature score file (npy/csv/txt, one value per feature): also run the top, bottom and a random third of the features at matched size, each with its own floor (the paper's run 59)")
+    d.add_argument("--standardize", action="store_true", help="z-score every feature first (the repair when one dimension dominates the spectrum; the paper's Section 8.3)")
+    d.add_argument("--split-by", default=None, help="per-feature score file (npy/csv/txt, one value per feature): also run the top, bottom and a random third of the features at matched size, each with its own floor (the paper's Section 7)")
+    d.add_argument("--order", default=None, help="the declared accumulation order: sequential (default), antipodal (one member of each antipodal pair first), or a comma-separated list of class labels")
+    d.add_argument("--sectors", action="store_true", help="fit the harmonics of the class-mean kernel for a cyclic axis (labels in cyclic order, class k at angle 2 pi k/K): the sector balance, the even and odd amplitudes, and which accumulation order entry coherence predicts (the paper's Section 4)")
+    d.add_argument("--null-shift", action="store_true", help="labels are in time order: add the circular-shift null, which rolls the label sequence and keeps its autocorrelation (the paper's Section 3)")
     d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks the declared order for the stall test and reports late_fraction as it")
+    d.add_argument("--decompose", action="store_true", help="the exact four-term split of every rung's deficit and of the shift (trace, pooling, between-class, coupling) and its scale-free regrouping A + P = D + Tb (the paper's Section 7); with --n-shuffle > 0, net of label permutations")
+    d.add_argument("--n-shuffle", type=int, default=5, help="label permutations for the sampling baseline of each decomposed term (0 disables)")
 
     m = sub.add_parser("llm", help="per-layer battery on a Hugging Face model")
     m.add_argument("--model", required=True)
@@ -682,7 +972,7 @@ def main():
     m.add_argument("--no-strata", action="store_true", help="ignore *.strata.json sidecars")
     m.add_argument("--out", default=None, help="write JSON here")
     m.add_argument("--paper-seeds", action="store_true",
-                   help="use the paper's seeding convention (reproduces Table 5 cells)")
+                   help="use the paper's seeding convention (reproduces the published per-layer cells)")
 
     s = sub.add_parser("summarize", help="plain-language reading of a `rung llm` or `rung data` JSON (the paper's rules)")
     s.add_argument("battery_json")
@@ -739,18 +1029,35 @@ def main():
         if a.antipode:
             import json as _json
             antipode = {int(k): int(v) for k, v in _json.load(open(a.antipode)).items()}
-        r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed, standardize=a.standardize, antipode=antipode)
+        order = a.order
+        if order not in (None, "sequential", "antipodal"):
+            order = [int(v) for v in order.split(",")]
+        r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed, standardize=a.standardize,
+                 antipode=antipode, order=order, shift_null=a.null_shift)
         for k, v in r.items():
             if not isinstance(v, list):
                 print(f"{k}: {v}")
         if a.split_by:
             score = _load_array(a.split_by).astype(float).ravel()
-            sp_r = split_by(X, labels, score, seed=a.seed, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, standardize=a.standardize, antipode=antipode)
+            sp_r = split_by(X, labels, score, seed=a.seed, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, standardize=a.standardize, antipode=antipode, order=order)
             r["split_by"] = sp_r
             print(f"split by score, {sp_r['n_features_per_subset']} of {sp_r['n_features_total']} features per subset (matched size, own floors):")
             for name, rr in sp_r["subsets"].items():
                 print(f"  {name:7s}: delta {rr['delta']:+.3f}" + (f", p = {rr['p_two']:.3f}" if "p_two" in rr else "")
                       + (f", late fraction {rr['late_fraction']:.2f}" if "late_fraction" in rr else "") + f", median score {rr['median_score']:.3g}")
+        if a.sectors:
+            # the kernel's cycle is the labels' own order (class k sits at angle 2 pi k / K); the
+            # accumulation order of --order is a different thing and does not enter here
+            sc = sectors(X, labels)
+            _print_sectors(sc); r["sectors"] = sc
+        if a.decompose:
+            Xd = (X - X.mean(0)) / (X.std(0) + 1e-12) if a.standardize else X
+            rd = decompose(Xd, labels, order=None if order in (None, "sequential") else [int(np.unique(labels)[i]) for i in declared_order(np.unique(labels), order)],
+                           n_null=20, seed=a.seed, n_shuffle=a.n_shuffle)
+            if rd is None:
+                print("decompose: the ladder has fewer than three rungs of ten samples; nothing to split")
+            else:
+                _print_decomposition(rd); r["decompose"] = rd
         if a.out:
             import json as _json
             _json.dump({k: (v if not isinstance(v, np.ndarray) else v.tolist()) for k, v in r.items()}, open(a.out, "w"), indent=1)

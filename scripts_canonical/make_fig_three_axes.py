@@ -91,7 +91,7 @@ ax = axB
 ax.loglog(n_grid, mp, ls="--", color="0.55", lw=1.0, label="analytic crossover")
 ax.loglog(r_sizes, r_pr, "o-", color=GRAY, lw=1.5, ms=4, label="random subsets (floor)")
 ax.loglog(s_sizes, s_pr, "o-", color=RED, lw=1.7, ms=4, label="direction-aligned ladder")
-ax.set_ylim(24, 62); ax.set_xticks([500, 1000, 2000, 4000]); ax.set_yticks([25, 30, 40, 50, 60])
+ax.set_ylim(24, 69); ax.set_xticks([500, 1000, 2000, 4000]); ax.set_yticks([25, 30, 40, 50, 60])
 for axis in (ax.xaxis, ax.yaxis):
     axis.set_major_formatter(ScalarFormatter()); axis.set_minor_formatter(NullFormatter())
 ax.text(560, 25.6, r"$\delta_{\rm dir} = +0.24$", fontsize=8.5, color=RED)

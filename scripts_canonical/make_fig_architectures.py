@@ -34,7 +34,7 @@ def last_cross(y):
     if i == 0: return 0.0
     return (i - 1 + (0 - y[i - 1]) / (y[i] - y[i - 1])) / L
 fig, axes = plt.subplots(1, 2, figsize=(6.0, 2.6), gridspec_kw={"width_ratios": [1.45, 1.0]})
-plt.subplots_adjust(wspace=0.35, left=0.08, right=0.985, top=0.88, bottom=0.19)
+plt.subplots_adjust(wspace=0.35, left=0.105, right=0.985, top=0.88, bottom=0.19)
 ax = axes[0]
 rows = []
 for lab, f, k, col in SRC:
@@ -46,11 +46,11 @@ for lab, f, k, col in SRC:
     if "OLMo-1B" not in lab:
         c = last_cross(y); ax.plot([c], [0], "v", color=col, ms=5, zorder=5); rows.append((lab, c))
 ax.axhline(0, color="k", lw=0.6)
-ax.set_xlabel("normalized depth $\\ell/L$"); ax.set_ylabel("construction $\\delta$ (declared order)")
+ax.set_xlabel("normalized depth $\\ell/L$"); ax.set_ylabel("construction $\\delta$, declared order", fontsize=7)
 ax.set_title("(a) one shape, one crossing depth per architecture")
-ax.legend(frameon=False, loc="lower right", ncol=2, columnspacing=0.8, handlelength=1.4)
-ax.set_ylim(-0.36, 0.14)
-ax.text(0.02, 0.96, "$\\blacktriangledown$ last zero crossing", transform=ax.transAxes, va="top", fontsize=6.5, color="0.3")
+ax.legend(frameon=False, loc="upper right", ncol=2, columnspacing=0.8, handlelength=1.4, borderaxespad=0.3)
+ax.set_ylim(-0.36, 0.27)
+ax.text(0.98, 0.03, "$\\blacktriangledown$ last zero crossing", transform=ax.transAxes, ha="right", va="bottom", fontsize=6.5, color="0.3")
 ax.spines[["top", "right"]].set_visible(False)
 # (b) blind probe: top-eigenvalue fraction by layer
 ax = axes[1]

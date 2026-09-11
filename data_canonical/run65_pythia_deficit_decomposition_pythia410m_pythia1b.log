@@ -1,0 +1,224 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 11317.31it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[pythia-410m content     ] L 0: delta +0.141 (stored +0.126, shuffle +0.033) | excess A +0.104 P +0.004 Cb -0.006 Cx +0.006 -> A  | free D +0.102 Tb +0.006 S +0.098 -> D  | private slope P -0.04 dim +0.05 | 6s
+[pythia-410m content     ] L 1: delta +0.102 (stored +0.143, shuffle -0.007) | excess A +0.033 P +0.064 Cb +0.006 Cx +0.006 -> P  | free D +0.110 Tb -0.014 S +0.046 -> D  | private slope P +0.07 dim +0.10 | 6s
+[pythia-410m content     ] L 2: delta +0.025 (stored +0.111, shuffle -0.064) | excess A +0.089 P -0.057 Cb +0.032 Cx +0.025 -> A  | free D +0.061 Tb -0.029 S +0.118 -> D  | private slope P +0.00 dim +0.10 | 6s
+[pythia-410m content     ] L 3: delta +0.106 (stored +0.123, shuffle +0.013) | excess A +0.131 P -0.036 Cb -0.000 Cx -0.002 -> A  | free D +0.081 Tb +0.014 S +0.116 -> D  | private slope P +0.06 dim +0.13 | 6s
+[pythia-410m content     ] L 4: delta +0.143 (stored +0.109, shuffle +0.050) | excess A +0.108 P +0.069 Cb -0.083 Cx +0.001 -> A  | free D +0.070 Tb +0.106 S +0.002 -> Tb | private slope P +0.13 dim +0.07 | 6s
+[pythia-410m content     ] L 5: delta +0.108 (stored +0.106, shuffle +0.025) | excess A +0.087 P +0.012 Cb -0.018 Cx +0.001 -> A  | free D +0.104 Tb -0.005 S +0.092 -> D  | private slope P +0.02 dim +0.08 | 6s
+[pythia-410m content     ] L 6: delta +0.096 (stored +0.084, shuffle +0.014) | excess A +0.059 P +0.053 Cb -0.034 Cx +0.005 -> A  | free D +0.078 Tb +0.034 S +0.025 -> D  | private slope P +0.05 dim +0.05 | 6s
+[pythia-410m content     ] L 7: delta +0.107 (stored +0.099, shuffle +0.028) | excess A +0.107 P +0.020 Cb -0.048 Cx -0.000 -> A  | free D +0.070 Tb +0.057 S +0.050 -> D  | private slope P +0.01 dim +0.04 | 6s
+[pythia-410m content     ] L 8: delta +0.103 (stored +0.098, shuffle +0.019) | excess A +0.102 P +0.020 Cb -0.041 Cx +0.003 -> A  | free D +0.069 Tb +0.052 S +0.049 -> D  | private slope P +0.02 dim +0.04 | 6s
+[pythia-410m content     ] L 9: delta +0.099 (stored +0.097, shuffle +0.025) | excess A +0.109 P -0.011 Cb -0.030 Cx +0.006 -> A  | free D +0.061 Tb +0.037 S +0.072 -> D  | private slope P -0.02 dim +0.03 | 6s
+[pythia-410m content     ] L10: delta +0.090 (stored +0.086, shuffle +0.029) | excess A +0.127 P -0.043 Cb -0.030 Cx +0.007 -> A  | free D +0.064 Tb +0.021 S +0.106 -> D  | private slope P -0.06 dim +0.04 | 7s
+[pythia-410m content     ] L11: delta +0.090 (stored +0.082, shuffle +0.022) | excess A +0.109 P -0.040 Cb -0.008 Cx +0.006 -> A  | free D +0.076 Tb -0.006 S +0.116 -> D  | private slope P -0.05 dim +0.06 | 7s
+[pythia-410m content     ] L12: delta +0.094 (stored +0.111, shuffle +0.014) | excess A +0.089 P +0.035 Cb -0.053 Cx +0.009 -> A  | free D +0.078 Tb +0.047 S +0.043 -> D  | private slope P +0.03 dim +0.06 | 7s
+[pythia-410m content     ] L13: delta +0.092 (stored +0.083, shuffle +0.018) | excess A +0.092 P +0.039 Cb -0.059 Cx +0.002 -> A  | free D +0.067 Tb +0.064 S +0.029 -> D  | private slope P +0.03 dim +0.05 | 7s
+[pythia-410m content     ] L14: delta +0.082 (stored +0.080, shuffle +0.013) | excess A +0.078 P +0.042 Cb -0.057 Cx +0.006 -> A  | free D +0.062 Tb +0.059 S +0.019 -> D  | private slope P +0.04 dim +0.05 | 7s
+[pythia-410m content     ] L15: delta +0.086 (stored +0.082, shuffle -0.001) | excess A +0.085 P +0.037 Cb -0.039 Cx +0.004 -> A  | free D +0.097 Tb +0.025 S +0.060 -> D  | private slope P +0.03 dim +0.09 | 7s
+[pythia-410m content     ] L16: delta +0.069 (stored +0.067, shuffle -0.001) | excess A +0.114 P -0.003 Cb -0.045 Cx +0.003 -> A  | free D +0.068 Tb +0.044 S +0.071 -> D  | private slope P -0.01 dim +0.06 | 7s
+[pythia-410m content     ] L17: delta +0.082 (stored +0.077, shuffle +0.015) | excess A +0.156 P -0.005 Cb -0.087 Cx +0.003 -> A  | free D +0.078 Tb +0.072 S +0.083 -> Cb | private slope P -0.00 dim +0.08 | 7s
+[pythia-410m content     ] L18: delta +0.075 (stored +0.071, shuffle +0.007) | excess A +0.187 P -0.012 Cb -0.109 Cx +0.002 -> A  | free D +0.060 Tb +0.115 S +0.072 -> Tb | private slope P -0.01 dim +0.06 | 7s
+[pythia-410m content     ] L19: delta +0.150 (stored +0.140, shuffle +0.015) | excess A +0.181 P +0.044 Cb -0.093 Cx +0.002 -> A  | free D +0.114 Tb +0.111 S +0.070 -> D  | private slope P +0.05 dim +0.12 | 7s
+[pythia-410m content     ] L20: delta +0.111 (stored +0.133, shuffle -0.015) | excess A +0.261 P -0.109 Cb -0.036 Cx +0.010 -> A  | free D +0.084 Tb +0.067 S +0.194 -> D  | private slope P -0.10 dim +0.11 | 7s
+[pythia-410m content     ] L21: delta +0.099 (stored +0.087, shuffle +0.041) | excess A +0.346 P -0.262 Cb -0.027 Cx +0.000 -> A  | free D +0.038 Tb +0.047 S +0.300 -> Tb | private slope P -0.32 dim +0.03 | 7s
+[pythia-410m content     ] L22: delta +0.037 (stored +0.093, shuffle -0.046) | excess A +0.322 P -0.236 Cb -0.018 Cx +0.016 -> A  | free D +0.051 Tb +0.034 S +0.288 -> D  | private slope P -0.31 dim +0.04 | 8s
+[pythia-410m content     ] L23: delta +0.084 (stored +0.086, shuffle -0.003) | excess A +0.336 P -0.158 Cb -0.105 Cx +0.014 -> A  | free D +0.085 Tb +0.092 S +0.243 -> Cb | private slope P -0.22 dim +0.07 | 8s
+[pythia-410m content     ] L24: delta +0.071 (stored +0.081, shuffle -0.003) | excess A +0.241 P -0.109 Cb -0.081 Cx +0.023 -> A  | free D +0.065 Tb +0.066 S +0.175 -> Cb | private slope P -0.15 dim +0.06 | 8s
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 25321.22it/s]
+[pythia-410m construction] L 0: delta -0.075 (stored -0.065, shuffle -0.011) | excess A -0.149 P +0.097 Cb -0.015 Cx +0.003 -> A  | free D -0.070 Tb +0.019 S -0.167 -> D  | private slope P +0.12 dim -0.05 | 10s
+[pythia-410m construction] L 1: delta -0.163 (stored -0.142, shuffle +0.005) | excess A +0.043 P -0.206 Cb +0.007 Cx -0.011 -> P  | free D -0.147 Tb -0.017 S +0.059 -> D  | private slope P -0.21 dim -0.12 | 10s
+[pythia-410m construction] L 2: delta -0.091 (stored -0.149, shuffle +0.060) | excess A +0.010 P -0.131 Cb -0.022 Cx -0.007 -> P  | free D -0.128 Tb +0.006 S +0.003 -> D  | private slope P -0.07 dim -0.07 | 10s
+[pythia-410m construction] L 3: delta -0.127 (stored -0.126, shuffle +0.024) | excess A -0.049 P -0.049 Cb -0.046 Cx -0.007 -> P  | free D -0.132 Tb +0.034 S -0.083 -> D  | private slope P +0.03 dim -0.07 | 10s
+[pythia-410m construction] L 4: delta -0.034 (stored -0.044, shuffle +0.010) | excess A -0.122 P +0.145 Cb -0.069 Cx +0.002 -> P  | free D -0.072 Tb +0.095 S -0.218 -> Tb | private slope P +0.19 dim -0.06 | 10s
+[pythia-410m construction] L 5: delta -0.015 (stored -0.011, shuffle +0.005) | excess A -0.159 P +0.188 Cb -0.046 Cx -0.003 -> P  | free D -0.002 Tb +0.031 S -0.190 -> Cb | private slope P +0.21 dim +0.01 | 10s
+[pythia-410m construction] L 6: delta -0.012 (stored -0.012, shuffle +0.001) | excess A -0.105 P +0.117 Cb -0.024 Cx -0.002 -> P  | free D -0.007 Tb +0.019 S -0.125 -> Cb | private slope P +0.13 dim +0.00 | 11s
+[pythia-410m construction] L 7: delta -0.004 (stored -0.000, shuffle -0.010) | excess A -0.085 P +0.119 Cb -0.030 Cx +0.001 -> P  | free D -0.004 Tb +0.039 S -0.124 -> Tb | private slope P +0.13 dim -0.00 | 11s
+[pythia-410m construction] L 8: delta +0.011 (stored +0.008, shuffle +0.003) | excess A -0.063 P +0.133 Cb -0.061 Cx -0.001 -> P  | free D +0.002 Tb +0.068 S -0.131 -> Tb | private slope P +0.15 dim +0.01 | 11s
+[pythia-410m construction] L 9: delta +0.018 (stored +0.015, shuffle +0.003) | excess A -0.065 P +0.147 Cb -0.070 Cx +0.002 -> P  | free D -0.005 Tb +0.088 S -0.152 -> Tb | private slope P +0.16 dim -0.01 | 11s
+[pythia-410m construction] L10: delta +0.017 (stored +0.022, shuffle -0.001) | excess A -0.074 P +0.146 Cb -0.058 Cx +0.004 -> P  | free D +0.030 Tb +0.041 S -0.115 -> Cb | private slope P +0.16 dim +0.04 | 11s
+[pythia-410m construction] L11: delta +0.009 (stored +0.009, shuffle -0.004) | excess A -0.065 P +0.109 Cb -0.038 Cx +0.007 -> P  | free D +0.015 Tb +0.028 S -0.093 -> Cb | private slope P +0.10 dim +0.01 | 11s
+[pythia-410m construction] L12: delta +0.020 (stored +0.013, shuffle +0.006) | excess A -0.050 P +0.110 Cb -0.048 Cx +0.002 -> P  | free D +0.017 Tb +0.043 S -0.093 -> Cb | private slope P +0.11 dim +0.02 | 11s
+[pythia-410m construction] L13: delta +0.030 (stored +0.032, shuffle +0.008) | excess A -0.031 P +0.106 Cb -0.056 Cx +0.003 -> P  | free D +0.016 Tb +0.059 S -0.090 -> Tb | private slope P +0.10 dim +0.02 | 11s
+[pythia-410m construction] L14: delta +0.019 (stored +0.018, shuffle +0.001) | excess A -0.015 P +0.098 Cb -0.069 Cx +0.004 -> P  | free D +0.017 Tb +0.066 S -0.081 -> Cb | private slope P +0.10 dim +0.02 | 11s
+[pythia-410m construction] L15: delta +0.075 (stored +0.076, shuffle -0.004) | excess A -0.030 P +0.163 Cb -0.065 Cx +0.011 -> P  | free D +0.079 Tb +0.054 S -0.084 -> D  | private slope P +0.16 dim +0.08 | 11s
+[pythia-410m construction] L16: delta +0.030 (stored +0.028, shuffle +0.004) | excess A +0.061 P +0.032 Cb -0.070 Cx +0.003 -> Cb | free D +0.034 Tb +0.059 S +0.002 -> Cb | private slope P +0.04 dim +0.05 | 11s
+[pythia-410m construction] L17: delta +0.064 (stored +0.055, shuffle +0.010) | excess A +0.119 P -0.016 Cb -0.055 Cx +0.005 -> A  | free D +0.066 Tb +0.037 S +0.082 -> D  | private slope P -0.02 dim +0.09 | 12s
+[pythia-410m construction] L18: delta +0.091 (stored +0.080, shuffle +0.012) | excess A +0.216 P -0.064 Cb -0.072 Cx +0.001 -> A  | free D +0.073 Tb +0.078 S +0.138 -> Tb | private slope P -0.08 dim +0.09 | 12s
+[pythia-410m construction] L19: delta +0.096 (stored +0.092, shuffle -0.010) | excess A +0.302 P -0.138 Cb -0.063 Cx +0.004 -> A  | free D +0.086 Tb +0.078 S +0.224 -> D  | private slope P -0.12 dim +0.15 | 12s
+[pythia-410m construction] L20: delta -0.032 (stored -0.039, shuffle -0.044) | excess A +0.532 P -0.424 Cb -0.099 Cx +0.003 -> A  | free D +0.009 Tb +0.099 S +0.432 -> Tb | private slope P -0.46 dim +0.05 | 12s
+[pythia-410m construction] L21: delta +0.205 (stored +0.204, shuffle -0.061) | excess A +0.344 P -0.015 Cb -0.080 Cx +0.016 -> A  | free D +0.273 Tb +0.056 S +0.287 -> D  | private slope P -0.04 dim +0.31 | 12s
+[pythia-410m construction] L22: delta +0.132 (stored +0.147, shuffle -0.034) | excess A +0.423 P -0.217 Cb -0.043 Cx +0.003 -> A  | free D +0.162 Tb +0.044 S +0.379 -> D  | private slope P -0.13 dim +0.29 | 12s
+[pythia-410m construction] L23: delta +0.130 (stored +0.135, shuffle -0.017) | excess A +0.434 P -0.216 Cb -0.083 Cx +0.012 -> A  | free D +0.136 Tb +0.081 S +0.353 -> D  | private slope P -0.23 dim +0.19 | 12s
+[pythia-410m construction] L24: delta +0.063 (stored +0.042, shuffle +0.000) | excess A +0.453 P -0.341 Cb -0.052 Cx +0.003 -> A  | free D +0.089 Tb +0.023 S +0.430 -> D  | private slope P -0.40 dim +0.11 | 12s
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s]Loading weights: 100%|██████████| 196/196 [00:00<00:00, 9752.81it/s]
+[pythia-1b content     ] L 0: delta +0.134 (stored +0.117, shuffle +0.032) | excess A +0.124 P -0.022 Cb -0.007 Cx +0.008 -> A  | free D +0.093 Tb +0.008 S +0.115 -> D  | private slope P -0.06 dim +0.04 | 15s
+[pythia-1b content     ] L 1: delta +0.113 (stored +0.153, shuffle -0.004) | excess A +0.038 P +0.046 Cb +0.021 Cx +0.011 -> P  | free D +0.106 Tb -0.021 S +0.060 -> D  | private slope P +0.04 dim +0.10 | 15s
+[pythia-1b content     ] L 2: delta +0.101 (stored +0.139, shuffle +0.008) | excess A +0.020 P +0.059 Cb +0.010 Cx +0.004 -> P  | free D +0.097 Tb -0.018 S +0.038 -> D  | private slope P +0.07 dim +0.09 | 16s
+[pythia-1b content     ] L 3: delta +0.135 (stored +0.123, shuffle +0.051) | excess A +0.020 P +0.089 Cb -0.023 Cx -0.002 -> P  | free D +0.088 Tb +0.021 S -0.001 -> D  | private slope P +0.12 dim +0.08 | 16s
+[pythia-1b content     ] L 4: delta +0.115 (stored +0.102, shuffle +0.039) | excess A +0.018 P +0.134 Cb -0.079 Cx +0.003 -> P  | free D +0.050 Tb +0.102 S -0.083 -> Tb | private slope P +0.17 dim +0.03 | 16s
+[pythia-1b content     ] L 5: delta +0.109 (stored +0.105, shuffle +0.020) | excess A +0.013 P +0.114 Cb -0.038 Cx +0.002 -> P  | free D +0.108 Tb +0.018 S -0.006 -> D  | private slope P +0.15 dim +0.11 | 16s
+[pythia-1b content     ] L 6: delta +0.107 (stored +0.086, shuffle +0.021) | excess A +0.039 P +0.074 Cb -0.032 Cx +0.005 -> P  | free D +0.085 Tb +0.028 S +0.011 -> D  | private slope P +0.09 dim +0.07 | 16s
+[pythia-1b content     ] L 7: delta +0.096 (stored +0.107, shuffle +0.011) | excess A +0.050 P +0.080 Cb -0.045 Cx +0.001 -> P  | free D +0.072 Tb +0.058 S -0.008 -> D  | private slope P +0.09 dim +0.06 | 16s
+[pythia-1b content     ] L 8: delta +0.099 (stored +0.090, shuffle +0.015) | excess A +0.065 P +0.047 Cb -0.035 Cx +0.006 -> A  | free D +0.061 Tb +0.051 S +0.014 -> D  | private slope P +0.04 dim +0.05 | 16s
+[pythia-1b content     ] L 9: delta +0.088 (stored +0.085, shuffle +0.011) | excess A +0.096 P +0.013 Cb -0.035 Cx +0.003 -> A  | free D +0.061 Tb +0.049 S +0.048 -> D  | private slope P +0.00 dim +0.05 | 17s
+[pythia-1b content     ] L10: delta +0.084 (stored +0.077, shuffle +0.013) | excess A +0.124 P -0.024 Cb -0.039 Cx +0.010 -> A  | free D +0.073 Tb +0.027 S +0.097 -> D  | private slope P -0.05 dim +0.06 | 17s
+[pythia-1b content     ] L11: delta +0.075 (stored +0.085, shuffle -0.004) | excess A +0.140 P -0.059 Cb -0.008 Cx +0.006 -> A  | free D +0.081 Tb +0.000 S +0.140 -> D  | private slope P -0.10 dim +0.07 | 17s
+[pythia-1b content     ] L12: delta +0.075 (stored +0.079, shuffle +0.006) | excess A +0.151 P -0.014 Cb -0.077 Cx +0.009 -> A  | free D +0.067 Tb +0.070 S +0.081 -> Cb | private slope P -0.06 dim +0.05 | 17s
+[pythia-1b content     ] L13: delta +0.067 (stored +0.072, shuffle +0.002) | excess A +0.164 P -0.020 Cb -0.085 Cx +0.005 -> A  | free D +0.054 Tb +0.090 S +0.073 -> Tb | private slope P -0.06 dim +0.04 | 17s
+[pythia-1b content     ] L14: delta +0.065 (stored +0.078, shuffle +0.002) | excess A +0.219 P -0.084 Cb -0.077 Cx +0.005 -> A  | free D +0.050 Tb +0.085 S +0.134 -> Tb | private slope P -0.14 dim +0.04 | 17s
+[pythia-1b content     ] L15: delta +0.058 (stored +0.066, shuffle -0.005) | excess A +0.290 P -0.184 Cb -0.053 Cx +0.010 -> A  | free D +0.055 Tb +0.051 S +0.239 -> D  | private slope P -0.23 dim +0.06 | 17s
+[pythia-1b content     ] L16: delta +0.048 (stored +0.041, shuffle -0.000) | excess A +0.170 P -0.010 Cb -0.130 Cx +0.018 -> A  | free D +0.035 Tb +0.126 S +0.045 -> Cb | private slope P -0.03 dim +0.03 | 18s
+Loading weights:   0%|          | 0/196 [00:00<?, ?it/s]Loading weights: 100%|██████████| 196/196 [00:00<00:00, 22632.59it/s]
+[pythia-1b construction] L 0: delta -0.106 (stored -0.090, shuffle -0.024) | excess A -0.156 P +0.092 Cb -0.018 Cx +0.001 -> A  | free D -0.086 Tb +0.022 S -0.178 -> D  | private slope P +0.13 dim -0.05 | 20s
+[pythia-1b construction] L 1: delta -0.104 (stored -0.116, shuffle +0.018) | excess A -0.071 P -0.056 Cb +0.008 Cx -0.003 -> A  | free D -0.112 Tb -0.015 S -0.056 -> D  | private slope P -0.06 dim -0.10 | 20s
+[pythia-1b construction] L 2: delta -0.069 (stored -0.089, shuffle +0.008) | excess A -0.042 P -0.018 Cb -0.015 Cx -0.001 -> A  | free D -0.062 Tb +0.001 S -0.044 -> D  | private slope P -0.02 dim -0.05 | 20s
+[pythia-1b construction] L 3: delta -0.069 (stored -0.081, shuffle -0.007) | excess A -0.099 P +0.060 Cb -0.021 Cx -0.002 -> A  | free D -0.058 Tb +0.019 S -0.118 -> D  | private slope P +0.05 dim -0.06 | 20s
+[pythia-1b construction] L 4: delta -0.050 (stored -0.058, shuffle +0.010) | excess A -0.062 P +0.088 Cb -0.089 Cx +0.003 -> Cb | free D -0.089 Tb +0.115 S -0.177 -> Tb | private slope P +0.07 dim -0.11 | 20s
+[pythia-1b construction] L 5: delta -0.038 (stored -0.030, shuffle +0.004) | excess A -0.091 P +0.116 Cb -0.066 Cx +0.000 -> P  | free D -0.023 Tb +0.047 S -0.138 -> Cb | private slope P +0.11 dim -0.03 | 21s
+[pythia-1b construction] L 6: delta -0.037 (stored -0.038, shuffle -0.001) | excess A -0.080 P +0.068 Cb -0.023 Cx -0.001 -> A  | free D -0.033 Tb +0.021 S -0.101 -> D  | private slope P +0.05 dim -0.04 | 21s
+[pythia-1b construction] L 7: delta -0.027 (stored -0.029, shuffle +0.004) | excess A -0.070 P +0.106 Cb -0.070 Cx +0.002 -> P  | free D -0.032 Tb +0.068 S -0.138 -> Cb | private slope P +0.10 dim -0.04 | 21s
+[pythia-1b construction] L 8: delta -0.014 (stored -0.004, shuffle +0.005) | excess A -0.097 P +0.159 Cb -0.083 Cx +0.002 -> P  | free D -0.025 Tb +0.087 S -0.184 -> Tb | private slope P +0.16 dim -0.03 | 21s
+[pythia-1b construction] L 9: delta +0.004 (stored -0.003, shuffle +0.024) | excess A -0.059 P +0.110 Cb -0.075 Cx +0.004 -> P  | free D -0.039 Tb +0.090 S -0.149 -> Tb | private slope P +0.09 dim -0.06 | 21s
+[pythia-1b construction] L10: delta -0.008 (stored +0.000, shuffle -0.001) | excess A -0.011 P +0.071 Cb -0.071 Cx +0.004 -> Cb | free D +0.013 Tb +0.048 S -0.058 -> Cb | private slope P +0.07 dim +0.02 | 21s
+[pythia-1b construction] L11: delta +0.013 (stored +0.010, shuffle -0.003) | excess A +0.030 P +0.012 Cb -0.035 Cx +0.008 -> Cb | free D +0.021 Tb +0.021 S +0.009 -> Cb | private slope P -0.00 dim +0.03 | 21s
+[pythia-1b construction] L12: delta +0.045 (stored +0.040, shuffle +0.003) | excess A +0.173 P -0.110 Cb -0.029 Cx +0.008 -> A  | free D +0.037 Tb +0.026 S +0.147 -> D  | private slope P -0.14 dim +0.05 | 22s
+[pythia-1b construction] L13: delta +0.046 (stored +0.038, shuffle +0.002) | excess A +0.283 P -0.196 Cb -0.046 Cx +0.004 -> A  | free D +0.033 Tb +0.054 S +0.229 -> Tb | private slope P -0.25 dim +0.04 | 22s
+[pythia-1b construction] L14: delta +0.053 (stored +0.051, shuffle -0.000) | excess A +0.347 P -0.241 Cb -0.057 Cx +0.004 -> A  | free D +0.040 Tb +0.066 S +0.280 -> Tb | private slope P -0.31 dim +0.04 | 22s
+[pythia-1b construction] L15: delta +0.060 (stored +0.069, shuffle -0.004) | excess A +0.369 P -0.255 Cb -0.060 Cx +0.010 -> A  | free D +0.060 Tb +0.054 S +0.315 -> D  | private slope P -0.32 dim +0.07 | 22s
+[pythia-1b construction] L16: delta +0.043 (stored +0.046, shuffle -0.012) | excess A +0.391 P -0.243 Cb -0.099 Cx +0.006 -> A  | free D +0.058 Tb +0.090 S +0.301 -> Cb | private slope P -0.27 dim +0.08 | 22s
+VERDICT {
+ "pythia-410m": {
+  "E1_content_L0_largest": "A",
+  "E1_content_L0_excess_split": {
+   "A": 0.10378991650261912,
+   "P": 0.0038889443992410344,
+   "Cb": -0.006264269713551873,
+   "Cx": 0.0059259793223752355,
+   "D": 0.10208865049048217,
+   "Tb": 0.005590210411377972,
+   "S": 0.09819970609124085
+  },
+  "E1": false,
+  "refined_descriptive": {
+   "content_L0_largest_free": "D",
+   "construction_late_largest_free_counts": {
+    "D": 6,
+    "Tb": 2,
+    "Cb": 1,
+    "Cx": 0
+   },
+   "construction_late_mean_free": {
+    "D": 0.10321454342477565,
+    "Tb": 0.061673187334334655,
+    "Cb": -0.06854038106395992,
+    "Cx": 0.005656731914693781,
+    "S": 0.2587223982532103
+   },
+   "content_late_mean_free": {
+    "D": 0.0716381612480205,
+    "Tb": 0.07199765785956494,
+    "Cb": -0.06674091146983979,
+    "Cx": 0.008206265612667147,
+    "S": 0.16615963656801616
+   },
+   "rho_layer_dimslope_construction": 0.9492307692307692,
+   "rho_layer_dimslope_content": -0.07384615384615385
+  },
+  "E2_late_layers": [
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24
+  ],
+  "E2_count_P_largest_positive": 0,
+  "E2": false,
+  "E2_late_largest_terms": [
+   "Cb",
+   "A",
+   "A",
+   "A",
+   "A",
+   "A",
+   "A",
+   "A",
+   "A"
+  ],
+  "E3_rho_construction": -0.546923076923077,
+  "E3_rho_content": -0.573076923076923,
+  "E3": false,
+  "max_sum_check": 5.10702591327572e-15,
+  "max_pr_identity_rel": 4.801609050201311e-07
+ },
+ "pythia-1b": {
+  "E1_content_L0_largest": "A",
+  "E1_content_L0_excess_split": {
+   "A": 0.12373084378338547,
+   "P": -0.02223137911925188,
+   "Cb": -0.007475064278957166,
+   "Cx": 0.007996225765130649,
+   "D": 0.09314668312127863,
+   "Tb": 0.00835278154285446,
+   "S": 0.11537806224053099
+  },
+  "E1": false,
+  "refined_descriptive": {
+   "content_L0_largest_free": "D",
+   "construction_late_largest_free_counts": {
+    "D": 2,
+    "Tb": 2,
+    "Cb": 2,
+    "Cx": 0
+   },
+   "construction_late_mean_free": {
+    "D": 0.041401200984375816,
+    "Tb": 0.051951539408759025,
+    "Cb": -0.05438480049317554,
+    "Cx": 0.006690836314280528,
+    "S": 0.21346633695568407
+   },
+   "content_late_mean_free": {
+    "D": 0.056900860535155286,
+    "Tb": 0.07040937522400742,
+    "Cb": -0.0716943620944498,
+    "Cx": 0.008790459446024758,
+    "S": 0.11873123157830878
+   },
+   "rho_layer_dimslope_construction": 0.8602941176470589,
+   "rho_layer_dimslope_content": -0.4387254901960785
+  },
+  "E2_late_layers": [
+   11,
+   12,
+   13,
+   14,
+   15,
+   16
+  ],
+  "E2_count_P_largest_positive": 0,
+  "E2": false,
+  "E2_late_largest_terms": [
+   "Cb",
+   "A",
+   "A",
+   "A",
+   "A",
+   "A"
+  ],
+  "E3_rho_construction": -0.5857843137254902,
+  "E3_rho_content": -0.5931372549019609,
+  "E3": false,
+  "max_sum_check": 5.162537064506978e-15,
+  "max_pr_identity_rel": 5.219767290390862e-07
+ },
+ "E1": false,
+ "E2": false,
+ "E3": false
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run65_pythia_deficit_decomposition_pythia410m_pythia1b.json in 22s

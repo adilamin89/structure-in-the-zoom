@@ -126,3 +126,106 @@ def test_split_by_runs_matched_subsets(tmp_path):
     assert res.returncode == 0, res.stderr
     d = json.load(open(out)); assert "split_by" in d and "deficit" in d and "late_fraction" in d
     assert "share of the climb" in "\n".join(tz.summarize_data(d, verbose=False)["lines"])
+
+
+def test_decompose_is_exact_and_separates_private_from_shared():
+    rng = np.random.default_rng(0); n_c, N, K = 30, 200, 8
+    lab = np.repeat(np.arange(K), n_c); W = rng.standard_normal((N, 5))
+    shared = np.concatenate([rng.standard_normal((n_c, 5)) @ W.T + 0.3 * rng.standard_normal((n_c, N)) for _ in range(K)])
+    private = np.concatenate([rng.standard_normal((n_c, 5)) @ rng.standard_normal((N, 5)).T + 0.3 * rng.standard_normal((n_c, N)) for _ in range(K)])
+    scaled = np.concatenate([(0.5 + 0.1 * c) * (rng.standard_normal((n_c, 5)) @ W.T + 0.3 * rng.standard_normal((n_c, N))) for c in range(K)])
+    rs, rp, rc = (tz.decompose(X, lab, n_null=5, n_shuffle=3) for X in (shared, private, scaled))
+    for r in (rs, rp, rc):
+        assert r["max_sum_check"] < 1e-9 and r["max_regroup_check"] < 1e-9 and abs(r["delta_split_check"]) < 1e-9
+        assert r["max_pr_identity_rel"] < 1e-4 and len(r["rungs"]) == 6 and "at_four" in r
+    # private modes: a large dimension term and a private slope near the block-mixture value; shared modes: small
+    # (the sampling baseline at thirty trials per class in 200 dimensions is removed by the permutations, to noise)
+    assert rp["excess"]["delta_split"]["D"] > 0.4 and abs(rs["excess"]["delta_split"]["D"]) < 0.2
+    assert rp["excess"]["delta_split"]["D"] > 3 * abs(rs["excess"]["delta_split"]["D"])
+    assert rp["excess"]["private_slope_dim"] > 0.4 and abs(rs["excess"]["private_slope_dim"]) < 0.25
+    # a class-dependent scale moves A and P by the same amount with opposite signs and leaves D near zero
+    assert abs(rc["excess"]["delta_split"]["S"]) > 0.5 and abs(rc["excess"]["delta_split"]["D"]) < 0.1
+    assert abs(rc["excess"]["delta_split"]["A"] - rc["excess"]["delta_split"]["S"] - rc["excess"]["delta_split"]["Tb"]) < 1e-9
+
+
+def test_cli_decompose_reports_the_split(tmp_path):
+    X, labels = _gaussian_classes(n=320, d=48)
+    np.save(tmp_path / "X.npy", X); np.save(tmp_path / "labels.npy", labels)
+    out = tmp_path / "r.json"
+    cmd = [sys.executable, os.path.join(os.path.dirname(tz.__file__), "rung.py"), "data",
+           str(tmp_path / "X.npy"), str(tmp_path / "labels.npy"), "--n-perm", "0", "--k-orders", "2",
+           "--decompose", "--n-shuffle", "2", "--out", str(out)]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    assert res.returncode == 0, res.stderr
+    assert "regrouped: D" in res.stdout and "net of 2 label permutations" in res.stdout
+    d = json.load(open(out)); assert "decompose" in d and len(d["decompose"]["rungs"]) == 6 and "excess" in d["decompose"]
+
+
+def test_sectors_recovers_a_planted_kernel_exactly():
+    # eight classes on a circle; class-mean vectors built from four orthonormal,
+    # zero-mean feature directions so that their correlation is exactly
+    # a + q1 cos(d) + q2 cos(2d): the DFT must return q1, q2 and nothing else
+    d, K = 40, 8
+    rng = np.random.default_rng(0)
+    B = rng.normal(size=(d, 4)); B -= B.mean(axis=0, keepdims=True)   # zero mean across features
+    Q, _ = np.linalg.qr(B)
+    q1, q2 = 0.3, 0.7
+    th = 2 * np.pi * np.arange(K) / K
+    M = (np.sqrt(q1) * (np.cos(th)[:, None] * Q[:, 0] + np.sin(th)[:, None] * Q[:, 1])
+         + np.sqrt(q2) * (np.cos(2 * th)[:, None] * Q[:, 2] + np.sin(2 * th)[:, None] * Q[:, 3]))
+    labels = np.repeat(np.arange(K), 5)
+    X = M[labels] + 1e-9 * rng.normal(size=(len(labels), d))
+    sc = tz.sectors(X, labels)
+    c = sc["coefficients"]
+    assert abs(c["q1"] - q1) < 1e-6 and abs(c["q2"] - q2) < 1e-6
+    assert abs(c["q3"]) < 1e-6 and abs(c["q4"]) < 1e-6 and abs(c["a"]) < 1e-6
+    assert abs(sc["balance"] - q2 / q1) < 1e-5 and abs(sc["A_even"] - q2) < 1e-6 and abs(sc["A_odd"] - q1) < 1e-6
+    assert set(sc["named"]) == {"a", "c1", "b2", "c3", "b4"}
+    # adjacent classes cohere at q1 cos 45 + q2 cos 90, antipodal at -q1 + q2: the
+    # quadrupole-dominant kernel makes the antipodal pair the more coherent one
+    assert abs(sc["C_adjacent"] - (q1 * np.cos(np.pi / 4))) < 1e-6
+    assert abs(sc["C_antipodal"] - (q2 - q1)) < 1e-6 and sc["order_prediction"] == "antipodal"
+    with pytest.raises(ValueError):
+        tz.sectors(X[labels < 2], labels[labels < 2])
+
+
+def test_declared_order_presets_and_the_antipodal_ladder():
+    classes = np.arange(8)
+    assert tz.declared_order(classes) == list(range(8)) == tz.declared_order(classes, "sequential")
+    assert tz.declared_order(classes, "antipodal") == [0, 4, 1, 5, 2, 6, 3, 7]
+    assert tz.declared_order(np.array([10, 20, 30]), [30, 10, 20]) == [2, 0, 1]
+    with pytest.raises(ValueError):
+        tz.declared_order(np.arange(7), "antipodal")
+    with pytest.raises(ValueError):
+        tz.declared_order(classes, [0, 1, 2])
+    Xd, labels = _circle_classes(harmonic=1)
+    rs = tz.zoom(Xd, labels, n_perm=0, k_orders=3, n_floor_draws=6, order="sequential")
+    ra = tz.zoom(Xd, labels, n_perm=0, k_orders=3, n_floor_draws=6, order="antipodal")
+    assert rs["order"] == list(range(8)) and ra["order"] == [0, 4, 1, 5, 2, 6, 3, 7]
+    # the declared-order shift is a path property and changes with the order; the
+    # order-averaged statistic describes the partition and does not
+    assert abs(rs["delta"] - ra["delta"]) > 1e-3
+    assert abs(rs["delta_orderavg"] - ra["delta_orderavg"]) < 1e-9
+    # entry coherence on the two planted codes: a dipole code's adjacent classes
+    # cohere more than its antipodes (sequential first); an even code's antipodes
+    # share a mean (antipodal first)
+    assert tz.sectors(Xd, labels)["order_prediction"] == "sequential"
+    Xe, _ = _circle_classes(harmonic=2)
+    assert tz.sectors(Xe, labels)["order_prediction"] == "antipodal"
+
+
+def test_circular_shift_null_separates_drift_from_alignment():
+    # a slowly drifting population: frames in time order, labels = eight time
+    # blocks. Drift makes the label permutation an easy null (every block is a
+    # contiguous piece of a slow trajectory) while rolling the label sequence
+    # keeps the blocks contiguous, so the shift must NOT survive the shift null
+    rng = np.random.default_rng(2)
+    n, d = 480, 48
+    t = np.linspace(0, 1, n)[:, None]
+    X = 3.0 * np.sin(2 * np.pi * t * rng.normal(size=(1, d)) * 0.5) + rng.normal(size=(n, d))
+    labels = np.repeat(np.arange(8), n // 8)
+    r = tz.zoom(X, labels, n_perm=60, k_orders=3, n_floor_draws=5, shift_null=True)
+    assert "shift_p_two" in r and "shift_z" in r
+    assert r["p_two"] < 0.05 and r["shift_p_two"] > 0.05
+    rep = tz.summarize_data(r, verbose=False)
+    assert rep["verdict"]["survives_circular_shift"] is False

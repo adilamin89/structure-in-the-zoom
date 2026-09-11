@@ -1,0 +1,256 @@
+✓ Initialized. View run at 
+https://modal.com/apps/adila-75793/main/ap-nexpUEXYjLCev32jjXDbPm
+✓ Created objects.
+├── 🔨 Created mount 
+│   /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/scr
+│   ipts_canonical/run66_allen_deficit_decomposition_modal.py
+├── 🔨 Created mount PythonPackage:deficit_split
+└── 🔨 Created function process_session.
+32 sessions
+[721123822] VIS    N 116: delta +0.295 (shuffle +0.013) | excess A +0.034 P +0.357 Cb -0.088 Cx -0.020 -> P | free D +0.206 Tb +0.185 S -0.151 -> D | dim slope +0.24 | wc PR 5.5 top-mode neuron PR 10.9 (0.09 N), z-scored 30.8 (0.27 N) | 3s
+[721123822] VISal  N 174: delta +0.166 (shuffle -0.009) | excess A +0.284 P +0.065 Cb -0.158 Cx -0.015 -> A | free D +0.103 Tb +0.245 S +0.039 -> Tb | dim slope +0.10 | wc PR 6.9 top-mode neuron PR 13.1 (0.08 N), z-scored 46.9 (0.27 N) | 4s
+[721123822] VISam  N  96: delta +0.346 (shuffle +0.022) | excess A +0.006 P +0.498 Cb -0.129 Cx -0.052 -> P | free D +0.303 Tb +0.201 S -0.195 -> D | dim slope +0.32 | wc PR 6.5 top-mode neuron PR 9.5 (0.10 N), z-scored 26.2 (0.27 N) | 4s
+[721123822] VISl   N 144: delta +0.120 (shuffle -0.009) | excess A +0.166 P +0.070 Cb -0.097 Cx -0.010 -> A | free D +0.035 Tb +0.201 S -0.035 -> Tb | dim slope +0.05 | wc PR 6.9 top-mode neuron PR 9.4 (0.07 N), z-scored 36.9 (0.26 N) | 4s
+[739448407] VIS    N 261: delta +0.161 (shuffle +0.008) | excess A +0.268 P +0.068 Cb -0.177 Cx -0.006 -> A | free D +0.087 Tb +0.248 S +0.020 -> Tb | dim slope +0.11 | wc PR 7.5 top-mode neuron PR 12.1 (0.05 N), z-scored 99.1 (0.38 N) | 4s[715093703] VISam  N  93: delta +0.122 (shuffle +0.057) | excess A +0.049 P +0.055 Cb -0.031 Cx -0.007 -> P | free D -0.004 Tb +0.108 S -0.059 -> Tb | dim slope +0.01 | wc PR 5.2 top-mode neuron PR 17.3 (0.19 N), z-scored 45.2 (0.49 N) | 6s
+
+[721123822] VISp   N 133: delta +0.297 (shuffle +0.003) | excess A -0.063 P +0.495 Cb -0.129 Cx -0.009 -> P | free D +0.202 Tb +0.230 S -0.293 -> Tb | dim slope +0.24 | wc PR 5.2 top-mode neuron PR 11.2 (0.08 N), z-scored 37.0 (0.28 N) | 5s[715093703] VISl   N 160: delta +0.278 (shuffle +0.066) | excess A -0.023 P +0.284 Cb -0.041 Cx -0.008 -> P | free D +0.125 Tb +0.135 S -0.158 -> Tb | dim slope +0.17 | wc PR 5.3 top-mode neuron PR 6.8 (0.04 N), z-scored 26.6 (0.17 N) | 6s
+[739448407] VISam  N 133: delta +0.009 (shuffle +0.021) | excess A +0.075 P -0.085 Cb -0.005 Cx +0.003 -> P | free D -0.055 Tb +0.045 S +0.030 -> D | dim slope -0.04 | wc PR 4.4 top-mode neuron PR 4.6 (0.03 N), z-scored 54.7 (0.41 N) | 4s
+
+[715093703] VISp   N 160: delta +0.283 (shuffle +0.098) | excess A +0.177 P +0.091 Cb -0.075 Cx -0.009 -> A | free D +0.087 Tb +0.181 S -0.004 -> Tb | dim slope +0.09 | wc PR 4.4 top-mode neuron PR 9.8 (0.06 N), z-scored 65.4 (0.41 N) | 6s
+[721123822] VISrl  N 111: delta +0.142 (shuffle -0.019) | excess A -0.043 P +0.263 Cb -0.044 Cx -0.014 -> P | free D +0.109 Tb +0.110 S -0.154 -> Tb | dim slope +0.13 | wc PR 7.8 top-mode neuron PR 5.3 (0.05 N), z-scored 31.1 (0.28 N) | 5s
+[739448407] VISl   N 152: delta -0.032 (shuffle +0.004) | excess A +0.199 P -0.266 Cb +0.001 Cx +0.030 -> P | free D -0.095 Tb +0.028 S +0.171 -> D | dim slope -0.08 | wc PR 5.1 top-mode neuron PR 11.6 (0.08 N), z-scored 43.6 (0.29 N) | 5s
+[715093703] VISpm  N 139: delta +0.408 (shuffle +0.111) | excess A +0.075 P +0.356 Cb -0.130 Cx -0.005 -> P | free D +0.214 Tb +0.218 S -0.142 -> Tb | dim slope +0.26 | wc PR 6.7 top-mode neuron PR 12.3 (0.09 N), z-scored 35.1 (0.25 N) | 6s
+[737581020] VISl   N 119: delta +0.005 (shuffle -0.038) | excess A -0.062 P +0.117 Cb -0.012 Cx -0.001 -> P | free D -0.029 Tb +0.084 S -0.146 -> Tb | dim slope -0.02 | wc PR 4.1 top-mode neuron PR 5.5 (0.05 N), z-scored 44.2 (0.37 N) | 5s
+[737581020] VISmma N  56: delta +0.120 (shuffle -0.051) | excess A -0.142 P +0.346 Cb -0.019 Cx -0.013 -> P | free D +0.122 Tb +0.081 S -0.224 -> D | dim slope +0.14 | wc PR 6.5 top-mode neuron PR 8.2 (0.15 N), z-scored 23.9 (0.43 N) | 5s[739448407] VISp   N  67: delta +0.181 (shuffle +0.023) | excess A +0.253 P -0.006 Cb -0.070 Cx -0.019 -> A | free D +0.082 Tb +0.165 S +0.088 -> Tb | dim slope +0.11 | wc PR 5.6 top-mode neuron PR 11.2 (0.17 N), z-scored 27.3 (0.41 N) | 5s
+[715093703] VISrl  N 280: delta +0.145 (shuffle +0.056) | excess A -0.039 P +0.149 Cb -0.017 Cx -0.005 -> P | free D +0.010 Tb +0.100 S -0.138 -> Tb | dim slope -0.00 | wc PR 4.3 top-mode neuron PR 14.6 (0.05 N), z-scored 60.6 (0.22 N) | 7s
+[732592105] VISal  N 195: delta +0.012 (shuffle -0.022) | excess A +0.100 P +0.009 Cb -0.036 Cx -0.040 -> A | free D +0.009 Tb +0.101 S -0.000 -> Tb | dim slope +0.01 | wc PR 6.8 top-mode neuron PR 8.2 (0.04 N), z-scored 55.1 (0.28 N) | 5s
+
+[737581020] VISp   N 136: delta +0.114 (shuffle -0.018) | excess A +0.292 P +0.087 Cb -0.219 Cx -0.028 -> A | free D +0.075 Tb +0.304 S -0.012 -> Tb | dim slope +0.10 | wc PR 6.4 top-mode neuron PR 5.8 (0.04 N), z-scored 41.5 (0.30 N) | 5s
+[737581020] VISpm  N  51: delta +0.120 (shuffle +0.045) | excess A -0.094 P +0.219 Cb -0.023 Cx -0.026 -> P | free D +0.032 Tb +0.093 S -0.187 -> Tb | dim slope +0.04 | wc PR 4.8 top-mode neuron PR 4.5 (0.09 N), z-scored 16.9 (0.33 N) | 5s[739448407] VISrl  N 193: delta +0.031 (shuffle +0.013) | excess A +0.022 P -0.003 Cb -0.002 Cx +0.002 -> A | free D -0.008 Tb +0.027 S -0.005 -> Tb | dim slope +0.02 | wc PR 3.9 top-mode neuron PR 5.6 (0.03 N), z-scored 64.8 (0.34 N) | 5s
+
+[732592105] VISl   N 223: delta +0.101 (shuffle -0.023) | excess A +0.165 P +0.089 Cb -0.108 Cx -0.022 -> A | free D +0.055 Tb +0.199 S -0.034 -> Tb | dim slope +0.06 | wc PR 7.0 top-mode neuron PR 12.2 (0.05 N), z-scored 61.0 (0.27 N) | 5s
+[737581020] VISrl  N 182: delta +0.178 (shuffle -0.007) | excess A +0.051 P +0.322 Cb -0.167 Cx -0.021 -> P | free D +0.151 Tb +0.221 S -0.170 -> Tb | dim slope +0.18 | wc PR 10.0 top-mode neuron PR 19.1 (0.10 N), z-scored 52.6 (0.29 N) | 6s
+[743475441] VISam  N 142: delta +0.126 (shuffle +0.085) | excess A +0.141 P -0.045 Cb -0.031 Cx -0.023 -> A | free D -0.008 Tb +0.104 S +0.037 -> Tb | dim slope -0.03 | wc PR 6.8 top-mode neuron PR 5.1 (0.04 N), z-scored 44.6 (0.31 N) | 5s
+[715093703] done 5 areas (7s)
+[732592105] VISp   N 259: delta +0.215 (shuffle +0.053) | excess A +0.141 P +0.070 Cb -0.048 Cx -0.000 -> A | free D +0.047 Tb +0.164 S -0.023 -> Tb | dim slope +0.05 | wc PR 5.0 top-mode neuron PR 10.3 (0.04 N), z-scored 69.2 (0.27 N) | 6s
+[743475441] VISl   N 134: delta -0.105 (shuffle -0.095) | excess A -0.004 P +0.005 Cb -0.006 Cx -0.005 -> Cb | free D -0.063 Tb +0.063 S -0.068 -> Tb | dim slope -0.02 | wc PR 4.1 top-mode neuron PR 2.4 (0.02 N), z-scored 38.0 (0.28 N) | 5s
+[750749662] VISal  N 132: delta +0.150 (shuffle +0.030) | excess A +0.145 P +0.127 Cb -0.122 Cx -0.030 -> A | free D +0.054 Tb +0.218 S -0.073 -> Tb | dim slope +0.09 | wc PR 6.9 top-mode neuron PR 9.6 (0.07 N), z-scored 38.3 (0.29 N) | 4s
+[732592105] VISpm  N 163: delta +0.180 (shuffle +0.007) | excess A -0.019 P +0.253 Cb -0.024 Cx -0.037 -> P | free D +0.115 Tb +0.120 S -0.139 -> Tb | dim slope +0.12 | wc PR 4.3 top-mode neuron PR 1.9 (0.01 N), z-scored 51.1 (0.31 N) | 6s[743475441] VISmma N 126: delta +0.037 (shuffle +0.044) | excess A +0.122 P -0.098 Cb -0.011 Cx -0.020 -> A | free D -0.035 Tb +0.059 S +0.064 -> Tb | dim slope -0.08 | wc PR 4.8 top-mode neuron PR 1.8 (0.01 N), z-scored 33.6 (0.27 N) | 5s
+[721123822] done 6 areas (6s)
+
+[754312389] VISal  N  94: delta +0.156 (shuffle -0.004) | excess A +0.075 P +0.218 Cb -0.097 Cx -0.036 -> P | free D +0.070 Tb +0.223 S -0.148 -> Tb | dim slope +0.08 | wc PR 5.2 top-mode neuron PR 7.1 (0.08 N), z-scored 23.9 (0.25 N) | 3s[732592105] VISrl  N 171: delta -0.030 (shuffle -0.009) | excess A +0.146 P -0.153 Cb -0.009 Cx -0.006 -> P | free D -0.069 Tb +0.063 S +0.083 -> D | dim slope -0.07 | wc PR 5.4 top-mode neuron PR 5.9 (0.03 N), z-scored 51.7 (0.30 N) | 6s[743475441] VISp   N 157: delta +0.009 (shuffle -0.080) | excess A -0.024 P +0.098 Cb +0.000 Cx +0.014 -> P | free D +0.062 Tb +0.013 S -0.036 -> D | dim slope +0.06 | wc PR 1.9 top-mode neuron PR 11.6 (0.07 N), z-scored 98.1 (0.62 N) | 5s
+[750749662] VISam  N 160: delta +0.060 (shuffle +0.002) | excess A +0.021 P +0.093 Cb -0.023 Cx -0.033 -> P | free D +0.031 Tb +0.082 S -0.062 -> Tb | dim slope +0.04 | wc PR 6.7 top-mode neuron PR 14.1 (0.09 N), z-scored 60.6 (0.38 N) | 4s[737581020] done 5 areas (6s)
+[742951821] VIS    N 247: delta +0.046 (shuffle +0.009) | excess A +0.236 P -0.045 Cb -0.122 Cx -0.033 -> A | free D -0.013 Tb +0.203 S +0.033 -> Tb | dim slope -0.02 | wc PR 7.8 top-mode neuron PR 8.5 (0.03 N), z-scored 69.3 (0.28 N) | 6s
+
+
+
+[754312389] VISam  N 128: delta +0.133 (shuffle -0.012) | excess A +0.104 P +0.262 Cb -0.161 Cx -0.061 -> P | free D +0.105 Tb +0.261 S -0.157 -> Tb | dim slope +0.11 | wc PR 5.3 top-mode neuron PR 8.6 (0.07 N), z-scored 40.1 (0.31 N) | 3s[743475441] VISrl  N 251: delta +0.090 (shuffle -0.004) | excess A -0.046 P +0.162 Cb -0.012 Cx -0.011 -> P | free D +0.057 Tb +0.060 S -0.106 -> Tb | dim slope +0.06 | wc PR 6.7 top-mode neuron PR 21.7 (0.09 N), z-scored 81.2 (0.32 N) | 6s[750749662] VISl   N 123: delta +0.079 (shuffle -0.010) | excess A +0.066 P +0.035 Cb -0.020 Cx +0.008 -> A | free D +0.011 Tb +0.090 S -0.024 -> Tb | dim slope +0.03 | wc PR 4.5 top-mode neuron PR 4.2 (0.03 N), z-scored 43.2 (0.35 N) | 4s
+
+
+[742951821] VISal  N 125: delta +0.184 (shuffle -0.022) | excess A +0.130 P +0.286 Cb -0.150 Cx -0.059 -> P | free D +0.155 Tb +0.260 S -0.131 -> Tb | dim slope +0.21 | wc PR 6.3 top-mode neuron PR 8.4 (0.07 N), z-scored 29.4 (0.24 N) | 6s
+[754312389] VISl   N  91: delta +0.038 (shuffle -0.008) | excess A -0.095 P +0.152 Cb -0.009 Cx -0.002 -> P | free D +0.003 Tb +0.054 S -0.149 -> Tb | dim slope +0.01 | wc PR 5.4 top-mode neuron PR 10.3 (0.11 N), z-scored 30.9 (0.34 N) | 3s[742951821] VISl   N 161: delta -0.010 (shuffle -0.035) | excess A +0.292 P -0.198 Cb -0.034 Cx -0.036 -> A | free D -0.001 Tb +0.096 S +0.196 -> Tb | dim slope -0.01 | wc PR 8.1 top-mode neuron PR 7.4 (0.05 N), z-scored 42.0 (0.26 N) | 7s
+[739448407] done 5 areas (7s)
+
+[750749662] VISp   N 177: delta +0.272 (shuffle -0.005) | excess A +0.132 P +0.267 Cb -0.116 Cx -0.006 -> P | free D +0.165 Tb +0.234 S -0.101 -> Tb | dim slope +0.18 | wc PR 5.4 top-mode neuron PR 8.4 (0.05 N), z-scored 70.6 (0.40 N) | 5s[719161530] VISal  N 114: delta +0.040 (shuffle -0.080) | excess A +0.040 P +0.132 Cb -0.027 Cx -0.026 -> P | free D +0.075 Tb +0.097 S -0.057 -> Tb | dim slope +0.08 | wc PR 4.2 top-mode neuron PR 5.0 (0.04 N), z-scored 33.8 (0.30 N) | 8s
+[742951821] VISp   N 158: delta +0.234 (shuffle +0.007) | excess A +0.159 P +0.175 Cb -0.086 Cx -0.021 -> P | free D +0.132 Tb +0.202 S -0.043 -> Tb | dim slope +0.16 | wc PR 5.6 top-mode neuron PR 8.7 (0.06 N), z-scored 66.7 (0.42 N) | 7s
+
+[754312389] VISp   N 233: delta +0.252 (shuffle -0.033) | excess A +0.191 P +0.441 Cb -0.334 Cx -0.013 -> P | free D +0.219 Tb +0.413 S -0.222 -> Tb | dim slope +0.24 | wc PR 5.4 top-mode neuron PR 13.5 (0.06 N), z-scored 59.4 (0.25 N) | 4s
+[719161530] VISam  N 105: delta +0.086 (shuffle -0.025) | excess A +0.049 P +0.174 Cb -0.059 Cx -0.052 -> P | free D +0.103 Tb +0.119 S -0.071 -> Tb | dim slope +0.12 | wc PR 8.1 top-mode neuron PR 10.3 (0.10 N), z-scored 32.7 (0.31 N) | 9s[742951821] VISpm  N  98: delta +0.016 (shuffle -0.017) | excess A +0.192 P -0.076 Cb -0.052 Cx -0.031 -> A | free D -0.007 Tb +0.123 S +0.069 -> Tb | dim slope +0.00 | wc PR 7.8 top-mode neuron PR 7.1 (0.07 N), z-scored 26.8 (0.27 N) | 7s
+[750749662] VISpm  N 153: delta +0.077 (shuffle +0.020) | excess A -0.032 P +0.151 Cb -0.030 Cx -0.031 -> P | free D +0.039 Tb +0.080 S -0.112 -> Tb | dim slope +0.06 | wc PR 7.6 top-mode neuron PR 10.8 (0.07 N), z-scored 50.8 (0.33 N) | 5s
+[754312389] VISpm  N  73: delta +0.072 (shuffle +0.026) | excess A +0.103 P +0.039 Cb -0.053 Cx -0.043 -> A | free D -0.014 Tb +0.156 S -0.053 -> Tb | dim slope -0.04 | wc PR 5.3 top-mode neuron PR 7.4 (0.10 N), z-scored 30.2 (0.41 N) | 4s
+[742951821] VISrl  N 149: delta +0.064 (shuffle -0.030) | excess A +0.195 P +0.021 Cb -0.093 Cx -0.029 -> A | free D +0.010 Tb +0.205 S -0.010 -> Tb | dim slope +0.01 | wc PR 6.4 top-mode neuron PR 5.3 (0.04 N), z-scored 43.0 (0.29 N) | 7s[719161530] VISl   N 195: delta -0.034 (shuffle -0.048) | excess A +0.309 P -0.210 Cb -0.067 Cx -0.017 -> A | free D -0.063 Tb +0.162 S +0.147 -> Tb | dim slope -0.10 | wc PR 7.7 top-mode neuron PR 9.7 (0.05 N), z-scored 39.9 (0.20 N) | 9s
+
+
+[750749662] VISrl  N 156: delta +0.127 (shuffle +0.002) | excess A +0.097 P +0.120 Cb -0.054 Cx -0.038 -> P | free D +0.070 Tb +0.148 S -0.050 -> Tb | dim slope +0.09 | wc PR 5.2 top-mode neuron PR 10.6 (0.07 N), z-scored 47.6 (0.31 N) | 5s[743475441] done 5 areas (7s)[754312389] VISrl  N 114: delta +0.146 (shuffle +0.043) | excess A +0.068 P +0.072 Cb -0.022 Cx -0.015 -> P | free D +0.017 Tb +0.124 S -0.056 -> Tb | dim slope +0.01 | wc PR 3.2 top-mode neuron PR 1.4 (0.01 N), z-scored 30.8 (0.27 N) | 4s
+[732592105] done 5 areas (7s)
+
+[719161530] VISp   N 134: delta +0.099 (shuffle -0.054) | excess A +0.176 P +0.436 Cb -0.363 Cx -0.096 -> P | free D +0.217 Tb +0.395 S -0.219 -> Tb | dim slope +0.22 | wc PR 5.9 top-mode neuron PR 4.4 (0.03 N), z-scored 36.4 (0.27 N) | 9s
+
+[746083955] VISal  N 103: delta +0.123 (shuffle +0.007) | excess A -0.016 P +0.146 Cb -0.006 Cx -0.007 -> P | free D +0.081 Tb +0.049 S -0.065 -> D | dim slope +0.09 | wc PR 5.4 top-mode neuron PR 3.3 (0.03 N), z-scored 40.5 (0.39 N) | 6s[719161530] VISpm  N 117: delta +0.007 (shuffle -0.030) | excess A +0.011 P +0.059 Cb -0.006 Cx -0.026 -> P | free D +0.018 Tb +0.053 S -0.042 -> Tb | dim slope +0.03 | wc PR 3.1 top-mode neuron PR 5.4 (0.05 N), z-scored 33.1 (0.28 N) | 9s
+
+[759883607] VISal  N 173: delta +0.217 (shuffle -0.037) | excess A -0.155 P +0.420 Cb -0.022 Cx +0.011 -> P | free D +0.178 Tb +0.088 S -0.243 -> D | dim slope +0.20 | wc PR 5.0 top-mode neuron PR 15.1 (0.09 N), z-scored 68.3 (0.39 N) | 3s[746083955] VISl   N 131: delta +0.068 (shuffle -0.017) | excess A -0.077 P +0.190 Cb -0.007 Cx -0.021 -> P | free D +0.063 Tb +0.050 S -0.127 -> D | dim slope +0.07 | wc PR 4.3 top-mode neuron PR 13.2 (0.10 N), z-scored 52.6 (0.40 N) | 6s
+[742951821] done 6 areas (8s)
+[719161530] VISrl  N 157: delta +0.080 (shuffle -0.041) | excess A +0.020 P +0.117 Cb -0.005 Cx -0.011 -> P | free D +0.116 Tb +0.021 S -0.000 -> D | dim slope +0.11 | wc PR 6.4 top-mode neuron PR 9.7 (0.06 N), z-scored 45.9 (0.29 N) | 10s
+
+[755434585] VISal  N 110: delta +0.047 (shuffle +0.043) | excess A +0.097 P +0.045 Cb -0.124 Cx -0.014 -> Cb | free D -0.062 Tb +0.205 S -0.107 -> Tb | dim slope -0.07 | wc PR 5.5 top-mode neuron PR 8.4 (0.08 N), z-scored 33.3 (0.30 N) | 4s
+[746083955] VISp   N  72: delta +0.141 (shuffle -0.055) | excess A -0.159 P +0.402 Cb -0.015 Cx -0.032 -> P | free D +0.156 Tb +0.087 S -0.246 -> D | dim slope +0.19 | wc PR 4.1 top-mode neuron PR 5.0 (0.07 N), z-scored 35.8 (0.50 N) | 7s
+[759883607] VISam  N 168: delta +0.324 (shuffle +0.012) | excess A -0.233 P +0.608 Cb -0.039 Cx -0.024 -> P | free D +0.269 Tb +0.106 S -0.339 -> D | dim slope +0.29 | wc PR 6.4 top-mode neuron PR 11.5 (0.07 N), z-scored 57.4 (0.34 N) | 3s
+[760345702] VISal  N 168: delta +0.137 (shuffle -0.020) | excess A +0.154 P +0.039 Cb -0.029 Cx -0.008 -> A | free D +0.064 Tb +0.130 S +0.024 -> Tb | dim slope +0.07 | wc PR 4.6 top-mode neuron PR 19.2 (0.11 N), z-scored 66.1 (0.39 N) | 3s[755434585] VISam  N 200: delta +0.181 (shuffle +0.010) | excess A -0.064 P +0.296 Cb -0.045 Cx -0.016 -> P | free D +0.097 Tb +0.135 S -0.199 -> Tb | dim slope +0.10 | wc PR 6.6 top-mode neuron PR 17.8 (0.09 N), z-scored 62.2 (0.31 N) | 5s[746083955] VISpm  N 282: delta +0.209 (shuffle -0.002) | excess A +0.100 P +0.237 Cb -0.108 Cx -0.019 -> P | free D +0.104 Tb +0.233 S -0.133 -> Tb | dim slope +0.10 | wc PR 6.4 top-mode neuron PR 26.3 (0.09 N), z-scored 78.5 (0.28 N) | 7s
+
+[750749662] done 6 areas (7s)
+
+[754829445] VISam  N 109: delta +0.095 (shuffle +0.037) | excess A +0.145 P +0.052 Cb -0.102 Cx -0.037 -> A | free D +0.014 Tb +0.183 S -0.038 -> Tb | dim slope +0.01 | wc PR 7.5 top-mode neuron PR 13.3 (0.12 N), z-scored 42.0 (0.39 N) | 5s
+[719161530] done 6 areas (10s)[759883607] VISp   N 237: delta +0.226 (shuffle -0.006) | excess A -0.079 P +0.351 Cb -0.044 Cx +0.003 -> P | free D +0.143 Tb +0.130 S -0.209 -> D | dim slope +0.16 | wc PR 5.7 top-mode neuron PR 6.9 (0.03 N), z-scored 70.6 (0.30 N) | 3s
+
+[791319847] VISal  N 116: delta +0.121 (shuffle +0.020) | excess A -0.086 P +0.280 Cb -0.062 Cx -0.032 -> P | free D +0.050 Tb +0.144 S -0.230 -> Tb | dim slope +0.06 | wc PR 7.3 top-mode neuron PR 7.9 (0.07 N), z-scored 22.1 (0.19 N) | 2s[760345702] VISam  N 141: delta +0.061 (shuffle +0.028) | excess A +0.162 P -0.112 Cb -0.012 Cx -0.006 -> A | free D -0.038 Tb +0.089 S +0.073 -> Tb | dim slope -0.04 | wc PR 4.2 top-mode neuron PR 10.5 (0.07 N), z-scored 52.6 (0.37 N) | 3s
+[755434585] VISl   N 158: delta +0.097 (shuffle +0.008) | excess A -0.033 P +0.151 Cb -0.023 Cx -0.006 -> P | free D +0.021 Tb +0.097 S -0.130 -> Tb | dim slope +0.03 | wc PR 5.9 top-mode neuron PR 8.2 (0.05 N), z-scored 47.2 (0.30 N) | 5s[754312389] done 6 areas (6s)
+[746083955] VISrl  N 126: delta +0.122 (shuffle +0.032) | excess A +0.307 P +0.101 Cb -0.284 Cx -0.034 -> A | free D +0.090 Tb +0.319 S -0.011 -> Tb | dim slope +0.11 | wc PR 8.4 top-mode neuron PR 14.7 (0.12 N), z-scored 42.9 (0.34 N) | 7s
+
+
+[791319847] VISam  N 141: delta +0.175 (shuffle -0.046) | excess A -0.143 P +0.561 Cb -0.128 Cx -0.069 -> P | free D +0.223 Tb +0.196 S -0.338 -> D | dim slope +0.26 | wc PR 7.5 top-mode neuron PR 11.2 (0.08 N), z-scored 49.8 (0.35 N) | 2s[754829445] VISp   N 243: delta +0.194 (shuffle +0.006) | excess A +0.240 P +0.217 Cb -0.266 Cx -0.003 -> Cb | free D +0.105 Tb +0.352 S -0.112 -> Tb | dim slope +0.12 | wc PR 7.3 top-mode neuron PR 21.1 (0.09 N), z-scored 66.2 (0.27 N) | 6s[759883607] VISpm  N 168: delta +0.357 (shuffle +0.009) | excess A +0.111 P +0.561 Cb -0.309 Cx -0.015 -> P | free D +0.310 Tb +0.362 S -0.251 -> Tb | dim slope +0.35 | wc PR 6.1 top-mode neuron PR 17.6 (0.10 N), z-scored 59.4 (0.35 N) | 4s[760345702] VISl   N 135: delta +0.257 (shuffle +0.004) | excess A +0.197 P +0.158 Cb -0.088 Cx -0.014 -> A | free D +0.140 Tb +0.215 S -0.018 -> Tb | dim slope +0.15 | wc PR 4.9 top-mode neuron PR 21.2 (0.16 N), z-scored 56.8 (0.42 N) | 4s
+[755434585] VISp   N 230: delta +0.238 (shuffle +0.036) | excess A +0.057 P +0.382 Cb -0.183 Cx -0.054 -> P | free D +0.140 Tb +0.299 S -0.242 -> Tb | dim slope +0.13 | wc PR 5.9 top-mode neuron PR 13.4 (0.06 N), z-scored 76.6 (0.33 N) | 5s
+
+
+
+[754829445] VISpm  N  66: delta +0.140 (shuffle +0.007) | excess A -0.016 P +0.259 Cb -0.099 Cx -0.011 -> P | free D +0.050 Tb +0.193 S -0.209 -> Tb | dim slope +0.06 | wc PR 4.8 top-mode neuron PR 6.3 (0.09 N), z-scored 26.4 (0.40 N) | 6s
+[791319847] VISl   N 149: delta +0.174 (shuffle -0.038) | excess A -0.144 P +0.397 Cb -0.022 Cx -0.018 -> P | free D +0.170 Tb +0.082 S -0.226 -> D | dim slope +0.19 | wc PR 6.4 top-mode neuron PR 14.2 (0.09 N), z-scored 59.5 (0.40 N) | 3s
+[755434585] VISpm  N 156: delta +0.095 (shuffle -0.038) | excess A -0.053 P +0.251 Cb -0.041 Cx -0.023 -> P | free D +0.066 Tb +0.132 S -0.185 -> Tb | dim slope +0.05 | wc PR 5.1 top-mode neuron PR 8.2 (0.05 N), z-scored 48.7 (0.31 N) | 6s
+[760345702] VISp   N 200: delta +0.305 (shuffle -0.016) | excess A +0.308 P +0.092 Cb -0.069 Cx -0.011 -> A | free D +0.187 Tb +0.214 S +0.094 -> Tb | dim slope +0.22 | wc PR 3.8 top-mode neuron PR 14.6 (0.07 N), z-scored 74.0 (0.37 N) | 4s[756029989] VISal  N 125: delta +0.108 (shuffle -0.022) | excess A +0.433 P +0.147 Cb -0.443 Cx -0.007 -> Cb | free D +0.157 Tb +0.422 S +0.010 -> Cb | dim slope +0.17 | wc PR 8.1 top-mode neuron PR 8.7 (0.07 N), z-scored 32.5 (0.26 N) | 6s
+[754829445] VISrl  N 107: delta +0.041 (shuffle -0.002) | excess A +0.044 P +0.073 Cb -0.045 Cx -0.029 -> P | free D -0.014 Tb +0.131 S -0.087 -> Tb | dim slope -0.01 | wc PR 5.5 top-mode neuron PR 9.3 (0.09 N), z-scored 41.3 (0.39 N) | 6s
+
+[791319847] VISp   N 241: delta +0.370 (shuffle -0.008) | excess A -0.110 P +0.615 Cb -0.109 Cx -0.018 -> P | free D +0.246 Tb +0.259 S -0.369 -> Tb | dim slope +0.27 | wc PR 4.5 top-mode neuron PR 7.6 (0.03 N), z-scored 73.8 (0.31 N) | 3s[755434585] VISrl  N 144: delta +0.062 (shuffle +0.004) | excess A +0.058 P +0.056 Cb -0.035 Cx -0.021 -> A | free D +0.011 Tb +0.104 S -0.045 -> Tb | dim slope +0.02 | wc PR 7.9 top-mode neuron PR 7.5 (0.05 N), z-scored 47.9 (0.33 N) | 6s
+
+[760345702] VISpm  N 119: delta +0.300 (shuffle -0.049) | excess A +0.150 P +0.287 Cb -0.068 Cx -0.020 -> P | free D +0.218 Tb +0.219 S -0.069 -> Tb | dim slope +0.24 | wc PR 3.7 top-mode neuron PR 11.5 (0.10 N), z-scored 50.6 (0.43 N) | 4s
+[756029989] VISam  N 156: delta +0.188 (shuffle +0.089) | excess A +0.094 P +0.046 Cb -0.021 Cx -0.020 -> A | free D +0.046 Tb +0.094 S +0.000 -> Tb | dim slope +0.01 | wc PR 3.7 top-mode neuron PR 2.3 (0.01 N), z-scored 53.4 (0.34 N) | 6s
+[791319847] VISpm  N 112: delta +0.179 (shuffle -0.010) | excess A -0.362 P +0.639 Cb -0.028 Cx -0.060 -> P | free D +0.184 Tb +0.093 S -0.455 -> D | dim slope +0.20 | wc PR 5.2 top-mode neuron PR 5.3 (0.05 N), z-scored 37.2 (0.33 N) | 3s[756029989] VISl   N 121: delta +0.102 (shuffle +0.005) | excess A +0.340 P -0.044 Cb -0.187 Cx -0.012 -> A | free D +0.037 Tb +0.260 S +0.080 -> Tb | dim slope +0.07 | wc PR 6.5 top-mode neuron PR 6.0 (0.05 N), z-scored 35.0 (0.29 N) | 6s
+[757970808] VISal  N 179: delta +0.111 (shuffle +0.038) | excess A +0.012 P +0.179 Cb -0.074 Cx -0.045 -> P | free D +0.012 Tb +0.179 S -0.167 -> Tb | dim slope +0.00 | wc PR 5.3 top-mode neuron PR 13.2 (0.07 N), z-scored 49.2 (0.27 N) | 5s[762602078] VIS    N 342: delta +0.034 (shuffle -0.016) | excess A +0.057 P +0.023 Cb -0.020 Cx -0.010 -> A | free D -0.015 Tb +0.094 S -0.038 -> Tb | dim slope -0.03 | wc PR 6.1 top-mode neuron PR 7.3 (0.02 N), z-scored 69.0 (0.20 N) | 4s
+
+
+[791319847] VISrl  N 160: delta +0.240 (shuffle -0.008) | excess A +0.118 P +0.263 Cb -0.117 Cx -0.017 -> P | free D +0.164 Tb +0.218 S -0.100 -> Tb | dim slope +0.18 | wc PR 6.9 top-mode neuron PR 16.3 (0.10 N), z-scored 49.5 (0.31 N) | 4s[756029989] VISp   N 167: delta +0.176 (shuffle -0.005) | excess A +0.531 P +0.122 Cb -0.453 Cx -0.019 -> A | free D +0.200 Tb +0.453 S +0.079 -> Cb | dim slope +0.21 | wc PR 6.0 top-mode neuron PR 13.5 (0.08 N), z-scored 50.0 (0.30 N) | 7s[757970808] VISam  N 173: delta +0.236 (shuffle +0.017) | excess A -0.221 P +0.505 Cb -0.034 Cx -0.031 -> P | free D +0.178 Tb +0.106 S -0.326 -> D | dim slope +0.19 | wc PR 5.2 top-mode neuron PR 15.7 (0.09 N), z-scored 60.0 (0.35 N) | 5s
+
+[746083955] done 5 areas (9s)
+[762602078] VISam  N 153: delta +0.025 (shuffle -0.007) | excess A +0.102 P +0.676 Cb -0.755 Cx +0.009 -> Cb | free D +0.251 Tb +0.527 S -0.425 -> Cb | dim slope +0.27 | wc PR 8.0 top-mode neuron PR 10.1 (0.07 N), z-scored 24.7 (0.16 N) | 4s
+
+[773418906] VISal  N 421: delta +0.158 (shuffle +0.006) | excess A +0.214 P +0.132 Cb -0.201 Cx +0.007 -> A | free D +0.115 Tb +0.230 S -0.016 -> Tb | dim slope +0.13 | wc PR 9.2 top-mode neuron PR 27.3 (0.06 N), z-scored 116.3 (0.28 N) | 4s[757970808] VISli  N 131: delta +0.183 (shuffle +0.010) | excess A +0.046 P +0.241 Cb -0.084 Cx -0.030 -> P | free D +0.096 Tb +0.191 S -0.145 -> Tb | dim slope +0.10 | wc PR 5.3 top-mode neuron PR 6.4 (0.05 N), z-scored 42.5 (0.32 N) | 5s
+[756029989] VISpm  N 171: delta +0.185 (shuffle -0.002) | excess A -0.013 P +0.266 Cb -0.046 Cx -0.021 -> P | free D +0.131 Tb +0.123 S -0.136 -> D | dim slope +0.15 | wc PR 6.1 top-mode neuron PR 11.5 (0.07 N), z-scored 49.8 (0.29 N) | 7s
+
+[762602078] VISmmp N  99: delta +0.084 (shuffle -0.026) | excess A -0.278 P +0.475 Cb -0.051 Cx -0.036 -> P | free D +0.035 Tb +0.162 S -0.440 -> Tb | dim slope +0.05 | wc PR 4.5 top-mode neuron PR 10.9 (0.11 N), z-scored 26.6 (0.27 N) | 4s
+[759883607] done 4 areas (5s)[756029989] VISrl  N  81: delta +0.061 (shuffle -0.011) | excess A +0.051 P +0.037 Cb -0.012 Cx -0.004 -> A | free D +0.035 Tb +0.053 S -0.002 -> Tb | dim slope +0.04 | wc PR 7.2 top-mode neuron PR 6.9 (0.08 N), z-scored 29.6 (0.37 N) | 7s
+[773418906] VISam  N  55: delta +0.048 (shuffle -0.075) | excess A +0.164 P +0.062 Cb -0.059 Cx -0.044 -> A | free D +0.078 Tb +0.148 S +0.016 -> Tb | dim slope +0.08 | wc PR 4.8 top-mode neuron PR 2.9 (0.05 N), z-scored 18.4 (0.33 N) | 4s
+[757216464] VIS    N 129: delta +0.056 (shuffle +0.008) | excess A -0.078 P +0.136 Cb -0.010 Cx +0.000 -> P | free D +0.007 Tb +0.051 S -0.129 -> Tb | dim slope -0.02 | wc PR 6.4 top-mode neuron PR 8.0 (0.06 N), z-scored 51.7 (0.40 N) | 6s
+[757970808] VISp   N 238: delta +0.220 (shuffle -0.007) | excess A +0.166 P +0.226 Cb -0.143 Cx -0.021 -> P | free D +0.134 Tb +0.257 S -0.092 -> Tb | dim slope +0.16 | wc PR 6.0 top-mode neuron PR 20.2 (0.08 N), z-scored 73.1 (0.31 N) | 6s
+
+[762602078] VISp   N 219: delta +0.183 (shuffle -0.012) | excess A +0.437 P +0.428 Cb -0.681 Cx +0.011 -> Cb | free D +0.229 Tb +0.637 S -0.199 -> Cb | dim slope +0.26 | wc PR 5.6 top-mode neuron PR 11.5 (0.05 N), z-scored 56.3 (0.26 N) | 4s
+[773418906] VISmmp N 112: delta +0.075 (shuffle -0.046) | excess A -0.250 P +0.373 Cb -0.002 Cx +0.000 -> P | free D +0.102 Tb +0.021 S -0.271 -> D | dim slope +0.08 | wc PR 4.3 top-mode neuron PR 3.4 (0.03 N), z-scored 37.1 (0.33 N) | 4s[757970808] VISrl  N 155: delta +0.093 (shuffle -0.020) | excess A +0.261 P +0.031 Cb -0.160 Cx -0.019 -> A | free D +0.044 Tb +0.248 S +0.013 -> Tb | dim slope +0.06 | wc PR 7.1 top-mode neuron PR 12.9 (0.08 N), z-scored 45.0 (0.29 N) | 6s[757216464] VISal  N 134: delta +0.165 (shuffle +0.061) | excess A +0.132 P +0.031 Cb -0.055 Cx -0.003 -> A | free D -0.028 Tb +0.190 S -0.058 -> Tb | dim slope -0.04 | wc PR 3.8 top-mode neuron PR 4.9 (0.04 N), z-scored 53.3 (0.40 N) | 7s
+[755434585] done 6 areas (7s)
+
+[754829445] done 4 areas (8s)
+[760345702] done 5 areas (6s)[773418906] VISp   N 178: delta +0.221 (shuffle +0.027) | excess A +0.270 P +0.129 Cb -0.170 Cx -0.035 -> A | free D +0.115 Tb +0.284 S -0.014 -> Tb | dim slope +0.11 | wc PR 6.5 top-mode neuron PR 9.0 (0.05 N), z-scored 51.4 (0.29 N) | 4s
+[762602078] VISrl  N 197: delta +0.138 (shuffle +0.017) | excess A +0.249 P +0.055 Cb -0.170 Cx -0.012 -> A | free D -0.057 Tb +0.361 S -0.112 -> Tb | dim slope -0.06 | wc PR 4.2 top-mode neuron PR 3.7 (0.02 N), z-scored 22.6 (0.11 N) | 5s
+
+[757216464] VISam  N 144: delta +0.217 (shuffle +0.005) | excess A -0.142 P +0.394 Cb -0.027 Cx -0.013 -> P | free D +0.154 Tb +0.097 S -0.240 -> D | dim slope +0.17 | wc PR 4.4 top-mode neuron PR 7.3 (0.05 N), z-scored 62.0 (0.43 N) | 7s
+[756029989] done 6 areas (8s)
+
+[758798717] VISal  N 193: delta +0.211 (shuffle +0.009) | excess A +0.296 P +0.333 Cb -0.423 Cx -0.005 -> Cb | free D +0.213 Tb +0.417 S -0.120 -> Cb | dim slope +0.25 | wc PR 8.0 top-mode neuron PR 16.7 (0.09 N), z-scored 46.5 (0.24 N) | 6s
+[773418906] VISrl  N 121: delta +0.113 (shuffle +0.029) | excess A +0.115 P +0.002 Cb -0.032 Cx -0.001 -> A | free D +0.030 Tb +0.088 S +0.027 -> Tb | dim slope +0.04 | wc PR 7.9 top-mode neuron PR 9.0 (0.07 N), z-scored 37.3 (0.31 N) | 5s
+[757216464] VISl   N 159: delta +0.177 (shuffle -0.000) | excess A -0.170 P +0.436 Cb -0.054 Cx -0.035 -> P | free D +0.103 Tb +0.163 S -0.333 -> Tb | dim slope +0.11 | wc PR 4.7 top-mode neuron PR 10.6 (0.07 N), z-scored 49.6 (0.31 N) | 7s[791319847] done 6 areas (5s)
+[758798717] VISam  N 114: delta +0.184 (shuffle -0.029) | excess A +0.008 P +0.306 Cb -0.076 Cx -0.024 -> P | free D +0.143 Tb +0.171 S -0.163 -> Tb | dim slope +0.17 | wc PR 6.2 top-mode neuron PR 6.1 (0.05 N), z-scored 37.3 (0.33 N) | 7s
+[757970808] done 5 areas (7s)
+
+[760693773] VISal  N 279: delta +0.092 (shuffle +0.001) | excess A +0.172 P +0.087 Cb -0.149 Cx -0.019 -> A | free D +0.052 Tb +0.208 S -0.035 -> Tb | dim slope +0.04 | wc PR 10.4 top-mode neuron PR 17.3 (0.06 N), z-scored 83.0 (0.30 N) | 6s
+[757216464] VISp   N 261: delta +0.198 (shuffle +0.005) | excess A +0.145 P +0.323 Cb -0.237 Cx -0.038 -> P | free D +0.156 Tb +0.312 S -0.167 -> Tb | dim slope +0.16 | wc PR 6.2 top-mode neuron PR 6.5 (0.02 N), z-scored 75.8 (0.29 N) | 8s[758798717] VISp   N 184: delta +0.083 (shuffle +0.016) | excess A +0.404 P +0.065 Cb -0.371 Cx -0.032 -> A | free D +0.060 Tb +0.409 S -0.005 -> Tb | dim slope +0.05 | wc PR 6.1 top-mode neuron PR 8.2 (0.04 N), z-scored 54.6 (0.30 N) | 7s
+[760693773] VISam  N 138: delta +0.087 (shuffle -0.021) | excess A +0.057 P +0.146 Cb -0.075 Cx -0.020 -> P | free D +0.049 Tb +0.154 S -0.098 -> Tb | dim slope +0.07 | wc PR 8.1 top-mode neuron PR 9.0 (0.07 N), z-scored 38.2 (0.28 N) | 7s
+
+[760693773] VISp   N 217: delta +0.196 (shuffle +0.018) | excess A +0.202 P +0.397 Cb -0.430 Cx +0.009 -> Cb | free D +0.207 Tb +0.392 S -0.190 -> Cb | dim slope +0.22 | wc PR 6.8 top-mode neuron PR 15.9 (0.07 N), z-scored 56.7 (0.26 N) | 7s[758798717] VISpm  N  76: delta +0.023 (shuffle -0.012) | excess A +0.026 P +0.101 Cb -0.049 Cx -0.042 -> P | free D -0.007 Tb +0.133 S -0.108 -> Tb | dim slope +0.04 | wc PR 6.0 top-mode neuron PR 8.4 (0.11 N), z-scored 25.7 (0.34 N) | 7s[757216464] VISrl  N 104: delta +0.219 (shuffle +0.009) | excess A +0.204 P +0.097 Cb -0.088 Cx -0.003 -> A | free D +0.059 Tb +0.242 S -0.037 -> Tb | dim slope +0.05 | wc PR 4.3 top-mode neuron PR 8.7 (0.08 N), z-scored 33.3 (0.32 N) | 8s
+
+[760693773] VISpm  N 113: delta +0.109 (shuffle +0.000) | excess A +0.144 P +0.462 Cb -0.464 Cx -0.034 -> Cb | free D +0.208 Tb +0.398 S -0.254 -> Cb | dim slope +0.21 | wc PR 7.9 top-mode neuron PR 8.6 (0.08 N), z-scored 35.6 (0.31 N) | 7s
+
+[760693773] VISrl  N 147: delta +0.093 (shuffle -0.050) | excess A +0.147 P +0.089 Cb -0.066 Cx -0.027 -> A | free D +0.060 Tb +0.176 S -0.029 -> Tb | dim slope +0.08 | wc PR 6.1 top-mode neuron PR 4.8 (0.03 N), z-scored 47.8 (0.33 N) | 7s[762120172] VIS    N 154: delta +0.022 (shuffle -0.004) | excess A -0.123 P +0.193 Cb -0.020 Cx -0.024 -> P | free D -0.003 Tb +0.074 S -0.196 -> Tb | dim slope -0.02 | wc PR 5.6 top-mode neuron PR 7.5 (0.05 N), z-scored 46.4 (0.30 N) | 6s[762602078] done 5 areas (6s)
+
+
+[762120172] VISal  N 212: delta +0.097 (shuffle +0.041) | excess A -0.048 P +0.145 Cb -0.025 Cx -0.016 -> P | free D -0.003 Tb +0.100 S -0.148 -> Tb | dim slope -0.02 | wc PR 5.6 top-mode neuron PR 2.0 (0.01 N), z-scored 62.8 (0.30 N) | 7s
+[797828357] VISal  N 137: delta +0.033 (shuffle -0.000) | excess A +0.158 P -0.102 Cb -0.006 Cx -0.017 -> A | free D -0.014 Tb +0.070 S +0.088 -> Tb | dim slope -0.01 | wc PR 2.6 top-mode neuron PR 14.4 (0.11 N), z-scored 65.5 (0.48 N) | 6s
+[773418906] done 5 areas (6s)
+[762120172] VISam  N  76: delta +0.061 (shuffle +0.017) | excess A -0.162 P +0.311 Cb -0.060 Cx -0.045 -> P | free D +0.016 Tb +0.132 S -0.294 -> Tb | dim slope +0.03 | wc PR 4.6 top-mode neuron PR 5.3 (0.07 N), z-scored 32.0 (0.42 N) | 7s
+[760693773] done 5 areas (8s)
+[763673393] VIS    N 173: delta -0.064 (shuffle +0.040) | excess A +0.013 P -0.136 Cb +0.003 Cx +0.016 -> P | free D -0.115 Tb -0.008 S +0.021 -> D | dim slope -0.14 | wc PR 7.7 top-mode neuron PR 9.0 (0.05 N), z-scored 60.2 (0.35 N) | 7s
+[762120172] VISl   N 185: delta -0.034 (shuffle -0.064) | excess A -0.227 P +0.258 Cb -0.009 Cx +0.007 -> P | free D -0.020 Tb +0.052 S -0.278 -> Tb | dim slope -0.02 | wc PR 6.2 top-mode neuron PR 12.6 (0.07 N), z-scored 56.1 (0.30 N) | 7s[797828357] VISam  N 183: delta +0.032 (shuffle -0.060) | excess A +0.355 P -0.135 Cb -0.097 Cx -0.031 -> A | free D +0.034 Tb +0.186 S +0.169 -> Tb | dim slope +0.05 | wc PR 7.4 top-mode neuron PR 11.4 (0.06 N), z-scored 52.7 (0.29 N) | 6s[799864342] VISal  N 137: delta +0.160 (shuffle -0.019) | excess A +0.327 P +0.025 Cb -0.155 Cx -0.019 -> A | free D +0.084 Tb +0.268 S +0.059 -> Tb | dim slope +0.10 | wc PR 6.1 top-mode neuron PR 10.5 (0.08 N), z-scored 40.3 (0.29 N) | 6s
+
+
+[763673393] VISam  N 216: delta +0.196 (shuffle +0.012) | excess A -0.017 P +0.261 Cb -0.055 Cx -0.006 -> P | free D +0.102 Tb +0.143 S -0.159 -> Tb | dim slope +0.11 | wc PR 6.9 top-mode neuron PR 26.3 (0.12 N), z-scored 73.8 (0.34 N) | 7s[799864342] VISam  N 114: delta +0.097 (shuffle -0.010) | excess A +0.437 P -0.082 Cb -0.241 Cx -0.006 -> A | free D +0.054 Tb +0.301 S +0.136 -> Tb | dim slope +0.06 | wc PR 6.5 top-mode neuron PR 7.4 (0.06 N), z-scored 33.9 (0.30 N) | 6s
+
+[762120172] VISp   N 234: delta +0.180 (shuffle -0.010) | excess A +0.166 P +0.221 Cb -0.196 Cx -0.002 -> P | free D +0.100 Tb +0.287 S -0.121 -> Tb | dim slope +0.10 | wc PR 6.9 top-mode neuron PR 21.1 (0.09 N), z-scored 68.1 (0.29 N) | 7s
+[797828357] VISl   N 151: delta +0.063 (shuffle +0.021) | excess A +0.174 P -0.061 Cb -0.058 Cx -0.012 -> A | free D -0.023 Tb +0.135 S +0.038 -> Tb | dim slope -0.04 | wc PR 7.9 top-mode neuron PR 10.8 (0.07 N), z-scored 46.9 (0.31 N) | 7s
+[763673393] VISl   N 105: delta +0.140 (shuffle -0.011) | excess A -0.126 P +0.284 Cb -0.009 Cx +0.002 -> P | free D +0.097 Tb +0.060 S -0.187 -> D | dim slope +0.10 | wc PR 5.3 top-mode neuron PR 7.7 (0.07 N), z-scored 39.6 (0.38 N) | 8s
+[798911424] VISal  N 213: delta +0.076 (shuffle -0.034) | excess A +0.263 P +0.240 Cb -0.386 Cx -0.006 -> Cb | free D +0.142 Tb +0.361 S -0.098 -> Cb | dim slope +0.17 | wc PR 8.0 top-mode neuron PR 11.8 (0.06 N), z-scored 56.4 (0.26 N) | 6s[799864342] VISl   N 126: delta +0.028 (shuffle -0.016) | excess A +0.375 P -0.140 Cb -0.180 Cx -0.010 -> A | free D -0.048 Tb +0.283 S +0.092 -> Tb | dim slope -0.07 | wc PR 5.2 top-mode neuron PR 10.8 (0.09 N), z-scored 36.5 (0.29 N) | 6s[758798717] done 4 areas (9s)
+
+
+[757216464] done 6 areas (10s)
+[763673393] VISp   N 175: delta +0.313 (shuffle -0.009) | excess A +0.284 P +0.327 Cb -0.284 Cx -0.006 -> P | free D +0.203 Tb +0.409 S -0.125 -> Tb | dim slope +0.21 | wc PR 4.1 top-mode neuron PR 9.0 (0.05 N), z-scored 53.3 (0.30 N) | 8s
+[799864342] VISmma N 140: delta +0.096 (shuffle -0.022) | excess A +0.151 P +0.072 Cb -0.083 Cx -0.023 -> A | free D +0.052 Tb +0.172 S -0.020 -> Tb | dim slope +0.05 | wc PR 6.2 top-mode neuron PR 5.8 (0.04 N), z-scored 33.6 (0.24 N) | 7s
+[797828357] VISp   N 239: delta +0.121 (shuffle -0.040) | excess A +0.280 P +0.012 Cb -0.104 Cx -0.026 -> A | free D +0.028 Tb +0.264 S +0.016 -> Tb | dim slope +0.07 | wc PR 3.7 top-mode neuron PR 2.3 (0.01 N), z-scored 89.1 (0.37 N) | 7s
+[798911424] VISam  N 312: delta -0.028 (shuffle -0.026) | excess A -0.027 P +0.107 Cb -0.036 Cx -0.046 -> P | free D -0.044 Tb +0.123 S -0.150 -> Tb | dim slope -0.04 | wc PR 5.5 top-mode neuron PR 1.8 (0.01 N), z-scored 103.1 (0.33 N) | 7s[763673393] VISrl  N 171: delta +0.179 (shuffle -0.030) | excess A +0.011 P +0.230 Cb -0.032 Cx -0.001 -> P | free D +0.134 Tb +0.108 S -0.096 -> D | dim slope +0.13 | wc PR 6.0 top-mode neuron PR 15.4 (0.09 N), z-scored 62.4 (0.36 N) | 8s[799864342] VISp   N 185: delta +0.087 (shuffle +0.056) | excess A +0.635 P +0.022 Cb -0.634 Cx +0.008 -> A | free D +0.112 Tb +0.546 S +0.090 -> Cb | dim slope +0.13 | wc PR 7.2 top-mode neuron PR 14.6 (0.08 N), z-scored 55.7 (0.30 N) | 7s[762120172] done 5 areas (8s)
+
+
+[797828357] VISpm  N 158: delta -0.027 (shuffle +0.045) | excess A +0.157 P -0.200 Cb -0.019 Cx -0.011 -> P | free D -0.110 Tb +0.067 S +0.090 -> D | dim slope -0.14 | wc PR 8.3 top-mode neuron PR 10.3 (0.06 N), z-scored 53.1 (0.34 N) | 7s
+
+[799864342] VISrl  N 116: delta +0.150 (shuffle -0.018) | excess A +0.089 P +0.169 Cb -0.097 Cx +0.007 -> P | free D +0.035 Tb +0.223 S -0.134 -> Tb | dim slope +0.04 | wc PR 5.7 top-mode neuron PR 5.5 (0.05 N), z-scored 29.8 (0.26 N) | 7s
+[798911424] VISl   N 177: delta +0.158 (shuffle -0.027) | excess A -0.172 P +0.492 Cb -0.098 Cx -0.038 -> P | free D +0.133 Tb +0.188 S -0.360 -> Tb | dim slope +0.15 | wc PR 6.8 top-mode neuron PR 15.3 (0.09 N), z-scored 49.1 (0.28 N) | 7s
+[798911424] VISp   N 235: delta +0.275 (shuffle -0.075) | excess A -0.236 P +0.643 Cb -0.052 Cx -0.005 -> P | free D +0.215 Tb +0.193 S -0.429 -> D | dim slope +0.26 | wc PR 3.7 top-mode neuron PR 2.4 (0.01 N), z-scored 72.7 (0.31 N) | 7s
+[799864342] done 6 areas (8s)[798911424] VISrl  N 129: delta -0.072 (shuffle -0.022) | excess A +0.137 P -0.191 Cb -0.001 Cx +0.005 -> P | free D -0.099 Tb +0.044 S +0.092 -> D | dim slope -0.08 | wc PR 2.8 top-mode neuron PR 1.6 (0.01 N), z-scored 40.3 (0.31 N) | 7s
+[763673393] done 5 areas (9s)
+
+[750332458] VISal  N 190: delta +0.186 (shuffle -0.067) | excess A +0.103 P +0.231 Cb -0.074 Cx -0.008 -> P | free D +0.113 Tb +0.221 S -0.118 -> Tb | dim slope +0.15 | wc PR 4.8 top-mode neuron PR 14.1 (0.07 N), z-scored 51.8 (0.27 N) | 13s
+[750332458] VISam  N 143: delta +0.150 (shuffle -0.042) | excess A -0.053 P +0.346 Cb -0.068 Cx -0.033 -> P | free D +0.110 Tb +0.182 S -0.236 -> Tb | dim slope +0.11 | wc PR 4.9 top-mode neuron PR 8.9 (0.06 N), z-scored 51.0 (0.36 N) | 14s
+[761418226] VISal  N 408: delta +0.072 (shuffle -0.044) | excess A +0.075 P +0.094 Cb -0.039 Cx -0.014 -> P | free D +0.058 Tb +0.111 S -0.036 -> Tb | dim slope +0.06 | wc PR 8.3 top-mode neuron PR 34.5 (0.08 N), z-scored 129.9 (0.32 N) | 10s[750332458] VISl   N 149: delta +0.149 (shuffle -0.001) | excess A +0.193 P +0.082 Cb -0.109 Cx -0.015 -> A | free D +0.062 Tb +0.214 S -0.021 -> Tb | dim slope +0.08 | wc PR 7.1 top-mode neuron PR 10.1 (0.07 N), z-scored 40.7 (0.27 N) | 14s
+[797828357] done 5 areas (9s)
+
+[761418226] VISp   N 113: delta +0.216 (shuffle +0.040) | excess A +0.223 P +0.157 Cb -0.186 Cx -0.017 -> A | free D +0.094 Tb +0.286 S -0.063 -> Tb | dim slope +0.10 | wc PR 5.2 top-mode neuron PR 8.7 (0.08 N), z-scored 39.9 (0.35 N) | 10s
+[750332458] VISp   N 192: delta +0.231 (shuffle -0.023) | excess A +0.088 P +0.359 Cb -0.181 Cx -0.013 -> P | free D +0.170 Tb +0.278 S -0.190 -> Tb | dim slope +0.20 | wc PR 6.1 top-mode neuron PR 13.0 (0.07 N), z-scored 52.4 (0.27 N) | 14s[761418226] VISpm  N 126: delta +0.052 (shuffle -0.045) | excess A +0.004 P +0.123 Cb -0.019 Cx -0.012 -> P | free D +0.052 Tb +0.075 S -0.071 -> Tb | dim slope +0.07 | wc PR 6.9 top-mode neuron PR 6.6 (0.05 N), z-scored 45.0 (0.36 N) | 10s
+[750332458] VISpm  N  89: delta +0.175 (shuffle -0.014) | excess A -0.209 P +0.448 Cb -0.011 Cx -0.038 -> P | free D +0.170 Tb +0.069 S -0.278 -> D | dim slope +0.22 | wc PR 3.0 top-mode neuron PR 9.2 (0.10 N), z-scored 38.6 (0.43 N) | 14s
+
+[798911424] done 5 areas (9s)
+[761418226] VISrl  N 308: delta +0.019 (shuffle -0.031) | excess A +0.007 P +0.065 Cb -0.018 Cx -0.004 -> P | free D -0.021 Tb +0.093 S -0.086 -> Tb | dim slope -0.03 | wc PR 5.1 top-mode neuron PR 27.7 (0.09 N), z-scored 136.8 (0.44 N) | 11s
+[750332458] VISrl  N 194: delta +0.178 (shuffle -0.104) | excess A -0.123 P +0.422 Cb -0.019 Cx +0.002 -> P | free D +0.200 Tb +0.099 S -0.222 -> D | dim slope +0.22 | wc PR 4.1 top-mode neuron PR 11.8 (0.06 N), z-scored 66.4 (0.34 N) | 15s
+[761418226] done 4 areas (12s)
+[751348571] VISam  N 152: delta +0.115 (shuffle +0.026) | excess A +0.277 P +0.008 Cb -0.200 Cx +0.004 -> A | free D -0.010 Tb +0.295 S -0.018 -> Tb | dim slope +0.01 | wc PR 7.3 top-mode neuron PR 9.8 (0.06 N), z-scored 43.1 (0.28 N) | 17s
+[751348571] VISl   N  81: delta -0.036 (shuffle -0.002) | excess A +0.690 P +0.089 Cb -0.819 Cx +0.006 -> Cb | free D +0.093 Tb +0.686 S +0.003 -> Cb | dim slope +0.11 | wc PR 7.3 top-mode neuron PR 5.9 (0.07 N), z-scored 24.4 (0.30 N) | 18s
+[751348571] VISp   N 149: delta +0.177 (shuffle -0.016) | excess A +0.154 P +0.352 Cb -0.297 Cx -0.015 -> P | free D +0.157 Tb +0.349 S -0.195 -> Tb | dim slope +0.15 | wc PR 6.8 top-mode neuron PR 12.8 (0.09 N), z-scored 45.5 (0.31 N) | 18s
+[751348571] VISpm  N  97: delta +0.156 (shuffle -0.018) | excess A +0.344 P +0.177 Cb -0.301 Cx -0.046 -> A | free D +0.113 Tb +0.407 S -0.063 -> Tb | dim slope +0.09 | wc PR 6.2 top-mode neuron PR 1.9 (0.02 N), z-scored 27.0 (0.28 N) | 18s
+[751348571] VISrl  N 305: delta +0.127 (shuffle -0.019) | excess A +0.344 P -0.002 Cb -0.189 Cx -0.008 -> A | free D +0.035 Tb +0.308 S +0.037 -> Tb | dim slope +0.03 | wc PR 6.7 top-mode neuron PR 9.0 (0.03 N), z-scored 76.2 (0.25 N) | 19s
+[751348571] done 5 areas (21s)
+[744228101] VIS    N 293: delta +0.077 (shuffle +0.021) | excess A -0.042 P +0.151 Cb -0.029 Cx -0.024 -> P | free D +0.026 Tb +0.083 S -0.125 -> Tb | dim slope +0.03 | wc PR 8.3 top-mode neuron PR 29.7 (0.10 N), z-scored 110.8 (0.38 N) | 23s
+[744228101] VISal  N 122: delta +0.136 (shuffle +0.053) | excess A +0.068 P +0.076 Cb -0.027 Cx -0.033 -> P | free D +0.035 Tb +0.108 S -0.041 -> Tb | dim slope +0.06 | wc PR 3.5 top-mode neuron PR 3.3 (0.03 N), z-scored 38.2 (0.31 N) | 24s
+[744228101] VISl   N 188: delta +0.054 (shuffle +0.019) | excess A -0.059 P +0.095 Cb -0.002 Cx +0.000 -> P | free D +0.021 Tb +0.016 S -0.074 -> D | dim slope -0.01 | wc PR 3.8 top-mode neuron PR 4.9 (0.03 N), z-scored 60.5 (0.32 N) | 24s
+[744228101] VISp   N 126: delta +0.211 (shuffle -0.052) | excess A -0.049 P +0.513 Cb -0.141 Cx -0.061 -> P | free D +0.249 Tb +0.216 S -0.265 -> D | dim slope +0.31 | wc PR 5.0 top-mode neuron PR 17.7 (0.14 N), z-scored 48.4 (0.38 N) | 24s
+[744228101] VISrl  N 134: delta +0.049 (shuffle +0.022) | excess A -0.023 P +0.055 Cb -0.007 Cx +0.003 -> P | free D -0.019 Tb +0.050 S -0.073 -> Tb | dim slope -0.02 | wc PR 6.2 top-mode neuron PR 8.6 (0.06 N), z-scored 39.3 (0.29 N) | 25s
+[744228101] done 5 areas (27s)
+[750332458] done 6 areas (32s)
+VERDICT {
+ "n_populations": 167,
+ "A1_count_P_largest_positive": 93,
+ "A1_count_P4_negative": 134,
+ "A1": false,
+ "A2_count_top_mode_ge_N_over_10": 20,
+ "A2": false,
+ "A3_rho_deltaP_wcPR": -0.07549187339606502,
+ "A3_rho_deltaCb_wcPR": -0.409986395539386,
+ "A3": false,
+ "largest_term_counts": {
+  "A": 57,
+  "P": 99,
+  "Cb": 11,
+  "Cx": 0
+ },
+ "refined_descriptive": {
+  "largest_free_term_counts": {
+   "D": 31,
+   "Tb": 126,
+   "Cb": 10,
+   "Cx": 0
+  },
+  "mean_free_excess": {
+   "D": 0.07800993135942175,
+   "Tb": 0.18361613967056492,
+   "Cb": -0.11133348631156877,
+   "Cx": -0.018007782566466683,
+   "S": -0.09600991763035106
+  },
+  "rho_deltaD_wcPR": 0.05598956991352923,
+  "rho_deltaTb_wcPR": 0.27490801529471176,
+  "count_top_mode_ge_N_over_10_zscored": 167,
+  "median_top_mode_over_N": 0.06688442485588232,
+  "median_top_mode_over_N_zscored": 0.30789607747634434,
+  "count_dimslope_excess_positive": 135,
+  "median_dimslope_excess": 0.07735622362076001
+ },
+ "delta_recomputed_vs_stored_median_absdiff": 0.008631127997576885,
+ "delta_recomputed_vs_stored_max_absdiff": 0.07063379845466893,
+ "max_sum_check": 9.044848203743072e-15,
+ "max_pr_identity_rel": 1.3399550634544393e-06
+}
+wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run66_allen_deficit_decomposition.json in 40s
+Stopping app - local entrypoint completed.
+Runner terminated.
+✓ App completed. View run at 
+https://modal.com/apps/adila-75793/main/ap-nexpUEXYjLCev32jjXDbPm

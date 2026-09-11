@@ -74,7 +74,6 @@ ax.set_xticks(range(len(areas)))
 ax.set_xticklabels(areas)
 ax.set_ylim(-0.19, 0.47)
 ax.set_ylabel(r"shift $\delta_{\rm dir}$")
-ax.set_title("Direction-aligned shift across 32 Neuropixels sessions")
 ax.legend(frameon=False, loc="upper right", fontsize=7.5, handletextpad=0.2)
 ax.spines[["top", "right"]].set_visible(False)
 fig.tight_layout()
@@ -109,12 +108,8 @@ ax1.plot(deg, Codd, color=RED, lw=1.4, ls=":")
 # label each curve where the full fit and the even sector actually
 # separate (they differ only by the odd term, so mid-plot labels are
 # ambiguous): full at the left edge, even at the right edge.
-ax1.annotate(r"full fit $C(\Delta\phi)$", (10, 0.89), xytext=(38, 0.52),
-             fontsize=7.5, color="k",
-             arrowprops=dict(arrowstyle="->", color="k", lw=0.8))
-ax1.annotate("even (orientation)", (155, 0.59), xytext=(90, 0.44),
-             fontsize=7.5, color=BLUE,
-             arrowprops=dict(arrowstyle="->", color=BLUE, lw=0.8))
+ax1.text(58, 0.70, r"full fit $C(\Delta\phi)$", fontsize=7.5, color="k", ha="left")
+ax1.text(100, 0.37, "even (orientation)", fontsize=7.5, color=BLUE, ha="center")
 ax1.text(120, -0.20, "odd (direction)", fontsize=7.5, color=RED, ha="center")
 
 def C_at(x_deg):
@@ -123,13 +118,9 @@ def C_at(x_deg):
             + c3 * np.cos(3 * x))
 
 ax1.scatter([22.5], [C_at(22.5)], color=GREEN, zorder=5, s=55, marker="o")
-ax1.annotate(f"adjacent\n$C = {C_at(22.5):.2f}$", (22.5, C_at(22.5)),
-             xytext=(60, 0.90), fontsize=7.5, color=GREEN,
-             arrowprops=dict(arrowstyle="->", color=GREEN, lw=0.8))
+ax1.text(33, 0.83, f"adjacent $C = {C_at(22.5):.2f}$", fontsize=7.5, color=GREEN, ha="left", va="center")
 ax1.scatter([180.0], [C_at(180.0)], color=MAGENTA, zorder=5, s=55, marker="o")
-ax1.annotate(f"antipodal\n$C = {C_at(180.0):.2f}$", (180.0, C_at(180.0)),
-             xytext=(132, 0.90), fontsize=7.5, color=MAGENTA,
-             arrowprops=dict(arrowstyle="->", color=MAGENTA, lw=0.8))
+ax1.text(178, 0.93, f"antipodal $C = {C_at(180.0):.2f}$", fontsize=7.5, color=MAGENTA, ha="right", va="center")
 ax1.set_xlim(-4, 186)
 ax1.set_ylim(-0.22, 1.02)
 ax1.set_xlabel(r"orientation difference $\Delta\phi$ (deg)")

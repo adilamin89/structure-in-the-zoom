@@ -66,7 +66,7 @@ ax4.plot(x, content, color=ORANGE, lw=1.4); ax4.plot(x, structure, color=BLUE, l
 ax4.plot(x, 0.047 + 0 * x, color=ORANGE, lw=0.8, ls="--"); ax4.plot(x, 0.053 + 0 * x, color=BLUE, lw=0.8, ls="--")
 ax4.text(0.97, 0.135, "content: inherited, dilutes", color=ORANGE, fontsize=5.0, ha="right", va="center")
 ax4.text(0.97, -0.05, "construction: built with depth", color=BLUE, fontsize=5.0, ha="right", va="center")
-ax4.text(0.97, 0.078, "dashed: order-averaged, flat", color=DGRAY, fontsize=4.6, ha="right", va="center")
+ax4.text(0.03, 0.038, "dashed: order-averaged, flat", color=DGRAY, fontsize=4.6, ha="left", va="center")
 ax4.text(0.97, 0.0, "permutation band", color=DGRAY, fontsize=4.6, ha="right", va="center")
 ax4.text(0.03, -0.135, "embedding = lexical control", color=INK, fontsize=4.6, ha="left", va="center")
 
@@ -74,5 +74,5 @@ for key in ("p1", "p2", "p3"):
     x0, _, w, _ = P[key]
     fig.add_artist(FancyArrowPatch((x0 + w + 0.004, 0.46), (x0 + w + 0.026, 0.46), transform=fig.transFigure,
                                    arrowstyle="-|>", mutation_scale=6, color=DGRAY, lw=0.8))
-out = Path(__file__).resolve().parent.parent / "figures_canonical" / "fig_llm_pipeline.png"
-fig.savefig(out, dpi=300); print("wrote", out)
+for out in (Path(__file__).resolve().parent.parent / "figures_canonical" / "fig_llm_pipeline.png", Path(__file__).resolve().parent.parent.parent / "arxiv" / "figures" / "fig_llm_pipeline.png"):
+    out.parent.mkdir(parents=True, exist_ok=True); fig.savefig(out, dpi=300); print("wrote", out)
