@@ -4,6 +4,8 @@
 identifier added on posting). This repository is two things: `rung`, the paper's measurement
 released as a tested tool, and the code and data behind every number in the paper.
 
+![The instrument in five steps](figures_canonical/fig_instrument.png)
+
 ## What rung reads
 
 A dimensionality-scaling exponent, the slope of the participation ratio against subsample size on
@@ -28,7 +30,7 @@ every rung against its matched floor. There is no probe to train and no dictiona
 
 ```bash
 pip install git+https://github.com/adilamin89/structure-in-the-zoom     # numpy core
-rung data X.npy labels.npy --out r.json --plot r.png                     # any samples-by-features array
+rung data X.npy labels.npy --out r.json --plot r.png                     # any samples-by-features array; labels = integer class ids, one per row
 rung summarize r.json                                                    # the reading, in plain language
 ```
 
@@ -38,7 +40,7 @@ model extras:
 ```bash
 git clone https://github.com/adilamin89/structure-in-the-zoom && cd structure-in-the-zoom
 pip install -e ".[models]"                                    # + torch, transformers, datasets
-rung llm --model EleutherAI/pythia-160m --axis axes/language_type.json --device mps --out lt.json
+rung llm --model EleutherAI/pythia-160m --axis axes/language_type.json --device mps --out lt.json   # --device cpu | mps | cuda
 rung plot lt.json --out lt.png                                # the depth profile with both null bands
 rung summarize lt.json                                        # the reading, layer by layer
 ```
@@ -57,7 +59,7 @@ For one array and one axis (`rung data`, or `zoom(X, labels)` in Python):
 - the ladder itself: `pr_obs` and `pr_floor` at every rung, `deficit` (the log participation ratio
   of the accumulated classes below the floor, zero at the top rung) and `late_fraction`, the share of
   the climb that the second half of the classes still carries. With `--antipode pairs.json`
-  (`{class: its antipodal class}`) that number is the stall test of the paper's Section 7: a code that
+  (`{class: its antipodal class}`) `late_fraction` is the stall test of the paper's Section 7: a code that
   has every class mean by half the classes has nothing left to climb there; a code that distinguishes
   a class from its antipode still does.
 
@@ -98,8 +100,9 @@ for a model, with both null bands.
 
 ## Two worked examples
 
-**A recording.** Trials by neurons, one drift direction per trial in eight classes at 45°, in angular
-order, with the antipodal pairs written down.
+**A recording.** Trials by neurons (from an NWB file, build the trials-by-units count matrix with `pynwb`
+and save it as `.npy`; from `.mat`, `scipy.io.loadmat`), one drift direction per trial in eight classes at
+45°, in angular order, with the antipodal pairs written down.
 
 ```bash
 python -c "import json; json.dump({c: (c + 4) % 8 for c in range(8)}, open('pairs.json', 'w'))"
@@ -115,8 +118,8 @@ pooling of fluctuation modes private to each class (`D`, the paper's finding on 
 per-neuron direction-selectivity index as `--split-by` to compare the direction-selective, random and
 orientation-only thirds at matched size.
 
-**A model.** Sixteen prompts per class, eight classes, the hidden state at the last token of every
-layer.
+**A model.** An axis is a JSON file `{"class": ["prompt", ...], ...}`; sixteen prompts per class, eight
+classes, the hidden state at the last token of every layer. `--paper-seeds` reproduces the paper's table cells.
 
 ```bash
 rung llm --model EleutherAI/pythia-2.8b --axis axes/language_type.json axes/world_knowledge.json \
@@ -141,7 +144,8 @@ eight class tokens rotated inside sixteen shared carrier sentences. Under the or
 ## Reading the numbers
 
 1. **Declare before you look.** Classes, class count and accumulation order are fixed first.
-2. **Six or more classes.** A two-class ladder fits a slope through two points.
+2. **Six or more classes, ten or more samples per rung.** A two-class ladder fits a slope through two
+   points, and a rung with fewer than ten samples is skipped.
 3. **For unordered classes, read the order-averaged shift.** The declared-order profile is a property
    of one path through the classes; the crossover shape of a depth profile belongs to the path.
 4. **Pass your nuisance structure as strata.** If the shift survives the within-stratum permutation,
