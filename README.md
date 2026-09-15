@@ -22,6 +22,12 @@ beyond the composition the labeling preserves. A shift outside both bands means 
 covariance accumulation; inside the second band only, it is composition; at zero, the probe is blind
 to this axis, which is not the same as the population lacking structure.
 
+![One population, three axes](figures_canonical/fig_three_axes.png)
+
+One recording, three ways to zoom it, three exponents, and only the direction-aligned one carries structure: the
+floor (gray) is what random subsets return, the declared ladder (red) starts far below it and climbs steeply, and
+the difference of the two slopes is the shift.
+
 It runs on any samples-by-features array with one label per row, and on any Hugging Face language
 model at every layer from one command. A rung is one step of the subsampling ladder; the tool reads
 every rung against its matched floor. There is no probe to train and no dictionary to fit.
@@ -46,6 +52,55 @@ rung summarize lt.json                                        # the reading, lay
 ```
 
 `theta-zoom`, the tool's name through 1.1.0, stays as an alias for one release.
+
+## Two worked examples
+
+**A recording.** Trials by neurons (from an NWB file, build the trials-by-units count matrix with `pynwb`
+and save it as `.npy`; from `.mat`, `scipy.io.loadmat`), one drift direction per trial in eight classes at
+45°, in angular order, with the antipodal pairs written down.
+
+```bash
+python -c "import json; json.dump({c: (c + 4) % 8 for c in range(8)}, open('pairs.json', 'w'))"
+rung data resp.npy direction.npy --antipode pairs.json --sectors --decompose --out v1.json --plot v1.png
+rung summarize v1.json
+```
+
+The summary gives the floor, the shift and its permutation p; the deficit at every rung and the share
+of the climb left after four classes, read as the stall test; the sector balance of the class-mean
+kernel with the accumulation order it predicts; and the split, which says whether the shift is the
+pooling of fluctuation modes private to each class (`D`, the paper's finding on V1) or the class means
+(`Tb`). Pass the session or animal as `--strata` when trials are not exchangeable across it; pass a
+per-neuron direction-selectivity index as `--split-by` to compare the direction-selective, random and
+orientation-only thirds at matched size.
+
+![The language-model battery](figures_canonical/fig_llm_pipeline.png)
+
+**A model.** An axis is a JSON file `{"class": ["prompt", ...], ...}`; sixteen prompts per class, eight
+classes, the hidden state at the last token of every layer. `--paper-seeds` reproduces the paper's table cells.
+
+```bash
+rung llm --model EleutherAI/pythia-2.8b --axis axes/language_type.json axes/world_knowledge.json \
+    --device mps --out p28.json
+rung summarize p28.json
+```
+
+The construction axis (sentence types, topics mixed inside each class) starts negative at the
+embedding and rises to positive with depth; the content axis (world-knowledge domains) is positive at
+the embedding and dilutes.
+
+![Depth profiles at four Pythia scales](figures_canonical/fig_llm_depth.png)
+
+`axes/language_type.strata.json` carries a topic per prompt, so the
+construction axis is read against the second null as well. For checkpoints, add `--revision`
+(`step1000`, `step143000`); for a site other than the residual stream, collect one feature vector per
+prompt at that site (an attention head's output, an MLP's neurons, a sparse autoencoder's latents) and
+call `zoom(X, labels)` on it. `rung axis --dataset ... --text-field ... --label-field ... --out my.json`
+builds an axis from any Hugging Face dataset, with `--strata-field` for the nuisance sidecar.
+
+The two planted axes in `axes/`, `compass.json` and `clock.json`, are what the second null is for:
+eight class tokens rotated inside sixteen shared carrier sentences. Under the ordinary floor both read
+δ ≈ −0.2 at every layer with no label information at the embedding; the carrier-stratified null (their
+`.strata.json` sidecars) returns them to zero.
 
 ## What it returns
 
@@ -97,49 +152,6 @@ stratified verdict, the per-rung deficit and the late fraction, the split, the s
 for a model, the profile shape (embedding sign, valley, last zero crossing) and whether the signal is
 label-linked or composition. `rung plot` draws the ladder figure for an array and one panel per axis
 for a model, with both null bands.
-
-## Two worked examples
-
-**A recording.** Trials by neurons (from an NWB file, build the trials-by-units count matrix with `pynwb`
-and save it as `.npy`; from `.mat`, `scipy.io.loadmat`), one drift direction per trial in eight classes at
-45°, in angular order, with the antipodal pairs written down.
-
-```bash
-python -c "import json; json.dump({c: (c + 4) % 8 for c in range(8)}, open('pairs.json', 'w'))"
-rung data resp.npy direction.npy --antipode pairs.json --sectors --decompose --out v1.json --plot v1.png
-rung summarize v1.json
-```
-
-The summary gives the floor, the shift and its permutation p; the deficit at every rung and the share
-of the climb left after four classes, read as the stall test; the sector balance of the class-mean
-kernel with the accumulation order it predicts; and the split, which says whether the shift is the
-pooling of fluctuation modes private to each class (`D`, the paper's finding on V1) or the class means
-(`Tb`). Pass the session or animal as `--strata` when trials are not exchangeable across it; pass a
-per-neuron direction-selectivity index as `--split-by` to compare the direction-selective, random and
-orientation-only thirds at matched size.
-
-**A model.** An axis is a JSON file `{"class": ["prompt", ...], ...}`; sixteen prompts per class, eight
-classes, the hidden state at the last token of every layer. `--paper-seeds` reproduces the paper's table cells.
-
-```bash
-rung llm --model EleutherAI/pythia-2.8b --axis axes/language_type.json axes/world_knowledge.json \
-    --device mps --out p28.json
-rung summarize p28.json
-```
-
-The construction axis (sentence types, topics mixed inside each class) starts negative at the
-embedding and rises to positive with depth; the content axis (world-knowledge domains) is positive at
-the embedding and dilutes. `axes/language_type.strata.json` carries a topic per prompt, so the
-construction axis is read against the second null as well. For checkpoints, add `--revision`
-(`step1000`, `step143000`); for a site other than the residual stream, collect one feature vector per
-prompt at that site (an attention head's output, an MLP's neurons, a sparse autoencoder's latents) and
-call `zoom(X, labels)` on it. `rung axis --dataset ... --text-field ... --label-field ... --out my.json`
-builds an axis from any Hugging Face dataset, with `--strata-field` for the nuisance sidecar.
-
-The two planted axes in `axes/`, `compass.json` and `clock.json`, are what the second null is for:
-eight class tokens rotated inside sixteen shared carrier sentences. Under the ordinary floor both read
-δ ≈ −0.2 at every layer with no label information at the embedding; the carrier-stratified null (their
-`.strata.json` sidecars) returns them to zero.
 
 ## Reading the numbers
 
