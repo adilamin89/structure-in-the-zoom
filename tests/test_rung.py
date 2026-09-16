@@ -229,3 +229,21 @@ def test_circular_shift_null_separates_drift_from_alignment():
     assert r["p_two"] < 0.05 and r["shift_p_two"] > 0.05
     rep = tz.summarize_data(r, verbose=False)
     assert rep["verdict"]["survives_circular_shift"] is False
+
+
+def test_every_axis_sidecar_matches_its_axis():
+    """Every shipped <axis>.strata.json has the classes and prompt counts of its axis, so the second null can read it."""
+    import glob, json, os
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sidecars = glob.glob(os.path.join(here, "axes", "*.strata.json"))
+    assert len(sidecars) >= 4
+    for side in sidecars:
+        axis = json.load(open(side[: -len(".strata.json")] + ".json"))
+        strata = json.load(open(side))
+        assert set(axis) == set(strata), side
+        for c in axis:
+            assert len(axis[c]) == len(strata[c]), (side, c)
+    pairs = json.load(open(os.path.join(here, "axes", "blimp_grammaticality.strata.json")))
+    good = [c for c in pairs if c.endswith("_good")]
+    for g in good:
+        assert pairs[g] == pairs[g[: -len("_good")] + "_bad"], g

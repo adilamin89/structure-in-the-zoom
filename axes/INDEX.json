@@ -84,5 +84,23 @@
   "three in the afternoon",
   "six in the evening",
   "nine at night"
+ ],
+ "baroni_complexity": [
+  "subordinated",
+  "coordinated",
+  "center_embedding",
+  "right_branching",
+  "ambiguous",
+  "unambiguous_high"
+ ],
+ "blimp_grammaticality": [
+  "regular_plural_subject_verb_agreement_1_good",
+  "regular_plural_subject_verb_agreement_1_bad",
+  "wh_island_good",
+  "wh_island_bad",
+  "npi_present_1_good",
+  "npi_present_1_bad",
+  "irregular_past_participle_verbs_good",
+  "irregular_past_participle_verbs_bad"
  ]
 }

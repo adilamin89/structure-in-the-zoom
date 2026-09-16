@@ -97,6 +97,12 @@ prompt at that site (an attention head's output, an MLP's neurons, a sparse auto
 call `zoom(X, labels)` on it. `rung axis --dataset ... --text-field ... --label-field ... --out my.json`
 builds an axis from any Hugging Face dataset, with `--strata-field` for the nuisance sidecar.
 
+The two minimal-pair benchmarks of the paper's Section 8.4 ship the same way: `axes/blimp_grammaticality.json`
+(four BLiMP paradigms, good and bad as classes) and `axes/baroni_complexity.json` (the three syntactic-complexity
+contrasts at 64 pairs), each with a `.strata.json` holding the pair, so `rung llm --axis axes/blimp_grammaticality.json`
+reads the grammaticality signal against the within-pair swap null out of the box (on Pythia-2.8B the paper finds a
+signal of twenty standard deviations that the swap null absorbs entirely).
+
 The two planted axes in `axes/`, `compass.json` and `clock.json`, are what the second null is for:
 eight class tokens rotated inside sixteen shared carrier sentences. Under the ordinary floor both read
 δ ≈ −0.2 at every layer with no label information at the embedding; the carrier-stratified null (their
@@ -248,8 +254,8 @@ tests/                   numpy-only pytest suite: the decomposition identity, si
                          kernel, the declared orders, the circular-shift null, the command line end to end
 render_all.py            prints the paper's tables and headline numbers from the artifacts
 axes/                    every prompt in the paper: the six battery axes and a random control, the ETHICS
-                         benchmark axis, the compass and clock axes, with strata sidecars; PROVENANCE.md
-                         gives origin and license per file
+                         benchmark axis, the compass and clock axes, the BLiMP and Baroni minimal-pair sets,
+                         with strata sidecars; PROVENANCE.md gives origin and license per file
 scripts_canonical/       one script per analysis, named for what it computes; each docstring names the
                          artifact it writes. make_fig_*.py regenerate the paper's figures from the artifacts.
 data_canonical/          the result JSON behind every reported number (one per script)

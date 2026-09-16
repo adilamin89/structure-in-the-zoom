@@ -24,6 +24,8 @@ prompts (short declarative carriers, matched final tokens) are part of that desi
 | `tqa_category.json` | TruthfulQA questions, grouped by the release's category field | Apache-2.0 | Lin, Hilton, Evans 2022 |
 | `hs_activity.json` | HellaSwag contexts (WikiHow-derived), grouped by activity label | MIT | Zellers et al. 2019 |
 | `arc_topic.json` | ARC questions, grouped by science topic | CC BY-SA 4.0 (this derivative file is therefore CC BY-SA 4.0) | Clark et al. 2018 |
+| `blimp_grammaticality.json` (+ `.strata.json`) | BLiMP minimal pairs, four paradigms x 16 pairs, good and bad as separate classes; the sidecar holds the pair id (the within-pair swap null of the paper's Section 8.4) | CC BY 4.0 | Warstadt et al. 2020 (`nyu-mll/blimp`, the first 16 items of each paradigm) |
+| `baroni_complexity.json` (+ `.strata.json`) | the three syntactic-complexity contrasts at 64 pairs, six classes; the sidecar holds the pair id | no license file in the release; redistributed as research data with attribution, contact the authors before any other reuse | Baroni et al. 2026 (github.com/franfranz/syntactic_complexity_in_LLMs) |
 
 ## Stimuli stored inside result artifacts
 
@@ -32,6 +34,8 @@ prompts (short declarative carriers, matched final tokens) are part of that desi
 | `run46_ethics_benchmark_axis.json` | 128 ETHICS scenario sentences (4 domains x 32), reformatted as prompt-plus-completion text | ETHICS (Hendrycks et al. 2021), via the `wassname/ethics_expression_preferences` parquet mirror | MIT |
 | `run43_baroni_complexity.json`, `run43b_baroni_64pairs.json`, `run43c_baroni_crossmodel.json` | the minimal-pair prompts used | Baroni et al. 2026 release, github.com/franfranz/syntactic_complexity_in_LLMs | no license file in the release; redistributed here as research data with attribution, contact the authors before any other reuse |
 | `run42_blimp_battery.json` | none (BLiMP is loaded at run time from `nyu-mll/blimp`) | Warstadt et al. 2020 | CC BY 4.0 |
+
+Both minimal-pair sets are also shipped as axis files (`scripts_canonical/build_benchmark_axes.py` writes them: the Baroni set from the run43b artifact, the BLiMP set from `nyu-mll/blimp`).
 
 Reuse of any benchmark-derived file must carry the source's attribution; the ARC-derived axis must stay
 share-alike. If you build your own axis with `rung axis`, the same applies to the dataset you draw from.
