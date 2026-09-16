@@ -93,8 +93,9 @@ ao = json.load(open(DATA / "antipodal_order.json"))
 seq = [r["delta_sequential"] for r in ao["rows"]]
 par = [r["delta_paired"] for r in ao["rows"]]
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.0, 2.6),
-                               gridspec_kw={"width_ratios": [1.1, 1.0]})
+# The kernel panel (A) now lives in the body as Figure 3B (Sep 8); the appendix figure is the ordering contrast alone.
+_f1, ax1 = plt.subplots()
+fig, ax2 = plt.subplots(figsize=(3.6, 2.6))
 
 phi = np.linspace(0, np.pi, 400)
 deg = np.degrees(phi)
@@ -135,7 +136,8 @@ ax2.set_xticks(x)
 ax2.set_xticklabels(["D1", "D2", "D3", "L1", "L2", "L3", "C1", "C2"])
 ax2.set_xlabel("grating recording")
 ax2.set_ylabel(r"shift $\delta$")
-ax2.set_title(r"$\mathbf{B}$  Order effect (8/8 recordings)", loc="left")
+ax2.set_title("Order effect, 8 of 8 recordings", loc="left")
+plt.close(_f1)
 ax2.set_ylim(0, 0.66)
 ax2.legend(frameon=True, facecolor="white", edgecolor="0.85",
            fontsize=7, loc="upper right")
