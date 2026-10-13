@@ -1,13 +1,15 @@
 """Camera-ready (NeurReps 2026) Figures 2 and 3: the two-panel multipole/order figure and the Allen panel.
 The arXiv-era make_fig3_4_allen_multipole.py draws the ordering contrast alone; this one keeps both panels.
-Inputs: data_canonical/cos2theta_fit.json, antipodal_order.json,
+Inputs: data_canonical/multipole_harmonics_8dir.json, run72_paper_designs_split.json (order-effect split),
+run59_shift_by_direction_selectivity.json (DSI thirds),
 allen_expansion_all_sessions.json. Out: ../figures_canonical/ (+ arxiv/figures when present).
 
 Fig 3 (fig_allen_expansion.png): per-population direction-aligned shifts across
 32 Allen Neuropixels sessions, by visual area, aligned vs shuffled in separate
 sub-columns with annotated means and counts.
-Fig 4 (fig_multipole_order.png): the measured C(dphi) multipole decomposition
-and the accumulation-order effects it predicts.
+Fig 2 (fig_multipole_two_panel.png, three panels): GT3's class-mean correlation and its two sectors;
+the order effect split into its class-mean and within-class parts; the shift of the most and least
+direction-selective thirds per recording.
 
 Outputs to figures/theta_eft/.
 """
@@ -91,12 +93,17 @@ mh = json.load(open(DATA / "multipole_harmonics_8dir.json"))
 gt3 = next(r for r in mh["rows"] if "drifting_GT3" in r["name"])["coef"]
 a0, b, c, b4, c3 = gt3["a"], gt3["b2"], gt3["c1"], gt3["b4"], gt3["c3"]
 
-ao = json.load(open(DATA / "antipodal_order.json"))
-seq = [r["delta_sequential"] for r in ao["rows"]]
-par = [r["delta_paired"] for r in ao["rows"]]
+split = json.load(open(DATA / "run72_paper_designs_split.json"))["rows"]      # order-effect split (Table 8)
+tags = ["D1", "D2", "D3", "L1", "L2", "L3", "C1", "C2"]
+o_tot = [split[t]["all"]["order_effect"] for t in tags]
+o_mean = [split[t]["all"]["order_probe"] for t in tags]
+o_with = [split[t]["all"]["order_noise"] for t in tags]
+ds = json.load(open(DATA / "run59_shift_by_direction_selectivity.json"))["verdict"]   # registered DSI thirds
+assert ds["tags"] == tags
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.0, 2.6),
-                               gridspec_kw={"width_ratios": [1.1, 1.0]})
+plt.rcParams.update({"font.size": 7, "axes.titlesize": 7.5, "axes.labelsize": 7, "xtick.labelsize": 6.5,
+                     "ytick.labelsize": 6.5, "legend.fontsize": 6.2})
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(6.0, 2.05), gridspec_kw={"width_ratios": [1.05, 1.0, 1.0]})
 
 phi = np.linspace(0, np.pi, 400)
 deg = np.degrees(phi)
@@ -104,45 +111,54 @@ Cfull = (a0 + b * np.cos(2 * phi) + c * np.cos(phi) + b4 * np.cos(4 * phi)
          + c3 * np.cos(3 * phi))
 Ceven = a0 + b * np.cos(2 * phi) + b4 * np.cos(4 * phi)
 Codd = c * np.cos(phi) + c3 * np.cos(3 * phi)
-ax1.plot(deg, Cfull, color="k", lw=2.0)
-ax1.plot(deg, Ceven, color=BLUE, lw=1.4, ls="--")
-ax1.plot(deg, Codd, color=RED, lw=1.4, ls=":")
-# label each curve where the full fit and the even sector actually
-# separate (they differ only by the odd term, so mid-plot labels are
-# ambiguous): full at the left edge, even at the right edge.
-ax1.text(58, 0.70, r"full fit $C(\Delta\phi)$", fontsize=7.5, color="k", ha="left")
-ax1.text(100, 0.37, "even (orientation)", fontsize=7.5, color=BLUE, ha="center")
-ax1.text(120, -0.20, "odd (direction)", fontsize=7.5, color=RED, ha="center")
+ax1.plot(deg, Cfull, color="k", lw=1.6, label="five-term fit")
+ax1.plot(deg, Ceven, color=BLUE, lw=1.2, ls="--", label="even (orientation)")
+ax1.plot(deg, Codd, color=RED, lw=1.2, ls=":", label="odd (direction)")
+ax1.legend(frameon=False, loc="lower left", fontsize=5.8, handlelength=1.6, borderaxespad=0.1, labelspacing=0.25)
+
 
 def C_at(x_deg):
     x = np.radians(x_deg)
     return (a0 + b * np.cos(2 * x) + c * np.cos(x) + b4 * np.cos(4 * x)
             + c3 * np.cos(3 * x))
 
-ax1.scatter([22.5], [C_at(22.5)], color=GREEN, zorder=5, s=55, marker="o")
-ax1.text(33, 0.83, f"adjacent $C = {C_at(22.5):.2f}$", fontsize=7.5, color=GREEN, ha="left", va="center")
-ax1.scatter([180.0], [C_at(180.0)], color=MAGENTA, zorder=5, s=55, marker="o")
-ax1.text(178, 0.93, f"antipodal $C = {C_at(180.0):.2f}$", fontsize=7.5, color=MAGENTA, ha="right", va="center")
-ax1.set_xlim(-4, 186)
-ax1.set_ylim(-0.22, 1.02)
+
+ax1.scatter([22.5], [C_at(22.5)], color="k", zorder=5, s=18)
+ax1.text(30, 0.86, f"adjacent {C_at(22.5):.2f}", fontsize=6.3, color="k", ha="left", va="center")
+ax1.scatter([180.0], [C_at(180.0)], color="k", zorder=5, s=18)
+ax1.annotate(f"antipodal {C_at(180.0):.2f}", xy=(180, C_at(180.0)), xytext=(100, 0.62), fontsize=6.3, ha="center",
+             va="center", arrowprops=dict(arrowstyle="-", color="0.4", lw=0.5))
+ax1.set_xlim(-4, 186); ax1.set_ylim(-0.42, 1.04); ax1.set_xticks([0, 45, 90, 135, 180])
 ax1.set_xlabel(r"direction difference $\Delta\phi$ (deg)")
-ax1.set_ylabel("signal correlation")
-ax1.set_title(r"$\mathbf{A}$  Multipole content of the V1 code", loc="left")
+ax1.set_ylabel(r"class-mean correlation $C(\Delta\phi)$")
+ax1.set_title(r"$\mathbf{A}$  GT3: two sectors", loc="left")
 ax1.spines[["top", "right"]].set_visible(False)
 
-x = np.arange(len(seq))
-ax2.bar(x - 0.19, seq, width=0.38, color=GREEN, label="sequential (adjacent)")
-ax2.bar(x + 0.19, par, width=0.38, color=MAGENTA, label="antipodal-paired")
-ax2.set_xticks(x)
-ax2.set_xticklabels(["D1", "D2", "D3", "L1", "L2", "L3", "C1", "C2"])
-ax2.set_xlabel("grating recording")
-ax2.set_ylabel(r"shift $\delta$")
-ax2.set_title(r"$\mathbf{B}$  Order effect (8/8 recordings)", loc="left")
-ax2.set_ylim(0, 0.66)
-ax2.legend(frameon=True, facecolor="white", edgecolor="0.85",
-           fontsize=7, loc="upper right")
+x = np.arange(len(tags))
+ax2.bar(x - 0.19, o_mean, width=0.36, color=GRAY, label="class means")
+ax2.bar(x + 0.19, o_with, width=0.36, color=RED, label="within-class")
+ax2.plot(x, o_tot, "o", color="k", ms=3.2, label="total", zorder=4)
+ax2.axhline(0, color="k", lw=0.6)
+ax2.text(-0.5, 0.285, "favours pairing", fontsize=6.0, color="0.35", va="center")
+ax2.text(-0.5, -0.235, "favours adjacent", fontsize=6.0, color="0.35", va="center")
+ax2.set_xticks(x); ax2.set_xticklabels(tags); ax2.set_ylim(-0.25, 0.31)
+ax2.set_ylabel("order effect (paired $-$ adjacent)")
+ax2.set_title(r"$\mathbf{B}$  order effect, split", loc="left")
+ax2.legend(frameon=False, loc="upper right", fontsize=5.8, handlelength=1.0, borderaxespad=0.1, bbox_to_anchor=(1.0, 0.9))
 ax2.spines[["top", "right"]].set_visible(False)
-fig.tight_layout()
+
+dsv, nds = ds["delta_DS"], ds["delta_nonDS"]
+for k in x:
+    ax3.plot([k, k], [nds[k], dsv[k]], color="0.75", lw=1.0, zorder=1)
+ax3.plot(x, dsv, "o", color=RED, ms=3.6, label="most direction-selective third", zorder=3)
+ax3.plot(x, nds, "o", mfc="white", mec=BLUE, mew=1.0, ms=3.4, label="least selective third", zorder=3)
+ax3.set_xticks(x); ax3.set_xticklabels(tags); ax3.set_ylim(0, 0.74)
+ax3.set_ylabel(r"shift $\delta_{\rm dir}$")
+ax3.set_title(r"$\mathbf{C}$  where the shift lives", loc="left")
+ax3.legend(frameon=False, loc="upper left", fontsize=5.8, handlelength=1.0, borderaxespad=0.1)
+ax3.spines[["top", "right"]].set_visible(False)
+fig.tight_layout(w_pad=0.6)
 save(fig, "fig_multipole_two_panel.png")
 plt.close(fig)
-print("fig_multipole_two_panel.png written")
+print("fig_multipole_two_panel.png written; class-mean order part > 0:", sum(v > 0.01 for v in o_mean),
+      "within-class < 0:", sum(v < 0 for v in o_with), "DS > nonDS:", sum(a > b for a, b in zip(dsv, nds)))
