@@ -1,0 +1,100 @@
+{
+ "stringer": {
+  "gratings": {
+   "n_recordings": 8,
+   "mice": [
+    "GT1",
+    "GT2",
+    "GT3"
+   ],
+   "neurons": [
+    11311,
+    22565
+   ],
+   "samples": [
+    3278,
+    5170
+   ],
+   "per_class": [
+    390,
+    681
+   ],
+   "by_type": {
+    "drifting": 3,
+    "local": 3,
+    "low_contrast": 2
+   }
+  },
+  "static": {
+   "n_recordings": 2,
+   "mice": [
+    "TX40",
+    "TX42"
+   ],
+   "neurons": [
+    17631,
+    18982
+   ],
+   "samples": [
+    4470,
+    5356
+   ]
+  },
+  "spont": {
+   "n_recordings": 8,
+   "mice": [
+    "MP027",
+    "MP028",
+    "MP030",
+    "MP032",
+    "MP033",
+    "MP034"
+   ],
+   "neurons": [
+    9392,
+    15179
+   ],
+   "samples": [
+    5000,
+    5000
+   ]
+  },
+  "all": {
+   "n_recordings": 18,
+   "neurons": [
+    9392,
+    22565
+   ],
+   "mice": 11
+  }
+ },
+ "allen": {
+  "n_sessions": 32,
+  "n_populations": 167,
+  "areas": [
+   "VIS",
+   "VISal",
+   "VISam",
+   "VISl",
+   "VISli",
+   "VISmma",
+   "VISmmp",
+   "VISp",
+   "VISpm",
+   "VISrl"
+  ],
+  "presentations": [
+   598,
+   600
+  ],
+  "units_per_population": [
+   51,
+   421
+  ],
+  "visp_units": [
+   67,
+   261
+  ],
+  "n_visp": 32
+ }
+}
