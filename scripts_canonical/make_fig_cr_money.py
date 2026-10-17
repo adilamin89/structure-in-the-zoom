@@ -69,9 +69,18 @@ def matrix(x0, y0, w, h, nrow=10, ncol=9, row_colors=None, row_edge=None, col_hi
                                 fill=False, ec=BLUEG, lw=1.0))
 
 
-rows = [("random stimulus subsets", "0.25", "floor", GRAY),
-        ("direction classes in order", "0.30", r"floor $+\ \delta = +0.24$", RED),
-        ("neighbouring neurons", "0.35", "floor again", BLUEG)]
+# GT3 on each probe: the exponent, its own ladder's floor and the shift (theta_obs = theta_floor + delta)
+_oz = load("orientation_zoom.json")
+_r = next(r for r in load("stringer_theta_decomposition.json")["rows"] if r["name"].startswith("gratings_drifting_GT3"))
+_d = next(r for r in _oz["results"] if r["name"].startswith("gratings_drifting_GT3"))
+_s = next(r for r in load("neuron_zoom_spatial.json")["rows"] if r["name"].startswith("gratings_drifting_GT3"))
+GT3 = [(_r["theta_obs"], _r["theta_floor_empirical"], _r["shift_obs"]),
+       (_d["theta_structured"], _d["theta_random"], _d["delta"]),
+       (_s["theta_spatial"], _s["theta_floor"], _s["delta_spatial"])]
+print("GT3 (theta_obs, floor, delta):", [tuple(round(v, 3) for v in g) for g in GT3])
+rows = [(lab, f"{o:.2f}", rf"floor ${f:.2f}$ $+$ $\delta$ ${d:+.2f}$".replace("-0.00", "+0.00"), col)
+        for lab, (o, f, d), col in zip(["random stimulus subsets", "direction classes in order", "neighbouring neurons"],
+                                       GT3, [GRAY, RED, BLUEG])]
 for k, ((lab, expo, reading, col), yt) in enumerate(zip(rows, [8.95, 5.95, 2.95])):
     y0 = yt - 2.25
     if k == 0:
@@ -98,7 +107,7 @@ for k, ((lab, expo, reading, col), yt) in enumerate(zip(rows, [8.95, 5.95, 2.95]
         axA.plot(cx + pts[near, 0], cy + pts[near, 1], ".", color=BLUEG, ms=2.4)
     axA.text(4.75, y0 + 1.72, lab, fontsize=6.0, va="center", color=INK)
     axA.text(4.75, y0 + 1.02, r"$\theta_{\rm obs} = " + expo + "$", fontsize=7.2, va="center", color=INK)
-    axA.text(4.75, y0 + 0.36, "reads: " + reading, fontsize=6.4, va="center", color=col)
+    axA.text(4.75, y0 + 0.36, reading, fontsize=6.4, va="center", color=col)
 axA.text(0.38, 8.95, "trials", fontsize=6.0, color=GRAY, rotation=90, va="top", ha="center")
 axA.text(1.70, 9.0, "neurons", fontsize=6.0, color=GRAY, ha="center", va="bottom")
 
@@ -139,9 +148,12 @@ ax.plot([r["theta_floor_empirical"] for r in rand], [r["shift_obs"] for r in ran
         mec=GRAY, mew=0.9, zorder=3)
 ax.plot([r["theta_floor"] for r in spat], [r["delta_spatial"] for r in spat], "s", ms=2.8, mfc="white",
         mec=BLUEG, mew=0.9, zorder=3)
+al = [v for r in load("allen_floors_all_sessions.json")["results"] if r.get("status") == "ok" for v in r["areas"].values()]
+ax.plot([v["theta_floor_dir"] for v in al], [v["delta_dir8"] for v in al], "o", ms=1.6, color="#e8a0a8", zorder=2)
 ax.plot([r["theta_random"] for r in dirx], [r["delta"] for r in dirx], "o", ms=3.4, color=RED, zorder=4)
 ax.plot([r["theta_floor"] for r in llm], [r["delta_topic"] for r in llm], "D", ms=2.8, mfc="white", mec=PURPLE, mew=0.9, zorder=4)
-ax.text(0.17, 0.33, "V1, stimulus\ndirection (8)", fontsize=6.3, color=RED, va="center", linespacing=0.95)
+ax.text(0.17, 0.36, "V1, stimulus\ndirection (8)", fontsize=6.3, color=RED, va="center", linespacing=0.95)
+ax.text(0.15, 0.13, "Neuropixels,\n167 populations", fontsize=6.3, color="#c9606e", va="center", linespacing=0.95)
 ax.text(0.55, -0.125, "V1, random stimuli (18)", fontsize=6.3, color=GRAY, va="center", ha="center")
 ax.text(0.55, -0.18, "and neighbouring neurons (10)", fontsize=6.3, color=BLUEG, va="center", ha="center")
 ax.text(0.63, 0.63, "language\nmodel, topic\n(13 layers)", fontsize=6.3, color=PURPLE, va="center", ha="right",

@@ -154,7 +154,7 @@ ax3.plot(x, dsv, "o", color=RED, ms=3.6, label="most direction-selective third",
 ax3.plot(x, nds, "o", mfc="white", mec=BLUE, mew=1.0, ms=3.4, label="least selective third", zorder=3)
 ax3.set_xticks(x); ax3.set_xticklabels(tags); ax3.set_ylim(0, 0.74)
 ax3.set_ylabel(r"shift $\delta_{\rm dir}$")
-ax3.set_title(r"$\mathbf{C}$  where the shift lives", loc="left")
+ax3.set_title(r"$\mathbf{C}$  where the shift is strongest", loc="left")
 ax3.legend(frameon=False, loc="upper left", fontsize=5.8, handlelength=1.0, borderaxespad=0.1)
 ax3.spines[["top", "right"]].set_visible(False)
 fig.tight_layout(w_pad=0.6)

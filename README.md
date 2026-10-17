@@ -300,6 +300,8 @@ and are not included; the scripts that read them expect the paths documented in 
 | App C | The spatial neuron ladder and its exchangeable control | (per-recording JSONs) | exchangeable_neuron_zoom.py, allen_neuron_zoom.py |
 | App J | The single-neuron tuning by stimulus type | local_vs_fullfield_tuning.json | local_vs_fullfield_tuning.py |
 | App K | The floor formula against simulation | (eq1_validation output) | eq1_validation.py, chun_comparison.py |
+| Camera-ready Fig 1C | Every ladder at its floor: imaging recordings and 167 Neuropixels populations | allen_floors_all_sessions.json, stringer_theta_decomposition.json, orientation_zoom.json, neuron_zoom_spatial.json | make_fig_cr_money.py, modal_allen_floors.py |
+| Camera-ready App B | The random ladder cut to the direction ladder's rungs returns the direction floor, 8 of 8 | c3_floor_crossover.json | c3_floor_crossover.py |
 
 ## Citation
 
