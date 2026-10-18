@@ -302,6 +302,7 @@ and are not included; the scripts that read them expect the paths documented in 
 | App K | The floor formula against simulation | (eq1_validation output) | eq1_validation.py, chun_comparison.py |
 | Camera-ready Fig 1C | Every ladder at its floor: imaging recordings and 167 Neuropixels populations | allen_floors_all_sessions.json, stringer_theta_decomposition.json, orientation_zoom.json, neuron_zoom_spatial.json | make_fig_cr_money.py, modal_allen_floors.py |
 | Camera-ready App B | The random ladder cut to the direction ladder's rungs returns the direction floor, 8 of 8 | c3_floor_crossover.json | c3_floor_crossover.py |
+| Camera-ready App G | Coarse-graining: preference-sorted blocks keep the shift, random blocks lose it (one estimator, shared K = 1) | cr_graining_table.json | cr_graining_table.py |
 
 ## Citation
 

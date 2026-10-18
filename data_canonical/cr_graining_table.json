@@ -1,0 +1,89 @@
+{
+ "estimator": "centred PR; rungs 1,2,3,4,6,8 of 8 direction bins; floor = 10 random ladders, seed shared by both arms at each K",
+ "rows": [
+  {
+   "K": 1,
+   "units": 11311,
+   "pref_sorted": {
+    "delta": 0.23481365013138583,
+    "theta_obs": 0.3049333038191066,
+    "theta_floor": 0.07011965368772079
+   },
+   "random_blocks": {
+    "delta": 0.23481363759170854,
+    "theta_obs": 0.3049333550987244,
+    "theta_floor": 0.07011971750701586
+   }
+  },
+  {
+   "K": 2,
+   "units": 5655,
+   "pref_sorted": {
+    "delta": 0.22076957603467992,
+    "theta_obs": 0.27997568576221893,
+    "theta_floor": 0.059206109727539015
+   },
+   "random_blocks": {
+    "delta": 0.2194895166816367,
+    "theta_obs": 0.28158737259503586,
+    "theta_floor": 0.06209785591339918
+   }
+  },
+  {
+   "K": 4,
+   "units": 2827,
+   "pref_sorted": {
+    "delta": 0.19925755977493956,
+    "theta_obs": 0.25142102879802686,
+    "theta_floor": 0.05216346902308731
+   },
+   "random_blocks": {
+    "delta": 0.17349280337624573,
+    "theta_obs": 0.23241354063064829,
+    "theta_floor": 0.05892073725440257
+   }
+  },
+  {
+   "K": 8,
+   "units": 1413,
+   "pref_sorted": {
+    "delta": 0.214164748307476,
+    "theta_obs": 0.22335328339199292,
+    "theta_floor": 0.009188535084516909
+   },
+   "random_blocks": {
+    "delta": 0.14308056650284987,
+    "theta_obs": 0.14924035329232313,
+    "theta_floor": 0.006159786789473257
+   }
+  },
+  {
+   "K": 16,
+   "units": 706,
+   "pref_sorted": {
+    "delta": 0.20523761268117555,
+    "theta_obs": 0.2323355768601995,
+    "theta_floor": 0.027097964179023968
+   },
+   "random_blocks": {
+    "delta": 0.05458824799526963,
+    "theta_obs": 0.07734185842482737,
+    "theta_floor": 0.022753610429557737
+   }
+  },
+  {
+   "K": 32,
+   "units": 353,
+   "pref_sorted": {
+    "delta": 0.27018215714702704,
+    "theta_obs": 0.28497933789626767,
+    "theta_floor": 0.014797180749240647
+   },
+   "random_blocks": {
+    "delta": 0.02654598806933106,
+    "theta_obs": 0.03245206551400355,
+    "theta_floor": 0.005906077444672487
+   }
+  }
+ ]
+}
