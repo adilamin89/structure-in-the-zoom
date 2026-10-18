@@ -5,13 +5,13 @@ accumulated from 0 deg in rungs of 1, 2, 3, 4, 6, 8 bins, floor = ten label-blin
 Both arms share one floor seed at each K, so the ungrained population (K = 1) returns one value in both columns.
 Blocks: K neurons averaged into one unit, neurons ordered by preferred direction (circular mean over the eight bins)
 or by a fixed random permutation.
-Input: basin_memory/data/stringer_v1/gratings_drifting_GT3.npy. Out: data_canonical/cr_graining_table.json"""
+Input: raw/gratings_drifting_GT3.npy. Out: data_canonical/cr_graining_table.json"""
 import json
 from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parents[2] / "basin_memory" / "data" / "stringer_v1" / "gratings_drifting_GT3.npy"
+RAW = HERE.parent / "raw" / "gratings_drifting_GT3.npy"   # Stringer et al. 2019 grating recording (figshare), saved as .npy
 OUT = HERE.parent / "data_canonical" / "cr_graining_table.json"
 N_BINS, BIN_COUNTS, N_NULL, KS = 8, [1, 2, 3, 4, 6, 8], 10, [1, 2, 4, 8, 16, 32]
 
