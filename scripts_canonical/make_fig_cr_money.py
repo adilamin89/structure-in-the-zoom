@@ -78,7 +78,7 @@ GT3 = [(_r["theta_obs"], _r["theta_floor_empirical"], _r["shift_obs"]),
        (_d["theta_structured"], _d["theta_random"], _d["delta"]),
        (_s["theta_spatial"], _s["theta_floor"], _s["delta_spatial"])]
 print("GT3 (theta_obs, floor, delta):", [tuple(round(v, 3) for v in g) for g in GT3])
-rows = [(lab, f"{o:.2f}", rf"floor ${f:.2f}$ $+$ $\delta$ ${d:+.2f}$".replace("-0.00", "+0.00"), col)
+rows = [(lab, f"{o:.3f}", rf"floor ${f:.3f}$ $+$ $\delta$ ${d:+.3f}$", col)
         for lab, (o, f, d), col in zip(["random stimulus subsets", "direction classes in order", "neighbouring neurons"],
                                        GT3, [GRAY, RED, BLUEG])]
 for k, ((lab, expo, reading, col), yt) in enumerate(zip(rows, [8.95, 5.95, 2.95])):
