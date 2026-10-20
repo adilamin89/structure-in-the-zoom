@@ -1,0 +1,44 @@
+{
+ "rows": [
+  {
+   "name": "gratings_drifting_GT1_2019_04_12_1",
+   "circulant_share": 0.9219712828192176,
+   "max_abs_residual": 0.08462907211109366
+  },
+  {
+   "name": "gratings_drifting_GT2_2019_04_05_1",
+   "circulant_share": 0.9329752968323003,
+   "max_abs_residual": 0.08176981156111485
+  },
+  {
+   "name": "gratings_drifting_GT3_2019_04_05_1",
+   "circulant_share": 0.9621790254974734,
+   "max_abs_residual": 0.07665496438872849
+  },
+  {
+   "name": "gratings_local_GT1_2019_04_27_2",
+   "circulant_share": 0.9579467958294249,
+   "max_abs_residual": 0.0554580332958301
+  },
+  {
+   "name": "gratings_local_GT2_2019_04_23_2",
+   "circulant_share": 0.9085059539939692,
+   "max_abs_residual": 0.12469177616345728
+  },
+  {
+   "name": "gratings_local_GT3_2019_04_24_2",
+   "circulant_share": 0.8854030876298908,
+   "max_abs_residual": 0.14443804303778923
+  },
+  {
+   "name": "gratings_low_contrast_GT1_2019_04_09_1",
+   "circulant_share": 0.7938512580971999,
+   "max_abs_residual": 0.16580719309547431
+  },
+  {
+   "name": "gratings_low_contrast_GT2_2019_04_12_2",
+   "circulant_share": 0.930746582807248,
+   "max_abs_residual": 0.0757326443283517
+  }
+ ]
+}

@@ -1,0 +1,135 @@
+{
+ "rows": [
+  {
+   "name": "gratings_drifting_GT1_2019_04_12_1",
+   "presentation_centred": {
+    "theta_spatial": 0.2989456068115704,
+    "theta_floor": 0.3244268596292173,
+    "delta": -0.025481252817646904
+   },
+   "unit_centred": {
+    "theta_spatial": 0.3593215894830468,
+    "theta_floor": 0.4087648404958075,
+    "delta": -0.0494432510127607
+   }
+  },
+  {
+   "name": "gratings_drifting_GT2_2019_04_05_1",
+   "presentation_centred": {
+    "theta_spatial": 0.2577239758712939,
+    "theta_floor": 0.3598324683135579,
+    "delta": -0.102108492442264
+   },
+   "unit_centred": {
+    "theta_spatial": 0.31736414273869057,
+    "theta_floor": 0.42149243732291786,
+    "delta": -0.10412829458422729
+   }
+  },
+  {
+   "name": "gratings_drifting_GT3_2019_04_05_1",
+   "presentation_centred": {
+    "theta_spatial": 0.35382333083627077,
+    "theta_floor": 0.35881805913960496,
+    "delta": -0.004994728303334195
+   },
+   "unit_centred": {
+    "theta_spatial": 0.41088727717307744,
+    "theta_floor": 0.41199528985270945,
+    "delta": -0.0011080126796320089
+   }
+  },
+  {
+   "name": "gratings_local_GT1_2019_04_27_2",
+   "presentation_centred": {
+    "theta_spatial": 0.44626455637786777,
+    "theta_floor": 0.47550567061040344,
+    "delta": -0.02924111423253567
+   },
+   "unit_centred": {
+    "theta_spatial": 0.5356784456670987,
+    "theta_floor": 0.5760881086193378,
+    "delta": -0.040409662952239134
+   }
+  },
+  {
+   "name": "gratings_local_GT2_2019_04_23_2",
+   "presentation_centred": {
+    "theta_spatial": 0.367126835552233,
+    "theta_floor": 0.45505848595140586,
+    "delta": -0.08793165039917283
+   },
+   "unit_centred": {
+    "theta_spatial": 0.43083473886412776,
+    "theta_floor": 0.5327843409688846,
+    "delta": -0.10194960210475684
+   }
+  },
+  {
+   "name": "gratings_local_GT3_2019_04_24_2",
+   "presentation_centred": {
+    "theta_spatial": 0.3850434645921266,
+    "theta_floor": 0.3727424413099557,
+    "delta": 0.01230102328217092
+   },
+   "unit_centred": {
+    "theta_spatial": 0.4339844478072195,
+    "theta_floor": 0.4329630473815162,
+    "delta": 0.0010214004257033116
+   }
+  },
+  {
+   "name": "gratings_low_contrast_GT1_2019_04_09_1",
+   "presentation_centred": {
+    "theta_spatial": 0.41463559957323537,
+    "theta_floor": 0.41763386677381426,
+    "delta": -0.0029982672005788857
+   },
+   "unit_centred": {
+    "theta_spatial": 0.5345443760684917,
+    "theta_floor": 0.5590848067971141,
+    "delta": -0.024540430728622442
+   }
+  },
+  {
+   "name": "gratings_low_contrast_GT2_2019_04_12_2",
+   "presentation_centred": {
+    "theta_spatial": 0.40186488556711925,
+    "theta_floor": 0.4674557646190984,
+    "delta": -0.06559087905197913
+   },
+   "unit_centred": {
+    "theta_spatial": 0.5314503761050277,
+    "theta_floor": 0.6058392209011795,
+    "delta": -0.07438884479615182
+   }
+  },
+  {
+   "name": "static_biased_TX40_2019_06_12_2",
+   "presentation_centred": {
+    "theta_spatial": 0.21233624486154987,
+    "theta_floor": 0.3082109763192336,
+    "delta": -0.09587473145768374
+   },
+   "unit_centred": {
+    "theta_spatial": 0.2899483050672544,
+    "theta_floor": 0.3949878828325488,
+    "delta": -0.10503957776529443
+   }
+  },
+  {
+   "name": "static_biased_TX42_2019_06_13_1",
+   "presentation_centred": {
+    "theta_spatial": 0.2696481507986756,
+    "theta_floor": 0.21402657951489024,
+    "delta": 0.055621571283785365
+   },
+   "unit_centred": {
+    "theta_spatial": 0.39682973743165095,
+    "theta_floor": 0.3424876906431841,
+    "delta": 0.05434204678846688
+   }
+  }
+ ],
+ "n_draws": 10
+}

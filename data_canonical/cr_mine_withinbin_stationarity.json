@@ -1,0 +1,100 @@
+{
+ "rows": [
+  {
+   "name": "gratings_drifting_GT1_2019_04_12_1",
+   "withinbin_share": 0.1447586294207792,
+   "withinbin_share_reliable": 0.13535647067246628,
+   "circulant_share": 0.9219713217340411,
+   "splithalf_r_offdiag": 0.995273335358419,
+   "circulant_share_halves": [
+    0.9308543258792434,
+    0.908928475408229
+   ],
+   "cardinal_over_oblique_norm": 0.9929922223091125
+  },
+  {
+   "name": "gratings_drifting_GT2_2019_04_05_1",
+   "withinbin_share": 0.16717656440954967,
+   "withinbin_share_reliable": 0.1588619315851892,
+   "circulant_share": 0.9329753007496682,
+   "splithalf_r_offdiag": 0.9985754868285518,
+   "circulant_share_halves": [
+    0.9311888624657395,
+    0.933392748510106
+   ],
+   "cardinal_over_oblique_norm": 1.0518035888671875
+  },
+  {
+   "name": "gratings_drifting_GT3_2019_04_05_1",
+   "withinbin_share": 0.11478375412311172,
+   "withinbin_share_reliable": 0.105375885899888,
+   "circulant_share": 0.9621790058205132,
+   "splithalf_r_offdiag": 0.995494304676,
+   "circulant_share_halves": [
+    0.953105377518411,
+    0.9663418008050028
+   ],
+   "cardinal_over_oblique_norm": 0.9239376187324524
+  },
+  {
+   "name": "gratings_local_GT1_2019_04_27_2",
+   "withinbin_share": 0.03921031624359792,
+   "withinbin_share_reliable": 0.030844285597045624,
+   "circulant_share": 0.9579467951595078,
+   "splithalf_r_offdiag": 0.9983412645384647,
+   "circulant_share_halves": [
+    0.9540725684575844,
+    0.9600561637055465
+   ],
+   "cardinal_over_oblique_norm": 0.9797276854515076
+  },
+  {
+   "name": "gratings_local_GT2_2019_04_23_2",
+   "withinbin_share": 0.057772650933692396,
+   "withinbin_share_reliable": 0.04802412590908432,
+   "circulant_share": 0.9085059425550019,
+   "splithalf_r_offdiag": 0.9983116245461179,
+   "circulant_share_halves": [
+    0.9146138144764827,
+    0.8997876647758836
+   ],
+   "cardinal_over_oblique_norm": 0.9860352277755737
+  },
+  {
+   "name": "gratings_local_GT3_2019_04_24_2",
+   "withinbin_share": 0.05754942115582027,
+   "withinbin_share_reliable": 0.04514846432064863,
+   "circulant_share": 0.8854031041183533,
+   "splithalf_r_offdiag": 0.9953956464335875,
+   "circulant_share_halves": [
+    0.88552566499605,
+    0.8829251284432243
+   ],
+   "cardinal_over_oblique_norm": 1.0246713161468506
+  },
+  {
+   "name": "gratings_low_contrast_GT1_2019_04_09_1",
+   "withinbin_share": 0.04244515392331115,
+   "withinbin_share_reliable": 0.0315879889573884,
+   "circulant_share": 0.7938512867348981,
+   "splithalf_r_offdiag": 0.992878653770207,
+   "circulant_share_halves": [
+    0.783186886529882,
+    0.7997850145395814
+   ],
+   "cardinal_over_oblique_norm": 0.8875877857208252
+  },
+  {
+   "name": "gratings_low_contrast_GT2_2019_04_12_2",
+   "withinbin_share": 0.042559990747400495,
+   "withinbin_share_reliable": 0.032873554283041416,
+   "circulant_share": 0.9307465941275924,
+   "splithalf_r_offdiag": 0.9962000092165721,
+   "circulant_share_halves": [
+    0.9280523819372319,
+    0.9306751470163812
+   ],
+   "cardinal_over_oblique_norm": 1.059958577156067
+  }
+ ]
+}
