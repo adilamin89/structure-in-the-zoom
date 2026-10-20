@@ -6,7 +6,7 @@ Real V1 orientation tuning is sharp; kappa=8 half-width ~19 deg matches
 mouse V1. This runs the same orientation-accumulation ladder + coarse-graining
 sweep at kappa=8 and, for reference, a kappa sweep.
 
-Output: data/theta_synthetic_kappa8.json
+Output: data_canonical/kappa_sweep.json (App G sentence on the synthetic population)
 """
 import json
 from pathlib import Path
@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "data" / "theta_synthetic_kappa8.json"
+OUT = HERE.parent / "data_canonical" / "kappa_sweep.json"
 
 N_NEUR = 2048
 N_STIM = 512

@@ -1,7 +1,7 @@
 # Structure is in the zoom
 
-**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs, 2026 (arXiv
-identifier added on posting). This repository is two things: `rung`, the paper's measurement
+**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs. NeurReps 2026 workshop
+(Proceedings of Machine Learning Research; arXiv identifier added on posting). This repository is two things: `rung`, the paper's measurement
 released as a tested tool, and the code and data behind every number in the paper.
 
 ![The instrument in five steps](figures_canonical/fig_instrument.png)
@@ -11,8 +11,8 @@ released as a tested tool, and the code and data behind every number in the pape
 A dimensionality-scaling exponent, the slope of the participation ratio against subsample size on
 log-log axes, is reported for neural populations and for the layers of language models as if the
 number belonged to the system. It does not. On one patch of eleven thousand mouse V1 neurons the
-exponent reads 0.25 along random stimulus subsets, 0.31 along drift direction and 0.35 along
-neuron count, and only the middle number carries structure. `rung` splits any such exponent
+exponent reads 0.25 along random stimulus subsets, 0.30 along drift direction and 0.35 along
+spatially contiguous neurons, and only the middle number carries structure. `rung` splits any such exponent
 exactly into a **floor**, what random subsets of the same sizes return through the same estimator,
 and a **shift** δ earned along a **declared axis**, the classes you accumulate and the order you add
 them in; it then reads the shift against two nulls: **permuting the labels** at fixed rung sizes,
@@ -222,8 +222,9 @@ per extension.
   nothing left to climb after four classes, the direction-selective third has most of its climb ahead,
   and the shift's variation across recordings is the direction-selective fraction. Adjacent classes
   are more coherent than antipodal ones, so the sequential accumulation order climbs faster (entry
-  coherence), and under coarse-graining the sector balance flows by a closed-form blocking factor
-  B(K) = [1/K + (1 − 1/K)ρ₂] / [1/K + (1 − 1/K)ρ₁]; mouse anatomy sits at its random limit.
+  coherence). Under coarse-graining the harmonic powers of the class means flow exactly by the blocking
+  factor B(K) = [1/K + (1 − 1/K)ρ₂] / [1/K + (1 − 1/K)ρ₁] (equal-size blocks, to machine precision), the
+  correlation-profile balance follows it within 26%, and mouse anatomy sits at its random limit.
 - **Ground truth.** Ising and nematic lattices and a rotation-equivariant network fix the sign:
   conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds them,
   architectural invariance gives exactly zero; entry coherence predicts the network's reversed
@@ -269,6 +270,9 @@ and are not included; the scripts that read them expect the paths documented in 
 
 ### Claim, artifact, script
 
+Rows marked *Camera-ready* refer to the NeurReps 2026 paper; the other rows use the section numbers of the
+extended draft, whose analyses this repository also carries.
+
 | Paper | Claim | Artifact | Script |
 |---|---|---|---|
 | Sec 3 | Direction-aligned shifts, 8 of 8, with the label permutation | run38_v1_label_permutations.json | run38_v1_label_permutations.py, shuffle_label_control.py |
@@ -302,18 +306,22 @@ and are not included; the scripts that read them expect the paths documented in 
 | App K | The floor formula against simulation | (eq1_validation output) | eq1_validation.py, chun_comparison.py |
 | Camera-ready Fig 1C | Every ladder at its floor: imaging recordings and 167 Neuropixels populations | allen_floors_all_sessions.json, stringer_theta_decomposition.json, orientation_zoom.json, neuron_zoom_spatial.json | make_fig_cr_money.py, modal_allen_floors.py |
 | Camera-ready App B | The random ladder cut to the direction ladder's rungs returns the direction floor, 8 of 8 | c3_floor_crossover.json | c3_floor_crossover.py |
-| Camera-ready App G | Coarse-graining: preference-sorted blocks keep the shift, random blocks lose it (one estimator, shared K = 1) | cr_graining_table.json | cr_graining_table.py |
+| Camera-ready App B | The shift's sampling threshold: on GT3 it is zero within noise up to 200 stimuli; the within-class part turns positive once each class holds more presentations than its own fluctuation dimension (about 26) | cr_finite_size_split.json (and cr_finite_size_sweep.json) | cr_finite_size_split.py, cr_finite_size_sweep.py |
+| Camera-ready App G | Coarse-graining of GT3: direction-sorted blocks keep the shift, random blocks lose it (one estimator, shared K = 1) | cr_graining_table.json | cr_graining_table.py |
+| Camera-ready App G | Four block types on eight recordings (orientation-, direction-sorted, random, anatomical): the shift stays positive in all 128 cells; the block decides which sector survives | run51_spatial_blocking.json, cr_graining_sectors_table.txt | run51_spatial_blocking.py, cr_graining_sectors_table.py |
+| Camera-ready App G | A synthetic von Mises population's sign depends on tuning width | kappa_sweep.json | kappa_sweep.py |
 
 ## Citation
 
 ```bibtex
-@article{amin2026zoom,
-  author  = {Amin, Adil},
-  title   = {Structure is in the zoom: probing neural symmetry through
-             dimensionality scaling},
-  journal = {arXiv preprint},
-  year    = {2026},
-  note    = {Code and data: https://github.com/adilamin89/structure-in-the-zoom}
+@inproceedings{amin2026zoom,
+  author    = {Amin, Adil},
+  title     = {Structure is in the zoom: probing neural symmetry through
+               dimensionality scaling},
+  booktitle = {Proceedings of the NeurReps Workshop (Symmetry and Geometry in Neural Representations)},
+  series    = {Proceedings of Machine Learning Research},
+  year      = {2026},
+  note      = {Code and data: https://github.com/adilamin89/structure-in-the-zoom}
 }
 ```
 

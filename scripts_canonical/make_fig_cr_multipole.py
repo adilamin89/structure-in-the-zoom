@@ -32,11 +32,11 @@ OUT.mkdir(parents=True, exist_ok=True)
 ARXIV = HERE.parent.parent / "arxiv" / "figures"  # secondary copy only when the paper tree is present
 
 
-def save(fig, name):
-    fig.savefig(OUT / name, dpi=300)
+def save(fig, name, **kw):
+    fig.savefig(OUT / name, dpi=300, **kw)
     CR = HERE.parent.parent / "neurreps_camera_ready" / "figures"
     if CR.exists():
-        fig.savefig(CR / name, dpi=300)
+        fig.savefig(CR / name, dpi=300, **kw)
     print("wrote", OUT / name)
 
 RED, GRAY, GREEN, MAGENTA, BLUE = "#b40426", "#8a8a8a", "#3d7d1f", "#c51b7d", "#2166ac"
@@ -140,7 +140,7 @@ ax2.bar(x + 0.19, o_with, width=0.36, color=RED, label="within-class")
 ax2.plot(x, o_tot, "o", color="k", ms=3.2, label="total", zorder=4)
 ax2.axhline(0, color="k", lw=0.6)
 ax2.text(-0.5, 0.285, "favours pairing", fontsize=6.0, color="0.35", va="center")
-ax2.text(-0.5, -0.235, "favours adjacent", fontsize=6.0, color="0.35", va="center")
+ax2.text(-0.5, -0.218, "favours adjacent", fontsize=6.0, color="0.35", va="center")
 ax2.set_xticks(x); ax2.set_xticklabels(tags); ax2.set_ylim(-0.25, 0.31)
 ax2.set_ylabel("order effect (paired $-$ adjacent)")
 ax2.set_title(r"$\mathbf{B}$  order effect, split", loc="left")
@@ -158,7 +158,7 @@ ax3.set_title(r"$\mathbf{C}$  where the shift is strongest", loc="left")
 ax3.legend(frameon=False, loc="upper left", fontsize=5.8, handlelength=1.0, borderaxespad=0.1)
 ax3.spines[["top", "right"]].set_visible(False)
 fig.tight_layout(w_pad=0.6)
-save(fig, "fig_multipole_two_panel.png")
+save(fig, "fig_multipole_two_panel.png", bbox_inches="tight", pad_inches=0.02)  # title of C inside the canvas, no blank bands
 plt.close(fig)
 print("fig_multipole_two_panel.png written; class-mean order part > 0:", sum(v > 0.01 for v in o_mean),
       "within-class < 0:", sum(v < 0 for v in o_with), "DS > nonDS:", sum(a > b for a, b in zip(dsv, nds)))
