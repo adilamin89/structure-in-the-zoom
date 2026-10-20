@@ -23,7 +23,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE / "data" / "stringer_v1" / "natimg"
+DATA = HERE.parent / "raw"
 OUT = HERE / "data" / "chun_comparison.json"
 
 N_BINS = 8

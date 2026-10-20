@@ -265,7 +265,10 @@ pyproject.toml           pip install -e . gives the rung command (and theta-zoom
 ```
 
 Raw neural data are public (Stringer et al. figshare releases; Allen Brain Observatory Neuropixels)
-and are not included; the scripts that read them expect the paths documented in their docstrings.
+and are not included. The recording scripts read `raw/`: each grating or static session as
+`raw/<session>.npy` (a dict with `sresp`, neurons by presentations, `istim`, the stimulus angle, and `stat`, cell
+positions; e.g. `raw/gratings_drifting_GT3_2019_04_05_1.npy`), spontaneous sessions under `raw/spont/`; each
+docstring names the files it reads.
 `python render_all.py` prints every table and headline number from the artifacts in `data_canonical/`.
 
 ### Claim, artifact, script

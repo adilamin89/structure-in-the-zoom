@@ -49,7 +49,7 @@ from scipy.stats import spearmanr
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 OUT = DATA / "run59_shift_by_direction_selectivity.json"
 spec = importlib.util.spec_from_file_location("run2", HERE / "run2_calibrated_corotating.py")
 r2 = importlib.util.module_from_spec(spec); spec.loader.exec_module(r2)

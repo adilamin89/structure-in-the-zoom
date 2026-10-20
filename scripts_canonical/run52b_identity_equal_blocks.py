@@ -17,7 +17,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 DATA = HERE.parent / "data_canonical"
 OUT = DATA / "run52b_identity_equal_blocks.json"
 NB = 8; KS = [4, 16, 32, 64]; ANG = 2 * np.pi * np.arange(NB) / NB

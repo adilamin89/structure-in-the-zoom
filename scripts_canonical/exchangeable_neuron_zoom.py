@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE / "data" / "stringer_v1" / "natimg"
+DATA = HERE.parent / "raw"
 OUT = HERE / "data" / "stringer_neuron_zoom_all.json"
 
 

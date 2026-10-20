@@ -29,7 +29,7 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "scripts_canonical"))
-DATA = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+DATA = HERE.parent / "raw"
 
 N_BINS = 8
 BIN_COUNTS = [1, 2, 3, 4, 6, 8]

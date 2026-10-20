@@ -25,7 +25,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+DATA = HERE.parent / "raw"
 N_BINS = 8
 N_SUB = 6
 RANK = 10

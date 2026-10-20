@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 OUT = HERE.parent / "data_canonical" / "run50_perrecording_anchors.json"
 spec = importlib.util.spec_from_file_location("chun", HERE / "chun_comparison.py")
 chun = importlib.util.module_from_spec(spec); spec.loader.exec_module(chun)

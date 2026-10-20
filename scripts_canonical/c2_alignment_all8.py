@@ -22,7 +22,7 @@ from scipy import stats
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 N_BINS, RANK, N_PER = 16, 10, 120
 FILES = {"D1": "gratings_drifting_GT1_2019_04_12_1", "D2": "gratings_drifting_GT2_2019_04_05_1",
          "D3": "gratings_drifting_GT3_2019_04_05_1", "L1": "gratings_local_GT1_2019_04_27_2",

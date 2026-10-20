@@ -22,7 +22,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+DATA = HERE.parent / "raw"
 OUT = HERE.parent / "data_canonical" / "run35_splithalf_subspaces.json"
 
 N_BINS = 16

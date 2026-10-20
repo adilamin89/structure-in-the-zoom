@@ -12,7 +12,7 @@ from scipy import stats
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 OUT = DATA / "run72_paper_designs_split.json"
 SUPP = HERE.parent.parent / "neurreps_supplement" / "data" / "antipodal_order.json"
 spec = importlib.util.spec_from_file_location("run63", HERE / "run63_deficit_decomposition.py")

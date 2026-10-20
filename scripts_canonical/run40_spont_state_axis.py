@@ -48,7 +48,7 @@ import numpy as np
 import scipy.io as sio
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE.parents[2] / "basin_memory" / "data" / "stringer_v1" / "spont"
+DATA = HERE.parent / "raw" / "spont"
 OUT = HERE.parent / "data_canonical" / "run40_spont_state_axis.json"
 
 BIN_COUNTS = [1, 2, 3, 4, 6, 8]

@@ -44,7 +44,7 @@ from scipy import stats
 from scipy.spatial import cKDTree
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 OUT = HERE.parent / "data_canonical" / "local_vs_fullfield_tuning.json"
 NB = 8
 

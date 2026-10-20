@@ -27,7 +27,7 @@ import numpy as np
 from scipy.spatial import cKDTree
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 DATA = HERE.parent / "data_canonical"
 OUT = DATA / "run50c_twokey_blocking.json"
 NB = 8; BIN_COUNTS = [1, 2, 3, 4, 6, 8]; N_NULL = 10; K = 32; N_BANDS = 4

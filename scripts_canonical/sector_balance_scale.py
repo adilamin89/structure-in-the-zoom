@@ -34,7 +34,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 DATA = HERE.parent / "data_canonical"
 OUT = DATA / "sector_balance_scale.json"
 NB = 8

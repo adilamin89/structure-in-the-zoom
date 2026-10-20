@@ -36,7 +36,7 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 OUT = DATA / "run58_within_class_spectrum_vs_trials.json"
 N_BINS = 8
 SIZES = [60, 120, 250, 500]

@@ -8,7 +8,7 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 OUT = DATA / "run73_m_out_of_n_all.json"
 RUNGS = (1, 2, 3, 4, 6, 8)
 N_REP, N_NULL, FRAC = 100, 10, 0.8

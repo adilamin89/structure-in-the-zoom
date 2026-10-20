@@ -36,7 +36,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE.parents[2] / "basin_memory" / "data" / "stringer_v1" / "natimg"
+DATA = HERE.parent / "raw"
 OUT = HERE.parent / "data_canonical" / "run38_v1_label_permutations.json"
 
 BIN_COUNTS = [1, 2, 3, 4, 6, 8]

@@ -20,7 +20,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent.parent.parent / "basin_memory" / "data" / "stringer_v1" / "natimg"
+RAW = HERE.parent / "raw"
 OUT = HERE.parent / "data_canonical" / "run49_blocking_splithalf.json"
 NB = 8
 KS = [1, 2, 4, 8, 16, 32, 64]
