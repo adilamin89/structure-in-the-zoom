@@ -1,15 +1,16 @@
 """Camera-ready (NeurReps 2026) Figures 2 and 3: the two-panel multipole/order figure and the Allen panel.
 The arXiv-era make_fig3_4_allen_multipole.py draws the ordering contrast alone; this one keeps both panels.
-Inputs: data_canonical/multipole_harmonics_8dir.json, run72_paper_designs_split.json (order-effect split),
+Inputs: data_canonical/multipole_harmonics_8dir.json, cr_failure_interrogation.json (fluctuation overlaps),
 run59_shift_by_direction_selectivity.json (DSI thirds),
 allen_expansion_all_sessions.json. Out: ../figures_canonical/ (+ arxiv/figures when present).
 
 Fig 3 (fig_allen_expansion.png): per-population direction-aligned shifts across
 32 Allen Neuropixels sessions, by visual area, aligned vs shuffled in separate
 sub-columns with annotated means and counts.
-Fig 2 (fig_multipole_two_panel.png, three panels): GT3's class-mean correlation and its two sectors;
-the order effect split into its class-mean and within-class parts; the shift of the most and least
-direction-selective thirds per recording.
+Fig 2 (fig_multipole_two_panel.png, three panels): GT3's class-mean correlation and its two sectors; the shift of
+the most and least direction-selective thirds per recording; the shape overlap of two classes' fluctuations against
+their separation (cr_failure_interrogation.json: neighbours share most, antipodes recover only off the localized
+recordings).
 
 Outputs to figures/theta_eft/.
 """
@@ -93,11 +94,10 @@ mh = json.load(open(DATA / "multipole_harmonics_8dir.json"))
 gt3 = next(r for r in mh["rows"] if "drifting_GT3" in r["name"])["coef"]
 a0, b, c, b4, c3 = gt3["a"], gt3["b2"], gt3["c1"], gt3["b4"], gt3["c3"]
 
-split = json.load(open(DATA / "run72_paper_designs_split.json"))["rows"]      # order-effect split (Table 8)
 tags = ["D1", "D2", "D3", "L1", "L2", "L3", "C1", "C2"]
-o_tot = [split[t]["all"]["order_effect"] for t in tags]
-o_mean = [split[t]["all"]["order_probe"] for t in tags]
-o_with = [split[t]["all"]["order_noise"] for t in tags]
+fi = json.load(open(DATA / "cr_failure_interrogation.json"))["rows"]          # fluctuation shape overlaps, 16 classes
+assert [r["name"].split("_")[1] for r in fi] == ["drifting"] * 3 + ["local"] * 3 + ["low"] * 2
+kn = [r["Kn_profile"] for r in fi]
 ds = json.load(open(DATA / "run59_shift_by_direction_selectivity.json"))["verdict"]   # registered DSI thirds
 assert ds["tags"] == tags
 
@@ -134,31 +134,39 @@ ax1.set_ylabel(r"class-mean correlation $C(\Delta\phi)$")
 ax1.set_title(r"$\mathbf{A}$  GT3: two sectors", loc="left")
 ax1.spines[["top", "right"]].set_visible(False)
 
+dsv, nds = ds["delta_DS"], ds["delta_nonDS"]
 x = np.arange(len(tags))
-ax2.bar(x - 0.19, o_mean, width=0.36, color=GRAY, label="class means")
-ax2.bar(x + 0.19, o_with, width=0.36, color=RED, label="within-class")
-ax2.plot(x, o_tot, "o", color="k", ms=3.2, label="total", zorder=4)
-ax2.axhline(0, color="k", lw=0.6)
-ax2.text(-0.5, 0.285, "favours pairing", fontsize=6.0, color="0.35", va="center")
-ax2.text(-0.5, -0.218, "favours adjacent", fontsize=6.0, color="0.35", va="center")
-ax2.set_xticks(x); ax2.set_xticklabels(tags); ax2.set_ylim(-0.25, 0.31)
-ax2.set_ylabel("order effect (paired $-$ adjacent)")
-ax2.set_title(r"$\mathbf{B}$  order effect, split", loc="left")
-ax2.legend(frameon=False, loc="upper right", fontsize=5.8, handlelength=1.0, borderaxespad=0.1, bbox_to_anchor=(1.0, 0.9))
+for k in x:
+    ax2.plot([k, k], [nds[k], dsv[k]], color="0.75", lw=1.0, zorder=1)
+ax2.plot(x, dsv, "o", color=RED, ms=3.6, label="most direction-selective third", zorder=3)
+ax2.plot(x, nds, "o", mfc="white", mec=BLUE, mew=1.0, ms=3.4, label="least selective third", zorder=3)
+ax2.set_xticks(x); ax2.set_xticklabels(tags); ax2.set_ylim(0, 0.74)
+ax2.set_ylabel(r"shift $\delta_{\rm dir}$")
+ax2.set_title(r"$\mathbf{B}$  selective neurons shift more", loc="left")
+ax2.legend(frameon=False, loc="upper left", fontsize=5.8, handlelength=1.0, borderaxespad=0.1)
 ax2.spines[["top", "right"]].set_visible(False)
 
-dsv, nds = ds["delta_DS"], ds["delta_nonDS"]
-for k in x:
-    ax3.plot([k, k], [nds[k], dsv[k]], color="0.75", lw=1.0, zorder=1)
-ax3.plot(x, dsv, "o", color=RED, ms=3.6, label="most direction-selective third", zorder=3)
-ax3.plot(x, nds, "o", mfc="white", mec=BLUE, mew=1.0, ms=3.4, label="least selective third", zorder=3)
-ax3.set_xticks(x); ax3.set_xticklabels(tags); ax3.set_ylim(0, 0.74)
-ax3.set_ylabel(r"shift $\delta_{\rm dir}$")
-ax3.set_title(r"$\mathbf{C}$  where the shift is strongest", loc="left")
-ax3.legend(frameon=False, loc="upper left", fontsize=5.8, handlelength=1.0, borderaxespad=0.1)
+# C: shape overlap of two classes' fluctuations (K_cd / sqrt(K_cc K_dd)) against their separation, sixteen classes
+sep = 22.5 * np.arange(9)
+COL = {"D": "k", "L": MAGENTA, "C": GRAY}
+NAME = {"D": "drifting", "L": "localized", "C": "low contrast"}
+seen = set()
+for t, prof in zip(tags, kn):
+    g = t[0]
+    ax3.plot(sep[1:], prof[1:], "-o", color=COL[g], lw=1.0, ms=2.2, alpha=0.9,
+             label=NAME[g] if g not in seen else None)
+    seen.add(g)
+ax3.set_xlim(15, 187); ax3.set_xticks([22.5, 90, 180]); ax3.set_xticklabels(["22.5", "90", "180"])
+ax3.set_ylim(0, 0.62)
+ax3.set_xlabel(r"direction difference $\Delta\phi$ (deg)")
+ax3.set_ylabel("fluctuation overlap")
+ax3.set_title(r"$\mathbf{C}$  neighbours share fluctuations", loc="left")
+ax3.legend(frameon=False, loc="upper center", fontsize=5.8, handlelength=1.2, borderaxespad=0.1)
 ax3.spines[["top", "right"]].set_visible(False)
-fig.tight_layout(w_pad=0.6)
+print("CHECK Kn(22.5) range %.2f-%.2f; Kn(180) localized %.2f-%.2f, drifting %.2f-%.2f, low contrast %.2f-%.2f" % (
+    min(p[1] for p in kn), max(p[1] for p in kn), min(p[8] for p in kn[3:6]), max(p[8] for p in kn[3:6]),
+    min(p[8] for p in kn[:3]), max(p[8] for p in kn[:3]), min(p[8] for p in kn[6:]), max(p[8] for p in kn[6:])))
+fig.tight_layout(w_pad=1.1)
 save(fig, "fig_multipole_two_panel.png", bbox_inches="tight", pad_inches=0.02)  # title of C inside the canvas, no blank bands
 plt.close(fig)
-print("fig_multipole_two_panel.png written; class-mean order part > 0:", sum(v > 0.01 for v in o_mean),
-      "within-class < 0:", sum(v < 0 for v in o_with), "DS > nonDS:", sum(a > b for a, b in zip(dsv, nds)))
+print("fig_multipole_two_panel.png written; DS > nonDS:", sum(a > b for a, b in zip(dsv, nds)))
