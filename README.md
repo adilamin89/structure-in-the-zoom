@@ -196,7 +196,7 @@ you would change are small and named.
   centered Gram-trace participation ratio of that subset. A kernel PR is the same call on a kernel
   matrix; a local intrinsic dimension replaces `_subset_pr` with a function of the subset rows. The
   identity `theta_obs = theta_floor + delta` holds for any functional evaluated on both arms; the
-  paper's sign rule and ordering rule are established for the linear one.
+  camera-ready's results are established for the linear one.
 - **Other modalities.** `rung data` reads `.npy`, `.csv` and whitespace text. For NWB files build the
   trials-by-units count matrix with `pynwb` and save it as `.npy`; for `.mat`, `scipy.io.loadmat`. A
   vision model is the model door with a different encoder: one feature vector per image at each layer,
@@ -208,31 +208,30 @@ you would change are small and named.
 Tests are numpy-only and run in ten seconds (`pip install -e ".[test]" && pytest -q tests`); add one
 per extension.
 
-## The paper in six results
+## The camera-ready in five results
 
-- **Cortex.** The direction-aligned shift is positive in eight of eight grating recordings and exceeds
-  every one of 200 label permutations; it is positive in 32 of 32 animals in a second laboratory and
-  tracks the even-sector amplitude of the class-mean kernel across 167 populations. Where the declared
-  axis is degenerate the instrument screens candidate axes and finds session time, spatial frequency
-  and behavioral state.
-- **Symmetry.** The grating axis works because it runs along the code's O(2) symmetry. The eight-class
-  harmonic decomposition of the class-mean kernel is exact; full-field gratings are quadrupole-dominant
-  (orientation), localized gratings dipole-dominant (direction) because single neurons become more
-  direction-selective. The even sector sets the rungs up to four classes and the odd sector, carried by
-  the direction-selective neurons, the rungs beyond: the orientation-only third of the neurons has
-  nothing left to climb after four classes, the direction-selective third has most of its climb ahead,
-  and the shift's variation across recordings is the direction-selective fraction. Adjacent classes
-  are more coherent than antipodal ones, so the sequential accumulation order climbs faster (entry
-  coherence). Under coarse-graining the harmonic powers of the class means flow exactly by the blocking
-  factor B(K) = [1/K + (1 − 1/K)ρ₂] / [1/K + (1 − 1/K)ρ₁] (equal-size blocks, to machine precision), the
-  correlation-profile balance follows it within 26%, and mouse anatomy sits at its random limit.
-- **Ground truth.** Ising and nematic lattices and a rotation-equivariant network fix the sign:
-  conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds them,
-  architectural invariance gives exactly zero; the class-mean harmonics predict the network's reversed
-  accumulation order, found at five of five seeds in its early layers.
-- **The anatomy of the shift.** Split on the covariance itself, the shift is the pooling of fluctuation
-  modes private to each direction, each a co-fluctuation of the neurons that fire at that direction with
-  its weight on the most active hundred of them.
+- **There is no probe-free exponent.** One recording of 11,311 mouse V1 neurons returns 0.25, 0.30 and 0.35 along
+  random stimuli, stimulus direction and neighbouring neurons. Each exponent splits exactly into a matched floor, the
+  population's spectrum read through the ladder's window, and a shift δ; random stimulus subsets return δ ≈ 0 in all
+  18 recordings (largest |δ| 0.02).
+- **Cortex.** Direction returns +0.20 to +0.45 in eight of eight grating recordings, above all 200 label permutations,
+  and more on the most direction-selective third of the neurons. A second laboratory (Allen Neuropixels) gives a positive
+  shift in 32 of 32 mice in primary visual cortex and in 158 of 167 populations across ten areas, growing with tuning.
+- **Two sectors.** The harmonics of the class-mean correlation separate orientation (even) from direction (odd): every
+  full-field recording is even-led, the localized ones are dipole-led and give the largest shifts, and binning by
+  orientation lowers the shift in every recording.
+- **What carries the shift.** Stimulus-dependent fluctuation structure. Giving every class the same fluctuations, with
+  their correlations intact, reverses the shift in eight of eight recordings; with the tuning inside each bin removed,
+  shuffling each neuron within its class reverses it in seven. An exact split of the covariance ties the within-class
+  part to how much the classes' fluctuations overlap (r = 0.92) and the class-mean part to Tr B/Tr W (r = −0.91); the
+  class means concentrate variance whenever PR(W)/PR(B) exceeds 1 + 2 Tr W/Tr B, as in all eight recordings. Which
+  classes share fluctuations sets the accumulation order they favour (r = −0.997).
+- **Ground truth.** Ising and nematic lattices fix the signs (conditioning on a scalar order parameter removes
+  dimensions, accumulating the classes of an orbit adds them); the invariant layers of a C4-equivariant network read
+  zero while their digit axis stays positive.
+
+The repository also carries the analyses of an extended draft that are not in the camera-ready:
+
 - **Language models.** On nine models across five architectures the instrument separates content axes
   inherited from the tokens (positive at the embedding, diluting with depth) from construction axes
   built with depth (negative at the embedding, rising past the null); the shape recurs, the depth at
@@ -310,6 +309,16 @@ extended draft, whose analyses this repository also carries.
 | App C | The spatial neuron ladder and its exchangeable control | (per-recording JSONs) | exchangeable_neuron_zoom.py, allen_neuron_zoom.py |
 | App J | The single-neuron tuning by stimulus type | local_vs_fullfield_tuning.json | local_vs_fullfield_tuning.py |
 | App K | The floor formula against simulation | (eq1_validation output) | eq1_validation.py, chun_comparison.py |
+| Camera-ready Sec 3, Table 2 | The random-stimulus zero on 18 recordings (corrected Oct 21: two spontaneous sessions oriented frames by neurons, matched log aggregation; the published file is `_pre_c8`) | stringer_theta_decomposition.json, cr_c8_identification.json (part B) | random_zoom_all_recordings.py, cr_c8_identification.py |
+| Camera-ready Sec 4, Fig 2B | The most direction-selective third shifts more in 8 of 8, also cross-fitted | run59_shift_by_direction_selectivity.json, cr_ds_thirds_crossfit.json | run59_shift_by_direction_selectivity.py, cr_ds_thirds_crossfit.py |
+| Camera-ready Sec 6, Table 9 | The exact split of the shift into a within-class and a class-mean part | run72_paper_designs_split.json | run72_paper_designs_split.py |
+| Camera-ready Sec 6, App K | The within-class shuffle, z-scoring and the square-root transform | cr_withinclass_controls.json | cr_withinclass_controls.py |
+| Camera-ready Sec 6, App K | Tuning inside each bin removed; on those residuals the shuffle reverses the shift in 7 of 8 and pooled fluctuations in 8 of 8 | cr_order_and_withinbin_controls.json, cr_c8_identification.json (part A) | cr_order_and_withinbin_controls.py, cr_c8_identification.py |
+| Camera-ready Sec 6, Fig 3A-B | The size law: overlap σ and Tr B/Tr W | cr_overlap_mining.json, cr_overlap_mining_followup.json | cr_overlap_mining.py, cr_overlap_mining_followup.py, make_fig_c6_laws.py |
+| Camera-ready Sec 6, Fig 2C, Fig 3C, App E | The order effect over sixteen origins and its two parts; the class means alone | cr_order_effect_origins.json, cr_failure_interrogation.json | cr_order_effect_origins.py, cr_failure_interrogation.py, cr_appE_class_means.py, make_fig_cr_multipole.py |
+| Camera-ready Sec 6, App K | The sign of the class-mean part, PR(W)/PR(B) against 1 + 2 Tr W/Tr B, and the alignment of the class means with the fluctuations | cr_c8_sign_condition.json, cr_c8_alignment.json | cr_c8_sign_condition.py, cr_c8_alignment.py |
+| Camera-ready Sec 6, App K | The calibrated model, its overlap fit, and its overlap equal to C² | run11b_fresh_draw_prediction.json, cr_model_overlap_calibration.json, cr_model_overlap_square.json | run11b_fresh_draw_prediction.py, cr_model_overlap_calibration.py, cr_model_overlap_square.py |
+| Camera-ready App G, K | The tests behind the appendix exceptions (synthetic kappa, GT2 graining, the exact Eq. 2 inverse) | cr_confession_tests.json | cr_confession_tests.py |
 | Camera-ready Fig 1C | Every ladder at its floor: imaging recordings and 167 Neuropixels populations | allen_floors_all_sessions.json, stringer_theta_decomposition.json, orientation_zoom.json, neuron_zoom_spatial.json | make_fig_cr_money.py, modal_allen_floors.py |
 | Camera-ready App B | The random ladder cut to the direction ladder's rungs returns the direction floor, 8 of 8 | c3_floor_crossover.json | c3_floor_crossover.py |
 | Camera-ready App B | The shift's sampling threshold: on GT3 it is zero within noise up to 200 stimuli; the within-class part turns positive once each class holds more presentations than its own fluctuation dimension (about 26) | cr_finite_size_split.json (and cr_finite_size_sweep.json) | cr_finite_size_split.py, cr_finite_size_sweep.py |
