@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent / "raw"   # the Stringer et al. 2019 grating recordings (figshare), saved as .npy
+RAW = HERE.parent / "raw"   # the Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
 OUT = HERE.parent / "data_canonical" / "cr_neuron_centering_check.json"
 SIZES, N_DRAWS = [50, 100, 200, 500, 1000, 2000, 5000], 10
 

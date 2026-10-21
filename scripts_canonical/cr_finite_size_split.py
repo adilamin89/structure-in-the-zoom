@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent / "raw" / "gratings_drifting_GT3.npy"   # Stringer et al. 2019 grating recording (figshare), saved as .npy
+RAW = HERE.parent / "raw" / "gratings_drifting_GT3.npy"   # Stringer et al. 2021 grating recording (Figshare 8279387), saved as .npy
 OUT = HERE.parent / "data_canonical" / "cr_finite_size_split.json"
 spec = importlib.util.spec_from_file_location("run63", HERE / "run63_deficit_decomposition.py")
 r63 = importlib.util.module_from_spec(spec); spec.loader.exec_module(r63)

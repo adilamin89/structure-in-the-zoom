@@ -184,7 +184,7 @@ def test_sectors_recovers_a_planted_kernel_exactly():
     # adjacent classes cohere at q1 cos 45 + q2 cos 90, antipodal at -q1 + q2: the
     # quadrupole-dominant kernel makes the antipodal pair the more coherent one
     assert abs(sc["C_adjacent"] - (q1 * np.cos(np.pi / 4))) < 1e-6
-    assert abs(sc["C_antipodal"] - (q2 - q1)) < 1e-6 and sc["order_prediction"] == "antipodal"
+    assert abs(sc["C_antipodal"] - (q2 - q1)) < 1e-6 and "order_prediction" not in sc
     with pytest.raises(ValueError):
         tz.sectors(X[labels < 2], labels[labels < 2])
 
@@ -206,12 +206,13 @@ def test_declared_order_presets_and_the_antipodal_ladder():
     # order-averaged statistic describes the partition and does not
     assert abs(rs["delta"] - ra["delta"]) > 1e-3
     assert abs(rs["delta_orderavg"] - ra["delta_orderavg"]) < 1e-9
-    # entry coherence on the two planted codes: a dipole code's adjacent classes
-    # cohere more than its antipodes (sequential first); an even code's antipodes
-    # share a mean (antipodal first)
-    assert tz.sectors(Xd, labels)["order_prediction"] == "sequential"
+    # class-mean coherence on the two planted codes: a dipole code's adjacent
+    # classes cohere more than its antipodes; an even code's antipodes share a mean
+    sd = tz.sectors(Xd, labels)
+    assert sd["C_adjacent"] > sd["C_antipodal"]
     Xe, _ = _circle_classes(harmonic=2)
-    assert tz.sectors(Xe, labels)["order_prediction"] == "antipodal"
+    se = tz.sectors(Xe, labels)
+    assert se["C_antipodal"] > se["C_adjacent"]
 
 
 def test_circular_shift_null_separates_drift_from_alignment():

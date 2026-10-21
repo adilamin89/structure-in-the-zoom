@@ -16,7 +16,7 @@ import numpy as np
 from scipy import stats
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent / "raw"   # the eight Stringer et al. 2019 grating recordings (figshare), saved as .npy
+RAW = HERE.parent / "raw"   # the eight Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
 OUT = HERE.parent / "data_canonical" / "cr_ds_thirds_crossfit.json"
 spec = importlib.util.spec_from_file_location("run2", HERE / "run2_calibrated_corotating.py")
 r2 = importlib.util.module_from_spec(spec); spec.loader.exec_module(r2)

@@ -76,7 +76,7 @@ def _ladder(K, members, order, bin_counts):
 
 
 def spectrum(X):
-    """Blind-probe diagnostics for a samples-by-features array (the paper's Section 8.3):
+    """Blind-probe diagnostics for a samples-by-features array:
     full-set effective dimension, leading-eigenvalue variance fraction, and
     the variance fraction of the single largest feature. An effective
     dimension near 1 with a leading fraction near 1 means a rogue dimension
@@ -124,16 +124,16 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
 
     order : the declared accumulation order: None (the classes in sorted
         label order), "sequential" (the same), "antipodal" (one member of each
-        antipodal pair first: 0, K/2, 1, K/2+1, ...; the paper's Section 4.1
+        antipodal pair first: 0, K/2, 1, K/2+1, ...; the paired order of Appendix E
         contrast), or an explicit list of class labels. The order-averaged
         outputs do not depend on it.
     shift_null : labels are in time order (one per frame) and a second null
         rolls the whole label sequence by a random offset, which keeps the
         labels' autocorrelation and breaks only their alignment with the
-        frames (the paper's Section 3, the state axes); reported as
+        frames (state axes); reported as
         shift_p_two / shift_z.
     antipode : optional dict {class: its antipodal class}. The stall test of
-        the paper's Section 7 reads `late_fraction` (the deficit at half the
+        Appendix K reads `late_fraction` (the deficit at half the
         classes over the deficit at one class) as the share of the climb the
         second half of the classes carries; that reading needs the first half
         of the declared order to hold one member of each pair, which this
@@ -147,7 +147,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     X = np.asarray(X, dtype=np.float64)
     if standardize:
         # per-feature z-score: the repair for populations dominated by a rogue
-        # dimension (the paper's Section 8.3); off by default so --paper-seeds
+        # dimension; off by default so --paper-seeds
         # still reproduces the published cells
         X = (X - X.mean(axis=0, keepdims=True)) / (X.std(axis=0, keepdims=True) + 1e-9)
     X = X / (X.std() + 1e-9)
@@ -200,7 +200,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
            # per-rung log-PR deficit below the floor (zero at the top rung, where the
            # ladder and the floor hold the same samples) and the share of the climb
            # that remains after half the classes: the stall test of the paper's
-           # Section 7 when the declared order lists one member of each antipodal
+           # Appendix K when the declared order lists one member of each antipodal
            # pair before any of their partners
            "deficit": deficit,
            "n_perm": int(n_perm), "k_orders": int(k_orders),
@@ -302,16 +302,16 @@ def declared_order(classes, order=None):
 
 def sectors(X, labels, order=None):
     """The harmonic content of the class-mean kernel for a cyclic axis (the
-    paper's Section 4): the classes, taken in sorted label order (or in
+    camera-ready's Section 4): the classes, taken in sorted label order (or in
     `order`) as equally spaced points on a circle,
     have mean response vectors whose Pearson correlation across features is
     averaged into a circular profile C(k) over class separations k; its
     discrete Fourier transform is exact on the class grid. Reports the
     coefficients q_l (for eight classes the paper's a, c1, b2, c3, b4), the
     sector balance q2/|q1| (the quadrupole-to-dipole ratio b2/|c1|), the even
-    and odd amplitudes, the coherence of adjacent and antipodal classes, and
-    the entry-coherence prediction for which accumulation order climbs faster
-    (the more coherent pair first)."""
+    and odd amplitudes, and the coherence of adjacent and antipodal classes.
+    Which accumulation order climbs faster is set by how much the classes'
+    fluctuations overlap (Section 6), not by these class-mean coherences."""
     X = np.asarray(X, dtype=np.float64); labels = np.asarray(labels)
     classes = np.unique(labels); K = len(classes)
     if K < 3:
@@ -337,7 +337,6 @@ def sectors(X, labels, order=None):
         out["named"] = {"a": coef["a"], "c1": coef["q1"], "b2": coef["q2"], "c3": coef["q3"], "b4": coef["q4"]}
     if K % 2 == 0:
         out["C_antipodal"] = float(prof[K // 2])
-        out["order_prediction"] = "sequential" if prof[1] > prof[K // 2] else "antipodal"
     return out
 
 
@@ -353,11 +352,11 @@ def _print_sectors(r):
     print(line)
     if "C_antipodal" in r:
         print(f"  adjacent classes cohere at C = {r['C_adjacent']:.2f}, antipodal at {r['C_antipodal']:.2f}: "
-              f"entry coherence predicts the {r['order_prediction']} order climbs faster")
+              "the order the fluctuations favour is read from their overlaps (Section 6), not from these")
 
 
 def split_by(X, labels, score, n_subsets=3, seed=0, **zoom_kwargs):
-    """The paper's Section 7 sorting as one call: sort the features by a
+    """Section 4's direction-selective thirds as one call: sort the features by a
     per-feature score (a direction-selectivity index, a tuning strength, a
     weight norm), take the top and bottom 1/n_subsets of them and a random
     subset of the same size, and run zoom() on each with its own floor. The
@@ -454,8 +453,6 @@ def summarize_data(result, verbose=True):
         txt = f"class-mean kernel: even amplitude {sc['A_even']:.3f}, odd {sc['A_odd']:.3f}"
         if "balance" in sc:
             txt += f", sector balance {sc['balance']:.2f}"
-        if "order_prediction" in sc:
-            txt += f"; entry coherence predicts the {sc['order_prediction']} accumulation order climbs faster"
         lines.append(txt)
     if result["delta"] < 0:
         lines.append("negative shift: accumulating the declared classes adds fewer dimensions than random draws (conditioning branch; low-rank between-class structure with isotropic within-class variability gives this sign)")
@@ -767,7 +764,7 @@ def summarize(path, out_json=None, verbose=True):
     return report
 
 
-# ---- The four-term split of a rung's deficit (the paper's Section 7 and Appendix I; runs 63-68) ----
+# ---- The four-term split of a rung's deficit (Section 6 and Appendix K) ----
 # For trials Y (n x N) with class labels, C = B + W (the between-class covariance of the class means about the
 # subset mean, weighted by occupancy; the pooled within-class covariance) and
 #     log PR = 2 log(b1 + w1) - log(b2 + w2 + 2x),   b1 = Tr B, w1 = Tr W, b2 = Tr B^2, w2 = Tr W^2, x = Tr(BW).
@@ -951,13 +948,13 @@ def main():
     d.add_argument("--seed", type=int, default=0)
     d.add_argument("--out", default=None, help="write the result JSON here")
     d.add_argument("--plot", default=None, help="write a ladder figure (PNG) here")
-    d.add_argument("--standardize", action="store_true", help="z-score every feature first (the repair when one dimension dominates the spectrum; the paper's Section 8.3)")
-    d.add_argument("--split-by", default=None, help="per-feature score file (npy/csv/txt, one value per feature): also run the top, bottom and a random third of the features at matched size, each with its own floor (the paper's Section 7)")
+    d.add_argument("--standardize", action="store_true", help="z-score every feature first (the repair when one dimension dominates the spectrum)")
+    d.add_argument("--split-by", default=None, help="per-feature score file (npy/csv/txt, one value per feature): also run the top, bottom and a random third of the features at matched size, each with its own floor (Section 4)")
     d.add_argument("--order", default=None, help="the declared accumulation order: sequential (default), antipodal (one member of each antipodal pair first), or a comma-separated list of class labels")
-    d.add_argument("--sectors", action="store_true", help="fit the harmonics of the class-mean kernel for a cyclic axis (labels in cyclic order, class k at angle 2 pi k/K): the sector balance, the even and odd amplitudes, and which accumulation order entry coherence predicts (the paper's Section 4)")
-    d.add_argument("--null-shift", action="store_true", help="labels are in time order: add the circular-shift null, which rolls the label sequence and keeps its autocorrelation (the paper's Section 3)")
+    d.add_argument("--sectors", action="store_true", help="fit the harmonics of the class-mean kernel for a cyclic axis (labels in cyclic order, class k at angle 2 pi k/K): the sector balance, the even and odd amplitudes, and the coherence of adjacent and antipodal classes (Section 4)")
+    d.add_argument("--null-shift", action="store_true", help="labels are in time order: add the circular-shift null, which rolls the label sequence and keeps its autocorrelation")
     d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks the declared order for the stall test and reports late_fraction as it")
-    d.add_argument("--decompose", action="store_true", help="the exact four-term split of every rung's deficit and of the shift (trace, pooling, between-class, coupling) and its scale-free regrouping A + P = D + Tb (the paper's Section 7); with --n-shuffle > 0, net of label permutations")
+    d.add_argument("--decompose", action="store_true", help="the exact four-term split of every rung's deficit and of the shift (trace, pooling, between-class, coupling) and its scale-free regrouping A + P = D + Tb (Section 6, Appendix K); with --n-shuffle > 0, net of label permutations")
     d.add_argument("--n-shuffle", type=int, default=5, help="label permutations for the sampling baseline of each decomposed term (0 disables)")
 
     m = sub.add_parser("llm", help="per-layer battery on a Hugging Face model")

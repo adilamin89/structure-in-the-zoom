@@ -97,7 +97,7 @@ prompt at that site (an attention head's output, an MLP's neurons, a sparse auto
 call `zoom(X, labels)` on it. `rung axis --dataset ... --text-field ... --label-field ... --out my.json`
 builds an axis from any Hugging Face dataset, with `--strata-field` for the nuisance sidecar.
 
-The two minimal-pair benchmarks of the paper's Section 8.4 ship the same way: `axes/blimp_grammaticality.json`
+Two minimal-pair benchmarks ship the same way: `axes/blimp_grammaticality.json`
 (four BLiMP paradigms, good and bad as classes) and `axes/baroni_complexity.json` (the three syntactic-complexity
 contrasts at 64 pairs), each with a `.strata.json` holding the pair, so `rung llm --axis axes/blimp_grammaticality.json`
 reads the grammaticality signal against the within-pair swap null out of the box (on Pythia-2.8B the paper finds a
@@ -120,35 +120,36 @@ For one array and one axis (`rung data`, or `zoom(X, labels)` in Python):
 - the ladder itself: `pr_obs` and `pr_floor` at every rung, `deficit` (the log participation ratio
   of the accumulated classes below the floor, zero at the top rung) and `late_fraction`, the share of
   the climb that the second half of the classes still carries. With `--antipode pairs.json`
-  (`{class: its antipodal class}`) `late_fraction` is the stall test of the paper's Section 7: a code that
+  (`{class: its antipodal class}`) `late_fraction` is the stall test of Appendix K: a code that
   has every class mean by half the classes has nothing left to climb there; a code that distinguishes
   a class from its antipode still does.
 
 Before any of that, `rung data` prints the **spectrum**: the array's full effective dimension, the
 variance fraction of its leading eigenvalue and of its largest single feature. A population dominated
-by one direction blinds any spectral functional (the paper's Section 8.3 meets one); `--standardize`
+by one direction blinds any spectral functional; `--standardize`
 z-scores every feature first and is the repair.
 
 Three further readings, each one flag:
 
 - `--decompose` (`decompose(X, labels)`): the exact four-term split of every rung's deficit and of the
   shift into a trace term, a fluctuation-pooling term, a between-class term and a mean-fluctuation
-  coupling (Section 7), regrouped into two scale-free pieces, the change in the pooled within-class
+  coupling (Section 6 and Appendix K), regrouped into two scale-free pieces, the change in the pooled within-class
   effective dimension `D` and the trace share of the class means `Tb`, with the private slope of `D`
   against log(k/K) (1 when every class brings its own fluctuation subspace, 0 when the variability
   recurs across classes) and, with `--n-shuffle`, every term net of label permutations. Read `D` and
   `Tb` wherever the within-class scale changes with the class.
 - `--sectors` (`sectors(X, labels)`): for a cyclic axis, with the labels in cyclic order, the harmonics
   of the class-mean kernel (Section 4): the coefficients (for eight classes the paper's a, c1, b2, c3, b4), the sector balance
-  b2/|c1|, the even and odd amplitudes, the coherence of adjacent and of antipodal classes, and the
-  accumulation order that entry coherence predicts will climb faster.
+  b2/|c1|, the even and odd amplitudes and the coherence of adjacent and of antipodal classes. Which
+  accumulation order climbs faster is set by how much the classes' fluctuations overlap (Section 6), not by
+  these class-mean coherences.
 - `--null-shift`: when the labels are in time order (one per frame), a circular shift of the whole
   label sequence as the second null, which keeps the labels' autocorrelation and breaks only their
-  alignment with the frames (Section 3). A slowly drifting population passes the label permutation
+  alignment with the frames. A slowly drifting population passes the label permutation
   and fails this one.
 
-`--order sequential|antipodal|<list>` sets the declared accumulation order (the paper's Section 4.1
-contrast); `--split-by scores.npy` runs the top, bottom and a random third of the features at matched
+`--order sequential|antipodal|<list>` sets the declared accumulation order (the contrast of
+Appendix E); `--split-by scores.npy` runs the top, bottom and a random third of the features at matched
 size, each with its own floor. For a model, every quantity above is returned at every layer, and
 `--revision` reads any Hugging Face checkpoint.
 
@@ -181,7 +182,7 @@ for a model, with both null bands.
 
 The blocking factor B(K) and sorted coarse-graining (they need a tuning phase per unit; the scripts
 that compute them on the paper's recordings are in `scripts_canonical/`), the calibrated and the
-cell-built population models of Section 7, and the lattice samplers of Section 6. Those are scripts,
+cell-built population models of Section 6, and the lattice samplers of Section 7. Those are scripts,
 not commands.
 
 ## Extending it
@@ -227,7 +228,7 @@ per extension.
   correlation-profile balance follows it within 26%, and mouse anatomy sits at its random limit.
 - **Ground truth.** Ising and nematic lattices and a rotation-equivariant network fix the sign:
   conditioning on a scalar order parameter removes dimensions, accumulating a group orbit adds them,
-  architectural invariance gives exactly zero; entry coherence predicts the network's reversed
+  architectural invariance gives exactly zero; the class-mean harmonics predict the network's reversed
   accumulation order, found at five of five seeds in its early layers.
 - **The anatomy of the shift.** Split on the covariance itself, the shift is the pooling of fluctuation
   modes private to each direction, each a co-fluctuation of the neurons that fire at that direction with
@@ -264,7 +265,9 @@ figures_canonical/       the paper's figures
 pyproject.toml           pip install -e . gives the rung command (and theta-zoom as an alias)
 ```
 
-Raw neural data are public (Stringer et al. figshare releases; Allen Brain Observatory Neuropixels)
+Raw neural data are public: the grating and static recordings are the Figshare release 8279387 of Stringer et al.
+(2021, Cell, "High-precision coding in visual cortex"), the spontaneous sessions the release of Stringer et al. (2019,
+Science), and the Allen Brain Observatory Neuropixels visual-coding sessions
 and are not included. The recording scripts read `raw/`: each grating or static session as
 `raw/<session>.npy` (a dict with `sresp`, neurons by presentations, `istim`, the stimulus angle, and `stat`, cell
 positions; e.g. `raw/gratings_drifting_GT3_2019_04_05_1.npy`), spontaneous sessions under `raw/spont/`; each

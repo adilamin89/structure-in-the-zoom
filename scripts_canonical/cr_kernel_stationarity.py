@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent / "raw"   # the Stringer et al. 2019 grating recordings (figshare), saved as .npy
+RAW = HERE.parent / "raw"   # the Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
 OUT = HERE.parent / "data_canonical" / "cr_kernel_stationarity.json"
 
 

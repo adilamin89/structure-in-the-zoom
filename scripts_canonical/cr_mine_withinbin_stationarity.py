@@ -16,7 +16,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent / "raw"   # the Stringer et al. 2019 grating recordings (figshare), saved as .npy
+RAW = HERE.parent / "raw"   # the Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
 OUT = HERE.parent / "data_canonical" / "cr_mine_withinbin_stationarity.json"
 SEP = np.minimum(np.abs(np.subtract.outer(np.arange(8), np.arange(8))), 8 - np.abs(np.subtract.outer(np.arange(8), np.arange(8))))
 OFF = ~np.eye(8, dtype=bool)

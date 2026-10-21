@@ -54,7 +54,7 @@ import numpy as np
 from scipy import stats
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent / "raw"   # the Stringer et al. 2019 grating recordings (figshare), saved as .npy
+RAW = HERE.parent / "raw"   # the Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
 OUT = HERE.parent / "data_canonical" / "cr_overlap_mining.json"
 PRIOR = HERE.parent / "data_canonical" / "cr_order_and_withinbin_controls.json"
 TWO_PI = 2 * np.pi

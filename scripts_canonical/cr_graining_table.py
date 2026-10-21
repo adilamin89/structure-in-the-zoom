@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-RAW = HERE.parent / "raw" / "gratings_drifting_GT3.npy"   # Stringer et al. 2019 grating recording (figshare), saved as .npy
+RAW = HERE.parent / "raw" / "gratings_drifting_GT3.npy"   # Stringer et al. 2021 grating recording (Figshare 8279387), saved as .npy
 OUT = HERE.parent / "data_canonical" / "cr_graining_table.json"
 N_BINS, BIN_COUNTS, N_NULL, KS = 8, [1, 2, 3, 4, 6, 8], 10, [1, 2, 4, 8, 16, 32]
 

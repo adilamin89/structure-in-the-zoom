@@ -5,6 +5,11 @@ Runs the optimized decomposition (Gram matrix trick) on all 18 recordings:
   - 8 spontaneous activity recordings (spont/*.mat)
 
 Kill-safe: writes each row to a JSONL as it completes.
+
+Corrected Oct 21 (C8): spontaneous Fsp arrays are neurons x frames and are now always transposed (the earlier loader
+kept MP033 and MP034, which have more neurons than frames, neurons x frames, so their ladder subsampled neurons); the
+observed arm averages log PR over its five draws per rung, as the floor averages log PR over its ten ladders (it took
+the log of the mean PR). Same seeds; the output matches c8_table2_corrected.py.
 Final summary to data/stringer_theta_decomposition.json.
 """
 import json
@@ -15,11 +20,11 @@ from pathlib import Path
 import numpy as np
 from scipy.io import loadmat
 
-DATA_DIR = Path(__file__).resolve().parent / "data" / "stringer_v1"
-NATIMG_DIR = DATA_DIR / "natimg"
+DATA_DIR = Path(__file__).resolve().parent.parent / "raw"   # Stringer et al. 2021 (Figshare 8279387) .npy; spont/ = 2019 Science
+NATIMG_DIR = DATA_DIR
 SPONT_DIR = DATA_DIR / "spont"
-OUT_PATH = Path(__file__).resolve().parent / "data" / "stringer_theta_decomposition.json"
-ROWS_PATH = Path(__file__).resolve().parent / "data" / "stringer_theta_decomposition_rows.jsonl"
+OUT_PATH = Path(__file__).resolve().parent.parent / "data_canonical" / "stringer_theta_decomposition.json"
+ROWS_PATH = Path(__file__).resolve().parent.parent / "data_canonical" / "stringer_theta_decomposition_rows.jsonl"
 
 N_NULL = 10
 ZOOM_SIZES = [2000, 1000, 500, 200, 100, 50]
@@ -47,9 +52,7 @@ def pr_null_mp(n, d):
 def decompose(X, name):
     """Full decomposition on one recording."""
     t0 = time.time()
-    # Ensure stimuli × neurons
-    if X.shape[0] > X.shape[1]:
-        X = X.T
+    assert X.shape[0] <= X.shape[1], "expected samples x neurons"
 
     n_stim, n_neur = X.shape
     print(f"\n  {name}: {n_neur} neurons × {n_stim} stimuli")
@@ -67,7 +70,7 @@ def decompose(X, name):
             rng = np.random.default_rng(42 + seed)
             idx = rng.choice(n_stim, size=n_sub, replace=False)
             prs.append(pr_fast(X[idx]))
-        units.append(("sub", n_sub, float(np.mean(prs))))
+        units.append(("sub", n_sub, float(np.exp(np.mean(np.log(prs))))))   # geometric mean: log PR averaged
 
     if len(units) < 3:
         return {"name": name, "status": "too_few_units"}
@@ -138,11 +141,7 @@ def load_natimg(path):
 
 def load_spont(path):
     dat = loadmat(path)
-    for key in ["Fsp", "spks", "F"]:
-        if key in dat:
-            X = dat[key]
-            return X.T if X.shape[0] < X.shape[1] else X
-    return None
+    return dat["Fsp"].T                                   # Fsp is neurons x frames: frames x neurons
 
 
 def main():

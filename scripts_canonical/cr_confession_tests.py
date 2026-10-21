@@ -19,6 +19,12 @@ T3 GT2 IN GRAINING (App G: "whether b/c is above or below one sorts seven of the
    orientation-sorted blocks (run51 construction) at K = 1 and 32, raw and with within-bin tuning removed.
    Expect: in GT2 the orientation-sorted K = 32 shift on raw data is within 0.05 of the tuning-removed shift at K = 1,
    and on tuning-removed data orientation sorting keeps >= 0.8 of the shift; GT1 and GT3 keep >= 0.8 either way.
+READINGS (C7, Oct 21). T2: the exact inverse of Eq. 2, PR = d(n-1)/(d+n), is d = n PR/(n-1-PR); chun_comparison's
+   PR (n-1)/(n-1-PR) inverts the older form d(n-1)/(d+n-1). The two differ by log[n/(n-1)] per rung, the same in both
+   arms at matched rung sizes, so delta_analytic is identical under either (printed as a check). T3: the second criterion
+   failed in GT2 (tuning-removed retention -1.55 against >= 0.8; the C6 note 'band missed by 0.01' read only the first):
+   orientation-sorted pooling takes 0.20 of GT2's raw shift at K = 32 and 0.08 once the tuning is removed, so the tuning
+   carries 0.12 of the loss (App G states this).
 Out: data_canonical/cr_confession_tests.json"""
 import importlib.util
 import json
@@ -67,8 +73,10 @@ def t2():
     n = np.array(sizes, float); prd, prf = np.array(prd), np.array(prf); x = np.log(n)
     s = lambda y: float(np.polyfit(x, y, 1)[0])
     d_emp = s(np.log(prd)) - s(np.log(prf))
-    inv = lambda p: p * (n - 1) / (n - 1 - p)
+    inv = lambda p: p * n / (n - 1 - p)                       # exact inverse of Eq. 2
     d_an = s(np.log(inv(prd))) - s(np.log(inv(prf)))
+    inv_old = lambda p: p * (n - 1) / (n - 1 - p)
+    assert abs(d_an - (s(np.log(inv_old(prd))) - s(np.log(inv_old(prf))))) < 1e-12   # common factor cancels
     term = s(-np.log(1 - prd / (n - 1))) - s(-np.log(1 - prf / (n - 1)))
     out = {"sizes": sizes, "pr_declared": prd.tolist(), "pr_floor": prf.tolist(), "delta_empirical": d_emp, "delta_analytic": d_an,
            "difference": d_an - d_emp, "term_slope": term,
