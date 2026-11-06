@@ -248,3 +248,91 @@ def test_every_axis_sidecar_matches_its_axis():
     good = [c for c in pairs if c.endswith("_good")]
     for g in good:
         assert pairs[g] == pairs[g[: -len("_good")] + "_bad"], g
+
+
+# ---------------- 1.6.0 ----------------
+
+def test_bias_null_keeps_means_sizes_variance_and_nets_out_on_class_free_fluctuations():
+    rng = np.random.default_rng(5)
+    C, m, d = 8, 60, 40
+    labels = np.repeat(np.arange(C), m)
+    A = rng.normal(size=(d, d)) / np.sqrt(d)                       # one fluctuation shape for every class
+    X = rng.normal(size=(C, d))[labels] * 1.5 + rng.normal(size=(C * m, d)) @ A
+    Y, ly = tz.bias_null(X, labels, "shape", seed=0)
+    for c in range(C):
+        assert np.allclose(Y[ly == c].mean(0), X[labels == c].mean(0), atol=1e-9)
+        assert abs(Y[ly == c].var(0).sum() - X[labels == c].var(0).sum()) < 1e-6 * X[labels == c].var(0).sum()
+    assert np.array_equal(np.bincount(ly), np.bincount(labels))
+    r = tz.decompose(X, labels, n_null=10, n_bias=3)
+    assert abs(r["net_of_bias"]["delta_split_free"]["D"]) < 0.03
+
+
+def test_sign_law_is_exact():
+    rng = np.random.default_rng(7)
+    for _ in range(200):
+        C, m, d = int(rng.integers(3, 9)), int(rng.integers(8, 30)), int(rng.integers(4, 60))
+        labels = np.repeat(np.arange(C), m)
+        X = rng.normal(size=(C, d))[labels] * rng.uniform(0.1, 3) + rng.normal(size=(C * m, d)) * rng.uniform(0.2, 2, size=d)
+        sl = tz.sign_law(X, labels)
+        b1, w1, b2, w2, x = tz.traces(X.astype(np.float64), labels)
+        assert abs(sl["c_full"] - np.log((1 + b1 / w1) ** 2 / (1 + (b2 + 2 * x) / w2))) < 1e-4
+        assert sl["class_mean_negative"] == sl["law_says_negative"]
+
+
+def test_time_blocks_and_same_class_runs():
+    import warnings
+    X, labels = _gaussian_classes(n=320, d=32)
+    runs = np.repeat(np.tile(np.arange(8), 8), 5)                 # runs of five, eight passes: clustered, not grouped
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        tz.zoom(X, runs, n_perm=0, k_orders=3, n_floor_draws=3)
+        assert any("cluster in time" in str(x.message) for x in w)
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        tz.zoom(X, np.random.default_rng(0).permutation(runs), n_perm=0, k_orders=3, n_floor_draws=3)
+        tz.zoom(X, np.sort(runs), n_perm=0, k_orders=3, n_floor_draws=3)            # grouped by class: no warning
+        assert not any("cluster in time" in str(x.message) for x in w)
+    r = tz.zoom(X, runs, n_perm=30, k_orders=3, n_floor_draws=3, time_blocks=tz.block_ids(len(runs), 40))
+    assert "tb_p_two" in r and "tb_p_two_orderavg" in r and r["n_time_blocks"] == 8
+
+
+def test_pair_preserving_orders_match_the_contrast_design():
+    import itertools
+    groups = [[0, 1], [2, 3], [4, 5]]
+    orders, total = tz.pair_preserving_orders(groups)
+    ref = [sum(([2 * c + mm, 2 * c + 1 - mm] for c, mm in zip(p, mem)), [])
+           for p in itertools.permutations(range(3)) for mem in itertools.product((0, 1), repeat=3)]
+    assert total == 48 and sorted(map(tuple, orders)) == sorted(map(tuple, ref))
+    rng = np.random.default_rng(1)
+    labels = np.repeat(np.arange(6), 20)
+    strata = np.array([f"c{c // 2}_p{k}" for c in range(6) for k in range(20)])   # pair ids shared by partner classes
+    X = rng.normal(size=(120, 24)) + rng.normal(size=(6, 24))[labels]
+    r = tz.zoom(X, labels, n_perm=20, k_orders=5, n_floor_draws=3, strata=strata)
+    assert r["pair_groups"] == groups and r["n_pair_orders"] == 48 and "pairavg_p_two" in r
+
+
+def test_last_token_report_and_matched_arms():
+    labels = np.repeat(np.arange(4), 12)
+    last = np.concatenate([np.arange(12), np.arange(12) % 3, np.arange(12) + 50, np.full(12, 7)])
+    rep = tz.last_token_report(last, labels)
+    assert rep["distinct_per_class"] == [12, 3, 12, 1] and rep["warnings"] and not rep["one_token_everywhere"]
+    assert tz.last_token_report(np.zeros(48, int), labels)["one_token_everywhere"]
+    rng = np.random.default_rng(2)
+    labels = np.repeat(np.arange(4), 16)
+    last = np.tile(np.arange(8), 8)                                # eight distinct last tokens in every class
+    X = rng.normal(size=(64, 20)) + rng.normal(size=(4, 20))[labels]
+    arms = tz.last_token_arms(X, labels, last, n_sub=3, n_perm=10, k_orders=3)
+    assert arms["m_per_class"] == 8 and "matched" in arms and "random" in arms
+
+
+def test_frames_disagree_flags_a_dominant_unit():
+    rng = np.random.default_rng(4)
+    C, m, d = 8, 40, 60
+    labels = np.repeat(np.arange(C), m)
+    X = rng.normal(size=(C * m, d))
+    X[:, :10] *= (1 + labels[:, None] % 3)                         # class-dependent fluctuation sizes: positive shift
+    X[:, -1] = 300 * (labels % 2) + rng.normal(size=C * m)         # one huge unit carrying two class means: negative
+    kw = dict(n_perm=40, k_orders=10, n_floor_draws=5, seed=0)
+    rl, rz = tz.zoom(X, labels, **kw), tz.zoom(X, labels, standardize=True, **kw)
+    assert rl["delta_orderavg"] < rl["null_mean_orderavg"] and rz["delta_orderavg"] > rz["null_mean_orderavg"]
+    assert tz.frames_disagree(rl, rz)

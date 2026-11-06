@@ -67,7 +67,7 @@ rung summarize v1.json
 
 The summary gives the floor, the shift and its permutation p; the deficit at every rung and the share
 of the climb left after four classes, read as the stall test; the sector balance of the class-mean
-kernel with the accumulation order it predicts; and the split, which says whether the shift is the
+kernel and its even and odd amplitudes; and the split, which says whether the shift is the
 pooling of fluctuation modes private to each class (`D`, the paper's finding on V1) or the class means
 (`Tb`). Pass the session or animal as `--strata` when trials are not exchangeable across it; pass a
 per-neuron direction-selectivity index as `--split-by` to compare the direction-selective, random and
@@ -101,7 +101,10 @@ Two minimal-pair benchmarks ship the same way: `axes/blimp_grammaticality.json`
 (four BLiMP paradigms, good and bad as classes) and `axes/baroni_complexity.json` (the three syntactic-complexity
 contrasts at 64 pairs), each with a `.strata.json` holding the pair, so `rung llm --axis axes/blimp_grammaticality.json`
 reads the grammaticality signal against the within-pair swap null out of the box (on Pythia-2.8B the paper finds a
-signal of twenty standard deviations that the swap null absorbs entirely).
+signal of twenty standard deviations that the swap null absorbs entirely). Because the strata pair the classes, the
+result also carries the pair-preserving order average: the shift over every accumulation order that keeps the two
+members of a pair or contrast adjacent, against the swap null over the same orders (a full order average dilutes a
+pairwise contrast).
 
 The two planted axes in `axes/`, `compass.json` and `clock.json`, are what the second null is for:
 eight class tokens rotated inside sixteen shared carrier sentences. Under the ordinary floor both read
@@ -148,6 +151,27 @@ Three further readings, each one flag:
   alignment with the frames. A slowly drifting population passes the label permutation
   and fails this one.
 
+Added in 1.6:
+
+- **The sign law of the split** (`decompose` prints it; `sign_law(X, labels)`): at the full set, the class-mean
+  term is negative exactly when PR(W)/PR(B) exceeds 1 + 2(1 - a) Tr W/Tr B, where a = Tr(WB) PR(W)/(Tr W Tr B) is
+  the alignment of the class means with the dominant fluctuations; the threshold without a is sufficient, not the rule.
+- **The finite-sample bias null** (`--decompose --n-bias 3`; `bias_null(X, labels)`): surrogates with the data's
+  class means, class sizes and class variances and one covariance shape for every class. At a few dozen samples
+  per class the split moves a little even when fluctuations do not depend on the class; the within part `D` is
+  read net of this null.
+- **The time-blocked null** (`--time-blocks 48`, or a file of block ids, rows in acquisition order): labels are
+  permuted only within contiguous blocks, which keeps what drift and slow state can do. Every run reports how
+  often consecutive rows share a class against the label-blind expectation and warns when labels cluster in time
+  (rows stored grouped by class, as in a prompt battery, are not flagged).
+- **Both feature frames.** `rung data` prints the shift of the per-feature z-scored array beside the linear one;
+  `rung llm --frames both` (the default) reports the order-averaged shift and its null in each frame at every
+  layer and flags layers where they disagree in sign: there a few high-variance units set the linear reading.
+- **The last-token report** (`rung llm`): distinct last tokens per class, with a warning when a class ends on few
+  of them or every class ends on the same one; `--match-last-token` adds, at every layer, subsamples matched on
+  distinct last tokens and size-matched random subsamples, so the lexical part of a lift is the drop from the
+  second to the first. `--dtype bf16` repairs float16 overflow in early training checkpoints.
+
 `--order sequential|antipodal|<list>` sets the declared accumulation order (the contrast of
 Appendix E); `--split-by scores.npy` runs the top, bottom and a random third of the features at matched
 size, each with its own floor. For a model, every quantity above is returned at every layer, and
@@ -177,6 +201,12 @@ for a model, with both null bands.
    its embedding value against the permutation null, not on a count of significant layers.
 9. **Coherence beats prompt count.** Prompts that widen within-class topic diversity weaken
    construction axes.
+10. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, the
+    linear one follows a few high-variance units.
+11. **The shift reads how classes spread, not a consistent offset.** Classes that differ only by the same small
+    direction between near-identical items (a minimal pair) give the shift nothing to read, while a linear probe
+    trained on other pairs can still find that direction; a swap null that absorbs the shift says the partition does
+    not organize the covariance, not that the property is absent.
 
 ## What it does not ship
 
@@ -205,7 +235,7 @@ you would change are small and named.
   specific position is a one-line change there (the paper's mean-pooling result is the reference
   point: the construction axis collapses, the content axis survives).
 
-Tests are numpy-only and run in ten seconds (`pip install -e ".[test]" && pytest -q tests`); add one
+Tests are numpy-only and run in under a minute (`pip install -e ".[test]" && pytest -q tests`); add one
 per extension.
 
 ## The camera-ready in five results

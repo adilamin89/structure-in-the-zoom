@@ -6,7 +6,10 @@ name stays importable as an alias for one release. 1.3 added the per-rung
 deficit, the late fraction and the stall check; 1.4 the exact four-term
 split of the deficit; 1.5 the sector fit of the class-mean kernel, the
 declared accumulation order, and the circular-shift null for labels in
-time order.)
+time order; 1.6 the finite-sample bias null and the sign-law readout of the
+split, the time-blocked null, pair-preserving order averaging for paired
+axes, and, for language models, the last-token report and both feature
+frames.)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -95,7 +98,7 @@ def spectrum(X):
 def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
          n_floor_draws=20, bin_counts=None, strata=None, seed=0,
          floor_seed=None, perm_seed=None, order_seed=None, standardize=False,
-         antipode=None, order=None, shift_null=False):
+         antipode=None, order=None, shift_null=False, time_blocks=None):
     """Axis-resolved decomposition of the dimensionality-scaling exponent.
 
     Parameters
@@ -132,6 +135,14 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         labels' autocorrelation and breaks only their alignment with the
         frames (state axes); reported as
         shift_p_two / shift_z.
+    time_blocks : optional (n,) array of acquisition-block ids (rows in time
+        order cut into contiguous epochs, e.g. block_ids(n, 48)). A further
+        null permutes labels only within blocks, which keeps each block's
+        class counts: a shift that drift or slow state could produce reads as
+        ordinary under it. Reported as tb_p_two / tb_z (declared order) and
+        tb_p_two_orderavg. zoom always reports the consecutive same-class rate
+        of the rows against its label-blind expectation (meaningful when rows
+        are in acquisition order) and warns when labels cluster in time.
     antipode : optional dict {class: its antipodal class}. The stall test of
         Appendix K reads `late_fraction` (the deficit at half the
         classes over the deficit at one class) as the share of the climb the
@@ -142,7 +153,12 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     Returns dict with delta, theta_obs, theta_floor, p_two, z,
     delta_orderavg (+sd, p_two_orderavg, z_orderavg), the per-rung ladders
     (pr_obs, pr_floor, deficit) with late_fraction, and, when strata is
-    given, strat_p_two / strat_z.
+    given, strat_p_two / strat_z. When the strata pair classes (two classes
+    share stratum ids, as the members of a minimal pair or contrast do), the
+    pair-preserving order average is added: the shift averaged over every
+    order that keeps partners adjacent (delta_pairavg) against labels
+    permuted within strata over the same orders (pairavg_p_two); a full
+    order average dilutes a pairwise contrast, this one does not.
     """
     X = np.asarray(X, dtype=np.float64)
     if standardize:
@@ -181,6 +197,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     K = X @ X.T
     members = [np.where(lab == c)[0] for c in range(n_classes)]
     canonical = declared_order(classes, order)
+    run = same_class_rate(lab)
 
     th_obs, sizes, pr_obs = _ladder(K, members, canonical, bc)
     logs = np.zeros((n_floor_draws, len(sizes)))
@@ -207,6 +224,13 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
            "n_floor_draws": int(n_floor_draws), "n_samples": int(n_samples),
            "n_features": int(X.shape[1])}
     out["order"] = [classes[i].item() if hasattr(classes[i], "item") else classes[i] for i in canonical]
+    out["same_class_rate"] = run
+    if run["excess_se"] > 3 and not run["grouped_by_class"] and time_blocks is None:
+        import warnings
+        warnings.warn(f"zoom: consecutive rows share a class {run['rate']:.2f} of the time against {run['expected']:.2f} "
+                      f"for unordered labels ({run['excess_se']:.0f} SE above): if rows are in acquisition order, "
+                      "classes cluster in time and drift can enter the shift; add time_blocks (rung data "
+                      "--time-blocks E) for the null that permutes labels only within time blocks.", stacklevel=2)
     half = n_classes // 2
     if half in bc and deficit[0] != 0:
         out["late_rung_classes"] = int(half)
@@ -278,7 +302,115 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
             / (len(null_sh) + 1))
         out["shift_null_mean"], out["shift_null_sd"] = nm, ns
 
+    if time_blocks is not None and n_perm:
+        tb = np.asarray(time_blocks)
+        if tb.shape != (n,):
+            raise ValueError(f"time_blocks must hold one block id per row ({n}); got {tb.shape}")
+        bmem = [np.where(tb == b)[0] for b in np.unique(tb)]
+        null_t, null_ta = [], []
+        for _ in range(n_perm):
+            tl = lab.copy()
+            for idx in bmem:
+                tl[idx] = tl[idx[prng.permutation(len(idx))]]
+            mem = [np.where(tl == c)[0] for c in range(n_classes)]
+            null_t.append(_ladder(K, mem, canonical, bc)[0] - th_floor)
+            null_ta.append(np.mean([_ladder(K, mem, o, bc)[0] for o in orders[:k_null_orders]]) - th_floor)
+        for tag, obs, null in (("", d_obs, null_t), ("_orderavg", out["delta_orderavg"], null_ta)):
+            null = np.asarray(null)
+            nm, ns = float(null.mean()), float(null.std())
+            out[f"tb_z{tag}"] = (obs - nm) / ns if ns > 0 else 0.0
+            out[f"tb_p_two{tag}"] = float((1 + (np.abs(null - nm) >= abs(obs - nm)).sum()) / (len(null) + 1))
+            out[f"tb_null_mean{tag}"], out[f"tb_null_sd{tag}"] = nm, ns
+        out["n_time_blocks"] = len(bmem)
+
+    if strata is not None:
+        groups = pair_groups(lab, np.asarray(strata), n_classes)
+        if len(groups) >= 2 and max(len(g) for g in groups) >= 2:
+            pp, n_pp = pair_preserving_orders(groups, k_max=5000, rng=orng)
+            sub = pp if len(pp) <= max(k_orders, 50) else [pp[i] for i in orng.choice(len(pp), max(k_orders, 50), replace=False)]
+            out["pair_groups"] = [[classes[i].item() if hasattr(classes[i], "item") else classes[i] for i in g] for g in groups]
+            out["n_pair_orders"] = int(n_pp)
+            out["delta_pairavg"] = float(np.mean([_ladder(K, members, o, bc)[0] for o in pp]) - th_floor)
+            if n_perm:
+                obs_sub = float(np.mean([_ladder(K, members, o, bc)[0] for o in sub]) - th_floor)
+                smem = [np.where(np.asarray(strata) == s_)[0] for s_ in np.unique(strata)]
+                null_p = []
+                for _ in range(n_perm):
+                    sl = lab.copy()
+                    for idx in smem:
+                        sl[idx] = sl[idx[prng.permutation(len(idx))]]
+                    mem = [np.where(sl == c)[0] for c in range(n_classes)]
+                    null_p.append(np.mean([_ladder(K, mem, o, bc)[0] for o in sub]) - th_floor)
+                null_p = np.asarray(null_p)
+                nm, ns = float(null_p.mean()), float(null_p.std())
+                out["pairavg_z"] = (obs_sub - nm) / ns if ns > 0 else 0.0
+                out["pairavg_p_two"] = float((1 + (np.abs(null_p - nm) >= abs(obs_sub - nm)).sum()) / (len(null_p) + 1))
+                out["pairavg_null_mean"], out["pairavg_null_sd"] = nm, ns
+                out["n_pair_orders_in_null"] = len(sub)
+
     return out
+
+
+def same_class_rate(lab):
+    """How often consecutive rows share a class, against the expectation for the same labels in random order
+    (sum n_c (n_c - 1) / (n (n - 1))). Meaningful when rows are in acquisition order: a rate far above the expectation
+    means classes were presented in runs, and slow drift can then enter a shift."""
+    lab = np.asarray(lab); n = len(lab)
+    if n < 3:
+        return {"rate": float("nan"), "expected": float("nan"), "excess_se": 0.0}
+    rate = float(np.mean(lab[1:] == lab[:-1]))
+    cnt = np.unique(lab, return_counts=True)[1].astype(float)
+    e = float((cnt * (cnt - 1)).sum() / (n * (n - 1)))
+    se = float(np.sqrt(max(e * (1 - e), 1e-12) / (n - 1)))
+    runs = int(1 + np.sum(lab[1:] != lab[:-1]))
+    # rows stored grouped by class (one run per class, as in a prompt battery) say nothing about acquisition time
+    return {"rate": rate, "expected": e, "excess_se": float((rate - e) / se), "n_runs": runs,
+            "grouped_by_class": bool(runs == len(cnt))}
+
+
+def block_ids(n, size):
+    """Contiguous acquisition blocks: rows 0..size-1 are block 0, and so on (rows must be in time order)."""
+    return np.arange(n) // int(size)
+
+
+def pair_groups(lab, strata, n_classes):
+    """Classes that share any stratum id belong together (the two members of a minimal pair, the arms of a
+    contrast); returns the connected groups of class indices, each sorted."""
+    parent = list(range(n_classes))
+
+    def find(a):
+        while parent[a] != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    for s_ in np.unique(strata):
+        cs = np.unique(lab[strata == s_])
+        for c in cs[1:]:
+            parent[find(int(c))] = find(int(cs[0]))
+    groups = {}
+    for c in range(n_classes):
+        groups.setdefault(find(c), []).append(c)
+    return sorted(groups.values())
+
+
+def pair_preserving_orders(groups, k_max=5000, rng=None):
+    """Every accumulation order that keeps each group's classes adjacent: the groups in any order, each group's
+    classes in any order. Enumerated when there are at most k_max, else k_max drawn at random. Returns
+    (orders, total count)."""
+    import itertools
+    import math
+    total = math.factorial(len(groups)) * math.prod(math.factorial(len(g)) for g in groups)
+    if total <= k_max:
+        orders = [sum((list(p) for p in inner), [])
+                  for outer in itertools.permutations(groups)
+                  for inner in itertools.product(*[list(itertools.permutations(g)) for g in outer])]
+        return orders, total
+    rng = rng if rng is not None else np.random.default_rng(0)
+    orders = []
+    for _ in range(k_max):
+        outer = [groups[i] for i in rng.permutation(len(groups))]
+        orders.append(sum(([g[i] for i in rng.permutation(len(g))] for g in outer), []))
+    return orders, total
 
 
 def declared_order(classes, order=None):
@@ -558,16 +690,90 @@ def _load_axis(axis_file, use_strata=True):
     return name, list(axes.keys()), prompts, np.array(labels), (np.array(strata) if smap is not None else None)
 
 
+def frames_disagree(r_linear, r_z):
+    """True when the order-averaged shift's excess over its null has opposite signs in the linear and the per-unit
+    z-scored frame, each beyond one null SD (zoom outputs with n_perm > 0). There the linear reading follows a few
+    high-variance units, and both frames are reported."""
+    el = r_linear["delta_orderavg"] - r_linear["null_mean_orderavg"]
+    ez = r_z["delta_orderavg"] - r_z["null_mean_orderavg"]
+    return bool(el * ez < 0 and abs(el) > r_linear["null_sd_orderavg"] and abs(ez) > r_z["null_sd_orderavg"])
+
+
+def last_token_report(last_ids, labels, decode=None):
+    """Distinct last tokens per class (the read-out token of a last-token battery). A class whose prompts end on few
+    distinct tokens starts its ladder on a low-dimensional rung at the first layers, so part of a shift there can be
+    the last token's identity (Appendix I); when every class ends on the same token, the last token cannot carry the
+    shift. Returns counts per class, the shared tokens, and warnings."""
+    last_ids = np.asarray(last_ids); labels = np.asarray(labels)
+    classes = np.unique(labels)
+    distinct = [int(len(np.unique(last_ids[labels == c]))) for c in classes]
+    shared = [int(t) for t in np.unique(last_ids) if len(np.unique(labels[last_ids == t])) > 1]
+    vals, cnt = np.unique(last_ids, return_counts=True)
+    one = len(vals) == 1
+    warn = []
+    if one:
+        warn.append("every class ends on the same last token: the last token cannot carry the shift, and the "
+                    "last-token-matched comparison cannot run")
+    elif min(distinct) < 6:
+        k = min(distinct)
+        warn.append(f"a class ends on only {k} distinct last token{'s' if k != 1 else ''}: at the first layers its rung "
+                    "spans few dimensions and part of the shift there can be the last token's identity; the matched "
+                    "comparison (--match-last-token) needs at least 6 per class, so read the layers past the first few "
+                    "or add prompts with varied endings")
+    out = {"distinct_per_class": distinct, "n_shared_tokens": len(shared), "one_token_everywhere": bool(one),
+           "top_token_share": float(cnt.max() / cnt.sum()), "warnings": warn}
+    if decode is not None:
+        out["examples"] = [[decode(int(t)) for t in np.unique(last_ids[labels == c])[:8]] for c in classes]
+    return out
+
+
+def last_token_arms(X, labels, last_ids, n_sub=20, n_perm=100, k_orders=20, seed=1500):
+    """The last-token control of Appendix I for one layer: n_sub subsamples with m prompts per class ending on m
+    distinct last tokens (m = the smallest class's count of distinct last tokens), and n_sub size-matched random
+    subsamples with no token matching; the order-averaged shift and its permutation p for each. The lexical part of
+    a lift is the drop from the random arm to the matched arm; if the random arm also loses the lift, the subsample
+    is too small to tell. Returns None when m < 6."""
+    X = np.asarray(X); labels = np.asarray(labels); last_ids = np.asarray(last_ids)
+    classes = np.unique(labels)
+    m = min(len(np.unique(last_ids[labels == c])) for c in classes)
+    if m < 6:
+        return None
+    rng = np.random.default_rng(seed)
+    arms = {"matched": [], "random": []}
+    for _ in range(n_sub):
+        keep = []
+        for c in classes:
+            idx = np.where(labels == c)[0]
+            for t in rng.permutation(np.unique(last_ids[idx]))[:m]:
+                keep.append(rng.choice(idx[last_ids[idx] == t]))
+        arms["matched"].append(np.sort(np.array(keep)))
+        arms["random"].append(np.sort(np.concatenate([rng.choice(np.where(labels == c)[0], m, replace=False) for c in classes])))
+    out = {"m_per_class": int(m)}
+    for arm, subs in arms.items():
+        vals = [zoom(X[k], labels[k], n_perm=n_perm, k_orders=k_orders, k_null_orders=k_orders,
+                     seed=int(rng.integers(1 << 30))) for k in subs]
+        out[arm] = {"delta_orderavg_median": float(np.median([v["delta_orderavg"] for v in vals])),
+                    "p_two_orderavg_median": float(np.median([v["p_two_orderavg"] for v in vals]))}
+    return out
+
+
 def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
                 max_len=128, out_path=None, paper_seeds=False, revision=None,
-                use_strata=True):
+                use_strata=True, standardize=False, dtype=None, frames="both", match_last_token=False):
     """Per-layer zoom() over last-token hidden states for one or more axes.
 
     axis_files: list of axis JSON paths and/or directories. The model is loaded
     once (optionally at a Hugging Face `revision`, e.g. a Pythia checkpoint
     "step10000") and every axis is encoded and analyzed. If <axis>.strata.json
     exists next to an axis file, the stratified (nuisance-preserving) null is
-    computed as well. Returns {"model", "revision", "axes": {name: {...}}}.
+    computed as well (and, when its strata pair classes, the pair-preserving
+    order average). frames: "linear" (the paper's estimator), "z" (every unit
+    z-scored first) or "both" (default): with both, the order-averaged shift
+    and its null are reported in each frame and layers where the two disagree
+    in sign beyond one null SD are flagged (a few high-variance units can set
+    the linear sign). Every axis gets a last-token report; match_last_token
+    adds the matched and size-matched random arms per layer. Returns
+    {"model", "revision", "axes": {name: {...}}}.
     """
     import json as _json
     import torch
@@ -576,7 +782,10 @@ def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
     files = _expand_axis_paths(list(axis_files))
     print(f"{len(files)} axis file(s); loading {model_name}"
           f"{' @ ' + revision if revision else ''} on {device}...", flush=True)
-    dtype = torch.float16 if device in ("mps", "cuda") else torch.float32
+    # dtype: None = float16 on mps/cuda, float32 on cpu; "bf16" repairs float16 overflow in early training
+    # checkpoints, "fp32" is the reference
+    dtype = {None: (torch.float16 if device in ("mps", "cuda") else torch.float32), "fp16": torch.float16,
+             "bf16": torch.bfloat16, "fp32": torch.float32}[dtype]
     kw = {"torch_dtype": dtype}
     if revision:
         kw["revision"] = revision
@@ -584,43 +793,79 @@ def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
     tok = AutoTokenizer.from_pretrained(model_name, revision=revision) if revision \
         else AutoTokenizer.from_pretrained(model_name)
     model.eval()
+    if frames not in ("linear", "z", "both"):
+        raise ValueError("frames is 'linear', 'z' or 'both'")
+    frame_list = {"linear": [False], "z": [True], "both": [False, True]}[frames]
+    if standardize:
+        frame_list = [True]
 
     results = {"model": model_name, "revision": revision, "n_perm": n_perm,
-               "k_orders": k_orders, "axes": {}}
+               "k_orders": k_orders, "frames": "z" if standardize else frames, "axes": {}}
     for af in files:
         name, classes, prompts, labels, strata = _load_axis(af, use_strata)
         print(f"[{name}] {len(classes)} classes, {len(prompts)} prompts"
               f"{' + strata' if strata is not None else ''}", flush=True)
-        states = []
+        states, last = [], []
         with torch.no_grad():
             for i, p in enumerate(prompts):
                 ids = tok(p, return_tensors="pt", truncation=True,
                           max_length=max_len).input_ids.to(device)
+                last.append(int(ids[0, -1]))
                 hs = model(ids, output_hidden_states=True).hidden_states
                 states.append([h[0, -1, :].float().cpu().numpy() for h in hs])
                 if i and i % 50 == 0:
                     print(f"    encoded {i}/{len(prompts)}", flush=True)
+        ltr = last_token_report(last, labels, decode=lambda t: tok.decode([t]))
+        print(f"  last tokens: distinct per class {ltr['distinct_per_class']}", flush=True)
+        for w in ltr["warnings"]:
+            print(f"  WARNING: {w}", flush=True)
+        keys = ("delta", "p_two", "z", "null_mean", "null_sd", "delta_orderavg",
+                "delta_orderavg_sd", "p_two_orderavg", "z_orderavg",
+                "null_mean_orderavg", "null_sd_orderavg",
+                "strat_p_two", "strat_z", "strat_null_mean", "strat_null_sd",
+                "delta_pairavg", "pairavg_p_two", "pairavg_z", "pairavg_null_mean", "pairavg_null_sd")
         layers = []
         for l in range(len(states[0])):
             X = np.stack([s[l] for s in states])
-            if paper_seeds:
-                r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata,
-                         floor_seed=100 * l + 1, perm_seed=3700, order_seed=3701)
-            else:
-                r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata, seed=l)
-            keys = ("delta", "p_two", "z", "null_mean", "null_sd", "delta_orderavg",
-                    "delta_orderavg_sd", "p_two_orderavg", "z_orderavg",
-                    "null_mean_orderavg", "null_sd_orderavg",
-                    "strat_p_two", "strat_z", "strat_null_mean", "strat_null_sd")
-            row = {"layer": l, **{k: r[k] for k in keys if k in r}}
+            row = {"layer": l}
+            for zf in frame_list:
+                if paper_seeds:
+                    r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata,
+                             floor_seed=100 * l + 1, perm_seed=3700, order_seed=3701, standardize=zf)
+                else:
+                    r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata, seed=l, standardize=zf)
+                suffix = "_z" if (zf and len(frame_list) == 2) else ""
+                row.update({k + suffix: r[k] for k in keys if k in r})
+            msg = (f"    L{l:02d} delta={row['delta']:+.3f} p={row.get('p_two', 1):.4f}"
+                   f" | avg={row['delta_orderavg']:+.3f} p={row.get('p_two_orderavg', 1):.4f}")
+            if "delta_orderavg_z" in row:
+                msg += f" | z-frame avg={row['delta_orderavg_z']:+.3f} p={row.get('p_two_orderavg_z', 1):.4f}"
+                if "null_mean_orderavg" in row and "null_mean_orderavg_z" in row:
+                    row["frames_disagree"] = frames_disagree(
+                        {k: row[k] for k in ("delta_orderavg", "null_mean_orderavg", "null_sd_orderavg")},
+                        {k: row[k + "_z"] for k in ("delta_orderavg", "null_mean_orderavg", "null_sd_orderavg")})
+                    if row["frames_disagree"]:
+                        msg += "  <- FRAMES DISAGREE in sign"
+            if "strat_p_two" in row:
+                msg += f" | strat p={row['strat_p_two']:.4f}"
+            if "delta_pairavg" in row:
+                msg += f" | pair-avg={row['delta_pairavg']:+.3f} p={row.get('pairavg_p_two', 1):.4f}"
+            if match_last_token:
+                arms = last_token_arms(X, labels, last)
+                row["last_token_arms"] = arms
+                if arms is not None:
+                    msg += (f" | matched {arms['matched']['delta_orderavg_median']:+.3f} vs random "
+                            f"{arms['random']['delta_orderavg_median']:+.3f} (m={arms['m_per_class']})")
             layers.append(row)
-            msg = (f"    L{l:02d} delta={r['delta']:+.3f} p={r.get('p_two', 1):.4f}"
-                   f" | avg={r['delta_orderavg']:+.3f} p={r.get('p_two_orderavg', 1):.4f}")
-            if "strat_p_two" in r:
-                msg += f" | strat p={r['strat_p_two']:.4f}"
             print(msg, flush=True)
         results["axes"][name] = {"classes": classes, "n_prompts": len(prompts),
-                                 "stratified": strata is not None, "layers": layers}
+                                 "stratified": strata is not None, "last_token": ltr, "layers": layers}
+        if "frames_disagree" in layers[0]:
+            nd = sum(r["frames_disagree"] for r in layers)
+            results["axes"][name]["frames_disagree_layers"] = nd
+            if nd:
+                print(f"  WARNING: the linear and z-scored frames disagree in sign at {nd} layer(s): there the linear "
+                      "reading follows a few high-variance units; report both", flush=True)
     if out_path:
         _json.dump(results, open(out_path, "w"), indent=1)
         print(f"wrote {out_path}", flush=True)
@@ -817,18 +1062,99 @@ def _lsq_slope(x, y):
     return float(np.linalg.lstsq(A, y, rcond=None)[0][1])
 
 
-def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_size=10, n_shuffle=0):
+def sign_law(X, labels):
+    """The sign of the class-mean part, read from the full set (Section 6, Appendix K). With beta = Tr B / Tr W,
+    r = PR(W) / PR(B) and the alignment a = xi PR(W), xi = Tr(WB) / (Tr W Tr B) (how much the class means lie along
+    the dominant fluctuations), the class-mean term of the full set, c = log[(1 + beta)^2 / (1 + beta^2 r + 2 a beta)],
+    is negative exactly when r > 1 + 2 (1 - a) / beta. The x-free threshold 1 + 2 / beta (a = 0) is sufficient for a
+    negative term when the alignment is positive, not the rule."""
+    X = np.asarray(X, np.float64); labels = np.asarray(labels)
+    Xc = X - X.mean(0)
+    classes = np.unique(labels)
+    n = len(Xc)
+    cm = np.stack([Xc[labels == c].mean(0) for c in classes])
+    p = np.array([(labels == c).mean() for c in classes])
+    Wh = (Xc - cm[np.searchsorted(classes, labels)]) / np.sqrt(n)
+    Bh = np.sqrt(p)[:, None] * cm
+    w1, b1 = float((Wh * Wh).sum()), float((Bh * Bh).sum())
+    w2 = float(((Wh @ Wh.T) ** 2).sum()) if n <= Xc.shape[1] else float(((Wh.T @ Wh) ** 2).sum())
+    b2 = float(((Bh @ Bh.T) ** 2).sum())
+    x = float(((Wh @ Bh.T) ** 2).sum())
+    beta, prw, prb = b1 / w1, w1 ** 2 / w2, b1 ** 2 / b2
+    xi = x / (w1 * b1)
+    a = xi * prw
+    c_full = float(np.log((1 + beta) ** 2 / (1 + (b2 + 2 * x) / w2)))
+    thr = 1 + 2 * (1 - a) / beta
+    return {"trB_trW": beta, "PR_W": prw, "PR_B": prb, "ratio": prw / prb, "xi": xi, "alignment": a,
+            "threshold_full": thr, "threshold_x_free": 1 + 2 / beta, "c_full": c_full,
+            "c_without_x": float(np.log((1 + beta) ** 2 / (1 + b2 / w2))), "x_share": 2 * x / (b2 + 2 * x),
+            "class_mean_negative": bool(c_full < 0), "law_says_negative": bool(prw / prb > thr)}
+
+
+def bias_null(X, labels, mode="shape", seed=0):
+    """A surrogate with the data's class means and class sizes whose fluctuations carry no class dependence of the
+    kind named by `mode` (the finite-sample bias null of Appendix K). Each class's residuals are standardized per
+    feature, all residual rows are pooled and redealt to the classes at random, and each class is rescaled:
+      'shape'    every class gets the pooled per-feature SD profile scaled to its own total variance (one covariance
+                 shape for all classes; what the within part reads at these counts when fluctuations do not depend
+                 on the class);
+      'variance' every class keeps its own per-feature SDs over the pooled correlation structure.
+    Returns (Y, labels) with rows grouped by class."""
+    X = np.asarray(X, np.float64); labels = np.asarray(labels)
+    classes = np.unique(labels)
+    mu = {c: X[labels == c].mean(0) for c in classes}
+    sd = {c: X[labels == c].std(0) for c in classes}
+    Z = np.empty_like(X)
+    for c in classes:
+        s_ = sd[c].copy(); s_[s_ <= 0] = 1.0
+        Z[labels == c] = (X[labels == c] - mu[c]) / s_
+    sd_pool = np.sqrt(np.mean([sd[c] ** 2 for c in classes], 0))
+    if mode == "shape":
+        tgt = {c: np.sqrt((sd[c] ** 2).sum() / max((sd_pool ** 2).sum(), 1e-30)) * sd_pool for c in classes}
+    elif mode == "variance":
+        tgt = sd
+    else:
+        raise ValueError("mode is 'shape' or 'variance'")
+    rows = Z[np.random.default_rng(seed).permutation(len(Z))]
+    parts, labs, i = [], [], 0
+    for c in classes:
+        k = int((labels == c).sum())
+        Zc = rows[i:i + k].copy(); i += k
+        Zc -= Zc.mean(0); s_ = Zc.std(0); s_[s_ <= 0] = 1.0; Zc /= s_
+        parts.append(mu[c] + Zc * tgt[c]); labs.append(np.full(k, c))
+    return np.concatenate(parts), np.concatenate(labs)
+
+
+def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_size=10, n_shuffle=0, n_bias=0):
     """The exact split of every rung's deficit and of the shift for the ladder that accumulates the classes in
     `order` (default: sorted labels) with `bin_counts` classes per rung (default: the paper's ladder). Returns the
     per-rung terms, the four slopes of the shift (and the scale-free regrouping), the private slopes, exactness
-    checks, and, with n_shuffle > 0, the label-permutation baseline and the excess over it."""
+    checks, the sign-law readout of the full set, with n_shuffle > 0 the label-permutation baseline and the excess
+    over it, and with n_bias > 0 the same split on bias_null(mode='shape') surrogates (seeds 0..n_bias-1) and the
+    data net of it: the within part counts as class-dependent fluctuation structure only beyond that null."""
     X = np.asarray(X, np.float32); labels = np.asarray(labels)
     if order is None:
         order = [int(c) for c in np.unique(labels)]
     if bin_counts is None:
         bin_counts = tuple(c for c in BIN_COUNTS_DEFAULT if c <= len(order))
     out = _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size)
-    if out is None or n_shuffle <= 0:
+    if out is None:
+        return out
+    out["sign_law"] = sign_law(X, labels)
+    if n_bias > 0:
+        bias = []
+        for s_ in range(n_bias):
+            Y, ly = bias_null(X, labels, "shape", s_)
+            r = _decompose_once(Y.astype(np.float32), ly, order, bin_counts, n_null, seed, min_size)
+            if r is not None:
+                bias.append(r)
+        if bias:
+            out["bias_null"] = {"n": len(bias), "delta": float(np.mean([r["delta"] for r in bias])),
+                                "delta_split_free": {k: float(np.mean([r["delta_split_free"][k] for r in bias])) for k in FREE}}
+            out["net_of_bias"] = {"delta": out["delta"] - out["bias_null"]["delta"],
+                                  "delta_split_free": {k: out["delta_split_free"][k] - out["bias_null"]["delta_split_free"][k]
+                                                       for k in FREE}}
+    if n_shuffle <= 0:
         return out
     keys = ("A", "P", "Cb", "Cx", "D", "Tb", "S")
     shuf = []
@@ -928,6 +1254,17 @@ def _print_decomposition(r):
     else:
         print(f"  private slope (D vs log k/K) {r['private_slope_dim']:+.2f}; run with --n-shuffle for the sampling baseline")
     print(f"  exactness: sum {r['max_sum_check']:.1e}, regroup {r['max_regroup_check']:.1e}, PR identity {r['max_pr_identity_rel']:.1e}")
+    sl = r.get("sign_law")
+    if sl:
+        agree = sl["class_mean_negative"] == sl["law_says_negative"]
+        print(f"  sign law (full set): Tr B/Tr W {sl['trB_trW']:.3f}, PR(W)/PR(B) = {sl['PR_W']:.1f}/{sl['PR_B']:.1f} = {sl['ratio']:.1f}, "
+              f"alignment a {sl['alignment']:.2f}; threshold 1 + 2(1 - a)/beta = {sl['threshold_full']:.1f} "
+              f"(x-free {sl['threshold_x_free']:.1f}); class-mean term {sl['c_full']:+.3f} "
+              + ("(sign as the law says)" if agree else "(MISMATCH with the law: report it)"))
+    if "net_of_bias" in r:
+        b = r["bias_null"]["delta_split_free"]; nb = r["net_of_bias"]["delta_split_free"]
+        print(f"  bias null ({r['bias_null']['n']} surrogates, one covariance shape for every class): D {b['D']:+.3f} Tb {b['Tb']:+.3f} "
+              f"Cb {b['Cb']:+.3f} Cx {b['Cx']:+.3f}; net of it: D {nb['D']:+.3f}, delta {r['net_of_bias']['delta']:+.3f}")
 
 
 def main():
@@ -956,6 +1293,8 @@ def main():
     d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks the declared order for the stall test and reports late_fraction as it")
     d.add_argument("--decompose", action="store_true", help="the exact four-term split of every rung's deficit and of the shift (trace, pooling, between-class, coupling) and its scale-free regrouping A + P = D + Tb (Section 6, Appendix K); with --n-shuffle > 0, net of label permutations")
     d.add_argument("--n-shuffle", type=int, default=5, help="label permutations for the sampling baseline of each decomposed term (0 disables)")
+    d.add_argument("--n-bias", type=int, default=0, help="with --decompose: surrogates of the finite-sample bias null (class means kept, one covariance shape for every class); the within part is read net of it")
+    d.add_argument("--time-blocks", default=None, help="rows are in acquisition order: an integer E cuts them into contiguous blocks of E rows, or a file gives one block id per row; adds the null that permutes labels only within blocks")
 
     m = sub.add_parser("llm", help="per-layer battery on a Hugging Face model")
     m.add_argument("--model", required=True)
@@ -970,6 +1309,13 @@ def main():
     m.add_argument("--out", default=None, help="write JSON here")
     m.add_argument("--paper-seeds", action="store_true",
                    help="use the paper's seeding convention (reproduces the published per-layer cells)")
+    m.add_argument("--dtype", choices=["fp16", "bf16", "fp32"], default=None,
+                   help="model dtype; default float16 on mps/cuda, float32 on cpu; bf16 repairs float16 overflow in early checkpoints")
+    m.add_argument("--standardize", action="store_true", help="z-score every unit per layer before the Gram (z frame only)")
+    m.add_argument("--frames", choices=["linear", "z", "both"], default="both",
+                   help="feature frame(s): the linear Gram (the paper's), per-unit z-scored, or both with a sign-disagreement flag (default)")
+    m.add_argument("--match-last-token", action="store_true",
+                   help="per layer, the last-token-matched and size-matched random subsamples (Appendix I's last-token control)")
 
     s = sub.add_parser("summarize", help="plain-language reading of a `rung llm` or `rung data` JSON (the paper's rules)")
     s.add_argument("battery_json")
@@ -1029,8 +1375,17 @@ def main():
         order = a.order
         if order not in (None, "sequential", "antipodal"):
             order = [int(v) for v in order.split(",")]
+        tb = None
+        if a.time_blocks:
+            tb = block_ids(len(labels), int(a.time_blocks)) if a.time_blocks.isdigit() else _load_array(a.time_blocks).astype(int)
         r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed, standardize=a.standardize,
-                 antipode=antipode, order=order, shift_null=a.null_shift)
+                 antipode=antipode, order=order, shift_null=a.null_shift, time_blocks=tb)
+        if not a.standardize:
+            rz = zoom(X, labels, n_perm=0, k_orders=a.k_orders, seed=a.seed, standardize=True, order=order)
+            r["delta_z_frame"], r["delta_orderavg_z_frame"] = rz["delta"], rz["delta_orderavg"]
+            print(f"frame check: per-feature z-scored delta {rz['delta']:+.3f} (order-averaged {rz['delta_orderavg']:+.3f})"
+                  + ("  <- OPPOSITE sign to the linear frame: a few high-variance features set the linear reading"
+                     if np.sign(rz["delta"]) != np.sign(r["delta"]) else ""))
         for k, v in r.items():
             if not isinstance(v, list):
                 print(f"{k}: {v}")
@@ -1050,7 +1405,7 @@ def main():
         if a.decompose:
             Xd = (X - X.mean(0)) / (X.std(0) + 1e-12) if a.standardize else X
             rd = decompose(Xd, labels, order=None if order in (None, "sequential") else [int(np.unique(labels)[i]) for i in declared_order(np.unique(labels), order)],
-                           n_null=20, seed=a.seed, n_shuffle=a.n_shuffle)
+                           n_null=20, seed=a.seed, n_shuffle=a.n_shuffle, n_bias=a.n_bias)
             if rd is None:
                 print("decompose: the ladder has fewer than three rungs of ten samples; nothing to split")
             else:
@@ -1064,7 +1419,8 @@ def main():
     else:
         llm_battery(a.model, a.axis, a.device, a.n_perm, a.k_orders, a.max_len,
                     a.out, paper_seeds=a.paper_seeds, revision=a.revision,
-                    use_strata=not a.no_strata)
+                    use_strata=not a.no_strata, standardize=a.standardize, dtype=a.dtype,
+                    frames=a.frames, match_last_token=a.match_last_token)
 
 
 if __name__ == "__main__":
