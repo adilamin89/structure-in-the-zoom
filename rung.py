@@ -9,7 +9,8 @@ declared accumulation order, and the circular-shift null for labels in
 time order; 1.6 the finite-sample bias null and the sign-law readout of the
 split, the time-blocked null, pair-preserving order averaging for paired
 axes, and, for language models, the last-token report and both feature
-frames.)
+frames; 1.6.1 a per-sample validity mask, e.g. a data release's invalid
+intervals, applied before every statistic.)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -366,6 +367,23 @@ def same_class_rate(lab):
     # rows stored grouped by class (one run per class, as in a prompt battery) say nothing about acquisition time
     return {"rate": rate, "expected": e, "excess_se": float((rate - e) / se), "n_runs": runs,
             "grouped_by_class": bool(runs == len(cnt))}
+
+
+def valid_from_intervals(starts, stops, intervals):
+    """Per-sample validity from invalid time intervals (e.g. a release's invalid_times for a probe): a sample whose window
+    [start, stop] overlaps an interval (start < interval stop and stop > interval start) is invalid. Returns a bool mask."""
+    starts, stops = np.asarray(starts, float).ravel(), np.asarray(stops, float).ravel()
+    valid = np.ones(len(starts), bool)
+    for a, z in np.asarray(intervals, float).reshape(-1, 2):
+        valid &= ~((starts < z) & (stops > a))
+    return valid
+
+
+def apply_valid(valid, *arrays):
+    """Keep only the valid samples (rows) of every array given; None passes through. Statistics then see the remaining
+    samples only: class sizes may become unequal, which every rung and floor already handles."""
+    valid = np.asarray(valid).astype(bool).ravel()
+    return [None if a is None else np.asarray(a)[valid] for a in arrays]
 
 
 def block_ids(n, size):
@@ -1295,6 +1313,9 @@ def main():
     d.add_argument("--n-shuffle", type=int, default=5, help="label permutations for the sampling baseline of each decomposed term (0 disables)")
     d.add_argument("--n-bias", type=int, default=0, help="with --decompose: surrogates of the finite-sample bias null (class means kept, one covariance shape for every class); the within part is read net of it")
     d.add_argument("--time-blocks", default=None, help="rows are in acquisition order: an integer E cuts them into contiguous blocks of E rows, or a file gives one block id per row; adds the null that permutes labels only within blocks")
+    d.add_argument("--valid", default=None, help="per-sample validity (1 keep, 0 drop), e.g. presentations a data release marks invalid; dropped before every statistic")
+    d.add_argument("--sample-times", default=None, help="n x 2 array of each sample's [start, stop]; with --invalid-intervals builds the validity mask")
+    d.add_argument("--invalid-intervals", default=None, help="k x 2 array of invalid [start, stop] intervals (e.g. Allen's invalid_times for the population's probe, all_probes and stimulus tags); a sample overlapping any is dropped")
 
     m = sub.add_parser("llm", help="per-layer battery on a Hugging Face model")
     m.add_argument("--model", required=True)
@@ -1365,9 +1386,6 @@ def main():
         X = _load_array(a.X)
         labels = _load_array(a.labels).astype(int)
         strata = _load_array(a.strata).astype(int) if a.strata else None
-        sp = spectrum(X)
-        print(f"spectrum: d_eff_full={sp['d_eff_full']:.1f} top1_eig_frac={sp['top1_eig_frac']:.2f} top1_dim_var_frac={sp['top1_dim_var_frac']:.2f}"
-              + ("  <- one dimension dominates; consider --standardize" if sp["top1_eig_frac"] > 0.5 else ""))
         antipode = None
         if a.antipode:
             import json as _json
@@ -1378,6 +1396,25 @@ def main():
         tb = None
         if a.time_blocks:
             tb = block_ids(len(labels), int(a.time_blocks)) if a.time_blocks.isdigit() else _load_array(a.time_blocks).astype(int)
+        valid = None
+        if a.valid:
+            valid = _load_array(a.valid).astype(bool).ravel()
+        if a.invalid_intervals:
+            if not a.sample_times:
+                raise SystemExit("--invalid-intervals needs --sample-times (each sample's start and stop)")
+            st = _load_array(a.sample_times).reshape(-1, 2)
+            vi = valid_from_intervals(st[:, 0], st[:, 1], _load_array(a.invalid_intervals))
+            valid = vi if valid is None else valid & vi
+        if valid is not None:
+            if len(valid) != len(labels):
+                raise SystemExit(f"validity mask has {len(valid)} entries for {len(labels)} samples")
+            n_all = len(labels)
+            X, labels, strata, tb = apply_valid(valid, X, labels, strata, tb)   # blocks keep their acquisition-time ids
+            print(f"validity mask: {len(labels)} of {n_all} samples kept; class sizes "
+                  + str(dict(zip(*[v.tolist() for v in np.unique(labels, return_counts=True)]))))
+        sp = spectrum(X)
+        print(f"spectrum: d_eff_full={sp['d_eff_full']:.1f} top1_eig_frac={sp['top1_eig_frac']:.2f} top1_dim_var_frac={sp['top1_dim_var_frac']:.2f}"
+              + ("  <- one dimension dominates; consider --standardize" if sp["top1_eig_frac"] > 0.5 else ""))
         r = zoom(X, labels, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata, seed=a.seed, standardize=a.standardize,
                  antipode=antipode, order=order, shift_null=a.null_shift, time_blocks=tb)
         if not a.standardize:
@@ -1410,6 +1447,8 @@ def main():
                 print("decompose: the ladder has fewer than three rungs of ten samples; nothing to split")
             else:
                 _print_decomposition(rd); r["decompose"] = rd
+        if valid is not None:
+            r["n_samples_total"], r["n_samples_valid"] = int(len(valid)), int(valid.sum())
         if a.out:
             import json as _json
             _json.dump({k: (v if not isinstance(v, np.ndarray) else v.tolist()) for k, v in r.items()}, open(a.out, "w"), indent=1)

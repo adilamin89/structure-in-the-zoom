@@ -336,3 +336,37 @@ def test_frames_disagree_flags_a_dominant_unit():
     rl, rz = tz.zoom(X, labels, **kw), tz.zoom(X, labels, standardize=True, **kw)
     assert rl["delta_orderavg"] < rl["null_mean_orderavg"] and rz["delta_orderavg"] > rz["null_mean_orderavg"]
     assert tz.frames_disagree(rl, rz)
+
+
+def test_valid_from_intervals_overlap_rule():
+    starts, stops = np.array([0.0, 2.0, 4.0, 6.0]), np.array([1.0, 3.0, 5.0, 7.0])
+    v = tz.valid_from_intervals(starts, stops, [[1.0, 2.0], [4.5, 4.6], [6.9, 9.0]])
+    # touching an interval's ends is not an overlap; inside or partial overlaps are invalid
+    assert v.tolist() == [True, True, False, False]
+    assert tz.valid_from_intervals(starts, stops, np.zeros((0, 2))).all()
+
+
+def test_cli_validity_mask_equals_running_on_the_kept_samples(tmp_path):
+    X, labels = _gaussian_classes(n=320, d=48)
+    rng = np.random.default_rng(5)
+    valid = rng.random(len(labels)) > 0.25
+    t0 = np.arange(len(labels)) * 3.0
+    times = np.stack([t0, t0 + 2.0], 1)
+    bad = times[~valid] + np.array([0.5, -0.5])                      # one invalid interval inside each dropped window
+    for name, arr in (("X", X), ("labels", labels), ("valid", valid.astype(int)), ("times", times), ("bad", bad),
+                      ("Xk", X[valid]), ("labk", labels[valid])):
+        np.save(tmp_path / f"{name}.npy", arr)
+    script = os.path.join(os.path.dirname(tz.__file__), "rung.py")
+    base = ["--n-perm", "20", "--k-orders", "3", "--seed", "4"]
+    outs = {}
+    for tag, args in (("mask", ["X.npy", "labels.npy", "--valid", "valid.npy"]),
+                      ("intervals", ["X.npy", "labels.npy", "--sample-times", "times.npy", "--invalid-intervals", "bad.npy"]),
+                      ("subset", ["Xk.npy", "labk.npy"])):
+        out = tmp_path / f"{tag}.json"
+        res = subprocess.run([sys.executable, script, "data", *[str(tmp_path / a) if a.endswith(".npy") else a for a in args], *base,
+                              "--out", str(out)], capture_output=True, text=True)
+        assert res.returncode == 0, res.stderr
+        outs[tag] = json.load(open(out))
+    for tag in ("mask", "intervals"):
+        assert outs[tag]["delta"] == outs["subset"]["delta"] and outs[tag]["p_two"] == outs["subset"]["p_two"]
+        assert outs[tag]["n_samples_valid"] == int(valid.sum()) and outs[tag]["n_samples_total"] == len(labels)

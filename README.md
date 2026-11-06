@@ -164,6 +164,13 @@ Added in 1.6:
   permuted only within contiguous blocks, which keeps what drift and slow state can do. Every run reports how
   often consecutive rows share a class against the label-blind expectation and warns when labels cluster in time
   (rows stored grouped by class, as in a prompt battery, are not flagged).
+- **Samples a release marks invalid** (`--valid mask.npy`, or `--sample-times times.npy --invalid-intervals bad.npy`;
+  `valid_from_intervals(starts, stops, intervals)`): a sample whose window overlaps an invalid interval is dropped
+  before every statistic, and the result records how many were kept. For the Allen Neuropixels sessions, the
+  intervals are the release's `invalid_times` tagged with the population's probe (the probe sent no data), all
+  probes or the stimulus; units on electrodes the release marks `valid_data = False` are dropped from the columns
+  before the call. A population whose summed count is zero where its rate predicts ten or more spikes is the same
+  defect, unflagged: build that mask from the counts and pass it with `--valid`.
 - **Both feature frames.** `rung data` prints the shift of the per-feature z-scored array beside the linear one;
   `rung llm --frames both` (the default) reports the order-averaged shift and its null in each frame at every
   layer and flags layers where they disagree in sign: there a few high-variance units set the linear reading.
