@@ -8,6 +8,7 @@ origin and license. Code in this repository is MIT (see `LICENSE`); the items be
 | axis | classes | how it was made |
 |---|---|---|
 | `world_knowledge.json` | 8 domains x 16 prompts | composed for the paper by the author, fixed before any measurement |
+| `world_knowledge32.json` | 8 domains x 32 prompts | the 16 of `world_knowledge.json` followed by 16 more per domain composed the same way; the language-model worked example of the paper's Appendix M |
 | `language_type.json` | 8 construction types x 16 | same; topics deliberately mixed inside each class |
 | `language_type.strata.json` | topic stratum per prompt | assigned by hand from the prompt text alone, blind to any measured value (the nuisance-preserving null of App G) |
 | `ethical.json` | 8 ethical concepts x 16 | same as world_knowledge; the concept list is inspired by, not identical to, the moral-foundations taxonomy |

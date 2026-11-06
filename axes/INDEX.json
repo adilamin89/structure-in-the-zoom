@@ -102,5 +102,15 @@
   "npi_present_1_bad",
   "irregular_past_participle_verbs_good",
   "irregular_past_participle_verbs_bad"
+ ],
+ "world_knowledge32": [
+  "mathematics",
+  "geography",
+  "history",
+  "technology",
+  "law",
+  "medicine",
+  "philosophy",
+  "sports"
  ]
 }
