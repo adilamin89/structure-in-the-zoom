@@ -1,12 +1,12 @@
 """Figure 6 (LLM depth profiles) for the arXiv version. From committed
 JSONs (runs 17/18/19/26 + run25 OLMo):
   (a) world_knowledge (content axis): delta vs normalized depth at four
-      Pythia scales — positive at the embedding, declining.
-  (b) language_type (structural axis): negative at the embedding, rising —
+      Pythia scales, positive at the embedding, declining.
+  (b) language_type (structural axis): negative at the embedding, rising,
       the content/structure crossover at all four scales.
   (c) embedding-excess delta(L) - delta(0) for all six axes on Pythia-2.8B
       (32 layers): network-built organization is visible as positive excess.
-      Inset: OLMo-1B (16/class, run25) — content replicates cross-family,
+      Inset: OLMo-1B (16/class, run25), content replicates cross-family,
       the structural profile does not.
 Out: ../figures_canonical/fig_llm_depth.png + ../../arxiv/figures/
 """
@@ -103,7 +103,7 @@ fig.legend(handles, labels, loc="lower center", ncol=3, fontsize=6.3, frameon=Fa
 ax.set_ylim(-0.34, 0.42)
 
 # inset: cross-family (OLMo, solid) vs same-corpus different-architecture
-# (GPT-Neo, dashed) — the rise tracks the corpus, the shape the architecture
+# (GPT-Neo, dashed), the rise tracks the corpus, the shape the architecture
 d25 = json.load(open(DATA / "run25_olmo1b_16pc_battery.json"))
 d29 = json.load(open(DATA / "run29_gptneo_battery.json"))
 ins = ax.inset_axes([0.10, 0.56, 0.42, 0.28])

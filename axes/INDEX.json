@@ -112,5 +112,15 @@
   "medicine",
   "philosophy",
   "sports"
+ ],
+ "ioi_names": [
+  "Mary",
+  "John",
+  "Tom",
+  "James",
+  "Sarah",
+  "Paul",
+  "Kate",
+  "Dan"
  ]
 }

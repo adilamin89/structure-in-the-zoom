@@ -1,6 +1,6 @@
-"""Run 37 — Inferential permutation nulls + order-averaged delta for the LLM battery.
+"""Run 37, Inferential permutation nulls + order-averaged delta for the LLM battery.
 
-WHY: runs 17-32 report sig/shuffle ratios from N_SHUF=5 label shuffles —
+WHY: runs 17-32 report sig/shuffle ratios from N_SHUF=5 label shuffles,
 descriptive, not inferential (round-4 item 3). This run re-encodes
 world_knowledge + language_type (prompts byte-identical via run17.build_axes())
 on Pythia-160m and Pythia-2.8b-deduped and computes:
@@ -11,8 +11,8 @@ on Pythia-160m and Pythia-2.8b-deduped and computes:
   (B) profile-level inference on PRE-DECLARED stats: integrated excess
       IE = mean_{l>=1}(delta_l - delta_0) and peak excess
       PE = max_{l>=1}(delta_l - delta_0), one-sided p in the pre-declared
-      direction (language_type: IE>0, PE>0 — structure built with depth;
-      world_knowledge: IE<0 — content diluted with depth);
+      direction (language_type: IE>0, PE>0, structure built with depth;
+      world_knowledge: IE<0, content diluted with depth);
   (C) order-averaged headline for UNORDERED axes (round-4 item 2):
       deltabar_l +/- SD over K_ORDERS=50 random class-accumulation orders;
       ordered ladders remain only for direction/SF/time/clock/compass;
@@ -33,7 +33,7 @@ P4: order-averaged IE/PE remain significant wherever P2 passes.
 
 FLOOR: label-independent, N_NULL_FLOOR=20 random-subset draws (run17
 construction), computed once per layer and shared by observed and permuted
-deltas — permuting labels cannot move the floor.
+deltas, permuting labels cannot move the floor.
 
 GRAM TRICK: the full n x n linear kernel K = X X^T is computed once per
 layer; every subset PR is then O(n^2) via double-centering the submatrix
@@ -259,7 +259,7 @@ def main():
                     labels.append(ci)
             labels = np.array(labels)
             print(f"\n[{mkey} / {axis_name}] {len(class_names)} classes, "
-                  f"{len(prompts)} prompts — encoding...", flush=True)
+                  f"{len(prompts)} prompts, encoding...", flush=True)
             per_layer = r17.get_hidden_states(model, tokenizer, prompts,
                                               device=device)
             res = analyze_axis(per_layer, labels, len(class_names), axis_name)

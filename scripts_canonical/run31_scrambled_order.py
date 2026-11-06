@@ -1,4 +1,4 @@
-"""Run 31 — Scrambled-word-order control for the structural axis.
+"""Run 31, Scrambled-word-order control for the structural axis.
 
 WHY: the structural (sentence-construction) axis could be organized by word
 DISTRIBUTION (which function words appear) rather than by structure (how
@@ -9,9 +9,9 @@ the signal trivially; here every prompt is scrambled EXCEPT its final word,
 preserving the completion position while destroying arrangement.
 
 REGISTERED EXPECTATIONS (written before the run):
-S1: content axis (world_knowledge) survives scrambling — its organization
+S1: content axis (world_knowledge) survives scrambling, its organization
     is lexical and order-free.
-S2: THE TEST — if the structural axis's rising profile survives
+S2: THE TEST, if the structural axis's rising profile survives
     all-but-last scrambling, its organization is word-distributional; if it
     collapses toward the shuffle band, it requires intact arrangement.
     Either outcome is reportable; the prediction is substantial weakening,

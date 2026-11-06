@@ -1,4 +1,4 @@
-"""Run 65 (S79, 2026-09-06) - The four-term split of the deficit in a language
+"""Run 65 - The four-term split of the deficit in a language
 model: which term carries the content axis's shift at the embedding and the
 construction axis's rise with depth?
 
@@ -64,7 +64,7 @@ from scipy.stats import spearmanr
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
-SUPP = HERE.parent.parent / "arxiv_supplement"
+SUPP = HERE.parent                      # the repository root: rung.py, axes/
 OUT = DATA / "run65_pythia_deficit_decomposition.json"
 sys.path.insert(0, str(HERE))
 from deficit_split import FREE, decompose, largest_term  # noqa: E402

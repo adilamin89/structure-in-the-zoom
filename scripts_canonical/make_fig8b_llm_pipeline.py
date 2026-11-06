@@ -1,7 +1,7 @@
 """Schematic for Section 8 (paper figure): the language-model battery from axis file to
 depth profile. The profile panel is a cartoon shaped like the measured Pythia profiles
 (content positive at the embedding and diluting; construction negative at the embedding
-and rising past zero near a quarter depth); no data are read. Written S76 (2026-09-04).
+and rising past zero near a quarter depth); no data are read.
 Output: figures_canonical/fig_llm_pipeline.png (drawn at the 6.0 in text width).
 """
 from pathlib import Path

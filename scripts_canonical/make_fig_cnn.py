@@ -1,9 +1,9 @@
-"""Figure: architectural ground truth (S77). (A) a drawn architecture panel: the
+"""Figure: architectural ground truth. (A) a drawn architecture panel: the
 shared trunk applied to the four rotations of an input and averaged over the
 orbit, with the read-out points; (B) delta_rot by layer for plain, pre-pool and
 invariant features with the digit axis on the invariant features (run5b); (C) the
 rotation-tuned variance fraction by depth against the raw-pixel baseline
-(run5c, run14). Panels B and C are the S70 fig_mechanism.png panel (c) and its inset.
+(run5c, run14). Panels B and C are the fig_mechanism.png panel (c) and its inset.
 Out: ../figures_canonical/fig_cnn.png + ../../arxiv/figures/
 """
 import json

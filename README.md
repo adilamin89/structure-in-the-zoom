@@ -1,257 +1,302 @@
 # Structure is in the zoom
 
-**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs. NeurReps 2026 workshop
-(Proceedings of Machine Learning Research). This repository is two things: `rung`, the paper's measurement released as a
-tested tool, and the code and data behind every number in the paper.
+**Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs. NeurReps 2026 workshop (Proceedings of
+Machine Learning Research). This repository holds `rung`, the paper's measurement as a tested tool, and the code and data
+behind every number in the paper.
+
+A dimensionality-scaling exponent, the slope of the participation ratio against subsample size on log-log axes, measures a
+population and the probe that sampled it together. One recording of 11,311 mouse V1 neurons returns 0.25 when stimuli are added
+at random, 0.30 when stimulus directions are added class by class, and 0.35 when neighbouring neurons are added. Two of the three
+are floors, what random subsets of the same sizes return through the same estimator; direction alone leaves its floor
+(0.305 = a floor of 0.065 + a shift of 0.240). `rung` makes that split for any reported exponent.
 
 ![One population, many probes](figures_canonical/fig_probes.png)
 
-## What rung reads
+## What rung tells you
 
-A dimensionality-scaling exponent, the slope of the participation ratio against subsample size on log-log axes, is
-reported for neural populations and for the layers of language models as if the number belonged to the system. It
-measures the population and the probe together. One recording of 11,311 mouse V1 neurons returns 0.25 when stimuli are
-added at random, 0.30 when stimulus directions are added class by class, and 0.35 when neighbouring neurons are added.
-Two of the three numbers are floors: what random subsets of the same sizes return through the same estimator. Direction
-alone leaves its floor (0.305 = a floor of 0.065 + a shift of 0.240).
+For a samples-by-features array with one label per row (trials by neurons, prompts by hidden units, images by channels), and for
+every layer of a language model at any training checkpoint, with no probe or model trained:
 
-`rung` splits a reported exponent before it is compared, for any samples-by-features array with one label per row and
-for every layer of a language model at any training checkpoint, with no probe or model trained. It returns the **floor** and the
-**shift** δ against label and nuisance nulls, splits the shift into what the class means and the fluctuations carry,
-reads the symmetry sectors of a cyclic axis and compares candidate labels. The exact identity
-`theta_obs = theta_floor + delta` holds whenever the declared ladder and its floor share rung sizes.
+- **how much of an exponent is floor**, and the shift a declared label adds to it, against label permutations and nulls that keep
+  a nuisance, an acquisition block or the labels' time order fixed (`theta_obs = theta_floor + delta`, exact whenever the declared
+  ladder and its floor share rung sizes);
+- **what carries the shift**: fluctuations that differ between classes, or the class means, with the sign law that says which way
+  the class means push;
+- **whether two measured terms account for it**, nothing fitted, and whether each class is sampled well enough to read it;
+- **which of several candidate labels organizes a population**, discovered on one half of the data and replicated on the other;
+- **what other samplings keep**: neighbouring neurons, features in a given order, blocks of features pooled by a score;
+- **for a language model**, how much a declared label (a topic, a construction) adds to each layer's exponent, how much of that is
+  the final token, and which attention heads to test first.
 
-The shift is an analysis, not a detector: it says how much of a reported exponent a declared label makes, and what sets
-it. A decoder asks whether a label can be read out; the two answer different questions and complement each other (see
-*What the paper shows*). The grouping of samples into classes carries the shift; the order in which the classes are
-added moves it little, so for unordered classes `rung` reports the order-averaged shift beside the declared one.
+A decoder tells whether a label can be read out; the shift tells how much of a reported exponent the label accounts for and what
+sets that share. The grouping of samples into classes carries the shift; the order in which the classes enter moves it little, so
+for unordered classes `rung` reports the order-averaged shift beside the declared one.
 
 ## Install and run
 
 ```bash
-pip install git+https://github.com/adilamin89/structure-in-the-zoom     # numpy core
-rung data X.npy labels.npy --out r.json --plot r.png                     # any samples-by-features array; labels = integer class ids, one per row
-rung summarize r.json                                                    # the reading, in plain language
+pip install git+https://github.com/adilamin89/structure-in-the-zoom      # numpy, scipy, matplotlib
+rung data X.npy labels.npy --decompose --out r.json --plot r.png          # any samples-by-features array, one integer label per row
+rung summarize r.json                                                     # the reading, in plain language
 ```
 
-For a language model, clone the repository (the paper's prompt axes live in `axes/`) and add the model extras:
+For a language model, clone the repository (the paper's prompt axes are in `axes/`) and add the model extras:
 
 ```bash
 git clone https://github.com/adilamin89/structure-in-the-zoom && cd structure-in-the-zoom
-pip install -e ".[models]"                                    # + torch, transformers, datasets
-rung llm --model EleutherAI/pythia-160m --axis axes/language_type.json --device mps --out lt.json   # --device cpu | mps | cuda
-rung plot lt.json --out lt.png                                # the depth profile with both null bands
-rung summarize lt.json                                        # the reading, layer by layer
+pip install -e ".[models]"                                                # + torch, transformers, datasets
+rung llm --model EleutherAI/pythia-160m --axis axes/world_knowledge32.json --match-last-token --out lm.json
+rung plot lm.json --out lm.png && rung summarize lm.json
 ```
 
-`theta-zoom`, the tool's name through 1.1.0, stays as an alias for one release.
+`pip install -e ".[nwb]"` adds h5py for NWB and MATLAB v7.3 files; `".[scripts]"` adds what the analysis scripts need (h5py,
+numba, scikit-learn). `rung --version` prints the release; every option's default is in `rung <command> --help`.
 
-## Two worked examples
+## Worked examples
 
-**A recording.** Trials by neurons (from an NWB file, build the trials-by-units count matrix with `pynwb` and save it as
-`.npy`; from `.mat`, `scipy.io.loadmat`), one drift direction per trial in eight classes at 45°, in angular order, with
-the antipodal pairs written down.
+**A recording.** GT3, 4,442 drifting-grating presentations by 11,311 neurons, eight direction classes in angular order:
 
 ```bash
-python -c "import json; json.dump({c: (c + 4) % 8 for c in range(8)}, open('pairs.json', 'w'))"
-rung data resp.npy direction.npy --antipode pairs.json --sectors --decompose --cov-floors --out v1.json --plot v1.png
-rung summarize v1.json
+rung data gt3_X.npy gt3_labels.npy --sectors --decompose --n-perm 200 --out gt3.json --plot gt3.png
 ```
 
-The summary gives the floor, the shift and its permutation p; the deficit at every rung and the share of the climb left
-after four classes, read as the stall test; the sector balance of the class-mean kernel and its even and odd amplitudes;
-the split, which says whether the shift is the pooling of fluctuation modes private to each class (`D`, the finding on
-V1) or the class means (`Tb`); and, with `--cov-floors`, the principal-angle dissimilarity between classes against its
-own label-blind floor. Pass the session or animal as `--strata` when trials are not exchangeable across it. To compare
-the direction-selective, random and least-selective thirds at matched size, pass the tuned neurons only (with
-`--split-by` scores of their direction selectivity): `split_by` ranks every feature it is given.
+![rung's ladder figure for GT3](figures_canonical/worked_example_gt3_rung.png)
 
-![The language-model battery](figures_canonical/fig_llm_pipeline.png)
+The ladder starts low (one class spans few directions) and climbs faster than its floor as each class brings new directions. The
+run prints the floor and the shift with its permutation p, the floor's own standard error, the split into the within-class part
+D (+0.358) and the class-mean part Tb + Cb + Cx (-0.127), the sign law and the class-mean harmonics. `--account` adds the
+two-term account, Figure 3 for this one recording.
 
-**A model.** An axis is a JSON file `{"class": ["prompt", ...], ...}`; eight classes, sixteen or thirty-two prompts per
-class, the hidden state at the last token of every layer. `--paper-seeds` reproduces the paper's cells.
+**A model.** An axis is a JSON file `{"class": ["prompt", ...], ...}`. `--paper-seeds` reproduces the paper's per-layer cells.
 
 ```bash
 rung llm --model EleutherAI/pythia-160m --axis axes/world_knowledge32.json --paper-seeds --match-last-token --out lm.json
-rung summarize lm.json
 ```
 
-Declared topics lift every layer, more with depth; `--match-last-token` adds, at every layer, subsamples matched on the
-number of distinct final tokens per class and size-matched random subsamples, so the lexical part of a lift is the drop
-from the second to the first. For checkpoints, add `--revision` (`step1000`, `step143000`); for a site other than the
-residual stream, collect one feature vector per prompt at that site (an attention head's output, an MLP's neurons, a
-sparse autoencoder's latents) and call `zoom(X, labels)` on it. `rung axis --dataset ... --text-field ... --label-field
-... --out my.json` builds an axis from any Hugging Face dataset, with `--strata-field` for the nuisance sidecar.
+![The language-model battery](figures_canonical/fig_llm_pipeline.png)
 
-Two minimal-pair benchmarks ship the same way: `axes/blimp_grammaticality.json` (four BLiMP paradigms, good and bad as
-classes) and `axes/baroni_complexity.json` (three syntactic-complexity contrasts at 64 pairs), each with a
-`.strata.json` holding the pair, so `rung llm` reads the grammaticality signal against the within-pair swap null out of
-the box. Because the strata pair the classes, the result also carries the pair-preserving order average. The two planted
-axes `axes/compass.json` and `axes/clock.json` (eight class tokens rotated inside sixteen shared carrier sentences) are
-what the second null is for: the carrier-stratified null returns them to zero.
+Declared topics lift every layer, more with depth; `--match-last-token` adds, at every layer, subsamples matched on the number of
+distinct final tokens per class and size-matched random subsamples, so the lexical part of a lift is the drop from the second to
+the first. For checkpoints add `--revision step1000`; for a site other than the residual stream, collect one feature vector per
+prompt at that site (an MLP's neurons, a sparse autoencoder's latents) and call `zoom(X, labels)` on it.
 
-## What it returns
+**Attention heads.** `rung llm --heads` scores every head's write at the final token along the axis:
 
-For one array and one axis (`rung data`, or `zoom(X, labels)` in Python):
+```bash
+rung llm --model openai-community/gpt2 --axis axes/ioi_names.json --heads --paper-seeds \
+         --heads-known 9.6,9.9,10.0,10.10,10.6,10.2,10.1,11.2,9.7,9.0,11.9 --out heads.json
+```
 
-- `theta_floor`, `delta`: the floor and the shift, with `theta_obs = theta_floor + delta` exact;
-- `p_two`, `z`: the shift against the label-permutation null (500 permutations by default);
-- `delta_orderavg`, `p_two_orderavg`: the shift averaged over fifty random class orders, the statistic for a partition
-  whose classes have no natural order;
-- `strat_p_two` when strata are given: the shift against the nuisance-preserving null;
-- the ladder itself: `pr_obs` and `pr_floor` at every rung, `deficit` (the log participation ratio of the accumulated
-  classes below the floor, zero at the top rung) and `late_fraction`, the share of the climb that the second half of the
-  classes still carries. With `--antipode pairs.json` (`{class: its antipodal class}`) `late_fraction` is the stall test:
-  a code that has every class mean by half the classes has nothing left to climb there; a code that distinguishes a class
-  from its antipode still does.
+On GPT-2 small's indirect-object circuit (eight indirect-object names, 16 prompts each), the heads' permutation z ranks the eleven
+name-mover and backup heads that path patching found at AUC 0.92 and their class-mean variance share at 0.96, with nothing trained
+(a trained probe: 0.95). It is a training-free pre-screen that ranks heads for causal follow-up; the split says whether a head
+scores through its class means or its fluctuations.
 
-Before any of that, `rung data` prints the **spectrum**: the array's full effective dimension, the variance fraction of
-its leading eigenvalue and of its largest single feature. A population dominated by one direction blinds any spectral
-functional; `--standardize` z-scores every feature first and is the repair.
+## Feature reference
 
-Further readings, each one flag:
+Each entry: what it returns, the question it answers, one command, and what the paper found with it.
 
-- `--decompose` (`decompose(X, labels)`): the exact four-term split of every rung's deficit and of the shift into a trace
-  term, a fluctuation-pooling term, a between-class term and a mean-fluctuation coupling, regrouped into two scale-free
-  pieces, the change in the pooled within-class effective dimension `D` and the trace share of the class means `Tb`, with
-  the private slope of `D` against log(k/K) (1 when every class brings its own fluctuation subspace, 0 when the
-  variability recurs across classes) and, with `--n-shuffle`, every term net of label permutations. It also prints the
-  **sign law** of the split: at the full set, the class-mean term is negative exactly when PR(W)/PR(B) exceeds
-  1 + 2(1 - a) Tr W/Tr B, where a = Tr(WB) PR(W)/(Tr W Tr B) is the alignment of the class means with the dominant
-  fluctuations. `--n-bias 3` adds the **finite-sample bias null**: surrogates with the data's class means, class sizes and
-  class variances and one covariance shape for every class; the within part `D` is read net of it.
-- `--sectors` (`sectors(X, labels)`): for a cyclic axis, with the labels in cyclic order, the harmonics of the class-mean
-  kernel: the coefficients (for eight classes a, c1, b2, c3, b4), the sector balance b2/|c1|, the even and odd amplitudes
-  and the coherence of adjacent and of antipodal classes.
-- `--cov-floors` (`cov_floors(X, labels)`): the principal-angle dissimilarity between classes (one minus the mean squared
-  cosine between their top `--cov-k` residual directions, averaged over class pairs) against its own label-blind floor,
-  often most of its raw value at the trial counts experiments use. Two label-blind classes are independent samples of
-  one distribution, so an elliptical random-matrix model, the pooled spectrum with a trial gain of the measured kurtosis,
-  predicts the floor without permutations. The run reports the observed value, the floor, the floor of the spectrum
-  alone, the floor-corrected value and the structure part (observed - floor) / (1 - floor); compare corrected or
-  normalized values across designs, never raw ones. The model fits best where trial-to-trial variability is a shared
-  gain; spike counts mix gain with private noise, so there `--cov-perm 50` adds the permutation floor to check it.
-- `--null-shift`: when the labels are in time order (one per frame), a circular shift of the whole label sequence as the
-  second null, which keeps the labels' autocorrelation and breaks only their alignment with the frames.
-- `--time-blocks 48` (or a file of block ids, rows in acquisition order): labels permuted only within contiguous blocks,
-  which keeps what drift and slow state can do. Every run reports how often consecutive rows share a class against the
-  label-blind expectation and warns when labels cluster in time.
-- `--valid mask.npy`, or `--sample-times times.npy --invalid-intervals bad.npy` (`valid_from_intervals`): samples a data
-  release marks invalid are dropped before every statistic, and the result records how many were kept.
-- `--order sequential|antipodal|<list>` sets the declared accumulation order; `--split-by scores.npy` runs the top,
-  bottom and a random third of the features at matched size, each with its own floor.
+**`rung data X labels`**: the floor `theta_floor` and its standard error, the shift `delta`, the order-averaged shift, each against
+label permutations. Before comparing an exponent across conditions, recordings or models: how much of it is floor.
+`rung data X.npy labels.npy --plot r.png`. GT3's three exponents: two are floors (Section 3).
 
-`rung data` also prints the shift of the per-feature z-scored array beside the linear one; `rung llm --frames both` (the
-default) reports both frames at every layer and flags layers where they disagree in sign. `rung llm` reports the
-distinct last tokens per class and warns when a class ends on few of them; `--dtype bf16` repairs float16 overflow in
-early training checkpoints. `rung summarize` turns a result into sentences under the rules below; `rung plot` draws the
-ladder figure for an array and one panel per axis for a model, with both null bands.
+**`--decompose`** (`decompose`): the within-class part D and the class-mean part Tb + Cb + Cx, which sum to the shift; the sign law
+(Eq. 3: the full-set class-mean remainder c, negative exactly when PR(W)/PR(B) exceeds 1 + 2(1 - a)/beta, a the means' alignment
+with the fluctuations); `--n-bias` the finite-sample bias null. What carries a lift. In imaging the within-class part is +0.29 to
++0.64 and the class-mean part -0.08 to -0.35 (Section 5).
+
+**`--account`** (`account`): the measured within-class part beside the mean-field overlap law ln[K/(1+(K-1) sigma)]/ln K (sigma from
+split halves) and the identity at the rungs' sample counts; the class-mean part beside Eq. 3 carried through the rungs; their sum
+beside the shift; the two corrections beyond mean field; a held-out arm. Whether two measured terms give the shift, and whether the
+classes are sampled enough to read it. The terms give the sign in 8 of 8 imaging recordings and 152 of 167 Allen populations
+(Figure 3).
+
+**`--candidates L1.npy L2.npy ...`** (`candidates`): each candidate label's shift against its own permutations, inside the joint cells
+of the other candidates with `--candidate-strata others`, ranked by z; `--halves oddeven` discovers on one half and replicates on
+the other. Which label organizes a population. Screening four labels picks direction on 16 Allen mice and again on the other 16
+(Section 8, Appendix H).
+
+**`rung features X`** (`feature_ladder`): a ladder over features, the nearest neighbours of random anchors (`--positions`) or features
+in a given order (`--order`, `--score`), against random features, with the exchangeable control. Whether anatomy or a feature
+ranking concentrates dimensions. `rung features X.npy --positions cells.npy`. Neighbouring neurons sit just below their floor
+(mean -0.033, negative in 8 of 10 recordings; Appendix D).
+
+**`--block-by phase1|phase2|random|score.npy --block-size 1,4,16,32`** (`blocks`): the shift on blocks of features pooled by a score
+(preferred direction, preferred orientation, a file) and on random blocks, each against its own floor. What a coarser recording
+keeps. Direction-sorted blocks keep GT3's shift at every block size, random blocks lose it (+0.027 at 32; Appendix G).
+
+**`--sectors`** (`sectors`): the harmonics of the class-mean kernel on a cyclic axis, its even (orientation) and odd (direction)
+amplitudes. Which tuning the shift reads (Section 4).
+
+**`--split-by score.npy`** (`split_by`): the top, bottom and a random third of the features at matched size, each against its own
+floor. Whether a feature property carries the shift; the most direction-selective third shifts more in all eight recordings (Section 4).
+
+**`--order sequential|antipodal|<list>`, `--antipode pairs.json`**: a declared accumulation order and the antipodal stall test. Order
+effects and what sets them (Appendix E).
+
+**`--strata`, `--time-blocks E`, `--null-shift`**: nulls that keep a nuisance, an acquisition block or the labels' time order fixed.
+Whether a shift is the label or its composition or drift (Appendices I and K).
+
+**`--valid mask.npy`, `--sample-times`, `--invalid-intervals`**: samples a data release marks invalid, dropped before every statistic
+(Allen's invalid intervals, Section 6).
+
+**`--cov-floors`** (`cov_floors`): the principal-angle dissimilarity between classes against its label-blind floor, predicted from the
+pooled spectrum. A median 69% of that dissimilarity across 167 Allen populations is floor (Section 8, Appendix H).
+
+**`--standardize`**: every feature z-scored first, the repair when one direction dominates the spectrum; `rung data` always prints the
+z-scored shift beside the linear one.
+
+**`--paper-floor`**, `--floor-draws`, `--floor-seed`, `--floor-by-rung`, `--rungs`: the floor's draws and the ladder's rungs.
+`--paper-floor` draws the floor as the paper's imaging, Allen and macaque generators do and replays their printed values.
+
+**`rung llm`** (`--revision`, `--match-last-token`, `--frames`, `--heads`): every layer's shift in the linear and the z-scored frame
+at any checkpoint, the final-token report and control; every attention head with `--heads`. Topics lift every layer of four Pythia
+models, and the late lift survives final-token matching (Appendix I).
+
+**`rung axis`, `rung summarize`, `rung plot`**: an axis JSON from a Hugging Face dataset (it reports texts cut at `--max-chars`, which
+can make the final token follow the class); a plain-language reading of any result; the figure for any result.
+
+**Loaders**: `.npy`, `.npz:key`, `.mat:variable`, `.csv`, text; `--transpose` when X is stored features by samples.
+`rung nwb session.nwb --intervals trials --label direction --out s` writes trials-by-units spike counts, labels and each row's time
+window from an NWB 2 file (h5py); `--units-where location=VISp` keeps one area. NWB 1 files (Allen Visual Coding two-photon) read
+with h5py directly.
 
 ## Reading the numbers
 
 1. **Declare before you look.** Classes, class count and accumulation order are fixed first.
 2. **Six or more classes, ten or more samples per rung.** A two-class ladder fits a slope through two points.
-3. **For unordered classes, read the order-averaged shift.** The declared-order profile is a property of one path.
-4. **Pass your nuisance structure as strata.** If the shift survives the within-stratum permutation, the label is doing
-   work; if the stratified null absorbs it, the signal is composition.
+3. **For unordered classes, read the order-averaged shift**, and for ordered ones too whenever the SD over orders is comparable to
+   the shift: the declared-order value is a property of one path.
+4. **Pass your nuisance structure as strata.** A shift that survives the within-stratum permutation is the label's; one the
+   stratified null absorbs is composition.
 5. **Read the spectrum first**, and standardize when one direction dominates.
 6. **Compare subsets at matched size only.** The shift depends on the number of features.
-7. **Read `D` and `Tb`, not the raw pooling and trace terms,** wherever the within-class scale changes with the class.
+7. **Read D and the class-mean part** wherever the within-class scale changes with the class: the raw pooling and trace terms
+   each carry that scale, with opposite signs.
 8. **Sample each class well before reading the split.** In the paper's grating recordings the within-class part turned positive
-   only once each class held 0.46 to 1.2 times its own fluctuation dimension in samples. The floor's first rungs estimate the
-   pooled fluctuations, of dimension about m PR_class with m = K/[1+(K-1)σ] (σ the classes' mean fluctuation overlap), from as
-   many samples as a declared rung spends on one class, so `D` sits below its population value, by about (m-1) PR_class/(n ln K)
-   at n samples per class (an endpoint, first-order estimate), while the class-mean terms (`Tb + Cb + Cx`) move the other way.
-   Evaluated at each rung's sample counts (`scripts_canonical/finite_n_identity.py`), the identity puts the within-class part of
-   eight equal Gaussian classes of PR_class = 30 within 0.05 of the population identity's value on the same rungs once a class
-   holds about 20, 8 and 3 times PR_class samples at σ = 0.2, 0.44 and 0.7, at higher ratios n/PR_class for classes of
-   lower PR. Compare the samples per class with PR(W), which the sign-law line prints; `--n-bias` measures the part that
-   remains when every class has one covariance shape.
-9. **For a depth profile, the inference is on the profile**, the integrated excess of the shift over its embedding value
-   against the permutation null, not on a count of significant layers.
-10. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, the linear one
-    follows a few high-variance units.
-11. **The shift reads how classes spread, not a consistent offset.** Classes that differ only by the same small direction
-    between near-identical items give the shift nothing to read, while a linear probe can still find that direction.
-12. **Any covariance statistic inherits a floor.** Read a principal-angle or other covariance comparison against its
-    label-blind floor (`--cov-floors`) before comparing it across designs.
+   only once each class held 0.46 to 1.2 times its own fluctuation dimension in samples. The floor's first rungs estimate the pooled
+   fluctuations, of dimension about m PR_class with m = K/[1+(K-1)σ] (σ the classes' mean fluctuation overlap), from as many
+   samples as a declared rung spends on one class, so `D` sits below its population value, by about (m-1) PR_class/(n ln K) at n
+   samples per class (an endpoint, first-order estimate), while the class-mean terms (`Tb + Cb + Cx`) move the other way.
+   Evaluated at each rung's sample counts (`scripts_canonical/finite_n_identity.py`, `--account`), the identity puts the within-class
+   part of eight equal Gaussian classes of PR_class = 30 within 0.05 of the population identity's value on the same rungs once a
+   class holds about 20, 8 and 3 times PR_class samples at σ = 0.2, 0.44 and 0.7, at higher ratios n/PR_class for classes of
+   lower PR.
+9. **For a depth profile, the inference is on the profile**, the integrated excess of the shift over its embedding value against the
+   permutation null; per-layer counts are descriptive.
+10. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, the linear one follows a
+    few high-variance units.
+11. **The shift reads how classes spread.** Classes that differ only by one small offset between near-identical items give it
+    nothing to read, while a linear probe can still find that offset.
+12. **Any covariance statistic inherits a floor.** Read a principal-angle or other covariance comparison against its label-blind
+    floor (`--cov-floors`) before comparing it across designs.
+13. **Quote a shift with the floor's standard error.** Two runs with independent floors of the same draw count differ with an SD of
+    about 1.4 times it.
+
+## rung against the paper
+
+Run as a user would, on arrays built from the public releases, rung returns the paper's numbers. With the floor the paper's
+generators drew (`--paper-floor`: ten draws, seed 42, drawn rung by rung; the lattices' own seeds) it replays the printed shifts and
+within-class parts exactly. With its default floor (20 draws) a shift differs from the printed one by the two runs' floor draws,
+whose size the spread column shows.
+
+| Dataset | rung, default floor | its spread over 20 seeds | rung, the paper's floor | paper | largest residual |
+|---|---|---|---|---|---|
+| GT3 direction ladder (Table 9) | +0.231 | +0.234 ± 0.004 | +0.233 | +0.233 | 3e-7 (float32) |
+| Allen VISp, one mouse (715093703) | +0.188 | +0.204 ± 0.010 | +0.215 | +0.215 | 2e-15 |
+| Allen VISp, TF-residualized arm | +0.226 | +0.239 ± 0.009 | +0.258 | +0.258 | 9e-16 |
+| macaque V1, array 1 | +0.153 | +0.153 ± 0.004 | +0.146 | +0.146 | 7e-16 |
+| macaque V1, array 2 | -0.353 | -0.355 ± 0.004 | -0.354 | -0.354 | 1e-15 |
+| macaque V1, array 3 | +0.249 | +0.248 ± 0.002 | +0.245 | +0.245 | 8e-16 |
+| XY nematic lattice, L 16, T 1.0 | -0.537 | -0.538 ± 0.002 | -0.542 | -0.542 | 4e-16 |
+| XY lattice, polar side, T 0.7 | +0.445 | +0.438 ± 0.005 | +0.442 | +0.442 | 4e-16 |
+| spin waves | +0.449 | +0.448 ± 0.001 | +0.449 | +0.449 | 7e-8 (float32) |
+
+Residuals are the largest of the shift's and the within-class part's; "float32" marks a generator that worked in float32, where
+rung computes in float64. Beyond the table: the worked examples of Appendix M return its printed values (GT3 and Pythia-160m,
+every row); the candidate screen replays Appendix H's Allen screen exactly (each half's z, p and shift); the feature ladder
+replays Appendix D's GT3 row; the blocks replay Appendix G's table to float32 rounding; `--account` on the eight grating
+recordings gives the shift's sign in 8 of 8 with r = 0.88 (Figure 3), and the identity at the rungs' sample counts tracks the
+held-out within-class part with a mean error of -0.004; `rung llm --heads --paper-seeds` replays Appendix I's ranking of GPT-2's
+circuit heads (AUC 0.92), and over ten default seeds the AUC is 0.93 ± 0.01. Generators: `rung_acceptance_replay.py`,
+`rung_account_imaging.py`, `rung_heads_ioi.py`.
 
 ## What the paper shows
 
-- **There is no probe-free exponent.** The GT3 recording's three exponents split exactly into floor and shift: random
-  stimuli 0.253 (floor 0.232, shift +0.020), neighbouring neurons 0.346 (floor 0.342), direction 0.305 (floor 0.065,
-  shift +0.240). Random stimulus subsets stay at their floors in all 18 recordings (mean shift -0.002).
-- **Direction lifts every grating recording**, from 0.20 (low contrast) to 0.45 (localized), above all 200 label
-  permutations; classes added in random orders give shifts of the same size, so the grouping carries it. The shift reads
-  the orientation and direction sectors of the tuning and is larger in the most direction-selective neurons.
-- **What carries it.** Direction-dependent fluctuations around the class means lift the exponent, while in these
-  recordings the class means pull it down. Two measured terms give the shift's sign with nothing fitted: one from how
-  much the classes' fluctuations overlap, one from how the class means sit against them.
-- **Two more laboratories.** In Allen Neuropixels spike counts the shift is positive in 32 of 32 mice in primary visual
-  cortex and in 158 of 167 populations across visual areas; the two terms, predicted from each population's counts,
-  give its sign in 152 of 167. Allen's largest fluctuations are shared, untuned modes that partly track running and
-  pupil; the class-mean term reverses there. The same terms predict macaque V1 and lattices of known structure.
-- **What the shift adds.** Linear decoders read the class means. With the means projected out they fall to chance while
-  the shift survives, and a quadratic decoder given each class's covariance still reads direction (accuracy 0.21 to
-  0.69; chance 0.125). Other covariance statistics inherit floors too: a median 69% of the principal-angle dissimilarity
-  across the 167 Allen populations is label-blind floor, which the random-matrix model predicts within a median 2% of the
+- **There is no probe-free exponent.** The GT3 recording's three exponents split exactly into floor and shift: random stimuli
+  0.253 (floor 0.232, shift +0.020), neighbouring neurons 0.346 (floor 0.342), direction 0.305 (floor 0.065, shift +0.240).
+  Random stimulus subsets stay at their floors in all 18 recordings (mean shift -0.002).
+- **Direction lifts every grating recording**, from 0.20 (low contrast) to 0.45 (localized), above all 200 label permutations;
+  classes added in random orders give shifts of the same size, so the grouping carries it. The shift reads the orientation and
+  direction sectors of the tuning and is larger in the most direction-selective neurons.
+- **What carries it.** Direction-dependent fluctuations around the class means lift the exponent, while in these recordings the
+  class means pull it down. Two measured terms give the shift's sign with nothing fitted: one from how much the classes'
+  fluctuations overlap, one from how the class means sit against them.
+- **Two more laboratories.** In Allen Neuropixels spike counts the shift is positive in 32 of 32 mice in primary visual cortex and
+  in 158 of 167 populations across visual areas; the two terms, predicted from each population's counts, give its sign in 152 of
+  167. Allen's largest fluctuations are shared, untuned modes that partly track running and pupil; the class-mean term reverses
+  there. The same terms predict macaque V1 and lattices of known structure.
+- **What the shift adds.** Linear decoders read the class means. With the means projected out they fall to chance while the shift
+  survives, and a quadratic decoder given each class's covariance still reads direction (accuracy 0.21 to 0.69; chance 0.125).
+  Other covariance statistics inherit floors too: a median 69% of the principal-angle dissimilarity across the 167 Allen
+  populations is label-blind floor, which the random-matrix model predicts within a median 2% of the
   permutation floors in imaging and 6% in Allen spike counts.
+
+![The two measured terms against the shift](figures_canonical/fig_twoterm.png)
 
 Every number above is read from its artifact by `tests/test_readme_numbers.py`.
 
 ## Further analyses in this repository
 
-The repository also carries analyses that are not in the camera-ready: the language-model battery at four Pythia sizes
-and five architectures (content axes inherited from the tokens, construction axes built with depth), the moral-concept
-axis before and after instruction tuning, the BLiMP and Baroni minimal pairs read against their swap nulls, the
-equivariant network whose invariant layers read zero, and the calibrated population models. Their scripts and artifacts
-are listed in the second table below.
+The repository also carries analyses beyond the camera-ready: the language-model battery at four Pythia sizes and five
+architectures, the moral-concept axis before and after instruction tuning, the BLiMP and Baroni minimal pairs read against their
+swap nulls, the equivariant network whose invariant layers read zero, and the calibrated population models. Their scripts and
+artifacts are listed in the second table below.
 
 ## What is where
 
 ```
-rung.py                  the instrument: zoom(), decompose(), sectors(), cov_floors(), llm_battery(), build_axis(),
-                         and the rung command line (data | llm | axis | plot | summarize); numpy core,
-                         torch and transformers only for the model door
-theta_zoom.py            alias of rung (the name through 1.1.0), kept for one release
-tests/                   numpy-only pytest suite: the decomposition identity, significance on structured labels and its
-                         absence on shuffled ones, the stratified null, the deficit ladder and the stall test, the split at
-                         matched size, the sector fit, the declared orders, the circular-shift null, the validity mask, the
-                         floor law, the command line end to end, and every number this README prints
+rung.py                  the instrument: zoom(), decompose(), account(), candidates(), feature_ladder(), blocks(), sectors(),
+                         cov_floors(), llm_battery(), head_scores(), build_axis(), nwb_counts(), and the rung command line
+                         (data | features | nwb | llm | axis | plot | summarize); numpy core, torch and transformers for models
+theta_zoom.py            alias of rung (the name through 1.1.0)
+tests/                   pytest suite: the decomposition identity, the nulls, the stall test, the split at matched size, the
+                         sector fit, the declared orders, the validity mask, the floor law, the account, the candidate screen,
+                         the feature ladder, the blocks, the loaders, the command line, and every number this README prints;
+                         regressions against the paper's artifacts with RUNG_DATA_TESTS=1 (raw data under raw/)
 render_all.py            prints the paper's tables and headline numbers from the artifacts
 axes/                    every prompt in the paper, with strata sidecars; PROVENANCE.md gives origin and license per file
-scripts_canonical/       one script per analysis, named for what it computes; each docstring names the artifact it
-                         writes; make_fig_*.py regenerate the figures from the artifacts
+scripts_canonical/       one script per analysis, named for what it computes; each docstring names the artifact it writes;
+                         make_fig_*.py regenerate the figures from the artifacts
 data_canonical/          the result files behind every reported number
-figures_canonical/       the figures
+figures_canonical/       the figures (drawn with matplotlib 3.10; later releases render text a few pixels differently)
 pyproject.toml           pip install -e . gives the rung command (and theta-zoom as an alias)
 ```
 
-Raw neural data are public and not included. The grating and static recordings are the Figshare release 8279387 of
-Stringer et al. (2021, Cell); the spontaneous sessions the release of Stringer et al. (2019, Science); the Allen Brain
-Observatory Neuropixels visual-coding sessions; the CRCNS pvc-11 macaque arrays (Kohn and Smith 2016,
-doi:10.6080/K0NC5Z4X). The scripts read `raw/`: each grating or static session as `raw/<session>.npy` (a dict with
-`sresp`, neurons by presentations, `istim`, the stimulus angle, and `stat`, cell positions), spontaneous sessions under
-`raw/spont/`, the pvc-11 arrays under `raw/pvc11/spikes_gratings/`, and the per-session Allen spike counts and running
-speeds under `raw/allen_counts/` and `raw/allen_running/` (written from the NWB files by `allen_counts_local.py`, or
-on a cloud runner by `allen_counts_modal.py` and `allen_running_modal.py`). Language-model hidden states go to
-`raw/llm_states/` (`llm_battery.py encode`, `llm_encode.py`; several GB). Each docstring names the files it reads.
+Raw neural data are public and not included. The grating and static recordings are the Figshare release 8279387 of Stringer et
+al. (2021, Cell); the spontaneous sessions the release of Stringer et al. (2019, Science); the Allen Brain Observatory Neuropixels
+visual-coding sessions; the CRCNS pvc-11 macaque arrays (Kohn and Smith 2016, doi:10.6080/K0NC5Z4X). The scripts read `raw/`:
+each grating or static session as `raw/<session>.npy` (a dict with `sresp`, neurons by presentations, `istim`, the stimulus
+angle, and `stat`, cell positions), spontaneous sessions under `raw/spont/`, the pvc-11 arrays under
+`raw/pvc11/spikes_gratings/`, and the per-session Allen spike counts and running speeds under `raw/allen_counts/` and
+`raw/allen_running/` (written from the NWB files by `allen_counts_local.py`, or on a cloud runner by `allen_counts_modal.py` and
+`allen_running_modal.py`). Language-model hidden states go to `raw/llm_states/` (`llm_battery.py encode`, `llm_encode.py`;
+several GB). Each docstring names the files it reads.
 
 ### Allen invalid intervals
 
-Every Allen number excludes what the release itself marks invalid: presentations that overlap an `invalid_times` interval
-tagged with the population's probe (the probe sent no data), `all_probes` or `stimulus`; units on electrodes with
-`valid_data` False; and presentations in which a population whose valid-time rate predicts 10 or more spikes fires none
-(one population, session 743475441 VISp, is silent before 2135 s without a flag). `allen_fetch_nwb.sh` fetches the 32
-session NWBs into `raw/allen_nwb/`; `allen_invalid_map.py` writes the per-population masks to `data_canonical/allen_masks/`
-(shipped). `allen_engine.pop_view` takes every Allen generator's presentations and units through the masks;
-`ALLEN_VARIANT=none` reproduces the unmasked values, `A` uses the release's flags alone, `B` (the default) is the paper.
-The `allen_*_local.py` scripts run the cloud-run Allen generators on the local counts through the same path; unmasked,
-they reproduce the cloud outputs to 5e-7. `rung --invalid-intervals` applies the same exclusion to any recording.
+Every Allen number excludes what the release itself marks invalid: presentations that overlap an `invalid_times` interval tagged
+with the population's probe (the probe sent no data), `all_probes` or `stimulus`; units on electrodes with `valid_data` False; and
+presentations in which a population whose valid-time rate predicts 10 or more spikes fires none (one population, session
+743475441 VISp, is silent before 2135 s without a flag). `allen_fetch_nwb.sh` fetches the 32 session NWBs into `raw/allen_nwb/`;
+`allen_invalid_map.py` writes the per-population masks to `data_canonical/allen_masks/` (shipped). `allen_engine.pop_view` takes
+every Allen generator's presentations and units through the masks; `ALLEN_VARIANT=none` reproduces the unmasked values, `A` uses
+the release's flags alone, `B` (the default) is the paper. The `allen_*_local.py` scripts run the cloud-run Allen generators on the
+local counts through the same path; unmasked, they reproduce the cloud outputs to 5e-7. `rung --invalid-intervals` applies the same
+exclusion to any recording.
 
-The Allen two-term predictions in `allen_twoterm_predictions.json` were written by `allen_twoterm_predict.py` and
-committed before the measured Allen results were compared with them; the two-term figure (`make_fig_twoterm.py`)
-shows both.
+The Allen two-term predictions in `allen_twoterm_predictions.json` were written by `allen_twoterm_predict.py` and committed before
+the measured Allen results were compared with them; the two-term figure (`make_fig_twoterm.py`) shows both.
 
 ### Claim, artifact, script: the paper
 
@@ -265,7 +310,8 @@ shows both.
 | The exact split of the shift into a within-class and a class-mean part | run72_paper_designs_split.json | run72_paper_designs_split.py |
 | What carries the shift: within-class shuffle, pooled fluctuations, tuning inside each bin removed | cr_withinclass_controls.json, cr_order_and_withinbin_controls.json, withinclass_shuffle_identification.json | cr_withinclass_controls.py, cr_order_and_withinbin_controls.py, withinclass_shuffle_identification.py |
 | The overlap law and the class-mean term; the sign law and the alignment a | overlap_identity_checks.json, overlap_identity_followup.json, classmean_sign_condition.json, classmean_fluctuation_alignment.json, signal_noise_alignment.json | overlap_identity_checks.py, overlap_identity_followup.py, classmean_sign_condition.py, classmean_fluctuation_alignment.py, signal_noise_alignment.py, make_fig_overlap_laws.py |
-| The two terms against the shift: imaging, Allen, macaque, lattices | twoterm_imaging.json, allen_twoterm_predictions.json, allen_sessions/session_*.json, macaque_pvc11_twoterm.json, xy_twoterm.json, xy_polar_twoterm.json | make_fig_twoterm.py, twoterm_imaging.py, allen_twoterm_predict.py, allen_run.py, macaque_pvc11_twoterm.py, xy_twoterm.py, xy_polar_twoterm.py |
+| The two terms against the shift: imaging, Allen, macaque, lattices | twoterm_imaging.json, allen_twoterm_predictions.json, allen_sessions/session_*.json, macaque_pvc11_twoterm.json, xy_twoterm.json, xy_polar_twoterm.json, fig_twoterm_marker.json | make_fig_twoterm.py, twoterm_imaging.py, allen_twoterm_predict.py, allen_run.py, macaque_pvc11_twoterm.py, xy_twoterm.py, xy_polar_twoterm.py, fig_twoterm_marker.py |
+| Beyond mean field: the overlap identity at the rungs' sample counts (imaging, lattices, the sampling rule) | finite_n_imaging.json, finite_n_lattice.json, finite_n_rule.json | finite_n_identity.py, finite_n_imaging.py, finite_n_lattice_regen.py, finite_n_rule.py |
 | Allen with temporal frequency separated: per-session shifts, splits, controls, verdicts and misses | allen_sessions/session_*.json, allen_verdicts.json, allen_twoterm_misses.json, allen_miss_threshold.json | allen_run.py, allen_engine.py, allen_score.py, allen_twoterm_misses.py, allen_miss_threshold.py |
 | Allen's state modes held out, running, pupil and lagged state | allen_heldout_modes.json, allen_heldout_modes_mechanism.json, allen_heldout_modes_control.json, allen_modes_removed.json, allen_modes_running.json, allen_modes_pupil.json, allen_modes_state_basis.json | allen_heldout_modes.py, allen_heldout_modes_mechanism.py, allen_heldout_modes_control.py, allen_modes_removed.py, allen_modes_running.py, allen_modes_pupil.py, allen_modes_state_basis.py |
 | Choosing an axis among candidates on half the Allen mice | allen_axis_screen.json, allen_axis_screen_rescore.json, allen_axes_halves.json | allen_axis_screen.py, allen_axis_screen_rescore.py, allen_axes_halves.py |
@@ -275,7 +321,8 @@ shows both.
 | Floors under other covariance statistics, and the floor law | allen_covariance_floors_decoders.json, covariance_floors_trial_ladder.json, principal_angle_floor_imaging.json, principal_angle_floor_allen.json | allen_covariance_floors_decoders.py, covariance_floors_trial_ladder.py, principal_angle_floor_law.py, principal_angle_floor_imaging.py, principal_angle_floor_allen.py |
 | Lattices and constructed systems of known structure | lattice_ground_truth_score.json, xy_groundtruth.json, xy_onset.json, ising_spectral_account.json | lattice_ground_truth.py, lattice_ground_truth_score.py, xy_groundtruth.py, xy_onset.py, xy_split.py, ising_spectral_account.py |
 | Language models: the topic and construction lifts at four Pythia sizes, last-token controls, probes, sparse autoencoders, a known circuit, other architectures | llm_battery_*.json, llm_lasttoken_*.json, llm_lasttoken_fractions.json, llm_probes_*.json, llm_sae.json, llm_ioi.json, llm_architectures_*.json, llm_path_nulls.json | llm_battery.py, llm_lasttoken.py, llm_lasttoken_fractions.py, llm_probes.py, llm_sae.py, llm_ioi.py, llm_architectures.py, llm_path_nulls.py, llm_score.py |
-| Worked examples (`rung` on GT3 and on Pythia-160m) | worked_example_gt3_rung160.json, appm_lm_check.json | worked_example_lm_check.py |
+| Worked examples (`rung` on GT3 and on Pythia-160m) | worked_example_gt3.json, appm_lm_check.json | worked_example_lm_check.py |
+| rung against the paper: replays of the paper's floors, the account on eight recordings, the attention heads | rung_acceptance_replay.json, rung_account_imaging.json, rung_heads_ioi.json | rung_acceptance_replay.py, rung_account_imaging.py, rung_heads_ioi.py, make_axis_ioi.py |
 | Appendix checks: coarse-graining, finite size, synthetic tuning width, the exact floor inverse | cr_graining_table.json, cr_finite_size_split.json, kappa_sweep.json, appendix_exception_tests.json | cr_graining_table.py, cr_finite_size_split.py, kappa_sweep.py, appendix_exception_tests.py |
 
 ### Claim, artifact, script: further analyses
@@ -307,8 +354,7 @@ shows both.
 
 ## License
 
-Code: MIT (see `LICENSE`). Result artifacts in `data_canonical/` may be reused with attribution to the paper. Prompts
-and stimuli carry their own terms: the three axes composed for the paper are CC BY 4.0; the benchmark-derived axes and
-stored stimuli inherit their sources' licenses (TruthfulQA Apache-2.0, HellaSwag MIT, ARC CC BY-SA 4.0, ETHICS MIT,
-BLiMP CC BY 4.0, Baroni et al. per their release). Origins, authorship and licenses are listed item by item in
-`axes/PROVENANCE.md`.
+Code: MIT (see `LICENSE`). Result artifacts in `data_canonical/` may be reused with attribution to the paper. Prompts and stimuli
+carry their own terms: the three axes composed for the paper are CC BY 4.0; the benchmark-derived axes and stored stimuli inherit
+their sources' licenses (TruthfulQA Apache-2.0, HellaSwag MIT, ARC CC BY-SA 4.0, ETHICS MIT, BLiMP CC BY 4.0, Baroni et al. per
+their release). Origins, authorship and licenses are listed item by item in `axes/PROVENANCE.md`.

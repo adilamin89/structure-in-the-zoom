@@ -1,7 +1,7 @@
 """Why localized gratings are dipole-dominant: per-neuron tuning under the three
 grating conditions (drifting full-field, localized, low-contrast full-field).
 
-CONTEXT (S74, 2026-09-02): multipole_harmonics_8dir.py showed the class-mean
+CONTEXT: multipole_harmonics_8dir.py showed the class-mean
 correlation profile is quadrupole-dominant (|b2| > |c1|) in the five full-field
 recordings and dipole-dominant in the three localized-grating recordings. This
 script FORMALIZES the same-day exploratory pass that asked why. It is not a

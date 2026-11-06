@@ -1,4 +1,4 @@
-"""Run 30 — Declared-axis search on the Stringer natural-image sessions
+"""Run 30, Declared-axis search on the Stringer natural-image sessions
 (natimg2800): the axes the static-grating sessions could not provide.
 
 Each of 2800 natural images gets two stimulus-computable coordinates from
@@ -8,7 +8,7 @@ are binned into 8 classes along each axis and the standard ladder runs
 (accumulate [1,2,3,4,6,8] classes, 10-draw floors, 5 label shuffles).
 
 REGISTERED EXPECTATIONS (written before the run):
-N1: delta_SF > 0 — mouse V1 is spatial-frequency tuned; an SF-aligned
+N1: delta_SF > 0, mouse V1 is spatial-frequency tuned; an SF-aligned
     ladder should expose organized covariance.
 N2: delta_domori > 0 but smaller than the grating-session delta_dir
     (+0.20..+0.46): each natural image carries broadband orientation

@@ -73,7 +73,8 @@ def test_every_named_file_exists():
     missing = []
     for n in names:
         if n.startswith(("http", "raw/")) or n in ("X.npy", "r.json", "lt.json", "lm.json", "v1.json", "pairs.json", "my.json",
-                                                        "r.png", "lt.png", "v1.png", "strata.json"):   # command-line examples
+                                                        "r.png", "lt.png", "v1.png", "strata.json", "gt3.json", "gt3.png",
+                                                        "heads.json", "lm.png"):   # command-line examples
             continue
         hits = [p for base in ("", "scripts_canonical", "data_canonical", "figures_canonical", "tests")
                 for p in glob.glob(os.path.join(ROOT, base, n))]
@@ -94,3 +95,50 @@ def test_finite_n_rule():
         d5, d30 = (next(q["D"] for q in grid if q["sigma"] == sigma and q["PR_class"] == pr and q["n_over_PR"] == r) for pr in (5, 30))
         assert d5 < d30 < 0, (sigma, d5, d30)
     assert "at higher ratios n/PR_class for classes of" in README
+
+
+def test_feature_reference_numbers():
+    t9 = [r["orig"] for r in load("cr_order_and_withinbin_controls.json")["rows"] if r["name"].startswith("gratings")]
+    assert len(t9) == 8
+    printed(min(r["within"] for r in t9), "+0.29", 2); printed(max(r["within"] for r in t9), "+0.64", 2)
+    printed(max(r["class_means"] for r in t9), "-0.08", 2); printed(min(r["class_means"] for r in t9), "-0.35", 2)
+    assert "+0.29 to\n+0.64 and the class-mean part -0.08 to -0.35" in README
+    sp = load("neuron_zoom_spatial.json")
+    printed(sp["mean_delta_spatial"], "-0.033", 3)
+    assert (sp["n_negative"], len(sp["rows"])) == (8, 10) and "negative in 8 of 10 recordings" in README
+    printed(load("cr_graining_table.json")["rows"][-1]["random_blocks"]["delta"], "+0.027", 3)
+    assert load("cr_graining_table.json")["rows"][-1]["K"] == 32 and "(+0.027 at 32" in README
+    io = load("llm_ioi.json")
+    printed(io["AUC_z"], "0.92", 2); printed(io["AUC_classmean_frac"], "0.96", 2); printed(io["AUC_probe_acc"], "0.95", 2)
+    tt = load("twoterm_imaging.json")["rows"]
+    assert sum(np.sign(r["B2"]["delta_pred"]) == np.sign(r["B2"]["t9_delta"]) for r in tt) == 8 and "8 of 8 imaging recordings" in README
+    am = load("allen_axis_screen_rescore.json")["b_across_mice"]
+    assert all(am[k]["pick"] == "direction" and am[k]["confirmed"] for k in ("pick_set0", "pick_set1"))
+    assert "picks direction on 16 Allen mice and again on the other 16" in README
+    v = load("cr_ds_thirds_crossfit.json")["verdict"]
+    assert v["sel0_meas1"] == v["sel1_meas0"] == 8 and "most direction-selective third shifts more in all eight recordings" in README
+
+
+def test_acceptance_section():
+    """'rung against the paper': each table row and each sentence number re-derived from the three acceptance artifacts."""
+    rep = load("rung_acceptance_replay.json")["rows"]
+    assert len(rep) == 9
+    for r in rep:
+        s = r["default_20_seeds"]
+        for v in (r["default"]["delta"], r["replay"]["delta"], r["paper"]["delta"]):
+            assert f"{v:+.3f}" in README, (r["name"], v)
+        assert f"{s['mean']:+.3f} ± {s['sd']:.3f}" in README, r["name"]
+        x = max(abs(r["residual_replay"]["delta"]), abs(r["residual_replay"]["within"]))
+        assert x < 1e-5, (r["name"], x)                                   # the replay is exact or at float32 rounding
+    acc = load("rung_account_imaging.json")["verdict"]
+    assert f"sign in {acc['signs_agree_two_terms']} of {acc['n']} with r = {acc['r_two_terms_delta']:.2f}" in README
+    assert f"mean error of {acc['mean_err_finite_heldout']:+.3f}" in README
+    hd = load("rung_heads_ioi.json")
+    assert hd["paper_seeds"]["replays_llm_ioi"] and f"(AUC {hd['paper_seeds']['AUC_z']:.2f})" in README
+    sp = hd["default_spread"]["AUC_z"]
+    assert f"the AUC is {sp['mean']:.2f} ± {sp['sd']:.2f}" in README
+
+
+def test_worked_example_split():
+    w = load("worked_example_gt3.json")["decompose"]["delta_split_free"]
+    printed(w["D"], "+0.358", 3); printed(w["Tb"] + w["Cb"] + w["Cx"], "-0.127", 3)

@@ -1,4 +1,4 @@
-"""Figure: the construction axis across architectures, and the blind probe (S77).
+"""Figure: the construction axis across architectures, and the blind probe.
 (a) declared-order construction profiles on normalized depth for Pythia-2.8B,
     GPT-Neo-1.3B, RedPajama-INCITE-3B, Mamba-2.8B, OLMo-2-1B and OLMo-1B, with
     the last zero crossing marked (the depth after which the profile stays

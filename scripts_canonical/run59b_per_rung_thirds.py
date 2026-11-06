@@ -1,4 +1,4 @@
-"""Run 59b (S78, 2026-09-05) - The rung-four stall, drawn: the per-rung log-PR
+"""Run 59b - The rung-four stall, drawn: the per-rung log-PR
 deficit below the floor for the three DSI-sorted thirds of run 59, on all
 eight grating recordings (the data behind the Section 7 figure).
 
@@ -9,7 +9,7 @@ keeps the ladder climbing. Run 59 recorded only the slope difference per
 third. This run records the ladder itself: at each rung the log participation
 ratio of the accumulated classes minus the mean log participation ratio of
 ten random subsets of the same size (the deficit; zero at the top rung by
-construction, where the ladder and the floor hold the same trials). The S77
+construction, where the ladder and the floor hold the same trials). The
 full-population split of this quantity (late rungs carry 0.61-0.74 of the
 climb on the full-field drifting recordings, early rungs 0.55-0.66 on the
 localized ones) was computed from orientation_zoom.json in the same way.

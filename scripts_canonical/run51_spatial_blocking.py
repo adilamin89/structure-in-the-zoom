@@ -1,7 +1,7 @@
-"""Run 51 (S75) - Anatomical (spatial) blocking of the direction-aligned shift
+"""Run 51 - Anatomical (spatial) blocking of the direction-aligned shift
 and of the sector balance on all eight grating recordings.
 
-Why (S75 literature sweep). Shmuel and Grinvald 1996: in cat area 18 direction
+Why. Shmuel and Grinvald 1996: in cat area 18 direction
 domains cluster two to four times more weakly than orientation domains because
 each iso-orientation patch splits into opposite-direction halves. Lashgari et
 al. 2012: in awake macaque V1 the LFP keeps the single units' preferences but

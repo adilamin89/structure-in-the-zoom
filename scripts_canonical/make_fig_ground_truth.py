@@ -1,4 +1,4 @@
-"""Figure (Session F): the ground truth of Section 6.1 in one panel each.
+"""Figure: the ground truth of Section 6.1 in one panel each.
 (A) 2D Ising, the uncentered signed-sort shift against T/T_c for L = 32, 64, 128: the critical value varies slowly
 (0.40, 0.35, 0.33) while the off-critical values collapse (0.15, 0.08, 0.04 at 0.95 T_c); the centered estimator at
 T_c, -0.47 (L = 32), marked. (B) XY nematic with polar coupling J1/J2 = 0.42: the centered shift against T at L = 32

@@ -1,4 +1,4 @@
-"""Run 63 (S78b, 2026-09-06) - The deficit decomposed: where along the ladder
+"""Run 63 - The deficit decomposed: where along the ladder
 does the shift come from, mean structure, fluctuation pooling, or the
 coupling between the two? On the data and on the population model.
 

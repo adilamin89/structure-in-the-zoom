@@ -1,4 +1,4 @@
-"""Run 64b v2 (S78b, 2026-09-06; v1 failed its construction check B5 on the first recording, top-mode PR 2 against 60, because gating by the rate hands the mode to the largest-amplitude member) - The assembly model: within-class fluctuation
+"""Run 64b v2 (v1 failed its construction check B5 on the first recording, top-mode PR 2 against 60, because gating by the rate hands the mode to the largest-amplitude member) - The assembly model: within-class fluctuation
 modes localized on co-tuned groups of neurons, plus the measured heavy-tailed
 independent part. The population model the diagnostics point to.
 

@@ -1,8 +1,8 @@
-"""Run 43c — Baroni 64-pair contrasts across the remaining battery models.
+"""Run 43c, Baroni 64-pair contrasts across the remaining battery models.
 
 WHY: run43b certified a label-linked signal beyond minimal-pair carriers on
 Pythia-2.8B (13/33 strat layers) and 160m (3/13); the user asked the natural
-next question — does the external-benchmark arrangement signal scale and
+next question, does the external-benchmark arrangement signal scale and
 does it track corpus, as the hand-written structural axis does? Same script,
 same 64-pair design, four more models.
 

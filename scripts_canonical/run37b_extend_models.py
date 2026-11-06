@@ -1,4 +1,4 @@
-"""Run 37b — extend the run37 inferential nulls to the remaining battery models.
+"""Run 37b, extend the run37 inferential nulls to the remaining battery models.
 
 WHY: Table 1 of the arXiv version reports the content/structural rows for
 Pythia-410m, Pythia-1B, OLMo-1B, and GPT-Neo-1.3B with descriptive

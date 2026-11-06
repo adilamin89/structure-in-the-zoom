@@ -1,4 +1,4 @@
-"""Run 58 (S77, 2026-09-05) - Is the within-class spectrum the calibration the
+"""Run 58 - Is the within-class spectrum the calibration the
 model gets wrong? A diagnostic on the raw data, no model.
 
 The calibrated model (runs 2, 11b, 48, 56, 57) represents within-class

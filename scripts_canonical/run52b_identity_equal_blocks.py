@@ -1,4 +1,4 @@
-"""Run 52b (S75) - the blocking identity checked the way the algebra states it.
+"""Run 52b - the blocking identity checked the way the algebra states it.
 
 run52's R1 compared the blocked sector powers with P_1 computed over ALL neurons,
 while the sorted arms drop the n mod K remainder and the k-means arm has unequal

@@ -1,4 +1,4 @@
-"""Run 49 (S74) - Split-half control for the label-sorted coarse-graining flow.
+"""Run 49 - Split-half control for the label-sorted coarse-graining flow.
 
 sector_balance_scale.py sorted units by a preferred phase estimated from the
 same trials used to evaluate the blocked profile. Sorting by an estimated phase

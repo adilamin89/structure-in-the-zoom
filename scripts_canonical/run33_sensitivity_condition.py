@@ -1,4 +1,4 @@
-"""Run 33 — The sensitivity condition for the entry-coherence ordering rule
+"""Run 33, The sensitivity condition for the entry-coherence ordering rule
 (round-3 referee M4).
 
 The corrected account of the compass ordering null: the estimator centers
@@ -11,7 +11,7 @@ world-knowledge reference on Pythia-160m.
 REGISTERED EXPECTATIONS:
 S1: between/within ratio is small for BOTH planted axes (their delta is
     ~-0.2: within dominates), and smaller for compass than for clock at
-    most layers — the stated sensitivity condition for why the ordering
+    most layers, the stated sensitivity condition for why the ordering
     rule steers on clock (12/12) but is null on compass.
 S2: world_knowledge's ratio exceeds both planted axes' (its ordering
     effects in run28 were an order of magnitude larger).

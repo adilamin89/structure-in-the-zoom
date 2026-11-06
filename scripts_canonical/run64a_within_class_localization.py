@@ -1,4 +1,4 @@
-"""Run 64a (S78b, 2026-09-06) - Is the class-private within-class variability
+"""Run 64a - Is the class-private within-class variability
 localized in neuron space? The diagnostic that chooses the next population
 model.
 

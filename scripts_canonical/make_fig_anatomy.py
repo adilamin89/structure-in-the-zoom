@@ -1,4 +1,4 @@
-"""Figure (S78b): the anatomy of the deficit (runs 63 and 64a).
+"""Figure: the anatomy of the deficit (runs 63 and 64a).
 (A) The four exact terms of the per-rung deficit on drifting GT1 (all tuned neurons): the
 trace term, the fluctuation-pooling term, the between-class term and the mean-fluctuation
 coupling; (B) the pooling term of the direction-selective third against log(k/8), the value

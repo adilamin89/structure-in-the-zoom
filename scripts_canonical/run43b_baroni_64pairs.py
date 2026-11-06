@@ -1,6 +1,6 @@
-"""Run 43b — Baroni contrasts at 64 pairs per contrast (resolution upgrade).
+"""Run 43b, Baroni contrasts at 64 pairs per contrast (resolution upgrade).
 
-WHY: run43 (16 pairs) found NO signal at either null level — a registered
+WHY: run43 (16 pairs) found NO signal at either null level, a registered
 miss for BA1 whose diagnosis is that all three Baroni datasets share one
 closed lexicon across classes (no cross-class vocabulary difference, hence
 no composition signal; bracketing BLiMP's |z|~20 from the other side). This

@@ -1,4 +1,4 @@
-"""Run 37c — ethical-concept axis under the run37 machinery on Pythia 160m + 2.8B.
+"""Run 37c, ethical-concept axis under the run37 machinery on Pythia 160m + 2.8B.
 
 WHY: run44 found the order-averaged statistic certifies weak ethical-axis
 organization on OLMo-2-1B and Qwen2.5-0.5B BASE models (10/17, 14/25 layers)
@@ -10,7 +10,7 @@ same measurement on Pythia (Pile, 2020-era). Same machinery, same artifact.
 REGISTERED EXPECTATIONS (written before the run):
 C1: canonical ethical stays uncertified at nearly all layers (the existing
     six-base-model zero, now exact).
-C2: DECISION CELL: order-averaged ethical on Pythia — if certified at a
+C2: DECISION CELL: order-averaged ethical on Pythia, if certified at a
     comparable fraction of layers to OLMo-2/Qwen (~50-60%), the ethical
     zero was statistic-sensitivity and the axis is weakly organized in all
     base models; if near zero, the organization tracks the newer corpora.

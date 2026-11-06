@@ -1,4 +1,4 @@
-"""Run 28b — order-permutation control for the planted-cycle circulant fit
+"""Run 28b, order-permutation control for the planted-cycle circulant fit
 (red-team item: is the compass kernel's stationarity tied to the planted
 cyclic order, or would any ordering of these classes fit a circulant?).
 

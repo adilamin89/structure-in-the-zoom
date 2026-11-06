@@ -12,7 +12,7 @@ Sources (each a committed artifact; CHECK lines assert every number the paper qu
 Lattice and spin-wave ensembles whose sampling term exceeds 0.05 are drawn open: the floor's first rungs estimate the pooled
 fluctuations from one class's worth of samples, so the within-class part sits below the overlap law by about (m-1) PR_class/(n ln K),
 m = K/[1+(K-1) sigma], PR_class the class's population PR (App K; fig_twoterm_marker.json, generator fig_twoterm_marker.py).
-Out: ../figures_canonical/fig_twoterm.png (+ camera-ready figures/)."""
+Out: ../figures_canonical/fig_twoterm.png."""
 import glob
 import json
 import os
@@ -27,7 +27,6 @@ import matplotlib.pyplot as plt
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
 OUT = HERE.parent / "figures_canonical"
-CR = HERE.parent.parent / "neurreps_camera_ready" / "figures"
 V1C, ALC, MQC, LAT = "#b40426", "#e98ea0", "#2a78d6", "#555555"   # validated all-pairs (dataviz validator, light mode)
 PARTS = ("within", "class_mean", "delta")
 
@@ -88,7 +87,8 @@ chk = {
     "Allen delta r": (round(r(*al["delta"]), 2), 0.68), "Allen VISp delta r": (round(r(al["delta"][0][visp], al["delta"][1][visp]), 2), 0.84),
     "Allen class-mean r": (round(r(*al["class_mean"]), 2), 0.95), "Allen class-mean sign": (sgn(*al["class_mean"]), 161),
     "macaque delta sign": (sgn(*mq["delta"]), 3),
-    "lattice+spin-wave delta sign": (sgn(*lat["delta"]) + sgn(*sw["delta"]), 40), "lattice+spin-wave n": (len(lat_nd) + len(sw["delta"][0]), 40),
+    "lattice+spin-wave delta sign": (sgn(*lat["delta"]) + sgn(*sw["delta"]) + (sgn(*pol["delta"]) if pol else 0), 72),
+    "lattice+spin-wave n": (len(lat_nd) + len(sw["delta"][0]) + (len(pol_nd) if pol else 0), 72),
     "lattice Spearman": (round(stats.spearmanr(*lat["delta"])[0], 2), 0.87),
 }
 chk["lattice + spin-wave open"] = (int((~lat_nd).sum() + (~sw_nd).sum() + ((~pol_nd).sum() if pol is not None else 0)), 52)
@@ -106,7 +106,7 @@ if pol is not None:
 
 # ---- draw
 plt.rcParams.update({"font.size": 7, "axes.titlesize": 7.5, "axes.labelsize": 7, "xtick.labelsize": 6.5, "ytick.labelsize": 6.5})
-fig, axs = plt.subplots(1, 3, figsize=(6.0, 2.2))
+fig, axs = plt.subplots(1, 3, figsize=(6.0, 2.0))   # 2.0 in tall for the page; width and fonts unchanged
 TITLES = {"within": r"$\mathbf{A}$  fluctuations: within-class part",
           "class_mean": r"$\mathbf{B}$  class means: class-mean part",
           "delta": r"$\mathbf{C}$  the shift $\delta$"}
@@ -146,7 +146,7 @@ h, l = axs[0].get_legend_handles_labels()
 fig.tight_layout(w_pad=0.8, rect=(0, 0.07, 1, 1))
 fig.legend(h, l, loc="lower center", ncol=5, fontsize=6.0, frameon=False, handletextpad=0.2, columnspacing=1.2,
            bbox_to_anchor=(0.5, -0.01))
-for dd in (OUT, CR):
+for dd in (OUT,):
     if dd.exists():
         fig.savefig(dd / "fig_twoterm.png", dpi=300, bbox_inches="tight", pad_inches=0.02)
 print("wrote fig_twoterm.png")

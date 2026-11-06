@@ -1,4 +1,4 @@
-"""Run 60 (S78, 2026-09-05) - The mixture model: does a population made of a
+"""Run 60 - The mixture model: does a population made of a
 direction-selective fraction and an orientation-selective fraction, with
 non-negative rates and gain variability that follows the rate, predict the
 direction-aligned shift across the eight grating recordings with no fitted

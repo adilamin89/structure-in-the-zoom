@@ -1,4 +1,4 @@
-"""Figure: the sector balance across scales (S77). (A) a drawn block of neurons
+"""Figure: the sector balance across scales. (A) a drawn block of neurons
 sorted by orientation (antipodal preferences: the odd harmonic cancels, the even
 adds), a random block, and a direction-sorted block; (B) the measured blocking
 factor (b2/c1)(K)/(b2/c1)(1) on the eight grating recordings, median and range per

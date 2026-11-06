@@ -1,4 +1,4 @@
-"""Run 36 — Carrier-stratified matched floor for the planted axes
+"""Run 36, Carrier-stratified matched floor for the planted axes
 (round-4 referee item 1: the deepest catch of the campaign).
 
 THE ISSUE: at the planted axes' embedding layer the class label carries no
@@ -21,7 +21,7 @@ T1: at the embedding layer delta_stratified ~ 0 for both planted axes
     right null removes it).
 T2: at later layers, EITHER delta_stratified stays ~ -0.2 (the negative
     sign law is genuinely class-linked) OR it collapses (the planted-axis
-    negative delta was carrier composition throughout) — either outcome
+    negative delta was carrier composition throughout), either outcome
     is decisive and reportable, and rewrites the generic claim
     accordingly.
 T3: within-carrier label shuffles ~ 0 under the stratified floor.

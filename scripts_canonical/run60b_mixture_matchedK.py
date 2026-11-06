@@ -1,4 +1,4 @@
-"""Run 60b (S78, 2026-09-05) - Run 60's mixture model at matched within-class
+"""Run 60b - Run 60's mixture model at matched within-class
 dimensionality and ten seeds.
 
 WHY: run 60 (three seeds) found that the resampled-DSI mixture (arm B) lands

@@ -30,14 +30,10 @@ HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
 OUT = HERE.parent / "figures_canonical"
 OUT.mkdir(parents=True, exist_ok=True)
-ARXIV = HERE.parent.parent / "arxiv" / "figures"  # secondary copy only when the paper tree is present
 
 
 def save(fig, name, **kw):
     fig.savefig(OUT / name, dpi=300, **kw)
-    CR = HERE.parent.parent / "neurreps_camera_ready" / "figures"
-    if CR.exists():
-        fig.savefig(CR / name, dpi=300, **kw)
     print("wrote", OUT / name)
 
 RED, GRAY, GREEN, MAGENTA, BLUE = "#b40426", "#8a8a8a", "#3d7d1f", "#c51b7d", "#2166ac"

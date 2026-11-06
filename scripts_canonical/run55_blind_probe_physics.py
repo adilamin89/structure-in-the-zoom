@@ -1,4 +1,4 @@
-"""Run 55 — the physics of a blind probe: why OLMo-1B reads zero on every axis.
+"""Run 55, the physics of a blind probe: why OLMo-1B reads zero on every axis.
 
 WHY: OLMo-1B (allenai/OLMo-1B-hf) reads nearly nothing on any declared axis (Table 5),
 while OLMo-2-1B (run54), Mamba (run53) and every NeoX-lineage model carry the content

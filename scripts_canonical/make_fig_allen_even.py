@@ -1,4 +1,4 @@
-"""Figure (Session F): the Allen shift against the even-sector amplitude over the 167 session-area populations
+"""Figure: the Allen shift against the even-sector amplitude over the 167 session-area populations
 (the association of Section 5: r = +0.41, p = 3e-8; within areas +0.33; A_odd -0.04). Assembly as in run39:
 delta = delta_dir8 per population, A_even = sqrt(b_quadrupole^2 + b4^2) from the harmonic fit.
 Sources: allen_expansion_all_sessions.json, allen_multipoles_all_sessions.json.

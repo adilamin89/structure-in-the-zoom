@@ -1,4 +1,4 @@
-"""Run 59 (S77, 2026-09-05) - Does the direction-aligned shift live in the
+"""Run 59 - Does the direction-aligned shift live in the
 direction-selective neurons?
 
 WHY: across the eight grating recordings the direction-aligned shift grows

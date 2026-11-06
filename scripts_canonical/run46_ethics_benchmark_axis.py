@@ -1,4 +1,4 @@
-"""Run 46 — benchmark-mined ethical axis (ETHICS domains) across the model suite.
+"""Run 46, benchmark-mined ethical axis (ETHICS domains) across the model suite.
 
 WHY (user ruling): the hand-written ethical-concept axis could be attacked as
 taxonomy-insensitive. This run rebuilds the ethical axis from the ETHICS

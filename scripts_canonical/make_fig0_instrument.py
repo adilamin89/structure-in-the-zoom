@@ -2,10 +2,8 @@
 matched sizes -> a slope per ladder, delta = theta_obs - theta_floor -> two nulls
 (label permutation; permutation within nuisance strata) -> the reading.
 
-Draws no data: every element is a drawn shape. Written for the arXiv v1 entry-point
-pass (S76, 2026-09-04); redrawn at 7 pt type in one row, 6.0 x 3.15 in (Session G
-follow-up, 2026-09-09). Output: figures_canonical/fig_instrument.png and
-../arxiv/figures/fig_instrument.png (shared by every version of the paper).
+Draws no data: every element is a drawn shape, at 7 pt type in one row, 6.0 x 3.15 in.
+Output: figures_canonical/fig_instrument.png.
 """
 from pathlib import Path
 import numpy as np
@@ -123,5 +121,5 @@ for w in W[:-1]:
                                    arrowstyle="-|>", mutation_scale=6, color=DGRAY, lw=0.8))
     x0 += w + G
 
-for out in (HERE.parent / "figures_canonical" / "fig_instrument.png", HERE.parent.parent / "arxiv" / "figures" / "fig_instrument.png"):
+for out in (HERE.parent / "figures_canonical" / "fig_instrument.png",):
     out.parent.mkdir(parents=True, exist_ok=True); fig.savefig(out, dpi=300); print("wrote", out)

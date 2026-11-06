@@ -1,5 +1,5 @@
-"""Figure (appendix): the two nulls in vivo on the spontaneous sessions (S77;
-panel (d) of the S73 fig_nulls.png). Source: run40_spont_state_axis.json.
+"""Figure (appendix): the two nulls in vivo on the spontaneous sessions
+(panel (d) of fig_nulls.png). Source: run40_spont_state_axis.json.
 Out: ../figures_canonical/fig_state_axes.png + ../../arxiv/figures/
 """
 import json

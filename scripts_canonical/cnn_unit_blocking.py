@@ -1,4 +1,4 @@
-"""CNN analogue of the coarse-graining flow (S74, 2026-09-02): block-average conv
+"""CNN analogue of the coarse-graining flow: block-average conv
 units of the C4 rotated-MNIST networks (run5 design, one seed each) and follow
 the C4 harmonic content of the rotation-class kernel.
 

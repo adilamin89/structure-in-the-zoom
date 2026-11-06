@@ -1,4 +1,4 @@
-"""Run 40 (M5) — behavioral-state axes on the Stringer SPONT sessions, two null levels.
+"""Run 40 (M5), behavioral-state axes on the Stringer SPONT sessions, two null levels.
 
 WHY: referee M5 asked for a behavioral-state axis; the static_biased originals
 (with per-trial behavior aligned to gratings) are not local, but the 8 spont
@@ -10,26 +10,26 @@ floor = slope of mean null log-PR over 10 draws, rng(42)).
 TWO NULL LEVELS (the run36 principle applied to real neural data): spont
 frames are temporally autocorrelated, so a frame-level label permutation is
 an easy null for any slowly varying axis. We therefore test against BOTH:
-  perm  — 200 frame-level label permutations (label-free level);
-  shift — 200 circular shifts of the label sequence (preserves label
+  perm, 200 frame-level label permutations (label-free level);
+  shift, 200 circular shifts of the label sequence (preserves label
           autocorrelation, breaks label-frame alignment; the
           nuisance-preserving level).
 
 AXES (per session, on 4096 frames evenly subsampled from valid frames):
-  runspeed8   — octiles of runSpeed (rank-based; ties split by time order —
+  runspeed8, octiles of runSpeed (rank-based; ties split by time order,
                 still-periods populate the bottom octiles)
-  pupil8      — octiles of pupil area
-  time_block8 — 8 contiguous blocks of the subsampled sequence (run27 analog)
-  random8     — random 8-class labels (control)
+  pupil8, octiles of pupil area
+  time_block8, 8 contiguous blocks of the subsampled sequence (run27 analog)
+  random8, random 8-class labels (control)
 
 REGISTERED EXPECTATIONS (written before the run):
 B1: runspeed8 delta positive in most sessions; exceeds the frame-permutation
     null (p<0.05) in >=6/8 sessions; expected to also exceed the circular-
-    shift null in the majority (state ALIGNMENT, not smoothness alone —
+    shift null in the majority (state ALIGNMENT, not smoothness alone,
     Stringer 2019: behavior dominates spontaneous covariance).
 B2: pupil8 same direction (arousal).
 B3: time_block8 positive and exceeds the permutation null, but NOT expected
-    to exceed the circular-shift null (slow drift is shift-invariant) — a
+    to exceed the circular-shift null (slow drift is shift-invariant), a
     designed real-data demonstration that the two null levels separate.
 B4: random8 ~ 0 under both nulls.
 

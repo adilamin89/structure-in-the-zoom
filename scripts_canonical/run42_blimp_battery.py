@@ -1,30 +1,30 @@
-"""Run 42 — BLiMP syntactic axes with the NATIVE stratified floor.
+"""Run 42, BLiMP syntactic axes with the NATIVE stratified floor.
 
 WHY: the scrambled-order control (run31) answers the lexical alternative
 with out-of-distribution text (a round-4 caveat). BLiMP minimal pairs are
 natural carriers: each pair contributes one grammatical and one
 ungrammatical sentence with near-identical vocabulary, so the run36
-stratified floor applies IN-DISTRIBUTION — within-pair label swaps preserve
+stratified floor applies IN-DISTRIBUTION, within-pair label swaps preserve
 carrier composition exactly and randomize only the grammaticality bit.
 Bonus control: every BLiMP sentence ends with a period, so the last-token
 confound is uniform by construction.
 
-DESIGN A — phenomenon axis (8 classes x 16 grammatical sentences):
+DESIGN A, phenomenon axis (8 classes x 16 grammatical sentences):
   anaphor_gender_agreement, animate_subject_passive, principle_A_case_1,
   existential_there_object_raising, determiner_noun_agreement_1,
   wh_questions_object_gap, wh_island, npi_present_1 (one paradigm per
   linguistics term, first 16 items each). Analyzed with the run37 machinery
   (500 label permutations per layer + order-averaged deltabar, K=50).
 
-DESIGN B — grammaticality x phenomenon (8 classes = 4 phenomena x good/bad,
+DESIGN B, grammaticality x phenomenon (8 classes = 4 phenomena x good/bad,
   16 pairs each = 128 prompts): regular_plural_subject_verb_agreement_1,
   wh_island, npi_present_1, irregular_past_participle_verbs (four distinct
   mechanisms: agreement, movement, polarity, morphology). Canonical
   accumulation order is phenomenon-major (sv_good, sv_bad, isl_good, ...):
   rung 2 is a within-phenomenon minimal-pair rung. Three quantities/layer:
-    delta_plain — observed minus random-subset floor (ordinary level);
-    full-perm null — 500 label permutations (label-free level);
-    strat null   — 500 independent within-pair good/bad swaps (the
+    delta_plain, observed minus random-subset floor (ordinary level);
+    full-perm null, 500 label permutations (label-free level);
+    strat null, 500 independent within-pair good/bad swaps (the
                    nuisance-preserving level: phenomenon labels and carrier
                    composition are invariant; only grammaticality moves).
 
@@ -90,7 +90,7 @@ def load_blimp():
 def design_b_analysis(per_layer, n_phen, n_pairs_per_phen):
     """Per-layer: delta_plain, full-perm null, within-pair strat null.
 
-    Prompt layout: phenomenon-major, pair-major, good before bad —
+    Prompt layout: phenomenon-major, pair-major, good before bad,
     prompt index = ph*(2*n_pairs) + 2*pair + (0 good | 1 bad).
     Class id = 2*ph + (0 good | 1 bad); canonical order = class id order.
     """

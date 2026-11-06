@@ -1,5 +1,5 @@
-"""Figure: declared order vs order average on Pythia-2.8B (S77; panel (a) of the
-S73 fig_nulls.png as its own figure). Source: run37_inferential_nulls.json.
+"""Figure: declared order vs order average on Pythia-2.8B (panel (a) of
+fig_nulls.png as its own figure). Source: run37_inferential_nulls.json.
 Out: ../figures_canonical/fig_path_partition.png + ../../arxiv/figures/
 """
 import json

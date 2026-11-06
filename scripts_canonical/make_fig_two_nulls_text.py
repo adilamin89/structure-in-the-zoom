@@ -1,4 +1,4 @@
-"""Figure: the two nulls on natural text (S77; panels (b),(c) of the S73
+"""Figure: the two nulls on natural text (panels (b),(c) of the
 fig_nulls.png). Sources: run42_blimp_battery.json, run43b_baroni_64pairs.json.
 Out: ../figures_canonical/fig_two_nulls_text.png + ../../arxiv/figures/
 """

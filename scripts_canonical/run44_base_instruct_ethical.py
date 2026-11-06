@@ -1,4 +1,4 @@
-"""Run 44 — base-vs-instruct pairs on the ethical-concept axis (the RLHF probe pilot).
+"""Run 44, base-vs-instruct pairs on the ethical-concept axis (the RLHF probe pilot).
 
 WHY: the ethical-concept axis is ~0 on every BASE model tested (Pythia
 160m/410m/1B/2.8B, OLMo-1B, GPT-Neo), which the paper states as a falsifiable
@@ -9,7 +9,7 @@ comparison on TWO architecture families:
   Qwen/Qwen2.5-0.5B       vs  Qwen/Qwen2.5-0.5B-Instruct
 Prompts are byte-identical to the battery (run17.build_axes: ethical = 8
 moral-foundation classes x 16; world_knowledge as the positive control) and
-are fed RAW (no chat template) to both members of each pair — the probe
+are fed RAW (no chat template) to both members of each pair, the probe
 reads representation geometry under identical input, not chat behavior.
 Analysis = run37 machinery (500 label permutations per layer + order-averaged
 deltabar, K=50), so every cell carries an inferential null.
@@ -20,7 +20,7 @@ PRE-DECLARED COMPARISON STAT: D_late = mean over the final third of layers of
 REGISTERED EXPECTATIONS (written before the run):
 E1 (control): world_knowledge certified per-layer (order-avg p<0.05 at most
     layers) in all four models; D_late(wk) small relative to D_late(ethical).
-E2 (probe — the standing prediction): ethical shows more per-layer
+E2 (probe, the standing prediction): ethical shows more per-layer
     significant cells and D_late > 0 on instruct vs base, in both pairs.
     Either outcome is reported; a null result bounds the effect of
     preference tuning at these scales (1B / 0.5B).

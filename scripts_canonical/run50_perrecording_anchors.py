@@ -1,4 +1,4 @@
-"""Run 50 (S74) - GT3-anchored numbers on all eight grating recordings:
+"""Run 50 - GT3-anchored numbers on all eight grating recordings:
 (a) preference-sorted vs random coarse-graining of the direction-aligned
 shift, delta(K) for K in {1, 4, 16, 32} (A9.1 design, Table 10 extended);
 (b) matched-floor delta vs the Chun et al. analytic bias correction on the

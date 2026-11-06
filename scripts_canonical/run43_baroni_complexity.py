@@ -1,8 +1,8 @@
-"""Run 43 — Baroni syntactic-complexity contrasts through the delta battery (subsumption demo).
+"""Run 43, Baroni syntactic-complexity contrasts through the delta battery (subsumption demo).
 
 WHY: Baroni et al. 2026 (arXiv:2601.03779) show three psycholinguistic
 complexity contrasts modulate LLM representations (via intrinsic dimension).
-Their stimuli are classic minimal pairs — natural carriers — so the battery
+Their stimuli are classic minimal pairs, natural carriers, so the battery
 can ask the sharper, floor-controlled question at BOTH null levels: does the
 complexity contrast organize covariance accumulation beyond the shared
 carrier content?
@@ -24,14 +24,14 @@ invariant, only the contrast bit moves).
 REGISTERED EXPECTATIONS (written before the run):
 BA1: label-free permutation strongly exceeded at most layers (minimal-pair
      carrier composition, the run42-B physics; sign expected negative).
-BA2: THE informative cell — unlike BLiMP's single-morpheme flip, these
+BA2: THE informative cell, unlike BLiMP's single-morpheme flip, these
      members differ in arrangement (connective/word order), and run31 shows
      arrangement carries structure: expect the strat null EXCEEDED
      (two-sided p<0.05) at mid/late layers on 2.8B; 160m weaker (Baroni:
      complexity effects strengthen with scale).
 BA3: if BA2 passes, the battery subsumes their contrast findings with floor
      control added; if it fails, the contrasts live below the accumulation
-     probe's resolution at 16 pairs — either way reported.
+     probe's resolution at 16 pairs, either way reported.
 
 Out: ../data_canonical/run43_baroni_complexity.json
 """

@@ -1,4 +1,4 @@
-"""Run 61 (S78b, 2026-09-06) - The rung-four stall in a language model: a code that
+"""Run 61 - The rung-four stall in a language model: a code that
 reads the parity quotient of a planted cycle should stall at four classes, and
 the units that distinguish a class from its antipode are the language-model
 analogue of the direction-selective fraction.
@@ -48,7 +48,7 @@ from scipy.stats import spearmanr
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
-SUPP = HERE.parent.parent / "arxiv_supplement"
+SUPP = HERE.parent                      # the repository root: rung.py, axes/
 OUT = DATA / "run61_llm_antipode_stall.json"
 spec = importlib.util.spec_from_file_location("rung", SUPP / "rung.py")
 rung = importlib.util.module_from_spec(spec); spec.loader.exec_module(rung)

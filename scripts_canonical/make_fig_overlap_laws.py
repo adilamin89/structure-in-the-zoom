@@ -17,7 +17,6 @@ import matplotlib.pyplot as plt
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
 OUT = HERE.parent / "figures_canonical"
-CR = HERE.parent.parent / "neurreps_camera_ready" / "figures"
 TAGS = ["D1", "D2", "D3", "L1", "L2", "L3", "C1", "C2"]
 COL = {"D": "k", "L": "#c51b7d", "C": "#8a8a8a"}
 
@@ -51,7 +50,7 @@ lo, hi = 0.2, 0.72
 axs[0].plot([lo, hi], [lo, hi], color="0.6", lw=0.7, ls="--"); axs[0].text(0.62, 0.66, "equality", fontsize=5.8, color="0.45", rotation=34)
 axs[2].axhline(0, color="0.6", lw=0.6)
 fig.tight_layout(w_pad=1.0)
-for d in (OUT, CR):
+for d in (OUT,):
     if d.exists():
         fig.savefig(d / "fig_overlap_laws.png", dpi=300, bbox_inches="tight", pad_inches=0.02)
 print("wrote fig_overlap_laws.png")

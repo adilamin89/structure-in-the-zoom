@@ -1,5 +1,5 @@
 """Figure (appendix): the calibrated-model bracket of GT3 and the cross-recording
-refit (S77; panel (b) of the S70 fig_mechanism.png, with its inset drawn as a
+refit (panel (b) of the fig_mechanism.png, with its inset drawn as a
 second panel). Sources: run2b_corotating_seeds.json, run11b_fresh_draw_prediction.json,
 run48_overshoot_across_recordings.json.
 Out: ../figures_canonical/fig_model_bracket.png + ../../arxiv/figures/

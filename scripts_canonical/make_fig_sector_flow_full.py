@@ -1,5 +1,5 @@
-"""Figure (appendix): the blocking flow of b2/c1 per recording (S77; panel (A)
-of the S75 fig_sector_flow.png with the legend outside the data).
+"""Figure (appendix): the blocking flow of b2/c1 per recording (panel (A)
+of the fig_sector_flow.png with the legend outside the data).
 Source: sector_balance_scale.json. Out: ../figures_canonical/fig_sector_flow_full.png + ../../arxiv/figures/
 """
 import json

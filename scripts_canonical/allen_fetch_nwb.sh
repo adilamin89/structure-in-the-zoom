@@ -1,5 +1,5 @@
 #!/bin/bash
-# H4 (Oct 25): fetch the 32 Allen VC Neuropixels session NWBs used by the paper into raw/allen_nwb (never backed up).
+# fetch the 32 Allen VC Neuropixels session NWBs used by the paper into raw/allen_nwb (never backed up).
 # Public S3; curl with --max-time per file and 3 retries; at most 4 in parallel; skips files already present.
 cd "$(dirname "$0")/.."
 D=raw/allen_nwb; mkdir -p "$D"

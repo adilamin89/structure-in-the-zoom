@@ -1,7 +1,7 @@
 """Figures 1 and 2 (canonical): GT3 two-axis ladder and per-recording shifts.
 Inputs: data_canonical/orientation_zoom.json; Fig 2 (camera-ready): basin_memory/data/stringer_mismatch_ablation.json
 (the paper's point estimates, Table C) + data_canonical/run73_m_out_of_n_all.json (m-out-of-n 95% intervals).
-Out: ../figures_canonical/ (+ ../../arxiv/figures/ and ../../neurreps_camera_ready/figures/ when present).
+Out: ../figures_canonical/.
 
 Fig 1 (fig_zoom_ladder_dir.png): GT3 ladders from stringer_orientation_zoom.json,
 labeled as the direction-aligned construction, with the analytic MP crossover
@@ -27,8 +27,6 @@ HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
 OUT = HERE.parent / "figures_canonical"
 OUT.mkdir(parents=True, exist_ok=True)
-ARXIV = HERE.parent.parent / "arxiv" / "figures"  # secondary copy only when the paper tree is present
-CR = HERE.parent.parent / "neurreps_camera_ready" / "figures"
 BM = HERE.parent.parent.parent / "basin_memory" / "data"
 
 def bm(name, local):
@@ -40,10 +38,6 @@ def bm(name, local):
 
 def save(fig, name):
     fig.savefig(OUT / name, dpi=300)
-    if ARXIV.exists() and name != "fig_delta_per_recording_moon.png":
-        fig.savefig(ARXIV / name, dpi=300)
-    if CR.exists():
-        fig.savefig(CR / name, dpi=300)
     print("wrote", OUT / name)
 RED, GRAY = "#b40426", "#8a8a8a"
 

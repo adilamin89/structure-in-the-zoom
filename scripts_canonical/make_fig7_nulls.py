@@ -1,4 +1,4 @@
-"""Figure 7 — the S73 inferential results in one figure.
+"""Figure 7, the inferential results in one figure.
 
 (a) Pythia-2.8B: declared-path delta (solid) against its 500-permutation null
     band, and the order-averaged deltabar (dashed) against its own null band,

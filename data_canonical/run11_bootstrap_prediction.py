@@ -1,4 +1,4 @@
-"""Run 11 — Proper uncertainty for the alignment-calibrated delta prediction
+"""Run 11, Proper uncertainty for the alignment-calibrated delta prediction
 (round-4 item 4) + covariance-preserving permutation null for the angular
 profile (item 6).
 

@@ -1,4 +1,4 @@
-"""Run 54 — is OLMo-1B the outlier, or the OLMo family? OLMo-2-1B on the content and
+"""Run 54, is OLMo-1B the outlier, or the OLMo family? OLMo-2-1B on the content and
 construction axes with run37's machinery.
 
 WHY: after run53 (Mamba-2.8B on the Pile carries the construction-axis trajectory),

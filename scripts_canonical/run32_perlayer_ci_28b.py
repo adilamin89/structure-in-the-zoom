@@ -1,4 +1,4 @@
-"""Run 32 — Per-layer prompt-resampling confidence intervals for the
+"""Run 32, Per-layer prompt-resampling confidence intervals for the
 content and structural axes on Pythia-2.8B (round-3 referee M2: the
 quarter-depth sign crossing is the paper's main LLM claim and needs
 per-layer intervals, not only the pooled shuffle band).
@@ -10,7 +10,7 @@ draw 12 of 16 prompts per class without replacement and recompute delta
 REGISTERED EXPECTATIONS:
 C1: structural axis: the negative band at the embedding excludes zero, the
     positive band over the last quarter of depth excludes zero, and the
-    crossing region spans zero — the sign structure of the crossover is
+    crossing region spans zero, the sign structure of the crossover is
     resolved at this design.
 C2: content axis: positive band excludes zero at the embedding and stays
     positive (possibly touching zero late).

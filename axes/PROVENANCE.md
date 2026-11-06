@@ -10,9 +10,11 @@ origin and license. Code in this repository is MIT (see `LICENSE`); the items be
 | `world_knowledge.json` | 8 domains x 16 prompts | composed for the paper by the author, fixed before any measurement |
 | `world_knowledge32.json` | 8 domains x 32 prompts | the 16 of `world_knowledge.json` followed by 16 more per domain composed the same way; the language-model worked example of the paper's Appendix M |
 | `language_type.json` | 8 construction types x 16 | same; topics deliberately mixed inside each class |
-| `language_type.strata.json` | topic stratum per prompt | assigned by hand from the prompt text alone, blind to any measured value (the nuisance-preserving null of App G) |
+| `language_type.strata.json` | topic stratum per prompt | assigned by hand from the prompt text alone, blind to any measured value (the nuisance-preserving null) |
 | `ethical.json` | 8 ethical concepts x 16 | same as world_knowledge; the concept list is inspired by, not identical to, the moral-foundations taxonomy |
-| `compass.json`, `clock.json` (+ `.strata.json`) | 8 classes x 16 shared carriers each | the planted C8 axes of Sec 8.6: sixteen carrier sentences composed for the paper with only the class token rotated; the sidecar holds the carrier id per prompt (the carrier-stratified null) |
+| `compass.json`, `clock.json` (+ `.strata.json`) | 8 classes x 16 shared carriers each | planted axes with eight cyclic classes: sixteen carrier sentences composed for the paper with only the class token rotated; the sidecar holds the carrier id per prompt (the carrier-stratified null) |
+
+| `ioi_names.json` | 8 indirect-object names x 16 prompts | the indirect-object battery of Appendix I: Wang et al. (2023)'s sentence templates (BABA forms and their ABBA mirrors) with names, places and objects drawn with a fixed seed by `llm_ioi.py`; written from `data_canonical/llm_ioi.json` by `make_axis_ioi.py` |
 
 The three composed axes and the strata are the paper's own instrument design. Style features of the
 prompts (short declarative carriers, matched final tokens) are part of that design and are stated in the paper.
@@ -25,7 +27,7 @@ prompts (short declarative carriers, matched final tokens) are part of that desi
 | `tqa_category.json` | TruthfulQA questions, grouped by the release's category field | Apache-2.0 | Lin, Hilton, Evans 2022 |
 | `hs_activity.json` | HellaSwag contexts (WikiHow-derived), grouped by activity label | MIT | Zellers et al. 2019 |
 | `arc_topic.json` | ARC questions, grouped by science topic | CC BY-SA 4.0 (this derivative file is therefore CC BY-SA 4.0) | Clark et al. 2018 |
-| `blimp_grammaticality.json` (+ `.strata.json`) | BLiMP minimal pairs, four paradigms x 16 pairs, good and bad as separate classes; the sidecar holds the pair id (the within-pair swap null of the paper's Section 8.4) | CC BY 4.0 | Warstadt et al. 2020 (`nyu-mll/blimp`, the first 16 items of each paradigm) |
+| `blimp_grammaticality.json` (+ `.strata.json`) | BLiMP minimal pairs, four paradigms x 16 pairs, good and bad as separate classes; the sidecar holds the pair id (the within-pair swap null of the paper's Appendix I) | CC BY 4.0 | Warstadt et al. 2020 (`nyu-mll/blimp`, the first 16 items of each paradigm) |
 | `baroni_complexity.json` (+ `.strata.json`) | the three syntactic-complexity contrasts at 64 pairs, six classes; the sidecar holds the pair id | no license file in the release; redistributed as research data with attribution, contact the authors before any other reuse | Baroni et al. 2026 (github.com/franfranz/syntactic_complexity_in_LLMs) |
 
 ## Stimuli stored inside result artifacts

@@ -1,4 +1,4 @@
-"""Run 50c (S74) - Two-key blocking: does sorting by retinotopic footprint AND
+"""Run 50c - Two-key blocking: does sorting by retinotopic footprint AND
 phase recover the localized recordings' shift under coarse-graining?
 
 App E (run50b) states that localized recordings retain only 0.41-0.56 of

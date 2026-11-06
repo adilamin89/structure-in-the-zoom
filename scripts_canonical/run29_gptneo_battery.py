@@ -1,4 +1,4 @@
-"""Run 29 — GPT-Neo-1.3B battery (run17 design): data vs architecture
+"""Run 29, GPT-Neo-1.3B battery (run17 design): data vs architecture
 dissociation for the structural-axis profile.
 
 WHY: run25 showed the structural (construction-type) rising profile does not
@@ -11,7 +11,7 @@ local attention, different tokenizer training), splitting the confound.
 
 REGISTERED EXPECTATIONS (written before the run):
 D1: world_knowledge positive (content = data-driven; the Pile is shared).
-D2: THE DECISIVE CELL — if the structural rising profile is data-driven,
+D2: THE DECISIVE CELL, if the structural rising profile is data-driven,
     GPT-Neo (Pile) should rise like Pythia; if architecture-driven, it
     should deviate like OLMo. Either outcome is reportable.
 D3: ethical ~ 0; random ~ 0 away from the earliest layers.

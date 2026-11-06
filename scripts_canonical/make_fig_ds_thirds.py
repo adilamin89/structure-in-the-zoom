@@ -1,4 +1,4 @@
-"""Figure (S78): the direction-selective third and the rung-four stall (runs 59 and 59b).
+"""Figure: the direction-selective third and the rung-four stall (runs 59 and 59b).
 (A) the per-rung log-PR deficit below the floor on drifting GT1 for the three DSI-sorted
 thirds and the full tuned population; (B) the share of the climb that remains after four
 classes, per third, on all eight grating recordings; (C) the full-population shift against

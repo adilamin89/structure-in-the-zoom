@@ -1,8 +1,8 @@
-"""Run 41 (M6) — CNN ordering prediction rerun, storing PER-SEED values.
+"""Run 41 (M6), CNN ordering prediction rerun, storing PER-SEED values.
 
 WHY: run12's artifact stores only mean/sd per (net, layer, order) cell; the
 referee's M6 asks for a paired analysis, which needs the per-seed effect
-values (each seed trains one net evaluated under both orders — a paired
+values (each seed trains one net evaluated under both orders, a paired
 design). Seeds and rngs are identical to run12 (torch.manual_seed(seed),
 default_rng(seed), default_rng(10+seed)), so the cell means must REPRODUCE;
 this run adds per-seed storage plus paired SE and the exact sign test.

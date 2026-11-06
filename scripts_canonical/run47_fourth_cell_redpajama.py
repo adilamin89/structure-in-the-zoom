@@ -1,4 +1,4 @@
-"""Run 47 — the fourth cell: one architecture, two corpora.
+"""Run 47, the fourth cell: one architecture, two corpora.
 
 WHY: Sections 8.3 and 8.5 stop at a three-cell corpus-by-architecture
 association (Pile x {Pythia, GPT-Neo} rise; Dolma x OLMo no rise) and state

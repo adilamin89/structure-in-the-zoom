@@ -1,4 +1,4 @@
-"""Run 48 (S74, 2026-09-02) - Does the calibrated model's overshoot track the
+"""Run 48 - Does the calibrated model's overshoot track the
 odd-sector share? The run6/run11b alignment-calibrated prediction overshoots
 GT3 (+0.32 vs +0.237). The paper attributes the overshoot to the model's
 exactly pi-symmetric within-class gain (over-recovered 180-degree alignment,

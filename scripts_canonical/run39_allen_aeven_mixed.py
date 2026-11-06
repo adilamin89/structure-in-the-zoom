@@ -1,4 +1,4 @@
-"""Run 39 — Allen mixed model with A_even / A_odd entering DIRECTLY (round-4 item 6).
+"""Run 39, Allen mixed model with A_even / A_odd entering DIRECTLY (round-4 item 6).
 
 WHY: the paper defines the composite even-sector amplitude A_even =
 sqrt(b2^2 + b4^2) and the odd amplitude A_odd = |c1| but reports them only
@@ -8,7 +8,7 @@ as the predictors, closing the composite-vs-component gap.
 
 REGISTERED EXPECTATIONS (written before the run):
 A1: A_even coefficient positive with p < 0.05 under both cluster-robust OLS
-    and REML mixed model (session random intercept, area fixed effects) —
+    and REML mixed model (session random intercept, area fixed effects),
     mirroring b2's +0.86 +/- 0.17, p = 4e-7 (b2 dominates the composite).
 A2: A_odd coefficient not significant (raw r = -0.04).
 A3: partial r(delta, A_even | A_odd, cardinal, n_units, pr_full) stays

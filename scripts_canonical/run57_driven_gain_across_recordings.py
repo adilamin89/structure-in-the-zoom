@@ -1,4 +1,4 @@
-"""Run 57 (S77, 2026-09-05) - The gain field without its baseline: does the
+"""Run 57 - The gain field without its baseline: does the
 symmetry-allowed model order GT1, GT2, GT3?
 
 PHYSICS (written before the run). Decompose the class mean m_j = mu0 + t_j

@@ -12,7 +12,7 @@
     over 50 random class orders (dbar50_run37) against that layer's floor (llm_battery_<model>.json).
     GT3's three readings (random stimuli, direction, neighbouring neurons) are ringed: the same neurons at three floors.
 Width 6.0 in = the PMLR text width, so fonts print 1:1.
-Out: ../figures_canonical/fig_probes.png (+ ../../neurreps_camera_ready/figures/ when present);
+Out: ../figures_canonical/fig_probes.png;
 `--draft PATH` writes only PATH (a design mock-up that leaves the paper's figure untouched).
 """
 import json
@@ -32,8 +32,7 @@ plt.rcParams.update({"font.size": 7, "axes.titlesize": 7.5, "axes.labelsize": 7,
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
 RAW = HERE.parent / "data"
-OUTS = [HERE.parent / "figures_canonical" / "fig_probes.png",
-        HERE.parent.parent / "neurreps_camera_ready" / "figures" / "fig_probes.png"]
+OUTS = [HERE.parent / "figures_canonical" / "fig_probes.png"]
 RED, GRAY, INK, PURPLE, BLUEG = "#b40426", "#8a8a8a", "#222222", "#6a3d9a", "#4d6b8a"
 CLASS = ["#4e79a7", "#f28e2b", "#59a14f", "#e15759", "#b07aa1", "#edc948", "#76b7b2", "#9c755f"]
 
@@ -124,7 +123,8 @@ ax.annotate("", xy=(s_sizes[1], s_pr[1]), xytext=(r_sizes[1] if r_sizes[1] == s_
             np.interp(np.log(s_sizes[1]), np.log(r_sizes), r_pr)),
             arrowprops=dict(arrowstyle="<->", color=INK, lw=0.6, mutation_scale=5))
 ax.text(s_sizes[1] * 0.93, 37, "early\ndeficit", fontsize=6.3, color=INK, va="center", ha="right", linespacing=0.95)
-ax.text(560, 25.6, r"$\delta_{\rm dir} = +0.24$", fontsize=7.5, color=RED)
+# the shift is a difference of slopes, so its label sits with the two slopes, away from the early-deficit arrow
+ax.text(4300, 25.5, r"$\delta = \theta_{\rm obs} - \theta_{\rm floor} = +%.2f$" % _d["delta"], fontsize=6.5, color=RED, ha="right", va="center")
 # the two slopes of step 3 (Eq. 1 on GT3: theta_obs = theta_floor + delta)
 ax.text(2350, 33.0, r"$\theta_{\rm obs} = %.3f$" % _d["theta_structured"], fontsize=6.3, color=RED, ha="left", va="center")
 ax.text(1260, 47.6, r"$\theta_{\rm floor} = %.3f$" % _d["theta_random"], fontsize=6.3, color=GRAY, ha="left", va="center")

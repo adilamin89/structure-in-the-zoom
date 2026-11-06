@@ -1,4 +1,4 @@
-"""Figure: the sector balance across scales (S75). Three panels from
+"""Figure: the sector balance across scales. Three panels from
 committed artifacts, drawn at the printed width (jmlr 6.0 in) so fonts print
 1:1.
   (A) graining flow of the quadrupole-to-dipole ratio b2/c1 with block size K

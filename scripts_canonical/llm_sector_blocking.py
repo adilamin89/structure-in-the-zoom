@@ -1,4 +1,4 @@
-"""LLM analogue of the V1 sector-balance results (S74, 2026-09-02): additivity of
+"""LLM analogue of the V1 sector-balance results: additivity of
 the class-mean kernel's harmonic content over hidden units, its flow under unit
 blocking, and a context-length knob. Pythia-160m, last-token hidden states,
 the paper's own prompts (planted compass / clock C8 axes from run28; the
@@ -42,8 +42,8 @@ import torch
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data_canonical"
-AXES = HERE.parent.parent / "arxiv_supplement" / "axes"
-sys.path.insert(0, str(HERE.parent.parent / "arxiv_supplement"))
+AXES = HERE.parent / "axes"
+sys.path.insert(0, str(HERE.parent))
 from rung import zoom  # noqa: E402
 
 spec = importlib.util.spec_from_file_location("r17", HERE / "run17_multiclass_battery.py")

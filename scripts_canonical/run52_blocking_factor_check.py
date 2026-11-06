@@ -1,4 +1,4 @@
-"""Run 52 (S75) - Does the blocking factor B(K) account for the measured flow
+"""Run 52 - Does the blocking factor B(K) account for the measured flow
 of the sector balance, and what are the within-block coherences rho_l?
 
 Section 4.1 now displays B(K) = [1/K + (1-1/K) rho_2] / [1/K + (1-1/K) rho_1]

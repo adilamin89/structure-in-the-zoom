@@ -1,0 +1,247 @@
+{
+ "rows": [
+  {
+   "default": {
+    "delta": 0.2307411219353518,
+    "theta_floor_se": 0.0037694280376898825,
+    "within": 0.35770934345174293
+   },
+   "replay": {
+    "delta": 0.23324781480186063,
+    "within": 0.36191574290265577
+   },
+   "default_20_seeds": {
+    "mean": 0.23375904094455785,
+    "sd": 0.004390775175151995,
+    "min": 0.2262029276823984,
+    "max": 0.24057253785747146
+   },
+   "name": "GT3 direction ladder (Table 9)",
+   "paper": {
+    "delta": 0.2332481147169891,
+    "within": 0.3619159957354176
+   },
+   "residual_replay": {
+    "delta": -2.999151284821533e-07,
+    "within": -2.528327618378512e-07
+   },
+   "cause": "the floor draw; the replay agrees to float32 rounding (the generator's Gram is float32)"
+  },
+  {
+   "default": {
+    "delta": 0.18827049014919056,
+    "theta_floor_se": 0.009146021483477648,
+    "within": 0.1310091200090833
+   },
+   "replay": {
+    "delta": 0.21464149800292204,
+    "within": 0.1630044002513758
+   },
+   "default_20_seeds": {
+    "mean": 0.20443216363012504,
+    "sd": 0.010368877351797824,
+    "min": 0.18827049014919056,
+    "max": 0.2255641924063983
+   },
+   "name": "Allen VISp 715093703 pooled",
+   "paper": {
+    "delta": 0.2146414980029218,
+    "within": 0.16300440025137367
+   },
+   "residual_replay": {
+    "delta": 2.498001805406602e-16,
+    "within": 2.1371793224034263e-15
+   },
+   "cause": "the floor draw alone (the replay is exact)"
+  },
+  {
+   "default": {
+    "delta": 0.2258968704524568,
+    "theta_floor_se": 0.008822314816994642,
+    "within": 0.15661860626983173
+   },
+   "replay": {
+    "delta": 0.2577859571522323,
+    "within": 0.20418659985841714
+   },
+   "default_20_seeds": {
+    "mean": 0.23873737269382747,
+    "sd": 0.009192420347394484,
+    "min": 0.22378033002439873,
+    "max": 0.2560286882537101
+   },
+   "name": "Allen VISp 715093703 tfres",
+   "paper": {
+    "delta": 0.2577859571522328,
+    "within": 0.20418659985841628
+   },
+   "residual_replay": {
+    "delta": -4.996003610813204e-16,
+    "within": 8.604228440844963e-16
+   },
+   "cause": "the floor draw alone (the replay is exact)"
+  },
+  {
+   "default": {
+    "delta": 0.15255580353321543,
+    "theta_floor_se": 0.00413126620948348,
+    "within": 0.21674784150350487
+   },
+   "replay": {
+    "delta": 0.14628585930814575,
+    "within": 0.24221779057722254
+   },
+   "default_20_seeds": {
+    "mean": 0.15338106355286438,
+    "sd": 0.004474656825247454,
+    "min": 0.1432384732013164,
+    "max": 0.1608754824210709
+   },
+   "name": "macaque array 1",
+   "paper": {
+    "delta": 0.1462858593081454,
+    "within": 0.24221779057722326
+   },
+   "residual_replay": {
+    "delta": 3.608224830031759e-16,
+    "within": -7.216449660063518e-16
+   },
+   "cause": "the floor draw alone (the replay is exact)"
+  },
+  {
+   "default": {
+    "delta": -0.35317606502497034,
+    "theta_floor_se": 0.004125786143713796,
+    "within": 0.07632555275855096
+   },
+   "replay": {
+    "delta": -0.35414296628766134,
+    "within": 0.08533744878361502
+   },
+   "default_20_seeds": {
+    "mean": -0.3547866503789324,
+    "sd": 0.004498814205580683,
+    "min": -0.3607049791382872,
+    "max": -0.3472437899659779
+   },
+   "name": "macaque array 2",
+   "paper": {
+    "delta": -0.35414296628766045,
+    "within": 0.08533744878361627
+   },
+   "residual_replay": {
+    "delta": -8.881784197001252e-16,
+    "within": -1.2490009027033011e-15
+   },
+   "cause": "the floor draw alone (the replay is exact)"
+  },
+  {
+   "default": {
+    "delta": 0.2485825301485982,
+    "theta_floor_se": 0.002717626422005888,
+    "within": 0.1781121745993543
+   },
+   "replay": {
+    "delta": 0.24491612868183235,
+    "within": 0.17314990618274095
+   },
+   "default_20_seeds": {
+    "mean": 0.24816685908545993,
+    "sd": 0.0023249651561169597,
+    "min": 0.2429751360084896,
+    "max": 0.2510257123523813
+   },
+   "name": "macaque array 3",
+   "paper": {
+    "delta": 0.24491612868183282,
+    "within": 0.17314990618274015
+   },
+   "residual_replay": {
+    "delta": -4.718447854656915e-16,
+    "within": 8.049116928532385e-16
+   },
+   "cause": "the floor draw alone (the replay is exact)"
+  },
+  {
+   "default": {
+    "delta": -0.5369062799577975,
+    "theta_floor_se": 0.002426953027688372,
+    "within": 0.11672713773546511
+   },
+   "replay": {
+    "delta": -0.5423873456313343,
+    "within": 0.12022862670894734
+   },
+   "default_20_seeds": {
+    "mean": -0.5384156369083881,
+    "sd": 0.0024140647304332304,
+    "min": -0.544548600959621,
+    "max": -0.5347497864184249
+   },
+   "name": "nematic L16 T1.0, 100 per class",
+   "paper": {
+    "delta": -0.5423873456313338,
+    "within": 0.12022862670894777
+   },
+   "residual_replay": {
+    "delta": -4.440892098500626e-16,
+    "within": -4.3021142204224816e-16
+   },
+   "cause": "the floor draw alone (the replay is exact)"
+  },
+  {
+   "default": {
+    "delta": 0.44512799620416643,
+    "theta_floor_se": 0.002916392413160092,
+    "within": 0.29207482152479636
+   },
+   "replay": {
+    "delta": 0.44166263493902913,
+    "within": 0.29156889096475647
+   },
+   "default_20_seeds": {
+    "mean": 0.43805041886136004,
+    "sd": 0.0045104924326672775,
+    "min": 0.43069513469867743,
+    "max": 0.4457615942077575
+   },
+   "name": "polar XY L32 T0.7, ensemble 0",
+   "paper": {
+    "delta": 0.4416626349390287,
+    "within": 0.29156889096475624
+   },
+   "residual_replay": {
+    "delta": 4.440892098500626e-16,
+    "within": 2.220446049250313e-16
+   },
+   "cause": "the floor draw alone (the replay is exact)"
+  },
+  {
+   "default": {
+    "delta": 0.4491552191916136,
+    "theta_floor_se": 0.0004579360593786944,
+    "within": 0.3429810704085284
+   },
+   "replay": {
+    "delta": 0.4485424689672126,
+    "within": 0.34624197793277645
+   },
+   "default_20_seeds": {
+    "mean": 0.4483190256746591,
+    "sd": 0.0006171888958762584,
+    "min": 0.44728320017734535,
+    "max": 0.4493570781640689
+   },
+   "name": "spin waves, 200 per class, seed 0",
+   "paper": {
+    "delta": 0.44854253789190074,
+    "within": 0.3462420499417234
+   },
+   "residual_replay": {
+    "delta": -6.892468812358388e-08,
+    "within": -7.200894697190208e-08
+   },
+   "cause": "the floor draw; the replay agrees to float32 rounding (the generator's Gram is float32)"
+  }
+ ]
+}

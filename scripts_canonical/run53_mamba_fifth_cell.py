@@ -1,4 +1,4 @@
-"""Run 53 — the fifth corpus-by-architecture cell: Mamba-2.8B on the Pile.
+"""Run 53, the fifth corpus-by-architecture cell: Mamba-2.8B on the Pile.
 
 WHY: Section 8.4 attributes the construction-axis rise to "architecture lineage or
 OLMo's idiosyncrasy" because the four cells (Pythia + GPT-Neo on the Pile;

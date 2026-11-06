@@ -1,8 +1,8 @@
-"""Figure: what sets the sign (S77). (A) a drawn picture of class means on a circle
+"""Figure: what sets the sign. (A) a drawn picture of class means on a circle
 with their within-class clouds in three regimes: low-rank clouds along an orbit
 (delta > 0), isotropic clouds (delta < 0), an invariant representation (delta = 0);
 (B) the measured within-class subspace alignment against class separation (run9,
-run3b, run11), panel (a) of the S70 fig_mechanism.png.
+run3b, run11), panel (a) of the fig_mechanism.png.
 Out: ../figures_canonical/fig_sign_rule.png + ../../arxiv/figures/
 """
 import json

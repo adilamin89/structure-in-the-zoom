@@ -1,4 +1,4 @@
-"""Figure: one population, three axes (S77). (A) a drawn schematic of the same
+"""Figure: one population, three axes. (A) a drawn schematic of the same
 trials-by-neurons matrix subsampled three ways (random stimuli; stimulus classes
 accumulated around the direction circle; spatially contiguous neurons) with the
 three GT3 exponents and their readings; (B) the GT3 ladders (orientation_zoom.json,

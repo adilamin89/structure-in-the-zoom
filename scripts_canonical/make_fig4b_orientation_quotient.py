@@ -2,7 +2,7 @@
 quotient; one tuning curve split into its even (orientation) and odd (direction)
 sectors; the two accumulation orders as paths on the circle. The tuning-curve panel
 uses the GT3 sector ratio b2/c1 = 2.4 (cos2theta_fit.json) for its amplitudes; the
-rest is drawn. Written S76 (2026-09-04). Output: figures_canonical/fig_orientation_quotient.png.
+rest is drawn. Output: figures_canonical/fig_orientation_quotient.png.
 """
 import json
 from pathlib import Path

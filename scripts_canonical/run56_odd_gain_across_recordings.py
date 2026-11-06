@@ -1,4 +1,4 @@
-"""Run 56 (S77, 2026-09-05) - Does an odd-sector admixture in the WITHIN-CLASS
+"""Run 56 - Does an odd-sector admixture in the WITHIN-CLASS
 pathway order the calibrated model across GT1, GT2, GT3?
 
 Facts that motivate it (all released):

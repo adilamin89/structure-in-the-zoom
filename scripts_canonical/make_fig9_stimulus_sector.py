@@ -1,5 +1,5 @@
 """Figure (App I): the sector balance follows single-neuron tuning across stimulus
-types. From local_vs_fullfield_tuning.json (S74). Drawn at the printed width.
+types. From local_vs_fullfield_tuning.json. Drawn at the printed width.
   (a) quadrupole-to-dipole ratio b2/c1 against the median direction-selectivity
       index of tuned neurons, one point per grating recording; the line b2/c1 = 1
       separates the quadrupole-dominant (director on RP^1, nematic) regime from

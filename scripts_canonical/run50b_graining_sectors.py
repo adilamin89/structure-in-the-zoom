@@ -1,4 +1,4 @@
-"""Run 50b (S74) - Sector-resolved coarse-graining of the direction-aligned
+"""Run 50b - Sector-resolved coarse-graining of the direction-aligned
 shift on all eight grating recordings.
 
 run50 showed that preference-sorted (orientation-phase) graining preserves

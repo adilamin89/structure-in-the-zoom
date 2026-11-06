@@ -1,7 +1,7 @@
-"""Run 38 — V1 label-permutation inference: >=200 permutations per grating recording.
+"""Run 38, V1 label-permutation inference: >=200 permutations per grating recording.
 
 WHY: the committed shuffled-label control (stringer_mismatch_ablation.json)
-uses 5 shuffle seeds per recording — descriptive, not inferential. This run
+uses 5 shuffle seeds per recording, descriptive, not inferential. This run
 upgrades the same construction (dir8 + ori8 binnings, accumulate counts
 1/2/3/4/6/8, floor = slope of mean null log-PR over 10 draws with rng(42),
 rung sizes preserved under permutation so the floor is reused EXACTLY) to
@@ -9,20 +9,20 @@ N_PERM=200 label permutations per recording per binning, yielding real
 permutation p-values and z-scores for the observed delta.
 
 Scope: the 8 grating recordings (the paper's primary claim). The two
-static_biased sessions stay excluded (degenerate probe range, ledger S68).
+static_biased sessions stay excluded (degenerate probe range).
 
 REGISTERED EXPECTATIONS (written before the run):
-V1: dir8 — observed delta exceeds ALL 200 permuted deltas in 8/8 recordings
+V1: dir8, observed delta exceeds ALL 200 permuted deltas in 8/8 recordings
     (p = 1/201 each), consistent with the 5-seed control (obs +0.20..+0.45
     vs shuffled ~0).
-V2: ori8 — same direction; expect 8/8 as well (ori8 deltas smaller but the
+V2: ori8, same direction; expect 8/8 as well (ori8 deltas smaller but the
     5-seed nulls were equally tight).
 V3: null SD comparable to the 5-seed SD already recorded (no widening).
 
 GRAM TRICK: the full stimulus x stimulus linear kernel K = X X^T is computed
 once per recording (float32 matmul on globally std-normalized responses,
 float64 accumulation downstream); every subset PR is then O(n^2) via
-double-centering the kernel submatrix — the 11K-22K neuron dimension is
+double-centering the kernel submatrix, the 11K-22K neuron dimension is
 touched exactly once. Validated in-recording against the committed pr_trace
 (rel diff < 1e-3) before use. Fork-parallel over recordings (Pool(4)).
 
@@ -46,7 +46,7 @@ N_PERM = 200
 
 
 def pr_trace(X):
-    """Committed construction (shuffle_label_control.py) — validation only."""
+    """Committed construction (shuffle_label_control.py), validation only."""
     Xc = X - X.mean(axis=0)
     n = Xc.shape[0]
     if n < 3:
@@ -170,7 +170,7 @@ def main():
         json.dump({"n_perm": N_PERM,
                    "construction": "identical to stringer_mismatch_ablation "
                    "(dir8+ori8, counts 1/2/3/4/6/8, floor rng(42) reused "
-                   "across permutations — rung sizes preserved); gram-trick "
+                   "across permutations, rung sizes preserved); gram-trick "
                    "subset PR validated per recording",
                    "rows": rows}, f, indent=1)
     print("DONE run38", flush=True)

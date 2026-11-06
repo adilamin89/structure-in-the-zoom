@@ -1,4 +1,4 @@
-"""Run 62 (S78b, 2026-09-06) - The two-species XY lattice: the rung-four stall on
+"""Run 62 - The two-species XY lattice: the rung-four stall on
 ground truth, with the polar fraction as the knob.
 
 WHY: Section 4 says an even code has every class mean it will have by four

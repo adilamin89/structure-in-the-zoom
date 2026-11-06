@@ -1,4 +1,4 @@
-"""Run 35 — Split-half reliability of the within-class subspace alignment
+"""Run 35, Split-half reliability of the within-class subspace alignment
 profile (the last open item from the round-1 review; round-3 M-adjacent).
 
 For each drifting recording, trials within each of 16 direction classes are

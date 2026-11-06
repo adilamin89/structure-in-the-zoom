@@ -1,4 +1,4 @@
-"""Run 67 (S79, 2026-09-06) - The four-term split of the deficit in the
+"""Run 67 - The four-term split of the deficit in the
 equivariant network: is the rotation shift carried by the four rotation
 means, or by rotation-private variability as in cortex?
 

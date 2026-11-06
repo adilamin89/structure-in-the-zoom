@@ -1,5 +1,5 @@
 """Harmonic decomposition of the class-mean signal correlation C(dphi) over the
-eight direction classes, for every Stringer grating recording (S74, 2026-09-02).
+eight direction classes, for every Stringer grating recording.
 
 WHY: the paper quotes a three-term fit (a, b cos2, c cos) with R^2 = 0.90, a
 cos4 term b4 = 0.07 (R^2 0.97), a cos3 term c3 = 0.064, and the even/odd

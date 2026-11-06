@@ -1,7 +1,7 @@
-"""Figure: LLM depth profiles (S77 restyle of make_fig6_llm.py). Two panels from
+"""Figure: LLM depth profiles (a restyle of make_fig6_llm.py). Two panels from
 committed JSONs (runs 17/18/19/26): (a) content axis, (b) construction axis, at
 four Pythia scales, on normalized depth; pooled shuffle band. The embedding-excess
-panel and the OLMo/GPT-Neo inset of the S73 figure are superseded by
+panel and the OLMo/GPT-Neo inset of the figure are superseded by
 fig_architectures.png. Drawn at the printed width so fonts print 1:1.
 Out: ../figures_canonical/fig_llm_depth.png + ../../arxiv/figures/
 """

@@ -1,4 +1,4 @@
-"""Run 68 (S79, 2026-09-06) - Two consistency checks on the V1 recordings
+"""Run 68 - Two consistency checks on the V1 recordings
 that runs 65-67 made necessary before their sentences enter the paper.
 
 WHY: on the language model, the network and the Allen populations the trace

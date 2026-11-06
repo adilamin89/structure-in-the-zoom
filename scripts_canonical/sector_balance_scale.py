@@ -1,4 +1,4 @@
-"""Sector balance across scales (S74, 2026-09-02): is the dipole/quadrupole balance
+"""Sector balance across scales: is the dipole/quadrupole balance
 of the class-mean correlation a single-neuron property, and does it flow under
 coarse-graining? Plus the balance per Allen visual area.
 

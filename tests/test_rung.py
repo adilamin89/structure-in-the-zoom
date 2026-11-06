@@ -157,7 +157,8 @@ def test_cli_decompose_reports_the_split(tmp_path):
            "--decompose", "--n-shuffle", "2", "--out", str(out)]
     res = subprocess.run(cmd, capture_output=True, text=True)
     assert res.returncode == 0, res.stderr
-    assert "regrouped: D" in res.stdout and "net of 2 label permutations" in res.stdout
+    assert "within-class part D" in res.stdout and "class-mean part (Tb + Cb + Cx)" in res.stdout
+    assert "net of 2 label permutations" in res.stdout and "full-set class-mean remainder c" in res.stdout
     d = json.load(open(out)); assert "decompose" in d and len(d["decompose"]["rungs"]) == 6 and "excess" in d["decompose"]
 
 

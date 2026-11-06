@@ -1,4 +1,4 @@
-"""Run 66 (S79, 2026-09-06) - The four-term split of the deficit on the 167
+"""Run 66 - The four-term split of the deficit on the 167
 Allen Neuropixels populations (Modal), and where the within-class modes live
 at the assembly scale.
 
@@ -66,7 +66,7 @@ import modal
 
 HERE = Path(__file__).resolve().parent
 image = (modal.Image.debian_slim(python_version="3.11").pip_install("numpy", "h5py", "requests")
-         .add_local_file(str(HERE.parent.parent / "arxiv_supplement" / "rung.py"), "/root/rung.py")
+         .add_local_file(str(HERE.parent / "rung.py"), "/root/rung.py")
          .add_local_python_source("deficit_split"))
 app = modal.App("allen-deficit-decomposition")
 vol = modal.Volume.from_name("allen-neuropixels-data", create_if_missing=False)

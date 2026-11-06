@@ -1,8 +1,8 @@
-"""Run 45 — topic-stratified floor for the language_type axis.
+"""Run 45, topic-stratified floor for the language_type axis.
 
 WHY: the run36 principle says a label-representation reading needs a
 nuisance-preserving null. language_type's nuisance is TOPIC: the 128 prompts
-mix topics within each construction type by design, but not uniformly —
+mix topics within each construction type by design, but not uniformly,
 topic composition could contribute to (or produce) the measured profile,
 including the negative canonical embedding delta the paper uses in its
 anti-lexical argument. Each prompt was hand-assigned one of 7 topic strata
@@ -17,7 +17,7 @@ REGISTERED EXPECTATIONS (written before the run):
 S1: late-layer positive delta SURVIVES the stratified null on 2.8B
     (construction-type organization beyond topic; run31's scramble result
     makes this the expected outcome).
-S2: DECISION CELL — embedding-layer negative canonical delta under
+S2: DECISION CELL, embedding-layer negative canonical delta under
     stratification: if the stratified null reproduces it, the embedding
     negativity is topic composition (revising the anti-lexical argument to
     rest on run31/run37); if the observed value beats the stratified null,
