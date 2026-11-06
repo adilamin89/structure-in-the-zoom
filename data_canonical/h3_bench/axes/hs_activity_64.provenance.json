@@ -1,0 +1,25 @@
+{
+ "source": "Rowan/hellaswag (Zellers et al. 2019), split validation, field ctx, label activity_label",
+ "rule": "run17's 8 most frequent activities; 64 per class drawn by rung.build_axis(seed 0); texts whole",
+ "pool_sizes": {
+  "Personal Care and Style": 2627,
+  "Family Life": 980,
+  "Food and Entertaining": 500,
+  "Computers and Electronics": 454,
+  "Health": 427,
+  "Home and Garden": 390,
+  "Finance and Business": 265,
+  "Pets and Animals": 255
+ },
+ "n_classes": 8,
+ "n_per_class": {
+  "Personal Care and Style": 64,
+  "Family Life": 64,
+  "Food and Entertaining": 64,
+  "Computers and Electronics": 64,
+  "Health": 64,
+  "Home and Garden": 64,
+  "Finance and Business": 64,
+  "Pets and Animals": 64
+ }
+}

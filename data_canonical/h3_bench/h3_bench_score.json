@@ -1,0 +1,801 @@
+{
+ "pythia-160m/hs_activity_64": {
+  "n_layers": 13,
+  "B1_layers_above_null": "1/13",
+  "B1_past_embedding": "1/12",
+  "B1_failing_layers": [
+   0,
+   1,
+   2,
+   3,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12
+  ],
+  "dbar50_range_past_emb": [
+   -0.0875267291960391,
+   0.0645868712728073
+  ],
+  "excess_range_past_emb": [
+   -0.03930843110994811,
+   0.011144526752333662
+  ],
+  "embedding": {
+   "dbar50": 0.6258646483374815,
+   "p_one": 0.30845771144278605,
+   "delta_declared": 5.641087187644882
+  },
+  "declared_pct_range": [
+   0.055,
+   0.895
+  ],
+  "B2_orderavg_IE": -0.6407640561698897,
+  "B2_orderavg_IE_p_two": 0.6069651741293532,
+  "B2_reading": "path (order-averaged profile inside its null)",
+  "declared_IE": -5.72819607651575,
+  "declared_IE_p_two": 0.05472636815920398,
+  "distinct_last_tokens": [
+   1,
+   2,
+   1,
+   2,
+   1,
+   2,
+   3,
+   2
+  ],
+  "last_tokens_examples": [
+   [
+    "."
+   ],
+   [
+    ".",
+    ")."
+   ],
+   [
+    "."
+   ],
+   [
+    ".",
+    " \"."
+   ],
+   [
+    "."
+   ],
+   [
+    ".",
+    ")."
+   ],
+   [
+    ".",
+    ").",
+    " \"."
+   ],
+   [
+    ".",
+    ")."
+   ]
+  ],
+  "spearman_distinct_vs_classPR": {
+   "0": 0.09413160730419345,
+   "6": -0.013041013273932527
+  },
+  "m_matched": 1,
+  "B3": "matched arm impossible (a class has fewer than 6 distinct last tokens)",
+  "lasttoken_strata_null_above": "0/13",
+  "movable_fraction": 1.0
+ },
+ "pythia-160m/arc_topic_64": {
+  "n_layers": 13,
+  "B1_layers_above_null": "12/13",
+  "B1_past_embedding": "12/12",
+  "B1_failing_layers": [
+   0
+  ],
+  "dbar50_range_past_emb": [
+   0.009464441812598978,
+   0.042076254897238485
+  ],
+  "excess_range_past_emb": [
+   0.016404768708706424,
+   0.05058424004356742
+  ],
+  "embedding": {
+   "dbar50": -0.007675197841812725,
+   "p_one": 0.1044776119402985,
+   "delta_declared": 0.09315678783659131
+  },
+  "declared_pct_range": [
+   0.285,
+   1.0
+  ],
+  "B2_orderavg_IE": 0.0334281691805011,
+  "B2_orderavg_IE_p_two": 0.5373134328358209,
+  "B2_reading": "path (order-averaged profile inside its null)",
+  "declared_IE": -0.060243901589092964,
+  "declared_IE_p_two": 0.18407960199004975,
+  "within_source_null_above": "12/13",
+  "distinct_last_tokens": [
+   7,
+   16,
+   9,
+   11,
+   12,
+   7,
+   7,
+   11
+  ],
+  "last_tokens_examples": [
+   [
+    "?",
+    " the",
+    " of",
+    " to",
+    " that",
+    " by"
+   ],
+   [
+    ",",
+    "?",
+    " a",
+    " of",
+    " to",
+    " be"
+   ],
+   [
+    ".",
+    "?",
+    " the",
+    " of",
+    " to",
+    " is"
+   ],
+   [
+    "?",
+    " of",
+    " in",
+    " to",
+    " is",
+    " that"
+   ],
+   [
+    "?",
+    " a",
+    " of",
+    " as",
+    " it",
+    " at"
+   ],
+   [
+    ".",
+    "?",
+    " a",
+    " be",
+    " will",
+    " about"
+   ],
+   [
+    "?",
+    " the",
+    " of",
+    " in",
+    " to",
+    " is"
+   ],
+   [
+    "?",
+    " a",
+    " of",
+    " in",
+    " to",
+    " is"
+   ]
+  ],
+  "spearman_distinct_vs_classPR": {
+   "0": 0.8838515090524254,
+   "6": 0.7242672088068488
+  },
+  "m_matched": 7,
+  "B3": {
+   "layers_1_to_half": {
+    "matched_mean": -0.03508804090818457,
+    "random_mean": -0.0006822943408249793,
+    "lexical_share": -50.42654541991178
+   },
+   "layers_half_to_last": {
+    "matched_mean": -0.014790898789382136,
+    "random_mean": 0.011263998466784735,
+    "lexical_share": 2.313112642282181
+   }
+  },
+  "B3_layers_above_null_matched": 0,
+  "B3_layers_above_null_random": 0,
+  "B3_embedding": {
+   "matched": -0.0527658756241835,
+   "random": -0.008775588915842208
+  },
+  "lasttoken_strata_null_above": "8/13",
+  "movable_fraction": 0.955078125
+ },
+ "pythia-160m/tqa_category_26": {
+  "n_layers": 13,
+  "B1_layers_above_null": "11/13",
+  "B1_past_embedding": "11/12",
+  "B1_failing_layers": [
+   0,
+   1
+  ],
+  "dbar50_range_past_emb": [
+   -0.03738182539379492,
+   0.12204431023120743
+  ],
+  "excess_range_past_emb": [
+   0.030213323026658717,
+   0.11617324532970077
+  ],
+  "embedding": {
+   "dbar50": 0.1463203008557441,
+   "p_one": 0.0845771144278607,
+   "delta_declared": 0.8721223992363516
+  },
+  "declared_pct_range": [
+   0.045,
+   0.455
+  ],
+  "B2_orderavg_IE": -0.053069764369936934,
+  "B2_orderavg_IE_p_two": 0.208955223880597,
+  "B2_reading": "path (order-averaged profile inside its null)",
+  "declared_IE": -0.8762601754314122,
+  "declared_IE_p_two": 0.9154228855721394,
+  "distinct_last_tokens": [
+   1,
+   2,
+   2,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "last_tokens_examples": [
+   [
+    "?"
+   ],
+   [
+    "?",
+    ".?"
+   ],
+   [
+    "?",
+    ".?"
+   ],
+   [
+    "?"
+   ],
+   [
+    "?"
+   ],
+   [
+    "?"
+   ],
+   [
+    "?"
+   ],
+   [
+    "?"
+   ]
+  ],
+  "spearman_distinct_vs_classPR": {
+   "0": -0.6546536707079771,
+   "6": -0.25197631533948484
+  },
+  "m_matched": 1,
+  "B3": "matched arm impossible (a class has fewer than 6 distinct last tokens)",
+  "movable_fraction": 1.0
+ },
+ "pythia-160m/ethics_domain_64": {
+  "n_layers": 13,
+  "B1_layers_above_null": "3/13",
+  "B1_past_embedding": "3/12",
+  "B1_failing_layers": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   10
+  ],
+  "dbar50_range_past_emb": [
+   -0.0010835530838634463,
+   0.028564440794333956
+  ],
+  "excess_range_past_emb": [
+   -0.00388735028574585,
+   0.06281587907273994
+  ],
+  "embedding": {
+   "dbar50": 0.02918550597584324,
+   "p_one": 0.36318407960199006,
+   "delta_declared": 0.29949171323239576
+  },
+  "declared_pct_range": [
+   0.145,
+   0.85
+  ],
+  "B2_orderavg_IE": -0.024553749891141147,
+  "B2_orderavg_IE_p_two": 0.9353233830845771,
+  "B2_reading": "path (order-averaged profile inside its null)",
+  "declared_IE": -0.30085159693293656,
+  "declared_IE_p_two": 0.06467661691542288,
+  "distinct_last_tokens": [
+   5,
+   13,
+   10,
+   9,
+   9
+  ],
+  "last_tokens_examples": [
+   [
+    ".",
+    "ack",
+    " police",
+    "person",
+    " tv"
+   ],
+   [
+    ".",
+    " is",
+    " head",
+    " course",
+    " house",
+    " yet"
+   ],
+   [
+    ".",
+    "/",
+    " it",
+    " now",
+    " day",
+    " already"
+   ],
+   [
+    "!",
+    ".",
+    "er",
+    " made",
+    " son",
+    " pressure"
+   ],
+   [
+    "!",
+    "\"",
+    ".",
+    " about",
+    " work",
+    " increase"
+   ]
+  ],
+  "spearman_distinct_vs_classPR": {
+   "0": 0.6668859288553503,
+   "6": 0.9746794344808963
+  },
+  "m_matched": 5,
+  "B3": "matched arm impossible (a class has fewer than 6 distinct last tokens)",
+  "movable_fraction": 0.878125
+ },
+ "pythia-2.8b-deduped/hs_activity_64": {
+  "n_layers": 33,
+  "B1_layers_above_null": "19/33",
+  "B1_past_embedding": "19/32",
+  "B1_failing_layers": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   17,
+   18,
+   19
+  ],
+  "dbar50_range_past_emb": [
+   -0.0637551675213529,
+   0.059562535642447734
+  ],
+  "excess_range_past_emb": [
+   -0.058245006365468505,
+   0.04077292749660016
+  ],
+  "embedding": {
+   "dbar50": 0.61521874398422,
+   "p_one": 0.31343283582089554,
+   "delta_declared": 5.649972906005413
+  },
+  "declared_pct_range": [
+   0.07,
+   0.91
+  ],
+  "B2_orderavg_IE": -0.6010560107234528,
+  "B2_orderavg_IE_p_two": 0.6467661691542289,
+  "B2_reading": "path (order-averaged profile inside its null)",
+  "declared_IE": -5.644903662751936,
+  "declared_IE_p_two": 0.11442786069651742,
+  "distinct_last_tokens": [
+   1,
+   2,
+   1,
+   2,
+   1,
+   2,
+   3,
+   2
+  ],
+  "last_tokens_examples": [
+   [
+    "."
+   ],
+   [
+    ".",
+    ")."
+   ],
+   [
+    "."
+   ],
+   [
+    ".",
+    " \"."
+   ],
+   [
+    "."
+   ],
+   [
+    ".",
+    ")."
+   ],
+   [
+    ".",
+    ").",
+    " \"."
+   ],
+   [
+    ".",
+    ")."
+   ]
+  ],
+  "spearman_distinct_vs_classPR": {
+   "0": 0.2431493812898187,
+   "16": 0.5477225575051662
+  },
+  "m_matched": 1,
+  "B3": "matched arm impossible (a class has fewer than 6 distinct last tokens)",
+  "lasttoken_strata_null_above": "12/33",
+  "movable_fraction": 1.0
+ },
+ "pythia-2.8b-deduped/arc_topic_64": {
+  "n_layers": 33,
+  "B1_layers_above_null": "32/33",
+  "B1_past_embedding": "32/32",
+  "B1_failing_layers": [
+   0
+  ],
+  "dbar50_range_past_emb": [
+   0.01736838674511071,
+   0.05874337969938643
+  ],
+  "excess_range_past_emb": [
+   0.018827974244625546,
+   0.042091516414599475
+  ],
+  "embedding": {
+   "dbar50": -0.003330965439979086,
+   "p_one": 0.0945273631840796,
+   "delta_declared": 0.1038955295859585
+  },
+  "declared_pct_range": [
+   0.31,
+   0.845
+  ],
+  "B2_orderavg_IE": 0.03494387063603852,
+  "B2_orderavg_IE_p_two": 0.3880597014925373,
+  "B2_reading": "path (order-averaged profile inside its null)",
+  "declared_IE": -0.0867825170403406,
+  "declared_IE_p_two": 0.13930348258706468,
+  "within_source_null_above": "32/33",
+  "distinct_last_tokens": [
+   7,
+   16,
+   9,
+   11,
+   12,
+   7,
+   7,
+   11
+  ],
+  "last_tokens_examples": [
+   [
+    "?",
+    " the",
+    " of",
+    " to",
+    " that",
+    " by"
+   ],
+   [
+    ",",
+    "?",
+    " a",
+    " of",
+    " to",
+    " be"
+   ],
+   [
+    ".",
+    "?",
+    " the",
+    " of",
+    " to",
+    " is"
+   ],
+   [
+    "?",
+    " of",
+    " in",
+    " to",
+    " is",
+    " that"
+   ],
+   [
+    "?",
+    " a",
+    " of",
+    " as",
+    " it",
+    " at"
+   ],
+   [
+    ".",
+    "?",
+    " a",
+    " be",
+    " will",
+    " about"
+   ],
+   [
+    "?",
+    " the",
+    " of",
+    " in",
+    " to",
+    " is"
+   ],
+   [
+    "?",
+    " a",
+    " of",
+    " in",
+    " to",
+    " is"
+   ]
+  ],
+  "spearman_distinct_vs_classPR": {
+   "0": 0.9206786552629431,
+   "16": -0.4419257545262127
+  },
+  "m_matched": 7,
+  "B3": {
+   "layers_1_to_half": {
+    "matched_mean": -0.01870883702605052,
+    "random_mean": 0.004055870861898625,
+    "lexical_share": 5.612779268147749
+   },
+   "layers_half_to_last": {
+    "matched_mean": -0.00533752538678305,
+    "random_mean": 0.010756531057993683,
+    "lexical_share": 1.4962125203753756
+   }
+  },
+  "B3_layers_above_null_matched": 0,
+  "B3_layers_above_null_random": 0,
+  "B3_embedding": {
+   "matched": -0.05880491979390989,
+   "random": 0.021642192914245628
+  },
+  "lasttoken_strata_null_above": "25/33",
+  "movable_fraction": 0.955078125
+ },
+ "pythia-2.8b-deduped/tqa_category_26": {
+  "n_layers": 33,
+  "B1_layers_above_null": "31/33",
+  "B1_past_embedding": "31/32",
+  "B1_failing_layers": [
+   0,
+   1
+  ],
+  "dbar50_range_past_emb": [
+   -0.0650987909816724,
+   0.1333858842566405
+  ],
+  "excess_range_past_emb": [
+   0.014265420684031305,
+   0.12133903148719839
+  ],
+  "embedding": {
+   "dbar50": -0.19399927395729777,
+   "p_one": 0.1691542288557214,
+   "delta_declared": -1.6802744109287573
+  },
+  "declared_pct_range": [
+   0.06,
+   0.44
+  ],
+  "B2_orderavg_IE": 0.2993141618197871,
+  "B2_orderavg_IE_p_two": 0.472636815920398,
+  "B2_reading": "path (order-averaged profile inside its null)",
+  "declared_IE": 1.6665823020658737,
+  "declared_IE_p_two": 0.8308457711442786,
+  "distinct_last_tokens": [
+   1,
+   2,
+   2,
+   1,
+   1,
+   1,
+   1,
+   1
+  ],
+  "last_tokens_examples": [
+   [
+    "?"
+   ],
+   [
+    "?",
+    ".?"
+   ],
+   [
+    "?",
+    ".?"
+   ],
+   [
+    "?"
+   ],
+   [
+    "?"
+   ],
+   [
+    "?"
+   ],
+   [
+    "?"
+   ],
+   [
+    "?"
+   ]
+  ],
+  "spearman_distinct_vs_classPR": {
+   "0": -0.6546536707079771,
+   "16": -0.25197631533948484
+  },
+  "m_matched": 1,
+  "B3": "matched arm impossible (a class has fewer than 6 distinct last tokens)",
+  "movable_fraction": 1.0
+ },
+ "pythia-2.8b-deduped/ethics_domain_64": {
+  "n_layers": 33,
+  "B1_layers_above_null": "12/33",
+  "B1_past_embedding": "12/32",
+  "B1_failing_layers": [
+   0,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   31
+  ],
+  "dbar50_range_past_emb": [
+   -0.002196045177406949,
+   0.10360221106520631
+  ],
+  "excess_range_past_emb": [
+   -0.011983073218827384,
+   0.11314989706988036
+  ],
+  "embedding": {
+   "dbar50": 0.03160934093115242,
+   "p_one": 0.3383084577114428,
+   "delta_declared": 0.3025206434052576
+  },
+  "declared_pct_range": [
+   0.36,
+   0.925
+  ],
+  "B2_orderavg_IE": -0.026159056682131816,
+  "B2_orderavg_IE_p_two": 0.9701492537313433,
+  "B2_reading": "path (order-averaged profile inside its null)",
+  "declared_IE": -0.2930834109174618,
+  "declared_IE_p_two": 0.05970149253731343,
+  "distinct_last_tokens": [
+   5,
+   13,
+   10,
+   9,
+   9
+  ],
+  "last_tokens_examples": [
+   [
+    ".",
+    "ack",
+    " police",
+    "person",
+    " tv"
+   ],
+   [
+    ".",
+    " is",
+    " head",
+    " course",
+    " house",
+    " yet"
+   ],
+   [
+    ".",
+    "/",
+    " it",
+    " now",
+    " day",
+    " already"
+   ],
+   [
+    "!",
+    ".",
+    "er",
+    " made",
+    " son",
+    " pressure"
+   ],
+   [
+    "!",
+    "\"",
+    ".",
+    " about",
+    " work",
+    " increase"
+   ]
+  ],
+  "spearman_distinct_vs_classPR": {
+   "0": 0.9746794344808963,
+   "16": 0.8207826816681234
+  },
+  "m_matched": 5,
+  "B3": "matched arm impossible (a class has fewer than 6 distinct last tokens)",
+  "movable_fraction": 0.878125
+ }
+}

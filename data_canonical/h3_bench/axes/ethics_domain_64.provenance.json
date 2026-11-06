@@ -1,0 +1,40 @@
+{
+ "source": "hendrycks/ethics (Hendrycks et al. 2021, ICLR), original release CSVs data/<domain>/train.csv",
+ "rule": "commonsense: input of is_short items; deontology: scenario + ' ' + excuse; justice: scenario; utilitarianism: first scenario (baseline); virtue: scenario before ' [SEP] ' (trait dropped); whitespace-normalized, de-duplicated, <= 128 Pythia tokens; 64 per class by rung.build_axis(seed 0)",
+ "pool": {
+  "commonsense": {
+   "unique": 6661,
+   "kept_le_128_tokens": 6661,
+   "dropped_over_128": 0
+  },
+  "deontology": {
+   "unique": 18162,
+   "kept_le_128_tokens": 18162,
+   "dropped_over_128": 0
+  },
+  "justice": {
+   "unique": 21782,
+   "kept_le_128_tokens": 21782,
+   "dropped_over_128": 0
+  },
+  "utilitarianism": {
+   "unique": 13602,
+   "kept_le_128_tokens": 13602,
+   "dropped_over_128": 0
+  },
+  "virtue": {
+   "unique": 4502,
+   "kept_le_128_tokens": 4502,
+   "dropped_over_128": 0
+  }
+ },
+ "format_note": "the five subsets differ in surface format (deontology items are request + excuse pairs, virtue items third-person sentences, commonsense and utilitarianism first-person), so the partition carries format as well as norm type",
+ "n_classes": 5,
+ "n_per_class": {
+  "commonsense": 64,
+  "deontology": 64,
+  "justice": 64,
+  "utilitarianism": 64,
+  "virtue": 64
+ }
+}

@@ -356,6 +356,24 @@ extended draft, whose analyses this repository also carries.
 | Camera-ready App G | Four block types on eight recordings (orientation-, direction-sorted, random, anatomical): the shift stays positive in all 128 cells; the block decides which sector survives | run51_spatial_blocking.json, cr_graining_sectors_table.txt | run51_spatial_blocking.py, cr_graining_sectors_table.py |
 | Camera-ready App G | A synthetic von Mises population's sign depends on tuning width | kappa_sweep.json | kappa_sweep.py |
 
+| Camera-ready Fig 3 | The two-term formula against the measured shift: imaging, 167 Allen populations, three macaque arrays, the XY lattice and spin waves | cr_h1_b245.json, h1_allen_b2_predictions.json, h1_allen/session_*.json, cr_h1_m_pvc11_twoterm.json, h2_xy_twoterm.json, h1_xy_polar_twoterm.json | make_fig_c11_twoterm.py (and cr_h1_b245.py, h1_allen_b2_predict.py, h1_allen_run.py, cr_h1_m_pvc11_twoterm.py, h2_xy_twoterm.py, h1_xy_polar_twoterm.py) |
+| Camera-ready Fig 1C | Language-model points: the topic partition at 32 prompts per class, order-averaged, against each layer's floor | h2_llm_battery_<model>.json | h2_llm_battery.py, make_fig_cr_money.py |
+| Camera-ready Sec 5, App H | Allen with temporal frequency separated: per-session shifts, splits, controls and verdicts; the population-level misses | h1_allen/session_*.json, h1_allen_verdicts.json, c12_allen_misses.json | h1_allen_run.py, h1_allen_engine.py, h1_allen_score.py, c12_allen_misses.py |
+| Camera-ready App H, K | Alignment, mode removal, running, the fluctuation kernel's parity, frames, onset, schedules, time blocks, trial order | cr_h1_r32.json, cr_h1_r33a.json, cr_h1_r33b.json, cr_h1_r34.json, cr_h1_b1_neuron_count.json, cr_h1_b1c.json, cr_h1_b24s.json, cr_h1_b3_onset.json, cr_h1_b10.json, cr_h1_trial_order.json | cr_h1_r32_diag.py, cr_h1_r33_topmodes.py, cr_h1_r33_running.py, cr_h1_r34_kernel_parity.py, cr_h1_b1_neuron_count.py, cr_h1_b1c_frames.py, cr_h1_b24s.py, cr_h1_b3_onset.py, cr_h1_b10_time_blocks.py, cr_h1_trial_order.py |
+| Camera-ready Sec 6, App H | Macaque V1, three Utah arrays | cr_h1_m_pvc11.json, cr_h1_m_pvc11_twoterm.json | cr_h1_m_pvc11.py, cr_h1_m_pvc11_twoterm.py |
+| Camera-ready App I | The language-model battery: order-averaged lift and its nulls at four scales, last-token controls, prompt halves, probes, decoders, other architectures, benchmark and ETHICS axes | h2_llm_battery_*.json, h2_lasttoken*.json, h2_profile_halves.json, h3_score.json, h3_v1_decode*.json, h3_generality_*.json, h3_bench/*.json | h2_llm_battery.py, h2_lasttoken.py, h2_lasttoken_power.py, h2_profile_halves.py, h3_score.py, h3_v1_decode.py, h3_generality.py, h3_bench.py, h3_bench_score.py |
+
+The Allen predictions in `h1_allen_b2_predictions.json` were written by `h1_allen_b2_predict.py` and committed on
+2026-10-22 at 17:21 CDT, before the measured Allen results were computed (committed 19:31 the same day); the figure
+compares the two.
+
+Further inputs read from `raw/` and not included: the CRCNS pvc-11 macaque arrays (Kohn and Smith 2016,
+doi:10.6080/K0NC5Z4X) as `raw/pvc11/spikes_gratings/`; the per-session Allen spike counts and running speeds that
+`h1_allen_counts_modal.py` and `h1_allen_running_modal.py` write from the Allen Brain Observatory NWB files, as
+`raw/allen_counts/` and `raw/allen_running/`; and language-model hidden states, which `h2_llm_battery.py encode` and
+`h3_bench.py encode` write to `raw/llm_states/` (several GB). The benchmark axes in `data_canonical/h3_bench/axes/` are built
+from ARC, HellaSwag, TruthfulQA and ETHICS by `h3_bench.py build` and `build_ethics`, each with a provenance file.
+
 ## Citation
 
 ```bibtex

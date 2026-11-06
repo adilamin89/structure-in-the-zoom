@@ -1,0 +1,25 @@
+{
+ "source": "TruthfulQA.csv (Lin, Hilton, Evans 2022), https://raw.githubusercontent.com/sylinrl/TruthfulQA/main/TruthfulQA.csv",
+ "n_per_class": {
+  "Misconceptions": 26,
+  "Law": 26,
+  "Health": 26,
+  "Sociology": 26,
+  "Economics": 26,
+  "Fiction": 26,
+  "Conspiracies": 26,
+  "Paranormal": 26
+ },
+ "rule": "run17's 8 largest categories; 26 per class (the smallest category's size) by rung.build_axis(seed 0)",
+ "pool_sizes": {
+  "Misconceptions": 100,
+  "Law": 64,
+  "Health": 55,
+  "Sociology": 55,
+  "Economics": 31,
+  "Fiction": 30,
+  "Conspiracies": 26,
+  "Paranormal": 26
+ },
+ "n_classes": 8
+}

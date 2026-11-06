@@ -1,0 +1,2077 @@
+{
+ "model_key": "pythia-160m",
+ "batteries": {
+  "pilot": {
+   "class_names": [
+    "arithmetic",
+    "geography",
+    "biology",
+    "history",
+    "cooking",
+    "sports",
+    "law",
+    "weather"
+   ],
+   "distinct_last_tokens": [
+    2,
+    4,
+    8,
+    5,
+    8,
+    7,
+    8,
+    8
+   ],
+   "last_tokens_per_class": [
+    [
+     " is",
+     " equals"
+    ],
+    [
+     " in",
+     " and",
+     " is",
+     " spans"
+    ],
+    [
+     " the",
+     " of",
+     " into",
+     " through",
+     "ends",
+     " carry",
+     " chemical",
+     " pumps"
+    ],
+    [
+     " the",
+     " in",
+     " at",
+     " by",
+     " divided"
+    ],
+    [
+     " to",
+     " and",
+     " for",
+     " with",
+     " you",
+     " need",
+     " before",
+     " until"
+    ],
+    [
+     " a",
+     " the",
+     "aced",
+     " five",
+     " passed",
+     " train",
+     " occurs"
+    ],
+    [
+     " the",
+     " in",
+     " for",
+     " not",
+     " when",
+     " under",
+     " original",
+     " limitations"
+    ],
+    [
+     " in",
+     " from",
+     " three",
+     " below",
+     " near",
+     " heavy",
+     " tall",
+     " brings"
+    ]
+   ],
+   "spearman_distinct_vs_classPR": {
+    "0": 0.8751723492699257,
+    "6": 0.8751723492699257
+   },
+   "class_PR": {
+    "0": [
+     1.0,
+     2.45093433208163,
+     6.185446519513648,
+     3.0500313110109487,
+     5.152584313029627,
+     5.373494465993634,
+     5.762874089203449,
+     6.373536707251582
+    ],
+    "6": [
+     3.274486007663459,
+     4.812146662965282,
+     6.096391299902212,
+     5.191279914861824,
+     5.957487079092741,
+     5.915522439550006,
+     5.7593052323333565,
+     6.229913455465662
+    ]
+   },
+   "mid_layer": 6,
+   "m": 2,
+   "matched": "cannot match (m < 6)",
+   "n_shared_tokens": 5,
+   "within_lasttoken_strata": [
+    {
+     "layer": 0,
+     "dbar": 0.08676224777069375,
+     "p_one": 0.6534653465346535,
+     "null_mean": 0.11441665015129812,
+     "null_sd": 0.06491631710540173
+    },
+    {
+     "layer": 1,
+     "dbar": 0.0968098540292821,
+     "p_one": 0.7425742574257426,
+     "null_mean": 0.1313546457890409,
+     "null_sd": 0.04620644500248361
+    },
+    {
+     "layer": 2,
+     "dbar": 0.04728155872729645,
+     "p_one": 0.5643564356435643,
+     "null_mean": 0.05687628067799981,
+     "null_sd": 0.045430420794769714
+    },
+    {
+     "layer": 3,
+     "dbar": 0.08996922125054352,
+     "p_one": 0.18811881188118812,
+     "null_mean": 0.05009382530334211,
+     "null_sd": 0.041088082816464644
+    },
+    {
+     "layer": 4,
+     "dbar": 0.055584057417945254,
+     "p_one": 0.2079207920792079,
+     "null_mean": 0.038679614626266116,
+     "null_sd": 0.02268038826045153
+    },
+    {
+     "layer": 5,
+     "dbar": 0.055958888643902416,
+     "p_one": 0.33663366336633666,
+     "null_mean": 0.04546507122973873,
+     "null_sd": 0.022282408973046446
+    },
+    {
+     "layer": 6,
+     "dbar": 0.05623292434234384,
+     "p_one": 0.3564356435643564,
+     "null_mean": 0.04762496209216775,
+     "null_sd": 0.023362811180773768
+    },
+    {
+     "layer": 7,
+     "dbar": 0.04371190065697783,
+     "p_one": 0.3069306930693069,
+     "null_mean": 0.032017862608334995,
+     "null_sd": 0.02428684305527993
+    },
+    {
+     "layer": 8,
+     "dbar": 0.07008822205825238,
+     "p_one": 0.0891089108910891,
+     "null_mean": 0.0365117000329733,
+     "null_sd": 0.021222873383608426
+    },
+    {
+     "layer": 9,
+     "dbar": 0.042102232747652124,
+     "p_one": 0.504950495049505,
+     "null_mean": 0.04567916563034817,
+     "null_sd": 0.018225546334077875
+    },
+    {
+     "layer": 10,
+     "dbar": 0.07685535239521768,
+     "p_one": 0.04950495049504951,
+     "null_mean": 0.03899715129411191,
+     "null_sd": 0.01921962320403122
+    },
+    {
+     "layer": 11,
+     "dbar": 0.08147645366511291,
+     "p_one": 0.019801980198019802,
+     "null_mean": 0.030667692905356335,
+     "null_sd": 0.016475904136648133
+    },
+    {
+     "layer": 12,
+     "dbar": 0.056640544872225584,
+     "p_one": 0.0594059405940594,
+     "null_mean": 0.03329123688709963,
+     "null_sd": 0.013924631217297203
+    }
+   ]
+  },
+  "world_knowledge": {
+   "class_names": [
+    "mathematics",
+    "geography",
+    "history",
+    "technology",
+    "law",
+    "medicine",
+    "philosophy",
+    "sports"
+   ],
+   "distinct_last_tokens": [
+    12,
+    11,
+    13,
+    16,
+    13,
+    16,
+    14,
+    14
+   ],
+   "last_tokens_per_class": [
+    [
+     " of",
+     " in",
+     " and",
+     " about",
+     " over",
+     " like",
+     " between",
+     " linear",
+     " modern",
+     " continuous",
+     " polynomial",
+     " triangle"
+    ],
+    [
+     " and",
+     " from",
+     " over",
+     "ological",
+     " central",
+     " African",
+     " coast",
+     " Australian",
+     " ocean",
+     " adapted",
+     " tropical"
+    ],
+    [
+     " of",
+     " in",
+     " and",
+     " for",
+     "ke",
+     " new",
+     "ized",
+     " during",
+     " across",
+     " Europe",
+     " trade",
+     " empire",
+     " ideological"
+    ],
+    [
+     " the",
+     " of",
+     " to",
+     " and",
+     " for",
+     " with",
+     " new",
+     " data",
+     " through",
+     " light",
+     " build",
+     " learn",
+     " layer",
+     " enabling",
+     " navigate",
+     " unauthorized"
+    ],
+    [
+     " of",
+     " in",
+     " and",
+     " is",
+     " from",
+     "able",
+     " same",
+     " market",
+     " requiring",
+     " creative",
+     " judicial",
+     " sovereign",
+     " remedies"
+    ],
+    [
+     " of",
+     " and",
+     " it",
+     " or",
+     " new",
+     " without",
+     " including",
+     " cancer",
+     " prevent",
+     " behavior",
+     " images",
+     " injury",
+     " healthy",
+     " protection",
+     " expectation",
+     " invasive"
+    ],
+    [
+     " of",
+     " to",
+     " and",
+     " or",
+     " from",
+     "ally",
+     " our",
+     " between",
+     " personal",
+     " wrong",
+     " reality",
+     " practical",
+     " conscious",
+     " artistic"
+    ],
+    [
+     " the",
+     " and",
+     " as",
+     " between",
+     " test",
+     " around",
+     " six",
+     " cars",
+     " precise",
+     " varying",
+     " billions",
+     "stroke",
+     " kilometers",
+     " outdoors"
+    ]
+   ],
+   "spearman_distinct_vs_classPR": {
+    "0": 0.9334876415650786,
+    "6": 0.9819805060619657
+   },
+   "class_PR": {
+    "0": [
+     8.775205423276832,
+     8.53005653620866,
+     10.04407592558314,
+     11.658541699317619,
+     9.458702365781257,
+     13.395930161777281,
+     10.615571255341322,
+     11.700763607676626
+    ],
+    "6": [
+     9.412087019368798,
+     9.092120065233933,
+     10.121620358580902,
+     11.640108780105583,
+     10.528986284038936,
+     12.183003947357395,
+     10.761862798043738,
+     11.045909337223826
+    ]
+   },
+   "mid_layer": 6,
+   "m": 11,
+   "matched": [
+    {
+     "layer": 0,
+     "dbar_median": -0.014813683689233026,
+     "p_median": 0.8118811881188119,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 1,
+     "dbar_median": -0.0011061072895551805,
+     "p_median": 0.4801980198019802,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 2,
+     "dbar_median": 0.0038387540730173697,
+     "p_median": 0.35148514851485146,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 3,
+     "dbar_median": 0.0036099453256164815,
+     "p_median": 0.2722772277227723,
+     "frac_p05": 0.05
+    },
+    {
+     "layer": 4,
+     "dbar_median": 0.006082741640220546,
+     "p_median": 0.2277227722772277,
+     "frac_p05": 0.1
+    },
+    {
+     "layer": 5,
+     "dbar_median": 0.0070364123026271375,
+     "p_median": 0.21782178217821782,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 6,
+     "dbar_median": 0.008606195606823908,
+     "p_median": 0.14851485148514854,
+     "frac_p05": 0.2
+    },
+    {
+     "layer": 7,
+     "dbar_median": 0.012432705107234543,
+     "p_median": 0.04950495049504951,
+     "frac_p05": 0.55
+    },
+    {
+     "layer": 8,
+     "dbar_median": 0.019857135339468757,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 0.75
+    },
+    {
+     "layer": 9,
+     "dbar_median": 0.029519361247918596,
+     "p_median": 0.01485148514851485,
+     "frac_p05": 0.9
+    },
+    {
+     "layer": 10,
+     "dbar_median": 0.015601916580883946,
+     "p_median": 0.0297029702970297,
+     "frac_p05": 0.6
+    },
+    {
+     "layer": 11,
+     "dbar_median": 0.023754759568716866,
+     "p_median": 0.04455445544554455,
+     "frac_p05": 0.55
+    },
+    {
+     "layer": 12,
+     "dbar_median": 0.01241732784091032,
+     "p_median": 0.2376237623762376,
+     "frac_p05": 0.15
+    }
+   ],
+   "n_shared_tokens": 11,
+   "within_lasttoken_strata": [
+    {
+     "layer": 0,
+     "dbar": -0.0024272601562111973,
+     "p_one": 0.6534653465346535,
+     "null_mean": 0.004796381663593404,
+     "null_sd": 0.016743860373514614
+    },
+    {
+     "layer": 1,
+     "dbar": 0.02443815864291432,
+     "p_one": 0.6633663366336634,
+     "null_mean": 0.029598451563827136,
+     "null_sd": 0.013648017171668947
+    },
+    {
+     "layer": 2,
+     "dbar": 0.017987736807535626,
+     "p_one": 0.48514851485148514,
+     "null_mean": 0.01667287534781602,
+     "null_sd": 0.013720922640718112
+    },
+    {
+     "layer": 3,
+     "dbar": 0.033057107477277525,
+     "p_one": 0.5643564356435643,
+     "null_mean": 0.03572112751739011,
+     "null_sd": 0.011924064224102205
+    },
+    {
+     "layer": 4,
+     "dbar": 0.021528212551652715,
+     "p_one": 0.38613861386138615,
+     "null_mean": 0.017991312504375963,
+     "null_sd": 0.009314399340200768
+    },
+    {
+     "layer": 5,
+     "dbar": 0.031144409427245168,
+     "p_one": 0.39603960396039606,
+     "null_mean": 0.02707169032145286,
+     "null_sd": 0.012725509106370676
+    },
+    {
+     "layer": 6,
+     "dbar": 0.02999912831065954,
+     "p_one": 0.40594059405940597,
+     "null_mean": 0.026584699636089316,
+     "null_sd": 0.01186178593227776
+    },
+    {
+     "layer": 7,
+     "dbar": 0.014750718208462632,
+     "p_one": 0.7920792079207921,
+     "null_mean": 0.024765365319293794,
+     "null_sd": 0.011440041772800152
+    },
+    {
+     "layer": 8,
+     "dbar": 0.04702642344440028,
+     "p_one": 0.297029702970297,
+     "null_mean": 0.039973645492167136,
+     "null_sd": 0.012523036491266177
+    },
+    {
+     "layer": 9,
+     "dbar": 0.03281772427867663,
+     "p_one": 0.1188118811881188,
+     "null_mean": 0.020284977793469983,
+     "null_sd": 0.00885827436805184
+    },
+    {
+     "layer": 10,
+     "dbar": 0.03729987519642608,
+     "p_one": 0.19801980198019803,
+     "null_mean": 0.03020233332404161,
+     "null_sd": 0.0090922375811584
+    },
+    {
+     "layer": 11,
+     "dbar": 0.04715434090453907,
+     "p_one": 0.12871287128712872,
+     "null_mean": 0.030814588646992568,
+     "null_sd": 0.013611765175100939
+    },
+    {
+     "layer": 12,
+     "dbar": 0.028463811402809402,
+     "p_one": 0.04950495049504951,
+     "null_mean": 0.014481447940753112,
+     "null_sd": 0.00839384778466265
+    }
+   ]
+  },
+  "language_type": {
+   "class_names": [
+    "question",
+    "definition",
+    "comparison",
+    "narrative",
+    "cause_effect",
+    "instruction",
+    "opinion",
+    "negation"
+   ],
+   "distinct_last_tokens": [
+    16,
+    14,
+    14,
+    15,
+    14,
+    12,
+    12,
+    15
+   ],
+   "last_tokens_per_class": [
+    [
+     " year",
+     " place",
+     " far",
+     " energy",
+     " eyes",
+     " lines",
+     " fight",
+     " located",
+     " animals",
+     " whom",
+     " century",
+     " largest",
+     " ice",
+     " sky",
+     " universe",
+     " 1953"
+    ],
+    [
+     " in",
+     " and",
+     " on",
+     " through",
+     " different",
+     " found",
+     " something",
+     " together",
+     " chemical",
+     " convert",
+     " citizens",
+     " goods",
+     " territory",
+     " solving"
+    ],
+    [
+     " of",
+     " that",
+     " on",
+     " will",
+     " more",
+     "ates",
+     " much",
+     " treat",
+     " written",
+     " brain",
+     " collective",
+     " mechanics",
+     " regimes",
+     " fungi"
+    ],
+    [
+     " the",
+     "ing",
+     " of",
+     " in",
+     " was",
+     " their",
+     " before",
+     " established",
+     " discovered",
+     " stored",
+     " extreme",
+     " unexpected",
+     " desert",
+     " searched",
+     " silk"
+    ],
+    [
+     " of",
+     " and",
+     " local",
+     " land",
+     " heart",
+     " natural",
+     " global",
+     " sleep",
+     " damage",
+     " throughout",
+     " dramatic",
+     " developmental",
+     " fatigue",
+     " pipes"
+    ],
+    [
+     " the",
+     " of",
+     " and",
+     " by",
+     " from",
+     " one",
+     " into",
+     " before",
+     " entire",
+     " degrees",
+     " cylinder",
+     " firmly"
+    ],
+    [
+     " in",
+     " to",
+     " all",
+     "izing",
+     " mental",
+     " replace",
+     " experiences",
+     " cognitive",
+     " conservation",
+     " illusion",
+     " threatens",
+     " engages"
+    ],
+    [
+     " the",
+     " of",
+     " to",
+     " and",
+     " with",
+     " as",
+     " are",
+     " during",
+     " children",
+     " night",
+     " memory",
+     " despite",
+     " causes",
+     " excellent",
+     " thicker"
+    ]
+   ],
+   "spearman_distinct_vs_classPR": {
+    "0": 0.7783117824941563,
+    "6": 0.2964997266644405
+   },
+   "class_PR": {
+    "0": [
+     14.403150510311413,
+     11.879622880317177,
+     11.920393556839127,
+     12.027174916069352,
+     11.439641850287376,
+     8.996490779553007,
+     9.886193407344251,
+     10.839810758921995
+    ],
+    "6": [
+     11.602655804919085,
+     11.67332897188702,
+     11.422420954172091,
+     11.423387904552044,
+     10.688991201601228,
+     11.753847194575085,
+     10.657590699320194,
+     12.109319198926627
+    ]
+   },
+   "mid_layer": 6,
+   "m": 12,
+   "matched": [
+    {
+     "layer": 0,
+     "dbar_median": -0.0001722547298486088,
+     "p_median": 0.5891089108910891,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 1,
+     "dbar_median": -0.008873158647675905,
+     "p_median": 0.6336633663366337,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 2,
+     "dbar_median": -0.007198194915839895,
+     "p_median": 0.8415841584158416,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 3,
+     "dbar_median": 0.002659406282724708,
+     "p_median": 0.2524752475247525,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 4,
+     "dbar_median": 0.004767066994005864,
+     "p_median": 0.13366336633663367,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 5,
+     "dbar_median": 0.010907423391606053,
+     "p_median": 0.0594059405940594,
+     "frac_p05": 0.45
+    },
+    {
+     "layer": 6,
+     "dbar_median": 0.00821566644903865,
+     "p_median": 0.0891089108910891,
+     "frac_p05": 0.3
+    },
+    {
+     "layer": 7,
+     "dbar_median": 0.007347994091009835,
+     "p_median": 0.1683168316831683,
+     "frac_p05": 0.05
+    },
+    {
+     "layer": 8,
+     "dbar_median": 0.011054206712320713,
+     "p_median": 0.20297029702970298,
+     "frac_p05": 0.05
+    },
+    {
+     "layer": 9,
+     "dbar_median": 0.01685075431624311,
+     "p_median": 0.10396039603960396,
+     "frac_p05": 0.2
+    },
+    {
+     "layer": 10,
+     "dbar_median": 0.02205088509114772,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 0.75
+    },
+    {
+     "layer": 11,
+     "dbar_median": 0.012746526534918035,
+     "p_median": 0.1188118811881188,
+     "frac_p05": 0.15
+    },
+    {
+     "layer": 12,
+     "dbar_median": 0.024797721488119262,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 0.95
+    }
+   ],
+   "n_shared_tokens": 7,
+   "within_lasttoken_strata": [
+    {
+     "layer": 0,
+     "dbar": 0.03091920035134954,
+     "p_one": 0.504950495049505,
+     "null_mean": 0.030830099781794164,
+     "null_sd": 0.014393395398774001
+    },
+    {
+     "layer": 1,
+     "dbar": 0.0339041655687069,
+     "p_one": 0.25742574257425743,
+     "null_mean": 0.024236747028767727,
+     "null_sd": 0.015306969321812794
+    },
+    {
+     "layer": 2,
+     "dbar": 0.029142701766067813,
+     "p_one": 0.4158415841584158,
+     "null_mean": 0.027155230673010483,
+     "null_sd": 0.010777734950612482
+    },
+    {
+     "layer": 3,
+     "dbar": 0.02106612323031465,
+     "p_one": 0.5742574257425742,
+     "null_mean": 0.021418464769641727,
+     "null_sd": 0.0071337110996599175
+    },
+    {
+     "layer": 4,
+     "dbar": 0.01062927901656141,
+     "p_one": 0.8514851485148515,
+     "null_mean": 0.016581440920932264,
+     "null_sd": 0.0055548566392374385
+    },
+    {
+     "layer": 5,
+     "dbar": 0.022834592345128635,
+     "p_one": 0.16831683168316833,
+     "null_mean": 0.017410234425327374,
+     "null_sd": 0.005333410391233041
+    },
+    {
+     "layer": 6,
+     "dbar": 0.02218343761757946,
+     "p_one": 0.6138613861386139,
+     "null_mean": 0.023801949993531486,
+     "null_sd": 0.0047878925073912585
+    },
+    {
+     "layer": 7,
+     "dbar": 0.012288930904206907,
+     "p_one": 0.2079207920792079,
+     "null_mean": 0.008235374451817414,
+     "null_sd": 0.004868504747724849
+    },
+    {
+     "layer": 8,
+     "dbar": 0.023954360882639136,
+     "p_one": 0.5148514851485149,
+     "null_mean": 0.023314886342256445,
+     "null_sd": 0.006914010218300724
+    },
+    {
+     "layer": 9,
+     "dbar": 0.05548002473453989,
+     "p_one": 0.0297029702970297,
+     "null_mean": 0.03469491571509934,
+     "null_sd": 0.010882380251958621
+    },
+    {
+     "layer": 10,
+     "dbar": 0.03957226281368198,
+     "p_one": 0.19801980198019803,
+     "null_mean": 0.03199957534822482,
+     "null_sd": 0.009316374585170574
+    },
+    {
+     "layer": 11,
+     "dbar": 0.012494681586556033,
+     "p_one": 0.6336633663366337,
+     "null_mean": 0.015722280018446385,
+     "null_sd": 0.012928974182972754
+    },
+    {
+     "layer": 12,
+     "dbar": 0.037465294935054905,
+     "p_one": 0.09900990099009901,
+     "null_mean": 0.02382233125939583,
+     "null_sd": 0.009525694316291614
+    }
+   ]
+  },
+  "baroni64": {
+   "class_names": [
+    "subordinated",
+    "coordinated",
+    "center_embedding",
+    "right_branching",
+    "ambiguous",
+    "unambiguous_high"
+   ],
+   "distinct_last_tokens": [
+    38,
+    38,
+    40,
+    40,
+    54,
+    54
+   ],
+   "last_tokens_per_class": [
+    [
+     "ing",
+     "ating",
+     "ning",
+     "uring",
+     "ting",
+     " going",
+     "aring",
+     "ling",
+     " running",
+     "king",
+     "apping",
+     "ushing",
+     " burning",
+     " breathing",
+     "ping",
+     " staring",
+     " resting",
+     "aning",
+     " shaking",
+     " smiling"
+    ],
+    [
+     "ing",
+     "ating",
+     "ning",
+     "uring",
+     "ting",
+     " going",
+     "aring",
+     "ling",
+     " running",
+     "king",
+     "apping",
+     "ushing",
+     " burning",
+     " breathing",
+     "ping",
+     " staring",
+     " resting",
+     "aning",
+     " shaking",
+     " smiling"
+    ],
+    [
+     "ing",
+     "ating",
+     "ting",
+     " going",
+     "aring",
+     "ering",
+     "king",
+     "apping",
+     " waiting",
+     " sitting",
+     " walking",
+     "ushing",
+     "zing",
+     "eling",
+     "isting",
+     " falling",
+     " sleeping",
+     "ping",
+     " floating",
+     "aping"
+    ],
+    [
+     "ing",
+     "ating",
+     "ting",
+     " going",
+     "aring",
+     "ering",
+     "king",
+     "apping",
+     " waiting",
+     " sitting",
+     " walking",
+     "ushing",
+     "zing",
+     "eling",
+     "isting",
+     " falling",
+     " sleeping",
+     "ping",
+     " floating",
+     "aping"
+    ],
+    [
+     "ly",
+     " out",
+     " up",
+     " off",
+     " back",
+     " again",
+     " well",
+     " around",
+     " something",
+     " lot",
+     " once",
+     " early",
+     " company",
+     " eyes",
+     " inside",
+     " outside",
+     " hands",
+     " lost",
+     "zy",
+     " friends"
+    ],
+    [
+     "ly",
+     " out",
+     " up",
+     " off",
+     " back",
+     " again",
+     " well",
+     " around",
+     " something",
+     " lot",
+     " once",
+     " early",
+     " company",
+     " eyes",
+     " inside",
+     " outside",
+     " hands",
+     " lost",
+     "zy",
+     " friends"
+    ]
+   ],
+   "spearman_distinct_vs_classPR": {
+    "0": 1.0,
+    "6": 0.956182887467515
+   },
+   "class_PR": {
+    "0": [
+     26.98512618040942,
+     26.98512618040942,
+     28.301531125509936,
+     28.301531125509936,
+     39.90050797251159,
+     39.90050797251159
+    ],
+    "6": [
+     20.72944754720909,
+     19.995839131130356,
+     22.59428260594486,
+     22.354736834361674,
+     25.326740371385018,
+     23.70159632041509
+    ]
+   },
+   "mid_layer": 6,
+   "m": 38,
+   "matched": [
+    {
+     "layer": 0,
+     "dbar_median": -0.10120318625432476,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 1,
+     "dbar_median": -0.07796143390825441,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 2,
+     "dbar_median": -0.06867293687639187,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 3,
+     "dbar_median": -0.09190657103024277,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 4,
+     "dbar_median": -0.09349732723710666,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 5,
+     "dbar_median": -0.10515103769575719,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 6,
+     "dbar_median": -0.053986510636548135,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 7,
+     "dbar_median": -0.046845314578760955,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 8,
+     "dbar_median": -0.03087776271759446,
+     "p_median": 1.0,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 9,
+     "dbar_median": 0.0003738093098112627,
+     "p_median": 0.5148514851485149,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 10,
+     "dbar_median": -0.017982567912164904,
+     "p_median": 0.8811881188118812,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 11,
+     "dbar_median": -0.018190395204343457,
+     "p_median": 0.8217821782178217,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 12,
+     "dbar_median": -0.01827409646383993,
+     "p_median": 0.8811881188118812,
+     "frac_p05": 0.0
+    }
+   ],
+   "n_shared_tokens": 111,
+   "within_lasttoken_strata": [
+    {
+     "layer": 0,
+     "dbar": 0.04275473800698726,
+     "p_one": 0.594059405940594,
+     "null_mean": 0.04724632861579123,
+     "null_sd": 0.026114475065859993
+    },
+    {
+     "layer": 1,
+     "dbar": 0.07279335002783671,
+     "p_one": 0.33663366336633666,
+     "null_mean": 0.06419786819156456,
+     "null_sd": 0.0221886941644997
+    },
+    {
+     "layer": 2,
+     "dbar": 0.045734061898868916,
+     "p_one": 0.3069306930693069,
+     "null_mean": 0.035610615890922175,
+     "null_sd": 0.023979990711521414
+    },
+    {
+     "layer": 3,
+     "dbar": 0.005639283464344974,
+     "p_one": 0.5148514851485149,
+     "null_mean": 0.00399533022637116,
+     "null_sd": 0.016194662442526216
+    },
+    {
+     "layer": 4,
+     "dbar": -0.005723626905686285,
+     "p_one": 0.1782178217821782,
+     "null_mean": -0.023804522879457345,
+     "null_sd": 0.01540195039567709
+    },
+    {
+     "layer": 5,
+     "dbar": -0.017234204333283126,
+     "p_one": 0.06930693069306931,
+     "null_mean": -0.041014188926211316,
+     "null_sd": 0.014647884384070527
+    },
+    {
+     "layer": 6,
+     "dbar": 0.023334227031885646,
+     "p_one": 0.0594059405940594,
+     "null_mean": 0.009169037331968801,
+     "null_sd": 0.008630394504285821
+    },
+    {
+     "layer": 7,
+     "dbar": 0.0366529560530609,
+     "p_one": 0.019801980198019802,
+     "null_mean": 0.015510812497869064,
+     "null_sd": 0.007229354518007065
+    },
+    {
+     "layer": 8,
+     "dbar": 0.04509305791145826,
+     "p_one": 0.009900990099009901,
+     "null_mean": 0.030286853876627634,
+     "null_sd": 0.006482880008162019
+    },
+    {
+     "layer": 9,
+     "dbar": 0.0862816045440048,
+     "p_one": 0.009900990099009901,
+     "null_mean": 0.05585665196563551,
+     "null_sd": 0.010973801880131648
+    },
+    {
+     "layer": 10,
+     "dbar": 0.00040602019143171075,
+     "p_one": 0.594059405940594,
+     "null_mean": 0.0017383655742800527,
+     "null_sd": 0.012204561729354526
+    },
+    {
+     "layer": 11,
+     "dbar": 0.048853572719085775,
+     "p_one": 0.06930693069306931,
+     "null_mean": 0.026931642008766344,
+     "null_sd": 0.01335192006471676
+    },
+    {
+     "layer": 12,
+     "dbar": 0.06129309140844491,
+     "p_one": 0.009900990099009901,
+     "null_mean": 0.022634462283494895,
+     "null_sd": 0.014945527159287578
+    }
+   ]
+  },
+  "world_knowledge32": {
+   "class_names": [
+    "mathematics",
+    "geography",
+    "history",
+    "technology",
+    "law",
+    "medicine",
+    "philosophy",
+    "sports"
+   ],
+   "distinct_last_tokens": [
+    28,
+    25,
+    29,
+    31,
+    29,
+    29,
+    30,
+    28
+   ],
+   "last_tokens_per_class": [
+    [
+     " of",
+     " in",
+     " and",
+     " about",
+     " time",
+     " over",
+     " like",
+     " between",
+     " area",
+     " problems",
+     " properties",
+     " numbers",
+     " components",
+     " scale",
+     " linear",
+     " variables",
+     " fields",
+     " modern",
+     " objects",
+     " continuous"
+    ],
+    [
+     " and",
+     " from",
+     " over",
+     " years",
+     "ological",
+     "ique",
+     " activity",
+     " deep",
+     " central",
+     " location",
+     " Earth",
+     " African",
+     " coast",
+     " millions",
+     " Australian",
+     " ocean",
+     " adapted",
+     " peaks",
+     "rock",
+     " zones"
+    ],
+    [
+     " of",
+     " in",
+     " and",
+     " for",
+     "ke",
+     " new",
+     "15",
+     "ized",
+     " years",
+     " during",
+     " free",
+     " terms",
+     " across",
+     " Europe",
+     " rights",
+     " nature",
+     " century",
+     " trade",
+     " France",
+     " diseases"
+    ],
+    [
+     " the",
+     " of",
+     " to",
+     " and",
+     " for",
+     " with",
+     " new",
+     " data",
+     " through",
+     " information",
+     " world",
+     " light",
+     " build",
+     " text",
+     " systems",
+     " learn",
+     " layer",
+     " devices",
+     " users",
+     " scale"
+    ],
+    [
+     " of",
+     " in",
+     " and",
+     " is",
+     " from",
+     "able",
+     " same",
+     " interest",
+     " cases",
+     " market",
+     " property",
+     " party",
+     " document",
+     " pressure",
+     " practice",
+     " rules",
+     " persons",
+     " bodies",
+     " requiring",
+     " creative"
+    ],
+    [
+     " of",
+     " and",
+     " it",
+     " or",
+     " new",
+     " function",
+     " level",
+     " without",
+     " cells",
+     " including",
+     " health",
+     " response",
+     " conditions",
+     " disease",
+     " cancer",
+     " prevent",
+     " behavior",
+     " images",
+     " devices",
+     " technology"
+    ],
+    [
+     " of",
+     " to",
+     " and",
+     " or",
+     " from",
+     "ally",
+     " our",
+     " between",
+     " own",
+     " state",
+     " matter",
+     " personal",
+     " wrong",
+     " context",
+     " knowledge",
+     " nature",
+     " argument",
+     " produced",
+     " agreement",
+     " communication"
+    ],
+    [
+     " the",
+     " and",
+     " as",
+     " work",
+     " between",
+     " test",
+     " control",
+     " around",
+     "work",
+     " expression",
+     " event",
+     " members",
+     " six",
+     " hundred",
+     " cars",
+     " stages",
+     " precise",
+     " worldwide",
+     " varying",
+     " throws"
+    ]
+   ],
+   "spearman_distinct_vs_classPR": {
+    "0": 0.8224729320348959,
+    "6": 0.20868716185960046
+   },
+   "class_PR": {
+    "0": [
+     22.904799683551246,
+     19.803188479659294,
+     24.146950549932036,
+     24.200255749559496,
+     23.650377098413284,
+     21.8239161330834,
+     25.171064298384092,
+     22.41945561046259
+    ],
+    "6": [
+     18.037185002289082,
+     15.131271717164314,
+     17.50448680640453,
+     15.768779990230987,
+     18.76622289355396,
+     16.768835304655536,
+     19.187151046109832,
+     17.556267229510645
+    ]
+   },
+   "mid_layer": 6,
+   "m": 25,
+   "matched": [
+    {
+     "layer": 0,
+     "dbar_median": -0.0002663014638746297,
+     "p_median": 0.599009900990099,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 1,
+     "dbar_median": 0.007219598345892142,
+     "p_median": 0.1782178217821782,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 2,
+     "dbar_median": 0.008377505601622148,
+     "p_median": 0.09900990099009901,
+     "frac_p05": 0.45
+    },
+    {
+     "layer": 3,
+     "dbar_median": 0.017731474668009117,
+     "p_median": 0.01485148514851485,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 4,
+     "dbar_median": 0.01709444508452007,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 5,
+     "dbar_median": 0.026445732381345843,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 6,
+     "dbar_median": 0.03417089499715917,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 7,
+     "dbar_median": 0.041959054100837945,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 8,
+     "dbar_median": 0.05794384739258565,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 9,
+     "dbar_median": 0.07142826464211666,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 10,
+     "dbar_median": 0.05718175609740034,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 11,
+     "dbar_median": 0.06878743326029596,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 12,
+     "dbar_median": 0.054474282077584146,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    }
+   ],
+   "n_shared_tokens": 15,
+   "within_lasttoken_strata": [
+    {
+     "layer": 0,
+     "dbar": 0.03026907248684607,
+     "p_one": 0.8613861386138614,
+     "null_mean": 0.039196294400078505,
+     "null_sd": 0.0072974481034753114
+    },
+    {
+     "layer": 1,
+     "dbar": 0.04496424743464866,
+     "p_one": 0.5445544554455446,
+     "null_mean": 0.047116385913325315,
+     "null_sd": 0.00920062095575294
+    },
+    {
+     "layer": 2,
+     "dbar": 0.034452238687122216,
+     "p_one": 0.5148514851485149,
+     "null_mean": 0.03473402829090275,
+     "null_sd": 0.004080037136608983
+    },
+    {
+     "layer": 3,
+     "dbar": 0.03522198550447486,
+     "p_one": 0.7029702970297029,
+     "null_mean": 0.037239651454597233,
+     "null_sd": 0.003632725925515469
+    },
+    {
+     "layer": 4,
+     "dbar": 0.041408972109311104,
+     "p_one": 0.8118811881188119,
+     "null_mean": 0.04563942441149181,
+     "null_sd": 0.0053186288677721525
+    },
+    {
+     "layer": 5,
+     "dbar": 0.05291294154936477,
+     "p_one": 0.36633663366336633,
+     "null_mean": 0.0511245706255013,
+     "null_sd": 0.004504464853958566
+    },
+    {
+     "layer": 6,
+     "dbar": 0.06076400296320189,
+     "p_one": 0.4158415841584158,
+     "null_mean": 0.059753485856644487,
+     "null_sd": 0.008249421860497866
+    },
+    {
+     "layer": 7,
+     "dbar": 0.06544777362426674,
+     "p_one": 0.5643564356435643,
+     "null_mean": 0.06606077390559435,
+     "null_sd": 0.006181243515583453
+    },
+    {
+     "layer": 8,
+     "dbar": 0.06691779742148918,
+     "p_one": 0.7425742574257426,
+     "null_mean": 0.07404105828915547,
+     "null_sd": 0.009817699472202972
+    },
+    {
+     "layer": 9,
+     "dbar": 0.06806073598931889,
+     "p_one": 0.1485148514851485,
+     "null_mean": 0.05518653804009638,
+     "null_sd": 0.010790203168165854
+    },
+    {
+     "layer": 10,
+     "dbar": 0.07283164199298003,
+     "p_one": 0.1188118811881188,
+     "null_mean": 0.06396428117301527,
+     "null_sd": 0.006290975790025165
+    },
+    {
+     "layer": 11,
+     "dbar": 0.08619056279096676,
+     "p_one": 0.009900990099009901,
+     "null_mean": 0.05406376543819899,
+     "null_sd": 0.011412204027716793
+    },
+    {
+     "layer": 12,
+     "dbar": 0.05901575471258491,
+     "p_one": 0.0594059405940594,
+     "null_mean": 0.04484242703555401,
+     "null_sd": 0.0075303408360913445
+    }
+   ]
+  },
+  "language_type32": {
+   "class_names": [
+    "question",
+    "definition",
+    "comparison",
+    "narrative",
+    "cause_effect",
+    "instruction",
+    "opinion",
+    "negation"
+   ],
+   "distinct_last_tokens": [
+    31,
+    29,
+    30,
+    31,
+    30,
+    28,
+    28,
+    31
+   ],
+   "last_tokens_per_class": [
+    [
+     " year",
+     " data",
+     "50",
+     " place",
+     " far",
+     " energy",
+     " others",
+     " eyes",
+     " learn",
+     " lines",
+     " ability",
+     " fight",
+     " located",
+     " animals",
+     " whom",
+     " century",
+     " largest",
+     " ice",
+     " humans",
+     " sky"
+    ],
+    [
+     " in",
+     " and",
+     " on",
+     " work",
+     " through",
+     " different",
+     " found",
+     " function",
+     " something",
+     " together",
+     " methods",
+     " growth",
+     " species",
+     " elements",
+     " proof",
+     " animals",
+     " nation",
+     " chemical",
+     " membrane",
+     " convert"
+    ],
+    [
+     " of",
+     " that",
+     " on",
+     " will",
+     " more",
+     "ates",
+     " much",
+     " state",
+     " treat",
+     " better",
+     " water",
+     " written",
+     " includes",
+     " brain",
+     " ones",
+     " uses",
+     " faster",
+     " involves",
+     " container",
+     " buildings"
+    ],
+    [
+     " the",
+     "ed",
+     "ing",
+     " of",
+     " in",
+     " it",
+     " was",
+     " their",
+     " through",
+     " before",
+     " run",
+     " war",
+     " design",
+     " hours",
+     " performance",
+     " window",
+     " established",
+     " changed",
+     " proof",
+     " discovered"
+    ],
+    [
+     " of",
+     " and",
+     "ated",
+     " local",
+     " night",
+     " making",
+     " land",
+     " heart",
+     " natural",
+     " global",
+     " sleep",
+     " damage",
+     " throughout",
+     " resources",
+     " communication",
+     " chain",
+     " diseases",
+     " climate",
+     " rapidly",
+     " bacteria"
+    ],
+    [
+     " the",
+     " of",
+     " and",
+     " by",
+     " from",
+     " one",
+     " into",
+     " before",
+     " together",
+     " provided",
+     " entire",
+     " loss",
+     " experiment",
+     " components",
+     " errors",
+     " particles",
+     " specified",
+     " degrees",
+     " finish",
+     " weather"
+    ],
+    [
+     " in",
+     " to",
+     " all",
+     " health",
+     "izing",
+     " technology",
+     " formation",
+     " construction",
+     " mental",
+     " Earth",
+     " replace",
+     " experiences",
+     " cognitive",
+     " markets",
+     " intake",
+     " environments",
+     " engagement",
+     " platforms",
+     " conservation",
+     " emissions"
+    ],
+    [
+     " the",
+     " of",
+     " to",
+     " and",
+     " with",
+     " as",
+     " are",
+     "age",
+     " point",
+     " during",
+     " children",
+     " period",
+     " night",
+     " death",
+     " flu",
+     " memory",
+     " claims",
+     " injury",
+     " despite",
+     " causes"
+    ]
+   ],
+   "spearman_distinct_vs_classPR": {
+    "0": 0.8400825588825814,
+    "6": 0.7412493166611013
+   },
+   "class_PR": {
+    "0": [
+     27.028824298813813,
+     24.873456600277112,
+     25.795575334411478,
+     26.18530418671635,
+     25.310119014798254,
+     23.08094975955832,
+     23.548253871032696,
+     25.0321260937365
+    ],
+    "6": [
+     20.012342565349854,
+     18.627097770255297,
+     17.630503835808216,
+     21.96965603189569,
+     18.138324601398928,
+     17.72079321220249,
+     17.770492987292677,
+     19.689288486701447
+    ]
+   },
+   "mid_layer": 6,
+   "m": 28,
+   "matched": [
+    {
+     "layer": 0,
+     "dbar_median": -0.0011860914573131875,
+     "p_median": 0.3910891089108911,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 1,
+     "dbar_median": -0.003273449140267115,
+     "p_median": 0.40594059405940597,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 2,
+     "dbar_median": -0.006713101339996808,
+     "p_median": 0.6782178217821782,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 3,
+     "dbar_median": 0.010113939518765547,
+     "p_median": 0.04455445544554455,
+     "frac_p05": 0.65
+    },
+    {
+     "layer": 4,
+     "dbar_median": 0.014631978061779516,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 0.9
+    },
+    {
+     "layer": 5,
+     "dbar_median": 0.017752118561923658,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 6,
+     "dbar_median": 0.02092565590616363,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 0.9
+    },
+    {
+     "layer": 7,
+     "dbar_median": 0.01968816296817469,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 0.8
+    },
+    {
+     "layer": 8,
+     "dbar_median": 0.031391177442450624,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 9,
+     "dbar_median": 0.029462788433414905,
+     "p_median": 0.0297029702970297,
+     "frac_p05": 0.8
+    },
+    {
+     "layer": 10,
+     "dbar_median": 0.03351062431849683,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 11,
+     "dbar_median": 0.021254282475176384,
+     "p_median": 0.07425742574257427,
+     "frac_p05": 0.4
+    },
+    {
+     "layer": 12,
+     "dbar_median": 0.03355129063489354,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    }
+   ],
+   "n_shared_tokens": 13,
+   "within_lasttoken_strata": [
+    {
+     "layer": 0,
+     "dbar": 0.025084463385621425,
+     "p_one": 0.5841584158415841,
+     "null_mean": 0.025769324638931886,
+     "null_sd": 0.005399203430118328
+    },
+    {
+     "layer": 1,
+     "dbar": 0.02099482253128715,
+     "p_one": 0.5742574257425742,
+     "null_mean": 0.021794471632130854,
+     "null_sd": 0.008932513057041154
+    },
+    {
+     "layer": 2,
+     "dbar": 0.017371707339737585,
+     "p_one": 0.5148514851485149,
+     "null_mean": 0.01721380743500226,
+     "null_sd": 0.009276537054609327
+    },
+    {
+     "layer": 3,
+     "dbar": 0.02498640592274215,
+     "p_one": 0.4752475247524752,
+     "null_mean": 0.02351033952463788,
+     "null_sd": 0.007528464299067525
+    },
+    {
+     "layer": 4,
+     "dbar": 0.03238043308232663,
+     "p_one": 0.22772277227722773,
+     "null_mean": 0.02712657967265818,
+     "null_sd": 0.0065930909288560895
+    },
+    {
+     "layer": 5,
+     "dbar": 0.02358396936186058,
+     "p_one": 0.25742574257425743,
+     "null_mean": 0.020172634302256034,
+     "null_sd": 0.0060722164030673756
+    },
+    {
+     "layer": 6,
+     "dbar": 0.030216927873865318,
+     "p_one": 0.21782178217821782,
+     "null_mean": 0.02339999514180553,
+     "null_sd": 0.008102743966786407
+    },
+    {
+     "layer": 7,
+     "dbar": 0.02202196435871373,
+     "p_one": 0.5841584158415841,
+     "null_mean": 0.023145218792236265,
+     "null_sd": 0.007446731542047179
+    },
+    {
+     "layer": 8,
+     "dbar": 0.03848141665138505,
+     "p_one": 0.1188118811881188,
+     "null_mean": 0.02908074311385208,
+     "null_sd": 0.00833364384178655
+    },
+    {
+     "layer": 9,
+     "dbar": 0.019935653709908074,
+     "p_one": 0.297029702970297,
+     "null_mean": 0.010656859019039313,
+     "null_sd": 0.015408762454169703
+    },
+    {
+     "layer": 10,
+     "dbar": 0.045743595335565934,
+     "p_one": 0.09900990099009901,
+     "null_mean": 0.03038268920858816,
+     "null_sd": 0.011212487464701203
+    },
+    {
+     "layer": 11,
+     "dbar": -0.006310332336134428,
+     "p_one": 0.504950495049505,
+     "null_mean": -0.007406569055224841,
+     "null_sd": 0.01577574815294863
+    },
+    {
+     "layer": 12,
+     "dbar": 0.04752171268009231,
+     "p_one": 0.039603960396039604,
+     "null_mean": 0.03164815763345072,
+     "null_sd": 0.009524348253234477
+    }
+   ]
+  }
+ }
+}

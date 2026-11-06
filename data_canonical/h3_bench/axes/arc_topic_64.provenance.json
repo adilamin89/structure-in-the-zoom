@@ -1,0 +1,36 @@
+{
+ "source": "allenai/ai2_arc (Clark et al. 2018), ARC-Challenge + ARC-Easy, splits train/validation/test",
+ "rule": "run17's keyword rule (first domain whose keyword list occurs in the lower-cased question, dict order); 64 per class by rung.build_axis(seed 0); strata = config/split",
+ "pool_sizes": {
+  "physics": 1220,
+  "earth": 942,
+  "biology": 1631,
+  "ecology": 282,
+  "chemistry": 646,
+  "space": 281,
+  "weather": 202,
+  "human_body": 127
+ },
+ "why_pooled": "ARC-Challenge alone gives human_body 34 over all splits (test 14)",
+ "challenge_fraction_per_class": {
+  "biology": 0.296875,
+  "physics": 0.25,
+  "earth": 0.34375,
+  "chemistry": 0.3125,
+  "space": 0.28125,
+  "ecology": 0.390625,
+  "human_body": 0.21875,
+  "weather": 0.390625
+ },
+ "n_classes": 8,
+ "n_per_class": {
+  "biology": 64,
+  "physics": 64,
+  "earth": 64,
+  "chemistry": 64,
+  "space": 64,
+  "ecology": 64,
+  "human_body": 64,
+  "weather": 64
+ }
+}

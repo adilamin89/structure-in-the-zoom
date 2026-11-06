@@ -1,0 +1,183 @@
+{
+ "n": 167,
+ "n_miss": 14,
+ "n_visp_miss": 1,
+ "miss_areas": {
+  "VIS": 1,
+  "VISal": 1,
+  "VISam": 1,
+  "VISl": 6,
+  "VISmma": 1,
+  "VISp": 1,
+  "VISpm": 1,
+  "VISrl": 2
+ },
+ "abs_delta_median_all": 0.1197713955002926,
+ "abs_delta_median_miss": 0.0388696748610015,
+ "abs_delta_max_miss": 0.09865527033242082,
+ "n_abs_delta_ge_cut": 100,
+ "n_abs_delta_ge_cut_sign_right": 100,
+ "n_abs_delta_lt_cut": 67,
+ "miss_classmean_sign_right": 14,
+ "miss_within_measured_negative": 12,
+ "miss_within_pred_positive": 13,
+ "all_within_measured_negative": 37,
+ "all_classmean_sign_right": 161,
+ "cut": 0.1,
+ "misses": [
+  {
+   "session": 719161530,
+   "area": "VISl",
+   "N": 195,
+   "delta_pred": 0.1377128993702092,
+   "delta": -0.04542797853918636,
+   "classmean_pred": 0.08335148882461219,
+   "class_means": 0.09612223737740624,
+   "within_pred": 0.054361410545597004,
+   "within": -0.14155021591659261
+  },
+  {
+   "session": 719161530,
+   "area": "VISp",
+   "N": 134,
+   "delta_pred": 0.008292711246664988,
+   "delta": -0.015310199650550861,
+   "classmean_pred": -0.07477202255328434,
+   "class_means": -0.04764610777122095,
+   "within_pred": 0.08306473379994933,
+   "within": 0.03233590812067009
+  },
+  {
+   "session": 732592105,
+   "area": "VISal",
+   "N": 195,
+   "delta_pred": 0.06528246300307508,
+   "delta": -0.05583681925056702,
+   "classmean_pred": 0.039192261478792484,
+   "class_means": 0.050386901923189995,
+   "within_pred": 0.02609020152428259,
+   "within": -0.10622372117375702
+  },
+  {
+   "session": 732592105,
+   "area": "VISrl",
+   "N": 171,
+   "delta_pred": 0.07577673149541972,
+   "delta": -0.03846577633398149,
+   "classmean_pred": 0.05365975475664659,
+   "class_means": 0.059712764906479865,
+   "within_pred": 0.022116976738773123,
+   "within": -0.09817854124046135
+  },
+  {
+   "session": 737581020,
+   "area": "VISl",
+   "N": 119,
+   "delta_pred": 0.09070649674053018,
+   "delta": -0.014571676274050451,
+   "classmean_pred": 0.06972304333990559,
+   "class_means": 0.06401800558248236,
+   "within_pred": 0.020983453400624588,
+   "within": -0.07858968185653281
+  },
+  {
+   "session": 743475441,
+   "area": "VISl",
+   "N": 134,
+   "delta_pred": 0.03889385923152842,
+   "delta": -0.059730461673361906,
+   "classmean_pred": 0.0420576800472213,
+   "class_means": 0.05478861907810614,
+   "within_pred": -0.003163820815692888,
+   "within": -0.11451908075146805
+  },
+  {
+   "session": 743475441,
+   "area": "VISmma",
+   "N": 126,
+   "delta_pred": 0.049595183129280636,
+   "delta": -0.011524814511093133,
+   "classmean_pred": 0.041651011516933685,
+   "class_means": 0.03597583763790053,
+   "within_pred": 0.007944171612346949,
+   "within": -0.04750065214899366
+  },
+  {
+   "session": 751348571,
+   "area": "VISl",
+   "N": 81,
+   "delta_pred": -0.04478615272442686,
+   "delta": 0.008307860226040664,
+   "classmean_pred": -0.1616324428401066,
+   "class_means": -0.07976785815748672,
+   "within_pred": 0.11684629011567975,
+   "within": 0.08807571838352737
+  },
+  {
+   "session": 762120172,
+   "area": "VISl",
+   "N": 185,
+   "delta_pred": 0.08611317324734966,
+   "delta": -0.05694677350952532,
+   "classmean_pred": 0.04640858368112131,
+   "class_means": 0.03840654661618888,
+   "within_pred": 0.03970458956622834,
+   "within": -0.0953533201257142
+  },
+  {
+   "session": 763673393,
+   "area": "VIS",
+   "N": 173,
+   "delta_pred": 0.0032908923074800186,
+   "delta": -0.03511801131725981,
+   "classmean_pred": 0.002851769282499583,
+   "class_means": 0.003626031117769518,
+   "within_pred": 0.0004391230249804359,
+   "within": -0.03874404243502933
+  },
+  {
+   "session": 797828357,
+   "area": "VISl",
+   "N": 151,
+   "delta_pred": 0.13274489241752777,
+   "delta": -0.06341720304411895,
+   "classmean_pred": 0.0615877329110674,
+   "class_means": 0.05346934991742651,
+   "within_pred": 0.07115715950646036,
+   "within": -0.11688655296154546
+  },
+  {
+   "session": 797828357,
+   "area": "VISpm",
+   "N": 158,
+   "delta_pred": 0.051949749385661895,
+   "delta": -0.0392735733880215,
+   "classmean_pred": 0.03138626615894754,
+   "class_means": 0.023215835085830312,
+   "within_pred": 0.02056348322671436,
+   "within": -0.062489408473851815
+  },
+  {
+   "session": 798911424,
+   "area": "VISam",
+   "N": 312,
+   "delta_pred": 0.07519714516739841,
+   "delta": -0.0044704946811221806,
+   "classmean_pred": 0.06073229920023874,
+   "class_means": 0.06568971055566399,
+   "within_pred": 0.014464845967159665,
+   "within": -0.07016020523678616
+  },
+  {
+   "session": 798911424,
+   "area": "VISrl",
+   "N": 129,
+   "delta_pred": 0.05277008452713715,
+   "delta": -0.09865527033242082,
+   "classmean_pred": 0.04456497780891739,
+   "class_means": 0.03942303183571248,
+   "within_pred": 0.008205106718219758,
+   "within": -0.1380783021681333
+  }
+ ]
+}
