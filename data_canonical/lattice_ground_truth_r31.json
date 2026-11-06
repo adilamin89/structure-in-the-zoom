@@ -1,0 +1,227 @@
+{
+ "ising": {
+  "per_chain": [
+   -0.37433074127364974,
+   -0.5396905305429545,
+   -0.5003419183170836
+  ],
+  "mean": -0.47145439671122924,
+  "sd": 0.07053052131379599,
+  "artifact": -0.47145439671122924,
+  "abs_diff": 0.0
+ },
+ "nematic": [
+  {
+   "T": 1.0,
+   "mean": 0.14991334009198953,
+   "n_valid": 5,
+   "artifact": 0.14991334009198953,
+   "artifact_n_valid": 5,
+   "abs_diff": 0.0,
+   "chains": [
+    {
+     "chain": 0,
+     "delta": 0.352273048622519,
+     "n_rungs": 3,
+     "bins_nonempty": 3,
+     "bin_counts": [
+      0,
+      0,
+      5,
+      184,
+      11,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "chain": 1,
+     "delta": 0.11815098874861218,
+     "n_rungs": 5,
+     "bins_nonempty": 3,
+     "bin_counts": [
+      0,
+      46,
+      153,
+      1,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "chain": 2,
+     "delta": 0.17904912130447542,
+     "n_rungs": 6,
+     "bins_nonempty": 2,
+     "bin_counts": [
+      77,
+      123,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "chain": 3,
+     "delta": 0.0538244188267854,
+     "n_rungs": 5,
+     "bins_nonempty": 3,
+     "bin_counts": [
+      0,
+      16,
+      70,
+      114,
+      0,
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "chain": 4,
+     "delta": NaN,
+     "n_rungs": 0,
+     "bins_nonempty": 3,
+     "bin_counts": [
+      0,
+      0,
+      0,
+      0,
+      33,
+      158,
+      9,
+      0
+     ]
+    },
+    {
+     "chain": 5,
+     "delta": 0.04626912295755567,
+     "n_rungs": 4,
+     "bins_nonempty": 2,
+     "bin_counts": [
+      0,
+      0,
+      196,
+      4,
+      0,
+      0,
+      0,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "T": 1.2,
+   "mean": 0.09015371366194984,
+   "n_valid": 5,
+   "artifact": 0.09015371366194984,
+   "artifact_n_valid": 5,
+   "abs_diff": 0.0,
+   "chains": [
+    {
+     "chain": 0,
+     "delta": 0.15159843882253055,
+     "n_rungs": 6,
+     "bins_nonempty": 3,
+     "bin_counts": [
+      92,
+      0,
+      0,
+      0,
+      0,
+      0,
+      13,
+      95
+     ]
+    },
+    {
+     "chain": 1,
+     "delta": 0.09611199117554958,
+     "n_rungs": 6,
+     "bins_nonempty": 7,
+     "bin_counts": [
+      36,
+      42,
+      3,
+      0,
+      1,
+      15,
+      33,
+      70
+     ]
+    },
+    {
+     "chain": 2,
+     "delta": 0.048698468712341625,
+     "n_rungs": 5,
+     "bins_nonempty": 8,
+     "bin_counts": [
+      4,
+      6,
+      58,
+      61,
+      41,
+      12,
+      14,
+      4
+     ]
+    },
+    {
+     "chain": 3,
+     "delta": 0.08127183028661189,
+     "n_rungs": 6,
+     "bins_nonempty": 6,
+     "bin_counts": [
+      36,
+      48,
+      9,
+      5,
+      93,
+      9,
+      0,
+      0
+     ]
+    },
+    {
+     "chain": 4,
+     "delta": 0.07308783931271556,
+     "n_rungs": 6,
+     "bins_nonempty": 8,
+     "bin_counts": [
+      27,
+      79,
+      19,
+      19,
+      21,
+      22,
+      10,
+      3
+     ]
+    },
+    {
+     "chain": 5,
+     "delta": NaN,
+     "n_rungs": 0,
+     "bins_nonempty": 4,
+     "bin_counts": [
+      0,
+      0,
+      0,
+      0,
+      54,
+      118,
+      27,
+      1
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,4 +1,4 @@
-"""Referee controls (ChatGPT referee, Oct 20, comments 3 and 4) on the eight grating recordings, one fast engine.
+"""Controls on the eight grating recordings, one fast engine.
 
 Engine: the Gram matrix G = X X^T of a recording (presentations x neurons, global SD scaling as run72) is computed once;
 every subset's centred PR and its exact W + B split (run72 / App K: within-class part log(w1^2/w2), class-mean part the

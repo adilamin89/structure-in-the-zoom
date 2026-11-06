@@ -1,4 +1,4 @@
-"""Referee check (ChatGPT referee, Oct 20, comment 8): Sec 4 averages the class-mean correlation over class pairs at each
+"""Check: Sec 4 averages the class-mean correlation over class pairs at each
 separation, C(dphi), assuming the full 8 x 8 class-pair correlation depends only on the separation. Per grating recording:
 the 8 x 8 correlation across neurons of the class-mean vectors (eight 45-degree classes, as multipole_harmonics_8dir), its
 circulant projection (each entry replaced by the mean at its circular separation), and the share of the off-diagonal variance

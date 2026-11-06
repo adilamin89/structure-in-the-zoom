@@ -1,11 +1,11 @@
-"""C6 (Oct 20): why does the calibrated generative model miss, and does calibrating it to the right statistic fix it?
+"""Why does the calibrated generative model miss, and does calibrating it to the right statistic fix it?
 
 Facts (released): the one-parameter model of Sec 6 (run48 construction: class means from each recording's multipole
 kernel; within-class fluctuations = K shared modes whose loadings are scaled neuron by neuron by (1 - s) + s * the
 class's normalized mean, so s interpolates shared -> class-dependent gain), calibrated by fitting s to the measured
 top-10 principal-angle alignment profile, errs by -0.118 (GT1), -0.100 (GT2), +0.116 (GT3), in proportion to each
 code's dipole share (run48). Adding an odd harmonic to the gain (run56) fixed the 180-degree alignment in all three but
-not the shift (R1-R3 failed). C6 found the within-class part is set by the variance-weighted overlap K_cd of the class
+not the shift (the earlier calibrations failed). The within-class part is set by the variance-weighted overlap K_cd of the class
 covariances (mean field r = 0.92), of which the principal-angle alignment is an unweighted proxy.
 
 HYPOTHESIS: the model misses because it is calibrated to the proxy. Calibrate s to the measured shape-overlap profile

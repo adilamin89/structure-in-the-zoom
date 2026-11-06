@@ -1,4 +1,4 @@
-"""Why the direction shift needs ~200 stimuli on GT3: the Sec 7 covariance split along the sampling axis (C5, Oct 20).
+"""Why the direction shift needs ~200 stimuli on GT3: the Sec 7 covariance split along the sampling axis.
 
 For each stimulus budget n, DRAWS random subsets of n presentations (labels kept) run the paper's direction ladder
 (centred PR, rungs 1,2,3,4,6,8 of 8 bins, rungs < 10 samples skipped, floor = 10 random ladders) split exactly into

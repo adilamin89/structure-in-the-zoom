@@ -1,0 +1,127 @@
+{
+ "L": 32,
+ "T": 1.2,
+ "chains": [
+  {
+   "chain": 0,
+   "rung_sizes": [
+    92,
+    92,
+    92,
+    92,
+    92,
+    200
+   ],
+   "bins_nonempty": 3,
+   "delta_director_paper_rule": 0.15340208441063763,
+   "delta_time_same_sizes": 0.3081378329345925,
+   "n_distinct_sizes": 2,
+   "rung_mean_time": [
+    118.18478260869566,
+    118.18478260869566,
+    118.18478260869566,
+    118.18478260869566,
+    118.18478260869566,
+    99.5
+   ]
+  },
+  {
+   "chain": 1,
+   "rung_sizes": [
+    36,
+    78,
+    81,
+    81,
+    97,
+    200
+   ],
+   "bins_nonempty": 7,
+   "delta_director_paper_rule": 0.10301928133391758,
+   "delta_time_same_sizes": 0.1318444665353511,
+   "n_distinct_sizes": 5,
+   "rung_mean_time": [
+    52.666666666666664,
+    88.73076923076923,
+    90.67901234567901,
+    90.67901234567901,
+    106.49484536082474,
+    99.5
+   ]
+  },
+  {
+   "chain": 2,
+   "rung_sizes": [
+    10,
+    68,
+    129,
+    182,
+    200
+   ],
+   "bins_nonempty": 8,
+   "delta_director_paper_rule": 0.04635326264012196,
+   "delta_time_same_sizes": 0.021362076936320862,
+   "n_distinct_sizes": 5,
+   "rung_mean_time": [
+    80.5,
+    57.3235294117647,
+    80.95348837209302,
+    95.34065934065934,
+    99.5
+   ]
+  },
+  {
+   "chain": 3,
+   "rung_sizes": [
+    36,
+    84,
+    93,
+    98,
+    200,
+    200
+   ],
+   "bins_nonempty": 6,
+   "delta_director_paper_rule": 0.07584329891172659,
+   "delta_time_same_sizes": 0.06608569311768464,
+   "n_distinct_sizes": 5,
+   "rung_mean_time": [
+    151.72222222222223,
+    156.85714285714286,
+    153.0,
+    147.78571428571428,
+    99.5,
+    99.5
+   ]
+  },
+  {
+   "chain": 4,
+   "rung_sizes": [
+    27,
+    106,
+    125,
+    144,
+    187,
+    200
+   ],
+   "bins_nonempty": 8,
+   "delta_director_paper_rule": 0.06730784760061748,
+   "delta_time_same_sizes": 0.10344661592974891,
+   "n_distinct_sizes": 6,
+   "rung_mean_time": [
+    130.37037037037038,
+    133.5754716981132,
+    116.4,
+    109.22222222222223,
+    99.67379679144385,
+    99.5
+   ]
+  },
+  {
+   "chain": 5,
+   "rung_sizes": [
+    172,
+    200
+   ],
+   "bins_nonempty": 4
+  }
+ ]
+}

@@ -6,7 +6,7 @@ Runs the optimized decomposition (Gram matrix trick) on all 18 recordings:
 
 Kill-safe: writes each row to a JSONL as it completes.
 
-Corrected Oct 21 (C8): spontaneous Fsp arrays are neurons x frames and are now always transposed (the earlier loader
+Corrected Oct 21: spontaneous Fsp arrays are neurons x frames and are now always transposed (the earlier loader
 kept MP033 and MP034, which have more neurons than frames, neurons x frames, so their ladder subsampled neurons); the
 observed arm averages log PR over its five draws per rung, as the floor averages log PR over its ten ladders (it took
 the log of the mean PR). Same seeds; the output matches c8_table2_corrected.py.

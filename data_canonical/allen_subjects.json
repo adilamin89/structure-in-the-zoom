@@ -1,0 +1,343 @@
+{
+ "summary": {
+  "sessions": 32,
+  "distinct_subject_id": 32,
+  "distinct_csv_specimen_id": 32,
+  "sex_age_genotype_match": 32,
+  "specimen_minus_subject_offsets": [
+   3,
+   4,
+   6,
+   7,
+   8,
+   9,
+   10,
+   13,
+   15,
+   16,
+   20
+  ]
+ },
+ "rows": [
+  {
+   "session": 715093703,
+   "subject_id": "699733573",
+   "genotype": "Sst-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P118D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "699733581",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 719161530,
+   "subject_id": "703279277",
+   "genotype": "Sst-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P122D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "703279284",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 721123822,
+   "subject_id": "707296975",
+   "genotype": "Pvalb-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P125D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "707296982",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 732592105,
+   "subject_id": "717038285",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P100D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "717038288",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 737581020,
+   "subject_id": "718643564",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P108D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "718643567",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 739448407,
+   "subject_id": "716813540",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P112D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "716813543",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 742951821,
+   "subject_id": "723627600",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P120D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "723627604",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 743475441,
+   "subject_id": "722882751",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P121D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "722882755",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 744228101,
+   "subject_id": "719817799",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P122D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "719817805",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 746083955,
+   "subject_id": "726170927",
+   "genotype": "Pvalb-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "F",
+   "age": "P98D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "726170935",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 750332458,
+   "subject_id": "726141242",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P91D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "726141251",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 750749662,
+   "subject_id": "726162193",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P92D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "726162197",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 751348571,
+   "subject_id": "732548371",
+   "genotype": "Vip-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "F",
+   "age": "P93D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "732548380",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 754312389,
+   "subject_id": "719828686",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P140D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "719828690",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 754829445,
+   "subject_id": "726298249",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P141D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "726298253",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 755434585,
+   "subject_id": "730760263",
+   "genotype": "Vip-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P100D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "730760270",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 756029989,
+   "subject_id": "734865729",
+   "genotype": "Sst-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P96D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "734865738",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 757216464,
+   "subject_id": "733457986",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P105D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "733457989",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 757970808,
+   "subject_id": "730756767",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P106D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "730756780",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 758798717,
+   "subject_id": "735109599",
+   "genotype": "Sst-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P102D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "735109609",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 759883607,
+   "subject_id": "740268983",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P113D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "740268986",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 760345702,
+   "subject_id": "739783158",
+   "genotype": "Pvalb-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P103D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "739783171",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 760693773,
+   "subject_id": "738651046",
+   "genotype": "Sst-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "F",
+   "age": "P110D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "738651054",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 761418226,
+   "subject_id": "742714472",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P119D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "742714475",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 762120172,
+   "subject_id": "745276220",
+   "genotype": "Vip-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P100D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "745276236",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 762602078,
+   "subject_id": "744915196",
+   "genotype": "Sst-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P110D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "744915204",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 763673393,
+   "subject_id": "742602884",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P126D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "742602892",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 773418906,
+   "subject_id": "757329617",
+   "genotype": "Pvalb-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "F",
+   "age": "P124D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "757329624",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 791319847,
+   "subject_id": "769360771",
+   "genotype": "Vip-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P116D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "769360779",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 797828357,
+   "subject_id": "776061236",
+   "genotype": "Pvalb-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "M",
+   "age": "P107D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "776061251",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 798911424,
+   "subject_id": "775876808",
+   "genotype": "Vip-IRES-Cre/wt;Ai32(RCL-ChR2(H134R)_EYFP)/wt",
+   "sex": "F",
+   "age": "P110D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "775876828",
+   "match_sex_age_genotype": true
+  },
+  {
+   "session": 799864342,
+   "subject_id": "772616820",
+   "genotype": "wt/wt",
+   "sex": "M",
+   "age": "P129D",
+   "species": "Mus musculus",
+   "csv_specimen_id": "772616823",
+   "match_sex_age_genotype": true
+  }
+ ]
+}

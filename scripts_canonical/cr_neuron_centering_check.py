@@ -1,10 +1,10 @@
-"""Referee control (ChatGPT referee, Oct 20, comment 7): the neuron ladders centre each presentation across the sampled
+"""Control: the neuron ladders centre each presentation across the sampled
 units, the stimulus ladders each unit across the sampled presentations, so the opening's three exponents differ in centering
 as well as in axis. Sensitivity: the spatial neuron ladder of App D (spatial_neuron_ladder.py: kNN subsets around random
 anchors vs random same-size subsets, sizes 50..5000) run with BOTH centerings on the same subsets (10 draws per size here,
 50 in App D), on the ten recordings.
 
-PREDICTION (written before the run): theta_obs changes with centering (C4 note: GT3 0.35 -> ~0.40 with unit centering), and
+PREDICTION (written before the run): theta_obs changes with centering (an earlier note: GT3 0.35 -> ~0.40 with unit centering), and
 delta_spatial keeps its sign pattern (negative in most recordings, mean within 0.03 of App D's -0.033) because both arms
 change alike.
 Out: data_canonical/cr_neuron_centering_check.json"""

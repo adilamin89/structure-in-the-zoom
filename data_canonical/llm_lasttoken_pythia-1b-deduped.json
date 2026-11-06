@@ -1,0 +1,913 @@
+{
+ "model_key": "pythia-1b-deduped",
+ "batteries": {
+  "world_knowledge32": {
+   "class_names": [
+    "mathematics",
+    "geography",
+    "history",
+    "technology",
+    "law",
+    "medicine",
+    "philosophy",
+    "sports"
+   ],
+   "distinct_last_tokens": [
+    28,
+    25,
+    29,
+    31,
+    29,
+    29,
+    30,
+    28
+   ],
+   "last_tokens_per_class": [
+    [
+     " of",
+     " in",
+     " and",
+     " about",
+     " time",
+     " over",
+     " like",
+     " between",
+     " area",
+     " problems",
+     " properties",
+     " numbers",
+     " components",
+     " scale",
+     " linear",
+     " variables",
+     " fields",
+     " modern",
+     " objects",
+     " continuous"
+    ],
+    [
+     " and",
+     " from",
+     " over",
+     " years",
+     "ological",
+     "ique",
+     " activity",
+     " deep",
+     " central",
+     " location",
+     " Earth",
+     " African",
+     " coast",
+     " millions",
+     " Australian",
+     " ocean",
+     " adapted",
+     " peaks",
+     "rock",
+     " zones"
+    ],
+    [
+     " of",
+     " in",
+     " and",
+     " for",
+     "ke",
+     " new",
+     "15",
+     "ized",
+     " years",
+     " during",
+     " free",
+     " terms",
+     " across",
+     " Europe",
+     " rights",
+     " nature",
+     " century",
+     " trade",
+     " France",
+     " diseases"
+    ],
+    [
+     " the",
+     " of",
+     " to",
+     " and",
+     " for",
+     " with",
+     " new",
+     " data",
+     " through",
+     " information",
+     " world",
+     " light",
+     " build",
+     " text",
+     " systems",
+     " learn",
+     " layer",
+     " devices",
+     " users",
+     " scale"
+    ],
+    [
+     " of",
+     " in",
+     " and",
+     " is",
+     " from",
+     "able",
+     " same",
+     " interest",
+     " cases",
+     " market",
+     " property",
+     " party",
+     " document",
+     " pressure",
+     " practice",
+     " rules",
+     " persons",
+     " bodies",
+     " requiring",
+     " creative"
+    ],
+    [
+     " of",
+     " and",
+     " it",
+     " or",
+     " new",
+     " function",
+     " level",
+     " without",
+     " cells",
+     " including",
+     " health",
+     " response",
+     " conditions",
+     " disease",
+     " cancer",
+     " prevent",
+     " behavior",
+     " images",
+     " devices",
+     " technology"
+    ],
+    [
+     " of",
+     " to",
+     " and",
+     " or",
+     " from",
+     "ally",
+     " our",
+     " between",
+     " own",
+     " state",
+     " matter",
+     " personal",
+     " wrong",
+     " context",
+     " knowledge",
+     " nature",
+     " argument",
+     " produced",
+     " agreement",
+     " communication"
+    ],
+    [
+     " the",
+     " and",
+     " as",
+     " work",
+     " between",
+     " test",
+     " control",
+     " around",
+     "work",
+     " expression",
+     " event",
+     " members",
+     " six",
+     " hundred",
+     " cars",
+     " stages",
+     " precise",
+     " worldwide",
+     " varying",
+     " throws"
+    ]
+   ],
+   "spearman_distinct_vs_classPR": {
+    "0": 0.8838515090524254,
+    "8": 0.8224729320348959
+   },
+   "class_PR": {
+    "0": [
+     22.26888822234628,
+     19.68295610581326,
+     24.111657179544494,
+     24.870498572733855,
+     23.51563859930162,
+     22.876960683181515,
+     25.542983233464756,
+     23.349305622337567
+    ],
+    "8": [
+     20.957078878564,
+     20.454499814088557,
+     20.978709150880523,
+     21.430268734504708,
+     23.076116681006297,
+     21.368092124501345,
+     22.832548228760228,
+     20.7090518952875
+    ]
+   },
+   "mid_layer": 8,
+   "m": 25,
+   "matched": [
+    {
+     "layer": 0,
+     "dbar_median": -0.0017897030564703598,
+     "p_median": 0.7376237623762376,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 1,
+     "dbar_median": 0.005378339150714895,
+     "p_median": 0.39603960396039606,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 2,
+     "dbar_median": 0.0030514830165871976,
+     "p_median": 0.18811881188118812,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 3,
+     "dbar_median": 0.015236097180345354,
+     "p_median": 0.04950495049504951,
+     "frac_p05": 0.55
+    },
+    {
+     "layer": 4,
+     "dbar_median": 0.013924195092740621,
+     "p_median": 0.0297029702970297,
+     "frac_p05": 0.85
+    },
+    {
+     "layer": 5,
+     "dbar_median": 0.017872224041772355,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 6,
+     "dbar_median": 0.02366782154935787,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 7,
+     "dbar_median": 0.022819636795052667,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 8,
+     "dbar_median": 0.028669516109890825,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 9,
+     "dbar_median": 0.028382003954721458,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 10,
+     "dbar_median": 0.03150941589689288,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 11,
+     "dbar_median": 0.03018510581657885,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 12,
+     "dbar_median": 0.03441221322721094,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 13,
+     "dbar_median": 0.040298239829141436,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 14,
+     "dbar_median": 0.047614098574982056,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 15,
+     "dbar_median": 0.06823374286538908,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 16,
+     "dbar_median": 0.07481394117082513,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    }
+   ],
+   "n_shared_tokens": 15,
+   "within_lasttoken_strata": [
+    {
+     "layer": 0,
+     "dbar": 0.028340449331769713,
+     "p_one": 0.8613861386138614,
+     "null_mean": 0.03734670887651387,
+     "null_sd": 0.007814672790421947
+    },
+    {
+     "layer": 1,
+     "dbar": 0.038151249819431854,
+     "p_one": 0.5841584158415841,
+     "null_mean": 0.04207852877484795,
+     "null_sd": 0.010541835210175418
+    },
+    {
+     "layer": 2,
+     "dbar": 0.027421576476995835,
+     "p_one": 0.44554455445544555,
+     "null_mean": 0.025265873103311777,
+     "null_sd": 0.0075309215214420175
+    },
+    {
+     "layer": 3,
+     "dbar": 0.03407278699048666,
+     "p_one": 0.4158415841584158,
+     "null_mean": 0.03261992561630772,
+     "null_sd": 0.004973441044830087
+    },
+    {
+     "layer": 4,
+     "dbar": 0.04706163002343766,
+     "p_one": 0.2079207920792079,
+     "null_mean": 0.04304974483713972,
+     "null_sd": 0.004669754343833758
+    },
+    {
+     "layer": 5,
+     "dbar": 0.04470673316255491,
+     "p_one": 0.32673267326732675,
+     "null_mean": 0.042296300630726,
+     "null_sd": 0.00500812253137427
+    },
+    {
+     "layer": 6,
+     "dbar": 0.03614292137563746,
+     "p_one": 0.2079207920792079,
+     "null_mean": 0.03184562960006524,
+     "null_sd": 0.00561727202612305
+    },
+    {
+     "layer": 7,
+     "dbar": 0.05316172219274928,
+     "p_one": 0.5544554455445545,
+     "null_mean": 0.05385540169416464,
+     "null_sd": 0.004827135858377101
+    },
+    {
+     "layer": 8,
+     "dbar": 0.053326776241130136,
+     "p_one": 0.37623762376237624,
+     "null_mean": 0.05197624420338696,
+     "null_sd": 0.00551438400991915
+    },
+    {
+     "layer": 9,
+     "dbar": 0.04446744735057362,
+     "p_one": 0.48514851485148514,
+     "null_mean": 0.04418082155606377,
+     "null_sd": 0.005114194346294516
+    },
+    {
+     "layer": 10,
+     "dbar": 0.0437996353124297,
+     "p_one": 0.5247524752475248,
+     "null_mean": 0.04386201995804015,
+     "null_sd": 0.005263427820598371
+    },
+    {
+     "layer": 11,
+     "dbar": 0.05341961245500704,
+     "p_one": 0.07920792079207921,
+     "null_mean": 0.04516202715896487,
+     "null_sd": 0.005539896835513671
+    },
+    {
+     "layer": 12,
+     "dbar": 0.06035688600124289,
+     "p_one": 0.019801980198019802,
+     "null_mean": 0.04425655292316611,
+     "null_sd": 0.006320645239527072
+    },
+    {
+     "layer": 13,
+     "dbar": 0.051005336640917,
+     "p_one": 0.04950495049504951,
+     "null_mean": 0.04231354940566063,
+     "null_sd": 0.005428862483653134
+    },
+    {
+     "layer": 14,
+     "dbar": 0.06538696548489198,
+     "p_one": 0.019801980198019802,
+     "null_mean": 0.052233667907290844,
+     "null_sd": 0.004992600776587338
+    },
+    {
+     "layer": 15,
+     "dbar": 0.08030872195367489,
+     "p_one": 0.0297029702970297,
+     "null_mean": 0.0631245485196829,
+     "null_sd": 0.00792825880415494
+    },
+    {
+     "layer": 16,
+     "dbar": 0.10261992405417442,
+     "p_one": 0.009900990099009901,
+     "null_mean": 0.06849586625185315,
+     "null_sd": 0.007903253070862813
+    }
+   ]
+  },
+  "language_type32": {
+   "class_names": [
+    "question",
+    "definition",
+    "comparison",
+    "narrative",
+    "cause_effect",
+    "instruction",
+    "opinion",
+    "negation"
+   ],
+   "distinct_last_tokens": [
+    31,
+    29,
+    30,
+    31,
+    30,
+    28,
+    28,
+    31
+   ],
+   "last_tokens_per_class": [
+    [
+     " year",
+     " data",
+     "50",
+     " place",
+     " far",
+     " energy",
+     " others",
+     " eyes",
+     " learn",
+     " lines",
+     " ability",
+     " fight",
+     " located",
+     " animals",
+     " whom",
+     " century",
+     " largest",
+     " ice",
+     " humans",
+     " sky"
+    ],
+    [
+     " in",
+     " and",
+     " on",
+     " work",
+     " through",
+     " different",
+     " found",
+     " function",
+     " something",
+     " together",
+     " methods",
+     " growth",
+     " species",
+     " elements",
+     " proof",
+     " animals",
+     " nation",
+     " chemical",
+     " membrane",
+     " convert"
+    ],
+    [
+     " of",
+     " that",
+     " on",
+     " will",
+     " more",
+     "ates",
+     " much",
+     " state",
+     " treat",
+     " better",
+     " water",
+     " written",
+     " includes",
+     " brain",
+     " ones",
+     " uses",
+     " faster",
+     " involves",
+     " container",
+     " buildings"
+    ],
+    [
+     " the",
+     "ed",
+     "ing",
+     " of",
+     " in",
+     " it",
+     " was",
+     " their",
+     " through",
+     " before",
+     " run",
+     " war",
+     " design",
+     " hours",
+     " performance",
+     " window",
+     " established",
+     " changed",
+     " proof",
+     " discovered"
+    ],
+    [
+     " of",
+     " and",
+     "ated",
+     " local",
+     " night",
+     " making",
+     " land",
+     " heart",
+     " natural",
+     " global",
+     " sleep",
+     " damage",
+     " throughout",
+     " resources",
+     " communication",
+     " chain",
+     " diseases",
+     " climate",
+     " rapidly",
+     " bacteria"
+    ],
+    [
+     " the",
+     " of",
+     " and",
+     " by",
+     " from",
+     " one",
+     " into",
+     " before",
+     " together",
+     " provided",
+     " entire",
+     " loss",
+     " experiment",
+     " components",
+     " errors",
+     " particles",
+     " specified",
+     " degrees",
+     " finish",
+     " weather"
+    ],
+    [
+     " in",
+     " to",
+     " all",
+     " health",
+     "izing",
+     " technology",
+     " formation",
+     " construction",
+     " mental",
+     " Earth",
+     " replace",
+     " experiences",
+     " cognitive",
+     " markets",
+     " intake",
+     " environments",
+     " engagement",
+     " platforms",
+     " conservation",
+     " emissions"
+    ],
+    [
+     " the",
+     " of",
+     " to",
+     " and",
+     " with",
+     " as",
+     " are",
+     "age",
+     " point",
+     " during",
+     " children",
+     " period",
+     " night",
+     " death",
+     " flu",
+     " memory",
+     " claims",
+     " injury",
+     " despite",
+     " causes"
+    ]
+   ],
+   "spearman_distinct_vs_classPR": {
+    "0": 0.7165410061057312,
+    "8": 0.21002063972064536
+   },
+   "class_PR": {
+    "0": [
+     28.126401803734225,
+     25.340736147847164,
+     26.30461528218407,
+     26.067559460284432,
+     26.27846916066627,
+     23.165192076611003,
+     22.81925738579335,
+     25.51510051355312
+    ],
+    "8": [
+     24.654601470307426,
+     23.62308355943155,
+     20.273700226341482,
+     23.512793944608273,
+     23.285465479596446,
+     21.634142420143274,
+     22.05796795489064,
+     21.608280741770365
+    ]
+   },
+   "mid_layer": 8,
+   "m": 28,
+   "matched": [
+    {
+     "layer": 0,
+     "dbar_median": -0.003697969317357719,
+     "p_median": 0.5742574257425742,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 1,
+     "dbar_median": -0.004448925653611546,
+     "p_median": 0.37623762376237624,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 2,
+     "dbar_median": 0.0012892188425058793,
+     "p_median": 0.34158415841584155,
+     "frac_p05": 0.0
+    },
+    {
+     "layer": 3,
+     "dbar_median": 0.00508968561474521,
+     "p_median": 0.18811881188118812,
+     "frac_p05": 0.2
+    },
+    {
+     "layer": 4,
+     "dbar_median": 0.008855704938740161,
+     "p_median": 0.07920792079207921,
+     "frac_p05": 0.4
+    },
+    {
+     "layer": 5,
+     "dbar_median": 0.013817170671074852,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 0.9
+    },
+    {
+     "layer": 6,
+     "dbar_median": 0.013399672590235778,
+     "p_median": 0.024752475247524754,
+     "frac_p05": 0.75
+    },
+    {
+     "layer": 7,
+     "dbar_median": 0.01797036113933187,
+     "p_median": 0.01485148514851485,
+     "frac_p05": 0.85
+    },
+    {
+     "layer": 8,
+     "dbar_median": 0.02169649015122438,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 9,
+     "dbar_median": 0.017249904199290622,
+     "p_median": 0.01485148514851485,
+     "frac_p05": 0.9
+    },
+    {
+     "layer": 10,
+     "dbar_median": 0.01627951375068276,
+     "p_median": 0.019801980198019802,
+     "frac_p05": 0.95
+    },
+    {
+     "layer": 11,
+     "dbar_median": 0.019869054256897223,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 12,
+     "dbar_median": 0.025173255778553394,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 13,
+     "dbar_median": 0.026490437705600722,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 14,
+     "dbar_median": 0.035990920681383376,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 15,
+     "dbar_median": 0.04268330319663033,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    },
+    {
+     "layer": 16,
+     "dbar_median": 0.031735076862617145,
+     "p_median": 0.009900990099009901,
+     "frac_p05": 1.0
+    }
+   ],
+   "n_shared_tokens": 13,
+   "within_lasttoken_strata": [
+    {
+     "layer": 0,
+     "dbar": 0.026673785477909107,
+     "p_one": 0.46534653465346537,
+     "null_mean": 0.025288801753283515,
+     "null_sd": 0.007155791464816877
+    },
+    {
+     "layer": 1,
+     "dbar": 0.01564493128623523,
+     "p_one": 0.49504950495049505,
+     "null_mean": 0.01565032387048155,
+     "null_sd": 0.01019751215738084
+    },
+    {
+     "layer": 2,
+     "dbar": 0.02719985132710656,
+     "p_one": 0.37623762376237624,
+     "null_mean": 0.025297388093303223,
+     "null_sd": 0.007242250923649435
+    },
+    {
+     "layer": 3,
+     "dbar": 0.016701139419889377,
+     "p_one": 0.25742574257425743,
+     "null_mean": 0.012405308380078391,
+     "null_sd": 0.006973703444320748
+    },
+    {
+     "layer": 4,
+     "dbar": 0.022869304969304838,
+     "p_one": 0.37623762376237624,
+     "null_mean": 0.020254234138005613,
+     "null_sd": 0.006411389410921384
+    },
+    {
+     "layer": 5,
+     "dbar": 0.013182531820127408,
+     "p_one": 0.16831683168316833,
+     "null_mean": 0.006897557964399225,
+     "null_sd": 0.006526804508989789
+    },
+    {
+     "layer": 6,
+     "dbar": 0.03007489760669202,
+     "p_one": 0.16831683168316833,
+     "null_mean": 0.023752382096444348,
+     "null_sd": 0.006433449741906572
+    },
+    {
+     "layer": 7,
+     "dbar": 0.019733434649751302,
+     "p_one": 0.32673267326732675,
+     "null_mean": 0.015139952866687035,
+     "null_sd": 0.0073473550013983075
+    },
+    {
+     "layer": 8,
+     "dbar": 0.02992324051164319,
+     "p_one": 0.31683168316831684,
+     "null_mean": 0.026657618442100395,
+     "null_sd": 0.006672445799072299
+    },
+    {
+     "layer": 9,
+     "dbar": 0.015592596547178705,
+     "p_one": 0.42574257425742573,
+     "null_mean": 0.013784061658402846,
+     "null_sd": 0.006606034288906181
+    },
+    {
+     "layer": 10,
+     "dbar": 0.03027246242939452,
+     "p_one": 0.15841584158415842,
+     "null_mean": 0.023127015305672592,
+     "null_sd": 0.006503344737413233
+    },
+    {
+     "layer": 11,
+     "dbar": 0.03134439288427748,
+     "p_one": 0.09900990099009901,
+     "null_mean": 0.024685463096057285,
+     "null_sd": 0.005229268530090311
+    },
+    {
+     "layer": 12,
+     "dbar": 0.04397673437416083,
+     "p_one": 0.019801980198019802,
+     "null_mean": 0.034854898061499856,
+     "null_sd": 0.00414894369952846
+    },
+    {
+     "layer": 13,
+     "dbar": 0.04346925386067568,
+     "p_one": 0.009900990099009901,
+     "null_mean": 0.03020647336180441,
+     "null_sd": 0.0052779054724002
+    },
+    {
+     "layer": 14,
+     "dbar": 0.04575278473144506,
+     "p_one": 0.18811881188118812,
+     "null_mean": 0.039322672783080076,
+     "null_sd": 0.007433196130353094
+    },
+    {
+     "layer": 15,
+     "dbar": 0.05439838338115821,
+     "p_one": 0.26732673267326734,
+     "null_mean": 0.04752419536842112,
+     "null_sd": 0.011637777486158019
+    },
+    {
+     "layer": 16,
+     "dbar": 0.03148346389014728,
+     "p_one": 0.5148514851485149,
+     "null_mean": 0.03228822729740446,
+     "null_sd": 0.013961225064811433
+    }
+   ]
+  }
+ }
+}

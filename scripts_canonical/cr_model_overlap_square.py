@@ -1,4 +1,4 @@
-"""C6 (Oct 20): why the calibrated model falls short of cortex's fluctuation overlap at 135 degrees. Reads only artifacts.
+"""Why the calibrated model falls short of cortex's fluctuation overlap at 135 degrees. Reads only artifacts.
 
 The model (run48 make_partial) builds each class's fluctuations as K shared random modes with each neuron's loading
 rescaled by (1 - s) + s * the class's normalized mean. For delocalized random modes Tr(S_c S_d) is dominated by the

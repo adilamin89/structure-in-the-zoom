@@ -1,6 +1,6 @@
 """Camera-ready App G: the direction shift along the sampling axis (finite-size sweep on GT3), one generator.
 
-Superseded for the paper by cr_finite_size_split.py (same design + the Sec 7 split). Replaces the generator-less `finite_size_scaling` block of physics_full_suite.json (C5, Oct 20; PI asked for a recompute).
+Superseded for the paper by cr_finite_size_split.py (same design + the Sec 7 split). Replaces the generator-less `finite_size_scaling` block of physics_full_suite.json with a recompute.
 Same estimator as the paper's direction ladder and cr_graining_table.py: centred PR, eight direction bins accumulated
 from 0 deg in rungs of 1, 2, 3, 4, 6, 8 bins, floor = ten label-blind random ladders of the same sizes; rungs with fewer
 than ten samples are skipped (App K). For each stimulus budget n, DRAWS random subsets of n presentations (without

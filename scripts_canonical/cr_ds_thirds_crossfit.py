@@ -1,4 +1,4 @@
-"""Referee control (fresh-Claude referee, Oct 20, concern 3): the direction-selective thirds of Sec 4 select and measure
+"""Control: the direction-selective thirds of Sec 4 select and measure
 on the same trials. Cross-fit: each class's trials split into alternating halves A and B; the tuning test (F, p < 0.01)
 and the direction-selectivity index (vector strength of the eight class means, as run59) come from one half, the
 eight-class direction ladder (run2.ladder_delta, ten-draw floor, seed 42) runs on the other half; both directions

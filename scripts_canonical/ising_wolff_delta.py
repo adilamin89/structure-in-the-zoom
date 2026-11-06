@@ -1,6 +1,6 @@
 """2D Ising Wolff: delta(T, L) for magnetization-aligned ladders - COMMITTED artifact.
 
-Regenerates the rescue-session result (ledger §B) with a registered construction:
+Regenerates an earlier Wolff-cluster result with a construction fixed in advance:
   - Wolff cluster sampling, 200 burn-in steps, 200 samples spaced 5 steps.
   - Configurations sorted by magnetization m; 8 equal-count bins.
   - Structured ladder: accumulate bins in sorted order at counts {1,2,3,4,6,8}

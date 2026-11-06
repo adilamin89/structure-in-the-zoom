@@ -93,7 +93,7 @@ ao = json.load(open(DATA / "antipodal_order.json"))
 seq = [r["delta_sequential"] for r in ao["rows"]]
 par = [r["delta_paired"] for r in ao["rows"]]
 
-# The kernel panel (A) now lives in the body as Figure 3B (Sep 8); the appendix figure is the ordering contrast alone.
+# The kernel panel (A) now lives in the body as Figure 3B; the appendix figure is the ordering contrast alone.
 _f1, ax1 = plt.subplots()
 fig, ax2 = plt.subplots(figsize=(3.6, 2.6))
 

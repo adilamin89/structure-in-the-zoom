@@ -1,0 +1,63 @@
+{
+ "L": 32,
+ "T": 1.0,
+ "J1": 0.42,
+ "chains": [
+  {
+   "chain": 0,
+   "delta_director": NaN,
+   "delta_time": NaN,
+   "rung_sizes": [
+    130,
+    200
+   ],
+   "bins_nonempty": 2
+  },
+  {
+   "chain": 1,
+   "delta_director": NaN,
+   "delta_time": NaN,
+   "rung_sizes": [
+    200
+   ],
+   "bins_nonempty": 2
+  },
+  {
+   "chain": 2,
+   "delta_director": NaN,
+   "delta_time": NaN,
+   "rung_sizes": [
+    200
+   ],
+   "bins_nonempty": 2
+  },
+  {
+   "chain": 3,
+   "delta_director": NaN,
+   "delta_time": NaN,
+   "rung_sizes": [
+    101,
+    200
+   ],
+   "bins_nonempty": 2
+  },
+  {
+   "chain": 4,
+   "delta_director": NaN,
+   "delta_time": NaN,
+   "rung_sizes": [
+    200
+   ],
+   "bins_nonempty": 1
+  },
+  {
+   "chain": 5,
+   "delta_director": NaN,
+   "delta_time": NaN,
+   "rung_sizes": [
+    200
+   ],
+   "bins_nonempty": 1
+  }
+ ]
+}

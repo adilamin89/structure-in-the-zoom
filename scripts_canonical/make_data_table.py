@@ -53,7 +53,7 @@ out["allen"] = {"n_sessions": len(ok), "n_populations": len(units),
                 "areas": sorted({k for s in ok for k in s["areas"]}),
                 "presentations": rng([s["n_presentations"] for s in ok]),
                 "units_per_population": rng(units), "visp_units": rng(visp), "n_visp": len(visp),
-                # H5-R1: presentations each population keeps after masking (h5_allen_expansion_local writes n_pres)
+                # Presentations each population keeps after masking (allen_expansion_local writes n_pres)
                 "presentations_per_population": rng([a.get("n_pres", s["n_presentations"]) for s in ok for a in s["areas"].values()]),
                 "visp_presentations": rng([s["areas"]["VISp"].get("n_pres", s["n_presentations"]) for s in ok if "VISp" in s["areas"]])}
 json.dump(out, open(DATA / "data_table_camera_ready.json", "w"), indent=1)

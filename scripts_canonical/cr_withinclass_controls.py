@@ -1,4 +1,4 @@
-"""Referee control (fresh-Claude referee, Oct 20, concerns 1-2): is the within-class part of the direction shift
+"""Control: is the within-class part of the direction shift
 population fluctuation geometry (correlated modes), or single-neuron variance tracking each class's tuning?
 
 The paper's direction ladder and exact split (run72.ladder: centred PR, 8 bins, rungs 1,2,3,4,6,8, ten-draw floor,
@@ -13,7 +13,7 @@ under four inputs:
 COMPETING PREDICTIONS (written before the run):
   H_geom (the paper's Sec 7 reading): the shift rides on correlated within-class modes, so shuf lowers the within-class
     part and delta well below orig (delta_shuf < delta_orig / 2 in >= 6 of 8).
-  H_diag (the referee's alternative): variance tracking the class mean suffices, so delta_shuf ~ delta_orig (within 25%
+  H_diag (the alternative): variance tracking the class mean suffices, so delta_shuf ~ delta_orig (within 25%
     in >= 6 of 8).
   zscore and sqrt: delta stays positive in 8 of 8 under either reading; their size is reported, not predicted.
 Out: data_canonical/cr_withinclass_controls.json"""

@@ -1,5 +1,5 @@
-"""Camera-ready check (Oct 20): is the order effect of Sec 4 / App E ("adjacent classes climb faster in all eight") a property of the
-recordings or of the declared origin? cr_overlap_mining_followup.py (d5) found the within-class order effect varies with
+"""Camera-ready check: is the order effect of Sec 4 / App E ("adjacent classes climb faster in all eight") a property of the
+recordings or of the declared origin? overlap_identity_followup.py (d5) found the within-class order effect varies with
 the origin (SD 0.03-0.10 over 16 cyclic origins) and that the stationary overlap kernel predicts its origin average within
 0.01 in 8/8. Here the TOTAL order effect (paired - sequential, sixteen 22.5-degree classes, each arm its own ten-draw floor,
 run72 design B; engine of cr_order_and_withinbin_controls), with its within-class and class-mean parts, at all sixteen

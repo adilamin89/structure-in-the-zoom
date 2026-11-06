@@ -1,4 +1,4 @@
-"""C3 (Oct 16): Allen Neuropixels FLOORS. Replays allen_expansion.py's per-area random sequence exactly (rng 42, areas
+"""Allen Neuropixels FLOORS. Replays allen_expansion.py's per-area random sequence exactly (rng 42, areas
 in sorted order, direction ladder, then orientation ladder, then the random-stimulus ladder) and stores what the
 expansion run did not: theta_obs and theta_floor of the direction ladder, its rung sizes, the random-stimulus ladder's
 observed and floor slopes over its rungs, and the full-population PR (d_eff). No shuffles, no eigenvalues (they do not

@@ -1,0 +1,100 @@
+{
+ "pythia-160m/content": {
+  "m_distinct_last_tokens": 25,
+  "embedding_matched": -0.0002663014638746297,
+  "embedding_size_matched": 0.025724321665023808,
+  "removed_first3_blocks": 0.6504686550593297,
+  "removed_second_half": 0.1175888811210205,
+  "past_embedding_matched_p05": 10,
+  "past_embedding_size_matched_p05": 12,
+  "n_past_embedding": 12
+ },
+ "pythia-160m/constructions": {
+  "m_distinct_last_tokens": 28,
+  "embedding_matched": -0.0011860914573131875,
+  "embedding_size_matched": 0.017124892511484913,
+  "removed_first3_blocks": 0.9975052727023552,
+  "removed_second_half": 0.10642111081819605,
+  "past_embedding_matched_p05": 9,
+  "past_embedding_size_matched_p05": 10,
+  "n_past_embedding": 12
+ },
+ "pythia-410m-deduped/content": {
+  "m_distinct_last_tokens": 25,
+  "embedding_matched": -0.0036445660858074325,
+  "embedding_size_matched": 0.023787400729782027,
+  "removed_first3_blocks": 0.7992937774733144,
+  "removed_second_half": 0.0867119029941793,
+  "past_embedding_matched_p05": 20,
+  "past_embedding_size_matched_p05": 21,
+  "n_past_embedding": 24
+ },
+ "pythia-410m-deduped/constructions": {
+  "m_distinct_last_tokens": 28,
+  "embedding_matched": -0.0017345663148619073,
+  "embedding_size_matched": 0.019016751896692163,
+  "removed_first3_blocks": 0.9856992364067335,
+  "removed_second_half": 0.10229655308827112,
+  "past_embedding_matched_p05": 17,
+  "past_embedding_size_matched_p05": 18,
+  "n_past_embedding": 24
+ },
+ "pythia-1b-deduped/content": {
+  "m_distinct_last_tokens": 25,
+  "embedding_matched": -0.0017897030564703598,
+  "embedding_size_matched": 0.023108173070986948,
+  "removed_first3_blocks": 0.7037717102714732,
+  "removed_second_half": 0.10433149224159222,
+  "past_embedding_matched_p05": 14,
+  "past_embedding_size_matched_p05": 15,
+  "n_past_embedding": 16
+ },
+ "pythia-1b-deduped/constructions": {
+  "m_distinct_last_tokens": 28,
+  "embedding_matched": -0.003697969317357719,
+  "embedding_size_matched": 0.020077298848806102,
+  "removed_first3_blocks": 0.9456630848685604,
+  "removed_second_half": 0.15212720940925828,
+  "past_embedding_matched_p05": 12,
+  "past_embedding_size_matched_p05": 14,
+  "n_past_embedding": 16
+ },
+ "pythia-2.8b-deduped/content": {
+  "m_distinct_last_tokens": 25,
+  "embedding_matched": -0.004006820710035441,
+  "embedding_size_matched": 0.023483067969643667,
+  "removed_first3_blocks": 0.8177427726990418,
+  "removed_second_half": 0.09956572885554671,
+  "past_embedding_matched_p05": 28,
+  "past_embedding_size_matched_p05": 31,
+  "n_past_embedding": 32
+ },
+ "pythia-2.8b-deduped/constructions": {
+  "m_distinct_last_tokens": 28,
+  "embedding_matched": -0.003011281300479729,
+  "embedding_size_matched": 0.017018721447081442,
+  "removed_first3_blocks": 0.8948703131528661,
+  "removed_second_half": 0.054882476565278226,
+  "past_embedding_matched_p05": 28,
+  "past_embedding_size_matched_p05": 31,
+  "n_past_embedding": 32
+ },
+ "summary": {
+  "embedding_matched_range": [
+   -0.004006820710035441,
+   -0.0002663014638746297
+  ],
+  "embedding_size_matched_range": [
+   0.017018721447081442,
+   0.025724321665023808
+  ],
+  "removed_first3_range": [
+   0.6504686550593297,
+   0.9975052727023552
+  ],
+  "removed_second_half_range": [
+   0.054882476565278226,
+   0.15212720940925828
+  ]
+ }
+}

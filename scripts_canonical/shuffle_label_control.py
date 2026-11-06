@@ -1,6 +1,6 @@
 """Shuffled-label control + ablations for the orientation zoom - COMMITTED artifact.
 
-Regenerates the rescue-session mismatch analysis (ledger §G). Two binnings:
+Regenerates the earlier mismatch analysis. Two binnings:
   dir8 - 8 equal-width bins over [0, 2pi) via digitize, matching the committed
          modal_bootstrap_all10.py construction (direction bins).
   ori8 - 8 equal-width bins over [0, pi) on istim mod pi (orientation bins,

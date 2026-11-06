@@ -1,6 +1,6 @@
-"""Camera-ready App E, "The class means alone" (C7, Oct 21): the numbers of that paragraph from the stored origin sweeps.
+"""Camera-ready App E, "The class means alone": the numbers of that paragraph from the stored origin sweeps.
 Reads only artifacts: cr_order_effect_origins.json (within and class-mean parts of the order effect at each of the sixteen
-origins), cr_failure_interrogation.json (oe_B_alone_mean: the order effect of the class-mean covariance B by itself,
+origins), fluctuation_overlap_profile.json (oe_B_alone_mean: the order effect of the class-mean covariance B by itself,
 origin-averaged) and multipole_harmonics_8dir.json (b2/c1). Order effect = paired minus sequential (negative: the
 sequential order climbs faster).
 Prints (CHECK lines): the largest |B-alone| effect; its sign against the sector (b/c above or below one); the regression of
@@ -12,7 +12,7 @@ import numpy as np
 
 D = Path(__file__).resolve().parent.parent / "data_canonical"
 oo = {r["name"]: r for r in json.load(open(D / "cr_order_effect_origins.json"))["rows"]}
-fi = {r["name"]: r for r in json.load(open(D / "cr_failure_interrogation.json"))["rows"]}
+fi = {r["name"]: r for r in json.load(open(D / "fluctuation_overlap_profile.json"))["rows"]}
 bc = {r["name"]: r["b2_over_c1"] for r in json.load(open(D / "multipole_harmonics_8dir.json"))["rows"] if "b2_over_c1" in r}
 names = sorted(fi)
 w = np.array([np.mean([o["within"] for o in oo[n]["origins"]]) for n in names])
