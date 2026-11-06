@@ -119,8 +119,12 @@ def test_feature_reference_numbers():
     assert load("cr_graining_table.json")["rows"][-1]["K"] == 32 and "(+0.027 at 32" in README
     io = load("llm_ioi.json")
     printed(io["AUC_z"], "0.92", 2); printed(io["AUC_classmean_frac"], "0.96", 2); printed(io["AUC_probe_acc"], "0.95", 2)
+    assert "circuit the class-mean share ranked the patched heads at 0.96, z at 0.92" in README          # rule 14
     tt = load("twoterm_imaging.json")["rows"]
-    assert sum(np.sign(r["B2"]["delta_pred"]) == np.sign(r["B2"]["t9_delta"]) for r in tt) == 8 and "8 of 8 imaging recordings" in README
+    # imaging tests the account's size, not its sign: every imaging shift is positive (the always-positive baseline gets 8 of 8)
+    pr, ms = np.array([r["B2"]["delta_pred"] for r in tt]), np.array([r["B2"]["t9_delta"] for r in tt])
+    assert len(ms) == 8 and (ms > 0).all() and "all eight shifts are positive there" in README
+    assert f"{np.corrcoef(pr, ms)[0, 1]:.2f}" == "0.88" and "(r = 0.88,\nFigure 3)" in README
     am = load("allen_axis_screen_rescore.json")["b_across_mice"]
     assert all(am[k]["pick"] == "direction" and am[k]["confirmed"] for k in ("pick_set0", "pick_set1"))
     assert "picks direction on 16 Allen mice and again on the other 16" in README
@@ -140,7 +144,7 @@ def test_acceptance_section():
         x = max(abs(r["residual_replay"]["delta"]), abs(r["residual_replay"]["within"]))
         assert x < 1e-5, (r["name"], x)                                   # the replay is exact or at float32 rounding
     acc = load("rung_account_imaging.json")["verdict"]
-    assert f"sign in {acc['signs_agree_two_terms']} of {acc['n']} with r = {acc['r_two_terms_delta']:.2f}" in README
+    assert acc["n"] == 8 and f"tracks the shift's size with r = {acc['r_two_terms_delta']:.2f}" in README
     assert f"mean error of {acc['mean_err_finite_heldout']:+.3f}" in README
     hd = load("rung_heads_ioi.json")
     assert hd["paper_seeds"]["replays_llm_ioi"] and f"(AUC {hd['paper_seeds']['AUC_z']:.2f})" in README

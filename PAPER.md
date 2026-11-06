@@ -12,8 +12,9 @@ rules are in the [README](README.md).
   classes added in random orders give shifts of the same size, so the grouping carries it. The shift reads the orientation and
   direction sectors of the tuning and is larger in the most direction-selective neurons.
 - **What carries it.** Direction-dependent fluctuations around the class means lift the exponent, while in these recordings the
-  class means pull it down. Two measured terms give the shift's sign with nothing fitted: one from how much the classes'
-  fluctuations overlap, one from how the class means sit against them.
+  class means pull it down. Two measured terms account for it with nothing fitted: one from how much the classes'
+  fluctuations overlap, one from how the class means sit against them. In these recordings they track the shift's size, and the
+  systems below test its sign, where it changes.
 - **Two more laboratories.** In Allen Neuropixels spike counts the shift is positive in 32 of 32 mice in primary visual cortex and
   in 158 of 167 populations across visual areas. With temporal-frequency tuning removed, as for the split and the two terms, it is
   negative in 16 of the 167; the two terms evaluated at each population's sample counts give the sign of 14 of those 16 and of 163
@@ -53,7 +54,7 @@ Residuals are the largest of the shift's and the within-class part's; "float32" 
 rung computes in float64. Beyond the table: the worked examples of Appendix M return its printed values (GT3 and Pythia-160m,
 every row); the candidate screen replays Appendix H's Allen screen exactly (each half's z, p and shift); the feature ladder
 replays Appendix D's GT3 row; the blocks replay Appendix G's table to float32 rounding; `--account` on the eight grating
-recordings gives the shift's sign in 8 of 8 with r = 0.88 (Figure 3), and the identity at the rungs' sample counts tracks the
+recordings tracks the shift's size with r = 0.88 (Figure 3; all eight shifts are positive, so imaging does not test the sign), and the identity at the rungs' sample counts tracks the
 held-out within-class part with a mean error of -0.004; `rung llm --heads --paper-seeds` replays Appendix I's ranking of GPT-2's
 circuit heads (AUC 0.92), and over ten default seeds the AUC is 0.93 ± 0.01. Generators: `rung_acceptance_replay.py`,
 `rung_account_imaging.py`, `rung_heads_ioi.py`.

@@ -96,8 +96,9 @@ def test_principal_angles_full_space_and_caps():
     assert r.cov_floors(X, y, k=5)["floor"] == 0.0
     X = np.random.default_rng(0).normal(size=(90, 5)); y = np.repeat(np.arange(3), 30)
     assert r.cov_floors(X, y, k=5)["full_space"]
+    assert "no variance" in r.cov_floors(np.ones((36, 4)), np.repeat(np.arange(3), 12))["undefined"]   # data: marked, not raised
     with pytest.raises(ValueError):
-        r.cov_floors(np.ones((36, 4)), np.repeat(np.arange(3), 12))
+        r.cov_floors(X, y, k=0)                                                                  # argument: raised
 
 
 def test_declared_order_rejects_unknown_classes():
@@ -111,5 +112,5 @@ def test_degenerate_class_means_read_as_degenerate():
     s = r.sign_law(X, y)
     assert s["degenerate"] == "no class-mean variance" and s["c_full"] == 0.0
     r.decompose(X, y, n_null=2)
-    with pytest.raises(ValueError):
-        r.decompose(np.ones((36, 4)), y)
+    u = r.decompose(np.ones((36, 4)), y)                       # no within-class variance: the split says so, no number
+    assert "no within-class variance" in u["undefined"] and np.isnan(u["delta_split_free"]["D"])

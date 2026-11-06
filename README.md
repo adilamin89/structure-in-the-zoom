@@ -28,7 +28,7 @@ every layer of a language model at any training checkpoint, with no probe or mod
 - **which of several candidate labels organizes a population**, discovered on one half of the data and replicated on the other;
 - **what other samplings keep**: neighbouring neurons, features in a given order, blocks of features pooled by a score;
 - **for a language model**, how much a declared label (a topic, a construction) adds to each layer's exponent, how much of that is
-  the final token, and which attention heads to test first.
+  the final token, and which attention heads' writes the label organizes.
 
 A decoder tells whether a label can be read out; the shift tells how much of a reported exponent the label accounts for and what
 sets that share. The grouping of samples into classes carries the shift. How much the order in which the classes enter moves it
@@ -103,6 +103,11 @@ its final tokens.
 `pip install -e ".[nwb]"` adds h5py for NWB and MATLAB v7.3 files; `".[scripts]"` adds what the analysis scripts need (h5py,
 numba, scikit-learn). `rung --version` prints the release; every option's default is in `rung <command> --help`.
 
+When the data leave a statistic undefined (fewer than three classes, no variance, classes with no within-class variance, as at a
+token every prompt of a class shares), the run still finishes: that part of the result reads `undefined` (or `degenerate`) with
+its reason and no number, and `rung summarize` and `rung report` say so. Invalid input (a missing file, NaN, labels of the wrong
+length) stops with one `rung: error:` line.
+
 ## Worked examples
 
 **A recording.** GT3, 4,442 drifting-grating presentations by 11,311 neurons, eight direction classes in angular order. The session
@@ -153,8 +158,16 @@ rung llm --model openai-community/gpt2 --axis axes/ioi_names.json --heads --pape
 
 On GPT-2 small's indirect-object circuit (eight indirect-object names, 16 prompts each), the heads' permutation z ranks the eleven
 name-mover and backup heads that path patching found at AUC 0.92 and their class-mean variance share at 0.96, with nothing trained
-(a trained probe: 0.95). It is a training-free pre-screen that ranks heads for causal follow-up; the split says whether a head
-scores through its class means or its fluctuations.
+(a trained linear classifier: 0.95). The split says whether a head scores through its class means or its fluctuations. A head's z reads how
+strongly the label organizes its write (expression), not whether the model's answer depends on that head (reliance); z is the net
+of the within-class and class-mean parts, which can cancel, and `rung report` lists both for the top heads. On the indirect-object
+circuit the top heads are the path-patched ones; on another task they need not be. To find the heads the output uses, run an
+intervention (patching or ablation); among rung's outputs the class-mean share tracks that best, and it is a mean screen. With `--heads-known`, every AUC prints beside the AUCs of random head sets of
+the same size (for 11 of 144 heads their SD is about 0.09) with a one-sided p, each known head's rank, and the AUC of the mean
+write norm, the trivial baseline (later layers write larger). `--untrained SEED` scores the same architecture with random
+weights, the comparator any 'with nothing trained' claim needs; `rung report` shows both runs' AUCs side by side (`--baseline`).
+`rung heads H.npy labels.npy` scores any stack of units the same way: SAE latents grouped by head, writes cached from a model
+`--heads` does not know.
 
 ## Feature reference
 
@@ -172,7 +185,8 @@ with the fluctuations); `--n-bias` the finite-sample bias null. What carries a l
 **`--account`** (`account`): the measured within-class part beside the mean-field overlap law ln[K/(1+(K-1) sigma)]/ln K (sigma from
 split halves) and the identity at the rungs' sample counts; the class-mean part beside Eq. 3 carried through the rungs; their sum
 beside the shift; the two corrections beyond mean field; a held-out arm. Whether two measured terms give the shift, and whether the
-classes are sampled enough to read it. The terms give the sign in 8 of 8 imaging recordings (Figure 3). For Allen's populations,
+classes are sampled enough to read it. In imaging the terms track the shift's size across the eight recordings (r = 0.88,
+Figure 3); all eight shifts are positive there, so the sign is tested where it changes (Allen, macaque and the lattices; PAPER.md). For Allen's populations,
 whose responses are first residualized on temporal frequency, `allen_finite_n_identity.py` evaluates the identity through that
 linear step; `--account` evaluates it for the array as given.
 
@@ -214,8 +228,8 @@ z-scored shift beside the linear one.
 **`--paper-floor`**, `--floor-draws`, `--floor-seed`, `--floor-by-rung`, `--rungs`: the floor's draws and the ladder's rungs.
 `--paper-floor` draws the floor as the paper's imaging, Allen and macaque generators do and replays their printed values.
 
-**`rung llm`** (`--revision`, `--match-last-token`, `--frames`, `--heads`): every layer's shift in the linear and the z-scored frame
-at any checkpoint, the final-token report and control; every attention head with `--heads`. Topics lift every layer of four Pythia
+**`rung llm`** (`--revision`, `--match-last-token`, `--frames`, `--heads`, `--untrained`): every layer's shift in the linear and the
+z-scored frame at any checkpoint or with random weights, the final-token report and control; every attention head with `--heads`. Topics lift every layer of four Pythia
 models, and the late lift survives final-token matching (Appendix I).
 
 **`rung axis`, `rung summarize`, `rung plot`, `rung report`**: an axis JSON from a Hugging Face dataset (it reports texts cut at
@@ -260,6 +274,12 @@ with h5py directly.
     floor (`--cov-floors`) before comparing it across designs.
 13. **Quote a shift with the floor's standard error.** Two runs with independent floors of the same draw count differ with an SD of
     about 1.4 times it.
+14. **A head's z says where the axis organizes writes, not where the answer comes from.** It is a signed significance against its
+    own null, not an effect size, and the net of a within-class and a class-mean part: a small but consistent write can rank high,
+    a large one whose parts cancel can sit near zero, and a head the answer depends on can sit below zero. Reading the two parts
+    separately does not change that: each is a slope of log PR, while reliance follows the variance a read-out uses. When an answer
+    runs through a linear read-out of the class means, the class-mean share and a probe screen for reliance more directly (on the
+    paper's GPT-2 circuit the class-mean share ranked the patched heads at 0.96, z at 0.92); an intervention decides.
 
 ## The paper
 
@@ -272,8 +292,8 @@ the public raw data and how the scripts read them, and a claim-by-claim table of
 rung.py                  the instrument: zoom(), decompose(), account(), candidates(),
                          feature_ladder(), blocks(), sectors(), cov_floors(), llm_battery(),
                          head_scores(), build_axis(), nwb_counts(), report(), and the rung
-                         command line (data | features | nwb | llm | axis | plot | summarize |
-                         report); numpy core, torch and transformers for models
+                         command line (data | features | nwb | llm | heads | axis | plot |
+                         summarize | report); numpy core, torch and transformers for models
 theta_zoom.py            alias of rung (the name through 1.1.0)
 tests/                   pytest suite: the decomposition identity, the nulls, the share of the
                          climb left after half the circle, the split at matched size, the

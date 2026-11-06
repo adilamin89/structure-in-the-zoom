@@ -186,8 +186,7 @@ def test_sectors_recovers_a_planted_kernel_exactly():
     # quadrupole-dominant kernel makes the antipodal pair the more coherent one
     assert abs(sc["C_adjacent"] - (q1 * np.cos(np.pi / 4))) < 1e-6
     assert abs(sc["C_antipodal"] - (q2 - q1)) < 1e-6 and "order_prediction" not in sc
-    with pytest.raises(ValueError):
-        tz.sectors(X[labels < 2], labels[labels < 2])
+    assert "at least three classes" in tz.sectors(X[labels < 2], labels[labels < 2])["undefined"]
 
 
 def test_declared_order_presets_and_the_antipodal_ladder():
