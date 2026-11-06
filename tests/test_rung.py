@@ -370,3 +370,33 @@ def test_cli_validity_mask_equals_running_on_the_kept_samples(tmp_path):
     for tag in ("mask", "intervals"):
         assert outs[tag]["delta"] == outs["subset"]["delta"] and outs[tag]["p_two"] == outs["subset"]["p_two"]
         assert outs[tag]["n_samples_valid"] == int(valid.sum()) and outs[tag]["n_samples_total"] == len(labels)
+
+
+def test_gamma_nodes_carry_the_gain_moments():
+    for kappa in (1.0, 1.006, 1.5, 3.7):
+        t, w = tz._gamma_nodes(kappa)
+        assert np.isfinite(t).all() and abs(w @ t - 1) < 1e-9 and abs(w @ t ** 2 - max(kappa, 1.0)) < 1e-6
+
+
+def test_principal_angle_dissimilarity_by_definition():
+    rng = np.random.default_rng(0)
+    X = rng.normal(size=(80, 30)); labels = np.repeat(np.arange(4), 20)
+    R = [X[labels == c] - X[labels == c].mean(0) for c in range(4)]
+    U = [np.linalg.svd(r, full_matrices=False)[2][:3].T for r in R]
+    ref = 1 - np.mean([np.sum((U[a].T @ U[b]) ** 2) / 3 for a in range(4) for b in range(a + 1, 4)])
+    assert abs(tz.principal_angle_dissimilarity(X, labels, k=3) - ref) < 1e-12
+
+
+def test_cov_floor_law_predicts_the_label_blind_floor():
+    # identical classes from an elliptical population: the observed value is all floor; the law with the gain lands near the
+    # permutation floor, the spectrum alone well below it
+    rng = np.random.default_rng(1)
+    p, n_per = 120, 50
+    lam = np.arange(1, p + 1) ** -1.0
+    tau = rng.gamma(0.5, 2.0, 8 * n_per)                       # E tau = 1, E tau^2 = 3
+    X = rng.standard_normal((8 * n_per, p)) * np.sqrt(lam) * np.sqrt(tau)[:, None]
+    labels = np.repeat(np.arange(8), n_per)
+    r = tz.cov_floors(X, labels, n_perm=30, seed=0)
+    assert abs(r["floor"] - r["floor_permutation"]) / r["floor_permutation"] < 0.08
+    assert r["floor_spectrum_only"] < r["floor"]
+    assert abs(r["floor"] - r["floor_permutation"]) < abs(r["floor_spectrum_only"] - r["floor_permutation"])

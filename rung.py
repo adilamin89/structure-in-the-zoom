@@ -10,7 +10,9 @@ time order; 1.6 the finite-sample bias null and the sign-law readout of the
 split, the time-blocked null, pair-preserving order averaging for paired
 axes, and, for language models, the last-token report and both feature
 frames; 1.6.1 a per-sample validity mask, e.g. a data release's invalid
-intervals, applied before every statistic.)
+intervals, applied before every statistic; 1.7 the label-blind floor of the
+principal-angle dissimilarity between classes, predicted from the pooled
+spectrum and the samples' gain kurtosis.)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -488,6 +490,107 @@ def sectors(X, labels, order=None):
     if K % 2 == 0:
         out["C_antipodal"] = float(prof[K // 2])
     return out
+
+
+def _gamma_nodes(kappa, n_nodes=48):
+    """Quadrature nodes and weights for a trial gain tau with E tau = 1 and E tau^2 = kappa (Gamma shape s = 1/(kappa - 1)):
+    generalized Gauss-Laguerre by Golub-Welsch, numpy only; tau = 1 when kappa <= 1."""
+    if kappa <= 1 + 1e-9:
+        return np.ones(1), np.ones(1)
+    s = 1.0 / (kappa - 1.0); a = s - 1.0
+    i = np.arange(n_nodes)
+    J = np.diag(2 * i + a + 1) + np.diag(np.sqrt((i[1:]) * (i[1:] + a)), 1) + np.diag(np.sqrt((i[1:]) * (i[1:] + a)), -1)
+    x, V = np.linalg.eigh(J)
+    w = V[0] ** 2
+    return x / s, w / w.sum()
+
+
+def _projector_weights(lam, n, k, tau, w, n_grid=1500, eta_rel=1e-5):
+    """Expected weight m_a of the top-k sample subspace of n - 1 centred samples on population eigenvector a, from the
+    deterministic equivalent of the sample resolvent for x = sqrt(tau) C^(1/2) z: Qbar(z) = (-z + g(z) C)^-1,
+    g = E[tau / (1 + tau delta)], delta = Tr C Qbar / (n - 1); m_a = the spectral weight of a above the k-th sample eigenvalue."""
+    nu = n - 1
+    hi = (lam.sum() / nu + lam.max()) * (1 + np.sqrt(tau.max())) * 4
+    lo = max(lam[lam > 0].min() * 1e-3, hi * 1e-9)
+    ls = np.geomspace(hi, lo, n_grid)
+    eta = eta_rel * lam.max()
+    d = -lam.sum() / (nu * (ls[0] + 1j * eta))
+    Q = np.empty((n_grid, len(lam)))
+    for i, l in enumerate(ls):
+        z = l + 1j * eta
+        for _ in range(4000):
+            dn = np.sum(lam / (lam * np.sum(w * tau / (1 + tau * d)) - z)) / nu
+            if abs(dn - d) < 1e-12 * (1 + abs(d)):
+                d = dn
+                break
+            d = 0.5 * d + 0.5 * dn
+        Q[i] = (1.0 / (lam * np.sum(w * tau / (1 + tau * d)) - z)).imag / np.pi
+    cum_a = np.vstack([np.zeros(len(lam)), np.cumsum(0.5 * (Q[1:] + Q[:-1]) * (-np.diff(ls))[:, None], axis=0)])
+    cum = cum_a.sum(1)
+    j = int(np.searchsorted(cum, k))
+    if j >= n_grid:
+        raise RuntimeError("floor law: the spectral grid does not reach k sample eigenvalues")
+    f = (k - cum[j - 1]) / (cum[j] - cum[j - 1])
+    return cum_a[j - 1] + f * (cum_a[j] - cum_a[j - 1])
+
+
+def principal_angle_dissimilarity(X, labels, k=5):
+    """1 - mean over class pairs of ||U_c' U_d||_F^2 / k, U_c the top-k directions of class c's residuals (k capped at the
+    smallest class size - 1)."""
+    X = np.asarray(X, dtype=np.float64); labels = np.asarray(labels)
+    classes = np.unique(labels)
+    R = [X[labels == c] - X[labels == c].mean(0) for c in classes]
+    kk = min(k, min(len(r) for r in R) - 1)
+    U = [np.linalg.svd(r, full_matrices=False)[2][:kk].T for r in R]
+    ov = [np.sum((U[a].T @ U[b]) ** 2) / kk for a in range(len(U)) for b in range(a + 1, len(U))]
+    return float(1 - np.mean(ov))
+
+
+def cov_floors(X, labels, k=5, n_perm=0, seed=0):
+    """The label-blind floor of the principal-angle dissimilarity between classes, predicted analytically.
+
+    With the labels ignored, two classes are independent samples of one distribution, so the expected overlap of their top-k
+    residual subspaces is Tr(M_c M_d), M the expected top-k sample projector at each class's size; M is diagonal in the
+    eigenbasis of the pooled covariance and follows from a random-matrix law (the deterministic equivalent of the sample
+    resolvent, elliptical form) whose inputs are the pooled spectrum and the trial gain's kurtosis (each sample's squared
+    radius kurtosis, net of the Gaussian quadratic form's own 1 + 2/d_eff). Returns the observed value, the floor (with and
+    without the gain term), the floor-corrected value and the ceiling-normalized structure part (observed - floor) / (1 - floor);
+    with n_perm > 0 also the permutation floor for comparison. Like the PR floor of Eq. 2, the floor depends on the design:
+    compare corrected or normalized values across designs, never raw ones."""
+    X = np.asarray(X, dtype=np.float64); labels = np.asarray(labels)
+    classes = np.unique(labels)
+    sizes = [int((labels == c).sum()) for c in classes]
+    kk = min(k, min(sizes) - 1)
+    Xc = X - X.mean(0)
+    G = Xc @ Xc.T if Xc.shape[0] < Xc.shape[1] else Xc.T @ Xc          # nonzero spectrum from the smaller Gram
+    lam = np.clip(np.linalg.eigvalsh(G), 0, None) / (len(Xc) - 1)
+    lam = lam[lam > lam.max() * 1e-12]
+    d_eff = float(lam.sum() ** 2 / np.sum(lam ** 2))
+    r2 = np.sum(Xc * Xc, axis=1)
+    kappa = float(np.mean(r2 ** 2) / np.mean(r2) ** 2 / (1 + 2 / d_eff))
+
+    def law(tau, w):
+        m = {n: _projector_weights(lam, n, kk, tau, w) for n in sorted(set(sizes))}
+        ov = [m[sizes[a]] @ m[sizes[b]] / kk for a in range(len(sizes)) for b in range(a + 1, len(sizes))]
+        return float(1 - np.mean(ov))
+    obs = principal_angle_dissimilarity(X, labels, k)
+    fl = law(*_gamma_nodes(kappa)); fl0 = law(np.ones(1), np.ones(1))
+    out = {"k": kk, "class_sizes": sizes, "observed": obs, "floor": fl, "floor_spectrum_only": fl0, "gain_kurtosis": kappa,
+           "d_eff": d_eff, "corrected": obs - fl, "structure": (obs - fl) / (1 - fl) if fl < 1 else float("nan"),
+           "floor_share": fl / obs if obs > 0 else float("nan")}
+    if n_perm:
+        rng = np.random.default_rng(seed)
+        out["floor_permutation"] = float(np.mean([principal_angle_dissimilarity(X, labels[rng.permutation(len(labels))], k)
+                                                  for _ in range(n_perm)]))
+    return out
+
+
+def _print_cov_floors(r):
+    print(f"principal-angle dissimilarity (k = {r['k']}, class sizes {min(r['class_sizes'])}-{max(r['class_sizes'])}): "
+          f"observed {r['observed']:.3f}, label-blind floor {r['floor']:.3f} ({100 * r['floor_share']:.0f}% of observed; "
+          f"spectrum alone {r['floor_spectrum_only']:.3f}, gain kurtosis {r['gain_kurtosis']:.2f})")
+    print(f"  floor-corrected {r['corrected']:+.3f}, structure part (ceiling-normalized) {r['structure']:+.3f}"
+          + (f"; permutation floor {r['floor_permutation']:.3f}" if "floor_permutation" in r else ""))
 
 
 def _print_sectors(r):
@@ -1313,6 +1416,9 @@ def main():
     d.add_argument("--n-shuffle", type=int, default=5, help="label permutations for the sampling baseline of each decomposed term (0 disables)")
     d.add_argument("--n-bias", type=int, default=0, help="with --decompose: surrogates of the finite-sample bias null (class means kept, one covariance shape for every class); the within part is read net of it")
     d.add_argument("--time-blocks", default=None, help="rows are in acquisition order: an integer E cuts them into contiguous blocks of E rows, or a file gives one block id per row; adds the null that permutes labels only within blocks")
+    d.add_argument("--cov-floors", action="store_true", help="the principal-angle dissimilarity between classes against its label-blind floor, predicted from the pooled spectrum and the samples' gain kurtosis (no permutations needed); prints the floor-corrected value and the ceiling-normalized structure part")
+    d.add_argument("--cov-k", type=int, default=5, help="with --cov-floors: the number of top residual directions per class")
+    d.add_argument("--cov-perm", type=int, default=0, help="with --cov-floors: also this many label permutations, to check the predicted floor")
     d.add_argument("--valid", default=None, help="per-sample validity (1 keep, 0 drop), e.g. presentations a data release marks invalid; dropped before every statistic")
     d.add_argument("--sample-times", default=None, help="n x 2 array of each sample's [start, stop]; with --invalid-intervals builds the validity mask")
     d.add_argument("--invalid-intervals", default=None, help="k x 2 array of invalid [start, stop] intervals (e.g. Allen's invalid_times for the population's probe, all_probes and stimulus tags); a sample overlapping any is dropped")
@@ -1439,6 +1545,9 @@ def main():
             # accumulation order of --order is a different thing and does not enter here
             sc = sectors(X, labels)
             _print_sectors(sc); r["sectors"] = sc
+        if a.cov_floors:
+            cf = cov_floors(X, labels, k=a.cov_k, n_perm=a.cov_perm, seed=a.seed)
+            _print_cov_floors(cf); r["cov_floors"] = cf
         if a.decompose:
             Xd = (X - X.mean(0)) / (X.std(0) + 1e-12) if a.standardize else X
             rd = decompose(Xd, labels, order=None if order in (None, "sequential") else [int(np.unique(labels)[i]) for i in declared_order(np.unique(labels), order)],

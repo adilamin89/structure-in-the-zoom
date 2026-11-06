@@ -279,10 +279,24 @@ The repository also carries the analyses of an extended draft that are not in th
   the partition preserves. On BLiMP minimal pairs a grammaticality signal of twenty standard deviations
   is entirely carrier composition.
 
+Added in 1.7:
+
+- **The floor of a standard covariance statistic** (`--cov-floors`; `cov_floors(X, labels)`): the principal-angle
+  dissimilarity between classes (one minus the mean squared cosine between their top `--cov-k` residual directions,
+  averaged over class pairs) has a label-blind floor of its own, often most of its raw value at the trial counts
+  experiments use. Two label-blind classes are independent samples of one distribution, so the floor follows from
+  a random-matrix law (the deterministic equivalent of the sample resolvent, elliptical form) whose inputs are the
+  pooled spectrum and the samples' gain kurtosis, with no permutations. The run reports the observed value, the floor,
+  the floor of the spectrum alone, the floor-corrected value and the structure part (observed - floor) / (1 - floor);
+  compare the corrected or normalized values across designs, never raw ones. The law is exact for an elliptical
+  population (shared gain times Gaussian fluctuations) and accurate to a few percent where trial-to-trial variability
+  is a shared gain; spike counts mix gain with private noise and few samples estimate the gain kurtosis low, so there
+  the predicted floor can be off by several percent: `--cov-perm 50` adds the permutation floor to check it.
+
 ## What is where
 
 ```
-rung.py                  the instrument: zoom(), decompose(), sectors(), llm_battery(), build_axis(),
+rung.py                  the instrument: zoom(), decompose(), sectors(), cov_floors(), llm_battery(), build_axis(),
                          and the rung command line (data | llm | axis | plot | summarize); numpy core,
                          torch and transformers only for the model door
 theta_zoom.py            alias of rung (the name through 1.1.0), kept for one release
