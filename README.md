@@ -16,7 +16,7 @@ Two of the three numbers are floors: what random subsets of the same sizes retur
 alone leaves its floor (0.305 = a floor of 0.065 + a shift of 0.240).
 
 `rung` splits a reported exponent before it is compared, for any samples-by-features array with one label per row and
-for every layer of a language model at any training checkpoint, with nothing trained. It returns the **floor** and the
+for every layer of a language model at any training checkpoint, with no probe or model trained. It returns the **floor** and the
 **shift** δ against label and nuisance nulls, splits the shift into what the class means and the fluctuations carry,
 reads the symmetry sectors of a cyclic axis and compares candidate labels. The exact identity
 `theta_obs = theta_floor + delta` holds whenever the declared ladder and its floor share rung sizes.
@@ -26,7 +26,7 @@ it. A decoder asks whether a label can be read out; the two answer different que
 *What the paper shows*). The grouping of samples into classes carries the shift; the order in which the classes are
 added moves it little, so for unordered classes `rung` reports the order-averaged shift beside the declared one.
 
-## Install and run in sixty seconds
+## Install and run
 
 ```bash
 pip install git+https://github.com/adilamin89/structure-in-the-zoom     # numpy core
@@ -157,13 +157,18 @@ ladder figure for an array and one panel per axis for a model, with both null ba
 5. **Read the spectrum first**, and standardize when one direction dominates.
 6. **Compare subsets at matched size only.** The shift depends on the number of features.
 7. **Read `D` and `Tb`, not the raw pooling and trace terms,** wherever the within-class scale changes with the class.
-8. **For a depth profile, the inference is on the profile**, the integrated excess of the shift over its embedding value
+8. **Sample each class well before reading the split.** In the paper's grating recordings the within-class part turned positive
+   only once each class held 0.46 to 1.2 times its own fluctuation dimension in samples, and below about twice that dimension
+   estimation moves weight between the within-class part `D` and the class-mean terms (`Tb + Cb + Cx`) while their sum, the shift,
+   stands. Compare the samples per class with PR(W), which the sign-law line prints, and read `D` net of the finite-sample bias
+   with `--n-bias`.
+9. **For a depth profile, the inference is on the profile**, the integrated excess of the shift over its embedding value
    against the permutation null, not on a count of significant layers.
-9. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, the linear one
-   follows a few high-variance units.
-10. **The shift reads how classes spread, not a consistent offset.** Classes that differ only by the same small direction
+10. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, the linear one
+    follows a few high-variance units.
+11. **The shift reads how classes spread, not a consistent offset.** Classes that differ only by the same small direction
     between near-identical items give the shift nothing to read, while a linear probe can still find that direction.
-11. **Any covariance statistic inherits a floor.** Read a principal-angle or other covariance comparison against its
+12. **Any covariance statistic inherits a floor.** Read a principal-angle or other covariance comparison against its
     label-blind floor (`--cov-floors`) before comparing it across designs.
 
 ## What the paper shows

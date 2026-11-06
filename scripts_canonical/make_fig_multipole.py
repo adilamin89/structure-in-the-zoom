@@ -123,12 +123,11 @@ def C_at(x_deg):
             + c3 * np.cos(3 * x))
 
 
-ax1.scatter([22.5], [C_at(22.5)], color="k", zorder=5, s=18)
-ax1.text(30, 0.86, f"adjacent {C_at(22.5):.2f}", fontsize=6.3, color="k", ha="left", va="center")
+# no marker at 22.5 deg: the eight classes sample 0, 45, ..., 180 deg, and the curve there is the exact interpolant, not a measured pair
 ax1.scatter([180.0], [C_at(180.0)], color="k", zorder=5, s=18)
 ax1.annotate(f"antipodal {C_at(180.0):.2f}", xy=(180, C_at(180.0)), xytext=(100, 0.62), fontsize=6.3, ha="center",
              va="center", arrowprops=dict(arrowstyle="-", color="0.4", lw=0.5))
-ax1.set_xlim(-4, 186); ax1.set_ylim(-0.42, 1.04); ax1.set_xticks([0, 45, 90, 135, 180])
+ax1.set_xlim(-4, 186); ax1.set_ylim(-0.62, 1.04); ax1.set_yticks([0.0, 0.5, 1.0]); ax1.set_xticks([0, 45, 90, 135, 180])  # room below the curves for the legend
 ax1.set_xlabel(r"direction difference $\Delta\phi$ (deg)")
 ax1.set_ylabel(r"class-mean correlation $C(\Delta\phi)$")
 ax1.set_title(r"$\mathbf{A}$  GT3: two sectors", loc="left")
