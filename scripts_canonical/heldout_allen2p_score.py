@@ -3,7 +3,7 @@
 Reads the `rung data` outputs of the 61 Visual Coding two-photon experiments (data_canonical/heldout_allen2p/<id>.json, the release's
 own per-presentation response; data_canonical/heldout_allen2p_nobaseline/<id>.json, the same window of the release's DfOverF with no
 per-presentation baseline) and the controls (data_canonical/heldout_allen2p_controls.json) and writes
-data_canonical/heldout_allen2p_summary.json, which the README's 'Runs on data the paper never saw' section quotes.
+data_canonical/heldout_allen2p_summary.json, which PAPER.md's 'Runs on data the paper never saw' section quotes.
 
 Definitions (rung keys): shift = delta (declared angular order) and delta_orderavg (50 random orders); within-class part =
 decompose.delta_split_free.D; class-mean part = Tb + Cb + Cx (so the two parts sum to delta); alignment a = decompose.sign_law.alignment;

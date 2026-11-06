@@ -1,4 +1,4 @@
-"""Every number README.md prints, recomputed from its artifact and checked at the README's rounding; every file the README names
+"""Every number README.md and PAPER.md print, recomputed from its artifact and checked at their rounding; every file they name
 exists. Run: pytest -q tests"""
 import glob
 import json
@@ -9,7 +9,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data_canonical")
-README = open(os.path.join(ROOT, "README.md")).read()
+README = "\n".join(open(os.path.join(ROOT, f)).read() for f in ("README.md", "PAPER.md"))
 
 
 def load(name):
@@ -52,6 +52,14 @@ def test_allen_counts():
     assert (len(pops), sum(v > 0 for v in pops)) == (167, 158) and "158 of 167" in README
     assert (len(visp), sum(v > 0 for v in visp)) == (32, 32) and "32 of 32" in README
     assert 167 - load("allen_twoterm_misses.json")["n_miss"] == 152 and "152 of 167" in README
+    # the temporal-frequency-residualized arm: its negative shifts, and the two terms' signs by class at the rungs' sample counts
+    # (finite, W2) and in the mean-field form (W0)
+    rows = load("allen_finite_n_identity.json")["rows"]
+    dm = np.array([q["delta_measured"] for q in rows]); cm = np.array([q["classmean_pred"] for q in rows])
+    agree = {k: np.sign(np.array([q[k] for q in rows]) + cm) == np.sign(dm) for k in ("W0", "W2")}
+    assert (len(rows), int((dm < 0).sum())) == (167, 16) and "negative in 16 of the 167" in README
+    assert (int(agree["W2"].sum()), int((agree["W2"] & (dm < 0)).sum())) == (163, 14) and "14 of those 16 and of 163\n  of 167" in README
+    assert (int(agree["W0"].sum()), int((agree["W0"] & (dm < 0)).sum())) == (152, 2) and "gives 2 of the 16 (152 of 167)" in README
 
 
 def test_decoders_with_the_means_removed():
@@ -69,12 +77,13 @@ def test_covariance_floors():
 
 
 def test_every_named_file_exists():
-    names = set(re.findall(r"([A-Za-z0-9_\-*/]+\.(?:json|py|sh|png))", README))
+    # table cells escape file globs (a backslash before each asterisk) so that GitHub does not render them as italics: read them as plain globs
+    names = set(re.findall(r"([A-Za-z0-9_\-*/]+\.(?:json|py|sh|png))", README.replace("\\*", "*")))
     missing = []
     for n in names:
         if n.startswith(("http", "raw/")) or n in ("X.npy", "r.json", "lt.json", "lm.json", "v1.json", "pairs.json", "my.json",
                                                         "r.png", "lt.png", "v1.png", "strata.json", "gt3.json", "gt3.png",
-                                                        "heads.json", "lm.png"):   # command-line examples
+                                                        "heads.json", "lm.png", "toy.json", "toy.png"):   # command-line examples
             continue
         hits = [p for base in ("", "scripts_canonical", "data_canonical", "figures_canonical", "tests")
                 for p in glob.glob(os.path.join(ROOT, base, n))]

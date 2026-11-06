@@ -1,0 +1,52 @@
+  epoch 0: train acc 0.554
+  epoch 1: train acc 0.833
+0 plain conv1 R 0.027 effect d +0.0020 (run41-style +0.0020) within +0.0009 cm +0.0011
+0 plain conv2 R 0.000 effect d +0.0075 (run41-style +0.0075) within +0.0039 cm +0.0036
+0 plain conv3 R 0.000 effect d +0.0101 (run41-style +0.0101) within +0.0097 cm +0.0004
+  epoch 0: train acc 0.592
+  epoch 1: train acc 0.864
+0 equivariant conv1_equi R 0.016 effect d +0.0022 (run41-style +0.0022) within +0.0006 cm +0.0015
+0 equivariant conv2_equi R 0.000 effect d +0.0148 (run41-style +0.0148) within +0.0086 cm +0.0062
+0 equivariant conv3_equi R 0.000 effect d +0.0127 (run41-style +0.0127) within +0.0130 cm -0.0003
+  epoch 0: train acc 0.562
+  epoch 1: train acc 0.836
+1 plain conv1 R 0.021 effect d +0.0011 (run41-style +0.0011) within +0.0003 cm +0.0008
+1 plain conv2 R 0.000 effect d +0.0110 (run41-style +0.0110) within +0.0033 cm +0.0077
+1 plain conv3 R 0.000 effect d -0.0032 (run41-style -0.0032) within -0.0010 cm -0.0022
+  epoch 0: train acc 0.612
+  epoch 1: train acc 0.882
+1 equivariant conv1_equi R 0.005 effect d +0.0023 (run41-style +0.0023) within +0.0007 cm +0.0015
+1 equivariant conv2_equi R 0.000 effect d +0.0172 (run41-style +0.0172) within +0.0094 cm +0.0078
+1 equivariant conv3_equi R 0.000 effect d +0.0075 (run41-style +0.0075) within +0.0120 cm -0.0045
+  epoch 0: train acc 0.559
+  epoch 1: train acc 0.845
+2 plain conv1 R 0.000 effect d +0.0038 (run41-style +0.0038) within +0.0017 cm +0.0021
+2 plain conv2 R 0.000 effect d +0.0169 (run41-style +0.0169) within +0.0094 cm +0.0075
+2 plain conv3 R 0.000 effect d +0.0086 (run41-style +0.0086) within +0.0082 cm +0.0004
+  epoch 0: train acc 0.602
+  epoch 1: train acc 0.875
+2 equivariant conv1_equi R 0.012 effect d +0.0014 (run41-style +0.0014) within +0.0004 cm +0.0010
+2 equivariant conv2_equi R 0.000 effect d +0.0093 (run41-style +0.0093) within +0.0038 cm +0.0055
+2 equivariant conv3_equi R 0.000 effect d -0.0004 (run41-style -0.0004) within +0.0068 cm -0.0072
+  epoch 0: train acc 0.565
+  epoch 1: train acc 0.834
+3 plain conv1 R 0.004 effect d +0.0024 (run41-style +0.0024) within +0.0004 cm +0.0019
+3 plain conv2 R 0.000 effect d +0.0158 (run41-style +0.0158) within +0.0078 cm +0.0080
+3 plain conv3 R 0.000 effect d +0.0038 (run41-style +0.0038) within +0.0065 cm -0.0026
+  epoch 0: train acc 0.591
+  epoch 1: train acc 0.865
+3 equivariant conv1_equi R 0.006 effect d +0.0016 (run41-style +0.0016) within +0.0005 cm +0.0011
+3 equivariant conv2_equi R 0.000 effect d +0.0102 (run41-style +0.0102) within +0.0041 cm +0.0061
+3 equivariant conv3_equi R 0.000 effect d +0.0245 (run41-style +0.0245) within +0.0187 cm +0.0059
+  epoch 0: train acc 0.570
+  epoch 1: train acc 0.846
+4 plain conv1 R 0.000 effect d +0.0008 (run41-style +0.0008) within +0.0000 cm +0.0008
+4 plain conv2 R 0.000 effect d +0.0112 (run41-style +0.0112) within +0.0044 cm +0.0068
+4 plain conv3 R 0.001 effect d +0.0158 (run41-style +0.0158) within +0.0173 cm -0.0015
+  epoch 0: train acc 0.568
+  epoch 1: train acc 0.857
+4 equivariant conv1_equi R 0.000 effect d +0.0013 (run41-style +0.0013) within +0.0002 cm +0.0011
+4 equivariant conv2_equi R 0.000 effect d +0.0095 (run41-style +0.0095) within +0.0049 cm +0.0046
+4 equivariant conv3_equi R 0.000 effect d +0.0096 (run41-style +0.0096) within +0.0133 cm -0.0037
+DONE net_order_split
+EXIT 0

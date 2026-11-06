@@ -15,7 +15,10 @@ principal-angle dissimilarity between classes, predicted from the pooled
 spectrum and the samples' gain kurtosis; 1.7.1 correctness fixes: every
 accumulation order is read against a floor at its own rung sizes, undefined
 statistics get no p-value, the split is computed in float64 on centred data,
-and degenerate designs raise instead of returning a number.)
+and degenerate designs raise instead of returning a number; 1.8 the
+paper's two-term account, the candidate screen, the feature ladder, blocks
+and attention heads; 1.8.1 readings that call a permutation p unresolved
+when the permutation budget cannot give p < 0.05.)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -53,7 +56,7 @@ data_canonical/ of this repository.
 """
 import numpy as np
 
-__version__ = "1.8.0"
+__version__ = "1.8.1"
 
 BIN_COUNTS_DEFAULT = (1, 2, 3, 4, 6, 8)
 
@@ -740,9 +743,27 @@ def _plot_data(result, out_png, title=None):
     return out_png
 
 
-def _second_null_verdict(p_label, p_second, alpha=0.05):
-    """One statistic against a nuisance-keeping second null: 'unseparated' when the label permutations do not separate it
-    to begin with, otherwise 'survives' or 'absorbed' by the second null."""
+def _p_unresolved(p, n_perm, alpha=0.05):
+    """A Monte Carlo p that cannot fall below `alpha` at this budget: with B permutations the smallest p is 1/(B + 1), so
+    for B < 1/alpha - 1 a p >= alpha says nothing about separation. Returns the plain-language reason, or None when p is
+    readable (p < alpha, or a budget that resolves alpha)."""
+    if not n_perm or p is None or not np.isfinite(p) or p < alpha:
+        return None
+    res = 1.0 / (n_perm + 1)
+    if res < alpha:
+        return None
+    reached = int(round(p * (n_perm + 1))) - 1
+    return (f"unresolved: {n_perm} permutations cannot give p below {res:.3f} "
+            + ("(no permutation reached the observed value)" if reached <= 0 else f"({reached} of {n_perm} reached it)")
+            + "; rerun with --n-perm 200 or more")
+
+
+def _second_null_verdict(p_label, p_second, alpha=0.05, n_perm=None):
+    """One statistic against a nuisance-keeping second null: 'unresolved' when the permutation budget cannot give p below
+    alpha, 'unseparated' when the label permutations do not separate it to begin with, otherwise 'survives' or 'absorbed'
+    by the second null."""
+    if n_perm and 1.0 / (n_perm + 1) >= alpha:
+        return "unresolved"
     if p_label >= alpha:
         return "unseparated"
     return "survives" if p_second < alpha else "absorbed"
@@ -763,9 +784,13 @@ def summarize_data(result, verbose=True):
     cert = None
     if "p_two" in result:
         cert = bool(result["p_two"] < 0.05)
+        unres = _p_unresolved(result["p_two"], n_perm)
         lines.append(f"declared order: z = {result['z']:+.1f}, two-sided Monte Carlo p = {result['p_two']:.3f} "
-                     f"(resolution {floor_p:.3f}); {'label-linked at p < 0.05' if cert else 'not separated from the label-permutation null'}")
+                     f"(resolution {floor_p:.3f}); "
+                     + ("label-linked at p < 0.05" if cert else unres or "not separated from the label-permutation null"))
         verdict["certified"] = cert
+        if unres:
+            verdict["p_unresolved"] = True
     if "delta_orderavg" in result and np.isfinite(result["delta_orderavg"]):
         oa = result["delta_orderavg"]; same = (oa > 0) == (result["delta"] > 0)
         txt = f"order-averaged shift {oa:+.3f} (SD over orders {result['delta_orderavg_sd']:.3f})"
@@ -800,19 +825,22 @@ def summarize_data(result, verbose=True):
             p_lab, p_2nd = result.get(f"p_two{sfx}"), result.get(f"{key}_p_two{sfx}")
             if p_lab is None or p_2nd is None or not (np.isfinite(p_lab) and np.isfinite(p_2nd)):
                 continue
-            v = _second_null_verdict(p_lab, p_2nd)
+            v = _second_null_verdict(p_lab, p_2nd, n_perm=n_perm)
             verdict[what + sfx] = {"survives": True, "absorbed": False}.get(v)
             parts.append(f"the {tag} " + {"survives": kept, "absorbed": lost,
-                                            "unseparated": "is not separated from the label-permutation null to begin with"}[v])
+                                            "unseparated": "is not separated from the label-permutation null to begin with",
+                                            "unresolved": f"cannot be read at {n_perm} permutations (p cannot fall below "
+                                                          f"{floor_p:.3f}); rerun with --n-perm 200 or more"}[v])
         if parts:
             txt += "; " + "; ".join(parts)
         lines.append(txt)
     if "shift_p_two" in result:
         survives = result["shift_p_two"] < 0.05
+        unres = _p_unresolved(result["shift_p_two"], n_perm)
         lines.append(f"circular-shift null (labels in time order): p = {result['shift_p_two']:.3f}; "
                      + ("the shift survives rolling the label sequence: the alignment of labels with frames matters beyond their slowness"
-                        if survives else "the shift does NOT survive rolling the label sequence: a slowly varying label would read this way by drift alone"))
-        verdict["survives_circular_shift"] = bool(survives)
+                        if survives else unres or "the shift does NOT survive rolling the label sequence: a slowly varying label would read this way by drift alone"))
+        verdict["survives_circular_shift"] = bool(survives) if not unres else None
     if "deficit" in result:
         lines.append("per-rung log-PR deficit below the floor, by classes accumulated "
                      + ", ".join(f"{c}: {d:+.3f}" for c, d in zip(result.get("rung_classes", []), result["deficit"])))
