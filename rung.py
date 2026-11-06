@@ -3,7 +3,7 @@
 A rung is one step of the subsampling ladder; the tool reads every rung
 against its matched floor. (Released as theta-zoom through 1.1.0; that
 name stays importable as an alias for one release. 1.3 added the per-rung
-deficit, the late fraction and the stall check; 1.4 the exact four-term
+deficit, the late fraction and the antipodal-pair check; 1.4 the exact four-term
 split of the deficit; 1.5 the sector fit of the class-mean kernel, the
 declared accumulation order, and the circular-shift null for labels in
 time order; 1.6 the finite-sample bias null and the sign-law readout of the
@@ -181,8 +181,8 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     keep_null : also return the permutation draws (null_draws, strat_null_draws).
     floor_by_rung : draw the floor rung by rung (every draw of the first rung, then the next), the order of the
         paper's generators; with their floor seed and draw count it replays their floor exactly. Default: draw by draw.
-    antipode : optional dict {class: its antipodal class}. The stall test of
-        Appendix K reads `late_fraction` (the deficit at half the
+    antipode : optional dict {class: its antipodal class}. With antipodal pairs,
+        the share of the climb left after half the circle (Appendices E and K) reads `late_fraction` (the deficit at half the
         classes over the deficit at one class) as the share of the climb the
         second half of the classes carries; that reading needs the first half
         of the declared order to hold one member of each pair, which this
@@ -291,8 +291,8 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
            "pr_floor": [float(v) for v in floor_means],
            # per-rung log-PR deficit below the floor (zero at the top rung, where the
            # ladder and the floor hold the same samples) and the share of the climb
-           # that remains after half the classes: the stall test of the paper's
-           # Appendix K when the declared order lists one member of each antipodal
+           # that remains after half the classes: with antipodal pairs, the share of the climb
+           # left after half the circle (Appendix K), when the declared order lists one member of each antipodal
            # pair before any of their partners
            "deficit": deficit,
            "n_perm": int(n_perm), "k_orders": int(k_orders),
@@ -318,7 +318,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         if clash:
             import warnings
             warnings.warn("zoom: the first half of the declared order holds an antipodal pair "
-                          f"{clash[:3]}; the stall test needs one member of each pair before any partner "
+                          f"{clash[:3]}; the share of the climb left after half the circle needs one member of each pair before any partner "
                           "(relabel the classes so the pairs sit half a cycle apart).", stacklevel=2)
 
     orders = [orng.permutation(n_classes).tolist() for _ in range(k_orders)]
@@ -740,10 +740,18 @@ def _plot_data(result, out_png, title=None):
     return out_png
 
 
+def _second_null_verdict(p_label, p_second, alpha=0.05):
+    """One statistic against a nuisance-keeping second null: 'unseparated' when the label permutations do not separate it
+    to begin with, otherwise 'survives' or 'absorbed' by the second null."""
+    if p_label >= alpha:
+        return "unseparated"
+    return "survives" if p_second < alpha else "absorbed"
+
+
 def summarize_data(result, verbose=True):
     """Plain-language reading of one `rung data` result under the paper's rules: the split of the exponent with the floor's
     own uncertainty, the declared and order-averaged shifts against their nulls, the nuisance-preserving, time-blocked and
-    circular-shift nulls, the stall test, and, when present, the split into within-class and class-mean parts, the sign
+    circular-shift nulls, the share of the climb left after half the circle, and, when present, the split into within-class and class-mean parts, the sign
     law, the two-term account, the sectors, the principal-angle floor, the candidates, the feature ladder and the blocks."""
     n_perm = int(result.get("n_perm", 0)); floor_p = 1.0 / (n_perm + 1) if n_perm else None
     se = result.get("theta_floor_se")
@@ -765,24 +773,40 @@ def summarize_data(result, verbose=True):
             txt += f", p = {result['p_two_orderavg']:.3f}"
         txt += "; same sign as the declared order" if same else "; OPPOSITE sign to the declared order: the declared-order value is a path property, report the order-averaged one for the partition"
         lines.append(txt); verdict["orderavg_same_sign"] = bool(same)
-    if "strat_p_two" in result:
-        sp_ = result["strat_p_two"]
-        txt = f"nuisance-preserving null (labels permuted within strata): p = {sp_:.3f}"
-        if "strat_p_two_orderavg" in result:
-            txt += f", order-averaged p = {result['strat_p_two_orderavg']:.3f}"
-        if cert and sp_ >= 0.05:
-            txt += "; the shift is ABSORBED by within-stratum relabelling: it reads nuisance composition, not the labels"
-            verdict["label_linked_beyond_strata"] = False
-        elif sp_ < 0.05:
-            txt += "; the shift survives within-stratum relabelling: label-linked beyond the nuisance"
-            verdict["label_linked_beyond_strata"] = True
-        else:
-            txt += "; neither null separates the shift"
+        sd_o = result.get("delta_orderavg_sd")
+        if sd_o is not None and np.isfinite(sd_o) and 2 * sd_o >= abs(result["delta"]):
+            lines.append(f"the declared shift ({result['delta']:+.3f}) lies within two SDs over random class orders ({sd_o:.3f}) of zero: "
+                         "other orders of the same classes can give the opposite sign, so the declared order is one path among many; "
+                         "read the order-averaged shift (README rule 3)")
+            verdict["read_orderavg"] = True
+        elif sd_o is not None and np.isfinite(sd_o) and abs(result["delta"] - oa) > 2 * sd_o:
+            lines.append(f"the declared shift ({result['delta']:+.3f}) lies more than two SDs over random class orders ({sd_o:.3f}) from "
+                         f"their average ({oa:+.3f}): the declared order is an atypical path through these classes; read the "
+                         "order-averaged shift for the partition (README rule 3)")
+            verdict["read_orderavg"] = True
+    for key, name, what, kept, lost in (
+            ("strat", "nuisance-preserving null (labels permuted within strata)", "label_linked_beyond_strata",
+             "survives within-stratum relabelling: label-linked beyond the nuisance",
+             "is ABSORBED by within-stratum relabelling: it reads nuisance composition, not the labels"),
+            ("tb", f"time-blocked null ({result.get('n_time_blocks')} blocks; labels permuted within blocks, which keeps drift and slow state)",
+             "beyond_drift", "survives: drift cannot account for it", "does not survive: drift or slow state could produce it")):
+        if f"{key}_p_two" not in result:
+            continue
+        txt = f"{name}: p = {result[f'{key}_p_two']:.3f}"
+        if f"{key}_p_two_orderavg" in result:
+            txt += f", order-averaged p = {result[f'{key}_p_two_orderavg']:.3f}"
+        parts = []
+        for tag, sfx in (("declared shift", ""), ("order-averaged shift", "_orderavg")):
+            p_lab, p_2nd = result.get(f"p_two{sfx}"), result.get(f"{key}_p_two{sfx}")
+            if p_lab is None or p_2nd is None or not (np.isfinite(p_lab) and np.isfinite(p_2nd)):
+                continue
+            v = _second_null_verdict(p_lab, p_2nd)
+            verdict[what + sfx] = {"survives": True, "absorbed": False}.get(v)
+            parts.append(f"the {tag} " + {"survives": kept, "absorbed": lost,
+                                            "unseparated": "is not separated from the label-permutation null to begin with"}[v])
+        if parts:
+            txt += "; " + "; ".join(parts)
         lines.append(txt)
-    if "tb_p_two" in result:
-        lines.append(f"time-blocked null ({result['n_time_blocks']} blocks; labels permuted within blocks, which keeps drift and slow state): "
-                     f"p = {result['tb_p_two']:.3f}" + (f", order-averaged p = {result['tb_p_two_orderavg']:.3f}" if "tb_p_two_orderavg" in result else "")
-                     + ("; drift cannot account for the shift" if result["tb_p_two"] < 0.05 else "; drift or slow state could produce this shift"))
     if "shift_p_two" in result:
         survives = result["shift_p_two"] < 0.05
         lines.append(f"circular-shift null (labels in time order): p = {result['shift_p_two']:.3f}; "
@@ -797,10 +821,10 @@ def summarize_data(result, verbose=True):
             txt = f"share of the climb remaining after {h} of {result['n_classes']} classes: {lf:.2f}"
             if "antipode_first_half_has_no_pair" in result:
                 if result["antipode_first_half_has_no_pair"]:
-                    txt += (" (stall test: the first half holds one member of each antipodal pair; near 0 = the code has every class mean by half the classes, "
+                    txt += (" (with antipodal pairs, the share of the climb left after half the circle: the first half holds one member of each pair; near 0 = the code has every class mean by half the classes, "
                             "it reads the quotient; large = the second half still adds directions, the code distinguishes a class from its antipode)")
                 else:
-                    txt += " (the first half of the declared order holds an antipodal pair, so this is not the stall test; relabel)"
+                    txt += " (the first half of the declared order holds an antipodal pair, so this is not the share left after half the circle; relabel)"
             lines.append(txt); verdict["late_fraction"] = float(lf)
     if "decompose" in result:
         dc = result["decompose"]; f = dc["delta_split_free"]
@@ -808,6 +832,15 @@ def summarize_data(result, verbose=True):
         lines.append(f"split (Section 5): within-class part D {f['D']:+.3f} + class-mean part (Tb + Cb + Cx) {cm:+.3f} = shift {dc['delta']:+.3f}"
                      " (decompose's own floor draws)")
         verdict.update(within_part=float(f["D"]), class_mean_part=float(cm))
+        cp = dc.get("class_pr"); sl0 = dc.get("sign_law") or {}
+        if cp and dc.get("rungs"):
+            n_pc = dc["rungs"][-1]["size"] / max(dc["rung_classes"][-1], 1)
+            v = [x for x in cp.values() if np.isfinite(x)]
+            if v:
+                lines.append(f"sampling: {n_pc:.0f} samples per class against each class's own fluctuation dimension {min(v):.1f} to {max(v):.1f} "
+                             f"(median {float(np.median(v)):.1f})" + (f"; PR(W) {sl0['PR_W']:.1f} pools the classes" if "PR_W" in sl0 else "")
+                             + ("" if n_pc > max(v) else "; below a class's own dimension the within-class part can read near zero "
+                                "where structure exists (Section 2)"))
         sl = dc.get("sign_law")
         if sl and "degenerate" not in sl:
             lines.append(f"sign law (Eq. 3): full-set class-mean remainder c {sl['c_full']:+.3f}, negative exactly when PR(W)/PR(B) = "
@@ -1190,6 +1223,33 @@ def _plot_battery(path, out_png):
 
 
 
+def _bh_mask(ps, q=0.05):
+    """Benjamini-Hochberg: which of the p-values are certified at level q."""
+    ps = np.asarray(ps, float); n = len(ps)
+    if n == 0:
+        return np.zeros(0, bool)
+    order = np.argsort(ps); thresh = q * np.arange(1, n + 1) / n
+    passed = ps[order] <= thresh
+    if not passed.any():
+        return np.zeros(n, bool)
+    k = int(np.max(np.where(passed)[0])) + 1
+    return ps <= thresh[k - 1]
+
+
+def _frame_class(layer):
+    """How the two feature frames read one layer's order-averaged shift: 'agree' or 'disagree' in sign when each excess over
+    its own null exceeds one null SD, 'one' when only one frame does, 'neither' when neither does; None without both frames."""
+    keys = ("delta_orderavg", "null_mean_orderavg", "null_sd_orderavg")
+    if not all(k in layer and k + "_z" in layer for k in keys):
+        return None
+    el = layer["delta_orderavg"] - layer["null_mean_orderavg"]
+    ez = layer["delta_orderavg_z"] - layer["null_mean_orderavg_z"]
+    bl, bz = abs(el) > layer["null_sd_orderavg"], abs(ez) > layer["null_sd_orderavg_z"]
+    if bl and bz:
+        return "agree" if el * ez > 0 else "disagree"
+    return "one" if (bl or bz) else "neither"
+
+
 def _bh_count(ps, q=0.05):
     ps = np.asarray(ps, float); n = len(ps)
     if n == 0:
@@ -1230,14 +1290,18 @@ def summarize(path, out_json=None, verbose=True):
         exc = dl - emb; peak_l = int(np.argmax(exc)); peak = float(exc[peak_l])
         cross = next((i for i in range(1, n) if np.sign(dl[i]) != np.sign(emb) and dl[i] != 0), None)
         lines = []
-        # partition-level reading
-        frac = ka_bh / n
-        if frac >= 0.5:
-            lines.append(f"label-linked at most depths: order-averaged statistic certified at {ka}/{n} layers "
-                         f"({ka_bh}/{n} after BH), mean deltabar {da.mean():+.3f}.")
-        elif ka_bh > 0:
-            lines.append(f"weakly label-linked: order-averaged statistic certified at {ka}/{n} layers "
-                         f"({ka_bh}/{n} after BH), mean deltabar {da.mean():+.3f}.")
+        # partition-level reading; certified layers are counted by the sign of their shift (a two-sided test certifies both)
+        pa_ = np.asarray(pa, float); raw_m = pa_ < 0.05; bh_m = _bh_mask(pa_)
+        kp, kn = int((raw_m & (da > 0)).sum()), int((raw_m & (da < 0)).sum())
+        kp_bh, kn_bh = int((bh_m & (da > 0)).sum()), int((bh_m & (da < 0)).sum())
+        counts = (f"order-averaged statistic certified positive at {kp}/{n} layers ({kp_bh}/{n} after BH) and negative at "
+                  f"{kn}/{n} ({kn_bh}/{n} after BH), mean deltabar {da.mean():+.3f}")
+        if kp_bh / n >= 0.5 and kp_bh > kn_bh:
+            lines.append(f"label-linked at most depths, the declared classes lifting the exponent: {counts}.")
+        elif kn_bh / n >= 0.5 and kn_bh > kp_bh:
+            lines.append(f"label-linked at most depths, the declared classes lowering the exponent: {counts}.")
+        elif kp_bh + kn_bh > 0:
+            lines.append(f"weakly label-linked{', with mixed signs' if kp_bh and kn_bh else ''}: {counts}.")
         else:
             lines.append(f"no certified label linkage under the order-free statistic ({ka}/{n} raw, 0 after BH); "
                          f"treat this partition as unorganized at this design.")
@@ -1280,10 +1344,19 @@ def summarize(path, out_json=None, verbose=True):
             lines.append(f"final-token control: matched {mt[0]:+.3f} / size-matched {rd[0]:+.3f} at the first layer, "
                          f"{mt[-1]:+.3f} / {rd[-1]:+.3f} at the last (m = {arms[0]['m_per_class']} per class); the lexical part of a "
                          "lift is the drop from size-matched to matched")
-        if any("frames_disagree" in l for l in L):
-            nd = sum(l.get("frames_disagree", False) for l in L)
-            lines.append(f"frames: linear and per-unit z-scored readings agree in sign at {n - nd}/{n} layers"
-                         + ("" if nd == 0 else "; where they disagree the linear reading follows a few high-variance units"))
+        frame_cls = [_frame_class(l) for l in L]
+        if any(c is not None for c in frame_cls):
+            cnt = {k: [i for i, c in enumerate(frame_cls) if c == k] for k in ("agree", "disagree", "one", "neither")}
+            txt = (f"frames (each order-averaged shift against its own null, beyond one null SD): the linear and per-unit z-scored "
+                   f"readings agree in sign at {len(cnt['agree'])}/{n} layers, disagree at {len(cnt['disagree'])}")
+            if cnt["one"]:
+                txt += (f", and one frame sits inside its null at {len(cnt['one'])} (layers "
+                        + ", ".join(str(L[i].get("layer", i)) for i in cnt["one"]) + ")")
+            if cnt["neither"]:
+                txt += f"; both inside their nulls at {len(cnt['neither'])}"
+            if cnt["disagree"] or cnt["one"]:
+                txt += "; where the frames disagree or only one separates, report both (the linear reading can follow a few high-variance units)"
+            lines.append(txt)
         if bh_possible:
             lines.append(f"caveat: per-layer counts are descriptive (~{0.05*n:.1f} false positives expected at p<0.05); "
                          f"the BH counts and the order-averaged statistic carry the inference.")
@@ -1294,6 +1367,8 @@ def summarize(path, out_json=None, verbose=True):
                          f"Rerun with --n-perm 500 (the paper's setting) or more before drawing conclusions.")
         report["axes"][name] = {"n_perm": n_perm, "bh_resolvable": bh_possible,
                                 "certified_declared": [kd, kd_bh], "certified_orderavg": [ka, ka_bh],
+                                "certified_orderavg_by_sign": {"positive": [kp, kp_bh], "negative": [kn, kn_bh]},
+                                "frames": {k: sum(c == k for c in frame_cls) for k in ("agree", "disagree", "one", "neither")},
                                 "embedding": float(emb), "final": float(fin), "peak_excess": peak,
                                 "peak_layer": peak_l, "crossover_layer": cross, "reading": lines}
         if verbose:
@@ -1355,6 +1430,20 @@ def _lsq_slope(x, y):
     x = np.asarray(x, float); y = np.asarray(y, float)
     A = np.vstack([np.ones_like(x), x]).T
     return float(np.linalg.lstsq(A, y, rcond=None)[0][1])
+
+
+def class_pr(X, labels):
+    """Each class's own fluctuation dimension: the participation ratio of its residuals around its mean, {class: PR}.
+    The sampling threshold of Section 2 compares a class's sample count with this number; PR(W), which pools the
+    classes, can sit above or below it."""
+    X = np.asarray(X, np.float64); labels = np.asarray(labels)
+    out = {}
+    for c in np.unique(labels):
+        Z = X[labels == c] - X[labels == c].mean(0)
+        G = Z @ Z.T if len(Z) <= Z.shape[1] else Z.T @ Z
+        t2 = float((G * G).sum())
+        out[int(c) if np.issubdtype(type(c), np.integer) else str(c)] = float(np.trace(G) ** 2 / t2) if t2 > 0 else float("nan")
+    return out
 
 
 def sign_law(X, labels):
@@ -1463,6 +1552,7 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_si
     if out is None:
         return out
     out["sign_law"] = sign_law(X, labels)
+    out["class_pr"] = class_pr(X, labels)
     if n_bias > 0:
         bias = []
         for s_ in range(n_bias):
@@ -1599,8 +1689,11 @@ def _print_decomposition(r):
               "sufficient when the alignment is positive) " + ("(sign as the law says)" if agree else "(MISMATCH with the law: report it)"))
         if r.get("rungs"):
             n_pc = r["rungs"][-1]["size"] / max(r["rung_classes"][-1], 1)
-            print(f"  samples per class {n_pc:.0f} against PR(W) {sl['PR_W']:.1f} (README rule 8: the within-class part needs each class sampled "
-                  "beyond its own fluctuation dimension; --account prints the sampling term)")
+            cp = r.get("class_pr")
+            own = (f"each class's own fluctuation dimension (PR of its residuals) {min(cp.values()):.1f} to {max(cp.values()):.1f}, "
+                   f"median {float(np.median(list(cp.values()))):.1f}; " if cp else "")
+            print(f"  samples per class {n_pc:.0f} against {own}PR(W) {sl['PR_W']:.1f}, which pools the classes (README rule 8: the "
+                  "within-class part needs each class sampled beyond its own fluctuation dimension; --account prints the sampling term)")
     if "net_of_bias" in r:
         b = r["bias_null"]["delta_split_free"]; nb = r["net_of_bias"]["delta_split_free"]
         print(f"  bias null ({r['bias_null']['n']} surrogates, one covariance shape for every class): D {b['D']:+.3f} Tb {b['Tb']:+.3f} "
@@ -2583,7 +2676,7 @@ def main():
     d.add_argument("--order", default=None, help="the declared accumulation order: sequential (default), antipodal (one member of each antipodal pair first), or a comma-separated list of class labels")
     d.add_argument("--sectors", action="store_true", help="the harmonics of the class-mean kernel for a cyclic axis (labels in cyclic order, class k at angle 2 pi k/K): sector balance, even and odd amplitudes, coherence of adjacent and antipodal classes (Section 4)")
     d.add_argument("--null-shift", action="store_true", help="labels are in time order: add the circular-shift null, which rolls the label sequence and keeps its autocorrelation")
-    d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks the declared order for the stall test and reports late_fraction as it (Appendix K)")
+    d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks that the declared order's first half holds one member of each pair and reports late_fraction as the share of the climb left after half the circle (Appendices E and K)")
     d.add_argument("--decompose", action="store_true", help="the shift split into its within-class part D and class-mean part Tb + Cb + Cx (exact four-term split, Section 5, Appendix K), with the sign law of Eq. 3")
     d.add_argument("--n-shuffle", type=int, default=5, help="with --decompose: label permutations for each term's sampling baseline (0 disables)")
     d.add_argument("--n-bias", type=int, default=0, help="with --decompose: surrogates of the finite-sample bias null (class means kept, one covariance shape for every class)")

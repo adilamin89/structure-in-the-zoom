@@ -1,0 +1,2720 @@
+{
+ "k_orders": 50,
+ "floor": "declared: ten draws, seed 42, rung by rung (the paper's); orders: rung 1.8.0 per-order floors",
+ "rows": [
+  {
+   "session": 715093703,
+   "area": "VISam",
+   "n_units": 93,
+   "n_pres": 513,
+   "pooled": {
+    "delta": 0.0939582092624022,
+    "delta_orderavg": 0.11678290255962094,
+    "delta_orderavg_sd": 0.02817516938044253
+   },
+   "tfres": {
+    "delta": 0.08238135973157072,
+    "delta_orderavg": 0.12579732815929753,
+    "delta_orderavg_sd": 0.03261158316285945
+   }
+  },
+  {
+   "session": 715093703,
+   "area": "VISl",
+   "n_units": 160,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.23842799448856528,
+    "delta_orderavg": 0.1410447654195382,
+    "delta_orderavg_sd": 0.04992419773991827
+   },
+   "tfres": {
+    "delta": 0.24888369941631128,
+    "delta_orderavg": 0.1485646854826828,
+    "delta_orderavg_sd": 0.051748594285989574
+   }
+  },
+  {
+   "session": 715093703,
+   "area": "VISp",
+   "n_units": 160,
+   "n_pres": 543,
+   "pooled": {
+    "delta": 0.21464149800292204,
+    "delta_orderavg": 0.1614936337916402,
+    "delta_orderavg_sd": 0.04825943792104442
+   },
+   "tfres": {
+    "delta": 0.2577859571522323,
+    "delta_orderavg": 0.20250885554410009,
+    "delta_orderavg_sd": 0.0481941058584307
+   }
+  },
+  {
+   "session": 715093703,
+   "area": "VISpm",
+   "n_units": 139,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.34576108950840845,
+    "delta_orderavg": 0.16401359316530914,
+    "delta_orderavg_sd": 0.09678437582049004
+   },
+   "tfres": {
+    "delta": 0.40886565116906803,
+    "delta_orderavg": 0.1838075313896077,
+    "delta_orderavg_sd": 0.11618360951457334
+   }
+  },
+  {
+   "session": 715093703,
+   "area": "VISrl",
+   "n_units": 266,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.1516018756814246,
+    "delta_orderavg": 0.11130401381580313,
+    "delta_orderavg_sd": 0.06784531620858153
+   },
+   "tfres": {
+    "delta": 0.1621002065326671,
+    "delta_orderavg": 0.11604500999653093,
+    "delta_orderavg_sd": 0.0673347615993887
+   }
+  },
+  {
+   "session": 719161530,
+   "area": "VISal",
+   "n_units": 114,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.04846211296196523,
+    "delta_orderavg": 0.11575238233076844,
+    "delta_orderavg_sd": 0.12444230862617256
+   },
+   "tfres": {
+    "delta": 0.03114480200959991,
+    "delta_orderavg": 0.11288168132380878,
+    "delta_orderavg_sd": 0.10630748092982449
+   }
+  },
+  {
+   "session": 719161530,
+   "area": "VISam",
+   "n_units": 105,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.08844186137191826,
+    "delta_orderavg": 0.055069772739825044,
+    "delta_orderavg_sd": 0.039311107312121986
+   },
+   "tfres": {
+    "delta": 0.061676452730038925,
+    "delta_orderavg": 0.06759575850423521,
+    "delta_orderavg_sd": 0.03796994178348914
+   }
+  },
+  {
+   "session": 719161530,
+   "area": "VISl",
+   "n_units": 195,
+   "n_pres": 598,
+   "pooled": {
+    "delta": -0.027568559426430245,
+    "delta_orderavg": 0.0979503536183413,
+    "delta_orderavg_sd": 0.10263393667261685
+   },
+   "tfres": {
+    "delta": -0.04542797853918652,
+    "delta_orderavg": 0.09798302986190618,
+    "delta_orderavg_sd": 0.09796832473549404
+   }
+  },
+  {
+   "session": 719161530,
+   "area": "VISp",
+   "n_units": 134,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.11238987689815502,
+    "delta_orderavg": 0.044185740517501675,
+    "delta_orderavg_sd": 0.08716773972166393
+   },
+   "tfres": {
+    "delta": -0.015310199650551016,
+    "delta_orderavg": 0.04120957137709116,
+    "delta_orderavg_sd": 0.05888810277985391
+   }
+  },
+  {
+   "session": 719161530,
+   "area": "VISpm",
+   "n_units": 117,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.014423415182197252,
+    "delta_orderavg": 0.07529730608516916,
+    "delta_orderavg_sd": 0.05841407439663848
+   },
+   "tfres": {
+    "delta": 0.03269250977403479,
+    "delta_orderavg": 0.06800055095233548,
+    "delta_orderavg_sd": 0.048243196181891504
+   }
+  },
+  {
+   "session": 719161530,
+   "area": "VISrl",
+   "n_units": 157,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.09435712539206977,
+    "delta_orderavg": 0.018684060062809767,
+    "delta_orderavg_sd": 0.09079976428667264
+   },
+   "tfres": {
+    "delta": 0.08022605102163198,
+    "delta_orderavg": 0.01969263191617055,
+    "delta_orderavg_sd": 0.08952869954109113
+   }
+  },
+  {
+   "session": 721123822,
+   "area": "VIS",
+   "n_units": 116,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.28587854988006794,
+    "delta_orderavg": 0.19378259997697433,
+    "delta_orderavg_sd": 0.05246189229032688
+   },
+   "tfres": {
+    "delta": 0.26636536335726807,
+    "delta_orderavg": 0.2026310245370258,
+    "delta_orderavg_sd": 0.06644907176114806
+   }
+  },
+  {
+   "session": 721123822,
+   "area": "VISal",
+   "n_units": 174,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.1537064904027079,
+    "delta_orderavg": 0.20881619029427181,
+    "delta_orderavg_sd": 0.0363038780603156
+   },
+   "tfres": {
+    "delta": 0.1767305322643813,
+    "delta_orderavg": 0.23436545409554618,
+    "delta_orderavg_sd": 0.05281028645218285
+   }
+  },
+  {
+   "session": 721123822,
+   "area": "VISam",
+   "n_units": 96,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.34373649635955483,
+    "delta_orderavg": 0.19553124411704847,
+    "delta_orderavg_sd": 0.10535606730702624
+   },
+   "tfres": {
+    "delta": 0.2925167122607647,
+    "delta_orderavg": 0.19227313284037845,
+    "delta_orderavg_sd": 0.08833023082861602
+   }
+  },
+  {
+   "session": 721123822,
+   "area": "VISl",
+   "n_units": 144,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.10463128204091016,
+    "delta_orderavg": 0.16137345203205877,
+    "delta_orderavg_sd": 0.03848810802148719
+   },
+   "tfres": {
+    "delta": 0.11243680657602723,
+    "delta_orderavg": 0.1652729802939909,
+    "delta_orderavg_sd": 0.04022041603879785
+   }
+  },
+  {
+   "session": 721123822,
+   "area": "VISp",
+   "n_units": 133,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.2853453872903307,
+    "delta_orderavg": 0.16016406980954592,
+    "delta_orderavg_sd": 0.06622823198760273
+   },
+   "tfres": {
+    "delta": 0.2988974720695251,
+    "delta_orderavg": 0.16360465691402643,
+    "delta_orderavg_sd": 0.06591946785066527
+   }
+  },
+  {
+   "session": 721123822,
+   "area": "VISrl",
+   "n_units": 111,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.1364709795804357,
+    "delta_orderavg": 0.11224209322263434,
+    "delta_orderavg_sd": 0.024041445435875237
+   },
+   "tfres": {
+    "delta": 0.14601436700650086,
+    "delta_orderavg": 0.11208917402434271,
+    "delta_orderavg_sd": 0.02688686679491263
+   }
+  },
+  {
+   "session": 732592105,
+   "area": "VISal",
+   "n_units": 195,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.025881613153681787,
+    "delta_orderavg": 0.06694847216569261,
+    "delta_orderavg_sd": 0.03890705593679135
+   },
+   "tfres": {
+    "delta": -0.055836819250567306,
+    "delta_orderavg": 0.06667737472246504,
+    "delta_orderavg_sd": 0.06036548065971524
+   }
+  },
+  {
+   "session": 732592105,
+   "area": "VISl",
+   "n_units": 218,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.094522173458319,
+    "delta_orderavg": 0.12248924746924177,
+    "delta_orderavg_sd": 0.05738050215030801
+   },
+   "tfres": {
+    "delta": 0.09723362643658431,
+    "delta_orderavg": 0.12893345041829518,
+    "delta_orderavg_sd": 0.05408494119160587
+   }
+  },
+  {
+   "session": 732592105,
+   "area": "VISp",
+   "n_units": 259,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.2055565744758339,
+    "delta_orderavg": 0.18315378719253303,
+    "delta_orderavg_sd": 0.026014686327261546
+   },
+   "tfres": {
+    "delta": 0.18785042993212803,
+    "delta_orderavg": 0.18538686928107226,
+    "delta_orderavg_sd": 0.027351101520276196
+   }
+  },
+  {
+   "session": 732592105,
+   "area": "VISpm",
+   "n_units": 163,
+   "n_pres": 598,
+   "pooled": {
+    "delta": 0.18874491450175956,
+    "delta_orderavg": 0.08539562612813992,
+    "delta_orderavg_sd": 0.049275306589254005
+   },
+   "tfres": {
+    "delta": 0.17129917667847702,
+    "delta_orderavg": 0.08455703061031246,
+    "delta_orderavg_sd": 0.04307751270241277
+   }
+  },
+  {
+   "session": 732592105,
+   "area": "VISrl",
+   "n_units": 171,
+   "n_pres": 598,
+   "pooled": {
+    "delta": -0.021870018644399025,
+    "delta_orderavg": 0.07858605238962467,
+    "delta_orderavg_sd": 0.042378514661503885
+   },
+   "tfres": {
+    "delta": -0.03846577633398184,
+    "delta_orderavg": 0.0788292245627692,
+    "delta_orderavg_sd": 0.04250496204032489
+   }
+  },
+  {
+   "session": 737581020,
+   "area": "VISl",
+   "n_units": 119,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.005467030813679365,
+    "delta_orderavg": 0.08624338576895678,
+    "delta_orderavg_sd": 0.04579339937649435
+   },
+   "tfres": {
+    "delta": -0.014571676274050354,
+    "delta_orderavg": 0.09641354055383433,
+    "delta_orderavg_sd": 0.048976974906024144
+   }
+  },
+  {
+   "session": 737581020,
+   "area": "VISmma",
+   "n_units": 56,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.13071079909465083,
+    "delta_orderavg": 0.06860535432607555,
+    "delta_orderavg_sd": 0.049076929915380124
+   },
+   "tfres": {
+    "delta": 0.16614894335676286,
+    "delta_orderavg": 0.07717454001024525,
+    "delta_orderavg_sd": 0.06109481746730708
+   }
+  },
+  {
+   "session": 737581020,
+   "area": "VISp",
+   "n_units": 136,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1363855913964702,
+    "delta_orderavg": 0.1681180229943881,
+    "delta_orderavg_sd": 0.060762236513618575
+   },
+   "tfres": {
+    "delta": 0.19198093771128327,
+    "delta_orderavg": 0.18333888242050073,
+    "delta_orderavg_sd": 0.07991673685772105
+   }
+  },
+  {
+   "session": 737581020,
+   "area": "VISpm",
+   "n_units": 51,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.09560709737346687,
+    "delta_orderavg": 0.0720568739527641,
+    "delta_orderavg_sd": 0.0822135676779224
+   },
+   "tfres": {
+    "delta": 0.0925928683220219,
+    "delta_orderavg": 0.07106298997259068,
+    "delta_orderavg_sd": 0.09528204335531561
+   }
+  },
+  {
+   "session": 737581020,
+   "area": "VISrl",
+   "n_units": 182,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.180532499743928,
+    "delta_orderavg": 0.10721504830919525,
+    "delta_orderavg_sd": 0.028429758215192124
+   },
+   "tfres": {
+    "delta": 0.21762082316073436,
+    "delta_orderavg": 0.10822728608060955,
+    "delta_orderavg_sd": 0.0403251863906388
+   }
+  },
+  {
+   "session": 739448407,
+   "area": "VIS",
+   "n_units": 261,
+   "n_pres": 594,
+   "pooled": {
+    "delta": 0.16377339649359976,
+    "delta_orderavg": 0.17201599176131413,
+    "delta_orderavg_sd": 0.0483843488314878
+   },
+   "tfres": {
+    "delta": 0.19553742224812404,
+    "delta_orderavg": 0.1858209660649935,
+    "delta_orderavg_sd": 0.042949604077280656
+   }
+  },
+  {
+   "session": 739448407,
+   "area": "VISam",
+   "n_units": 133,
+   "n_pres": 594,
+   "pooled": {
+    "delta": 0.020466764336660177,
+    "delta_orderavg": 0.05338515980818927,
+    "delta_orderavg_sd": 0.052522194991106164
+   },
+   "tfres": {
+    "delta": 0.031659525828604,
+    "delta_orderavg": 0.056729542961765,
+    "delta_orderavg_sd": 0.04927107309213932
+   }
+  },
+  {
+   "session": 739448407,
+   "area": "VISl",
+   "n_units": 152,
+   "n_pres": 594,
+   "pooled": {
+    "delta": -0.016415640999732247,
+    "delta_orderavg": 0.06634196755443673,
+    "delta_orderavg_sd": 0.05779688891354265
+   },
+   "tfres": {
+    "delta": -0.0036227613845419455,
+    "delta_orderavg": 0.06658669701924631,
+    "delta_orderavg_sd": 0.05254054913432723
+   }
+  },
+  {
+   "session": 739448407,
+   "area": "VISp",
+   "n_units": 67,
+   "n_pres": 594,
+   "pooled": {
+    "delta": 0.17125904857849397,
+    "delta_orderavg": 0.172938425558489,
+    "delta_orderavg_sd": 0.05819897974428942
+   },
+   "tfres": {
+    "delta": 0.14433117229401382,
+    "delta_orderavg": 0.14478831414540277,
+    "delta_orderavg_sd": 0.07047649173538487
+   }
+  },
+  {
+   "session": 739448407,
+   "area": "VISrl",
+   "n_units": 193,
+   "n_pres": 594,
+   "pooled": {
+    "delta": 0.015119728960462799,
+    "delta_orderavg": 0.029072072724708634,
+    "delta_orderavg_sd": 0.04173240707033476
+   },
+   "tfres": {
+    "delta": 0.03101400673572701,
+    "delta_orderavg": 0.02696834404569404,
+    "delta_orderavg_sd": 0.04233356944532293
+   }
+  },
+  {
+   "session": 742951821,
+   "area": "VIS",
+   "n_units": 247,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.044094493877514296,
+    "delta_orderavg": 0.11103817390714678,
+    "delta_orderavg_sd": 0.051415736652380424
+   },
+   "tfres": {
+    "delta": 0.045459228822510155,
+    "delta_orderavg": 0.12583326871236436,
+    "delta_orderavg_sd": 0.05540664693366138
+   }
+  },
+  {
+   "session": 742951821,
+   "area": "VISal",
+   "n_units": 125,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1818781636789387,
+    "delta_orderavg": 0.1630072498786809,
+    "delta_orderavg_sd": 0.07013431309509768
+   },
+   "tfres": {
+    "delta": 0.17729069044100126,
+    "delta_orderavg": 0.16551760335841365,
+    "delta_orderavg_sd": 0.06236879196599163
+   }
+  },
+  {
+   "session": 742951821,
+   "area": "VISl",
+   "n_units": 154,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.017675106478618696,
+    "delta_orderavg": 0.07767713397237822,
+    "delta_orderavg_sd": 0.06063904083149961
+   },
+   "tfres": {
+    "delta": 0.04357918945839965,
+    "delta_orderavg": 0.081527867618438,
+    "delta_orderavg_sd": 0.050501943453350316
+   }
+  },
+  {
+   "session": 742951821,
+   "area": "VISp",
+   "n_units": 158,
+   "n_pres": 584,
+   "pooled": {
+    "delta": 0.16339987498032937,
+    "delta_orderavg": 0.13692340946659715,
+    "delta_orderavg_sd": 0.05562252207428204
+   },
+   "tfres": {
+    "delta": 0.17497651614180226,
+    "delta_orderavg": 0.13184584312069617,
+    "delta_orderavg_sd": 0.06209287674853193
+   }
+  },
+  {
+   "session": 742951821,
+   "area": "VISpm",
+   "n_units": 98,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.040442510575884154,
+    "delta_orderavg": 0.059975253392259946,
+    "delta_orderavg_sd": 0.05598147160076095
+   },
+   "tfres": {
+    "delta": 0.01959838932274402,
+    "delta_orderavg": 0.054522702259336614,
+    "delta_orderavg_sd": 0.06950295718882867
+   }
+  },
+  {
+   "session": 742951821,
+   "area": "VISrl",
+   "n_units": 149,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.07226726762385777,
+    "delta_orderavg": 0.13841774501583137,
+    "delta_orderavg_sd": 0.03093359770288513
+   },
+   "tfres": {
+    "delta": 0.08988167446883463,
+    "delta_orderavg": 0.14400584787609796,
+    "delta_orderavg_sd": 0.030559050650038746
+   }
+  },
+  {
+   "session": 743475441,
+   "area": "VISam",
+   "n_units": 142,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.07670062163289261,
+    "delta_orderavg": 0.06475649856986244,
+    "delta_orderavg_sd": 0.0673404165738593
+   },
+   "tfres": {
+    "delta": 0.06256160745304187,
+    "delta_orderavg": 0.053949434223152466,
+    "delta_orderavg_sd": 0.04164781370822725
+   }
+  },
+  {
+   "session": 743475441,
+   "area": "VISl",
+   "n_units": 130,
+   "n_pres": 600,
+   "pooled": {
+    "delta": -0.08102296666857553,
+    "delta_orderavg": 0.09082858270908234,
+    "delta_orderavg_sd": 0.11829394304849512
+   },
+   "tfres": {
+    "delta": -0.08425213787325982,
+    "delta_orderavg": 0.09090793098369378,
+    "delta_orderavg_sd": 0.11614322692119738
+   }
+  },
+  {
+   "session": 743475441,
+   "area": "VISmma",
+   "n_units": 126,
+   "n_pres": 600,
+   "pooled": {
+    "delta": -0.016979792095139994,
+    "delta_orderavg": 0.012314301197822074,
+    "delta_orderavg_sd": 0.09264029904675387
+   },
+   "tfres": {
+    "delta": -0.011524814511092815,
+    "delta_orderavg": 0.014306934133833502,
+    "delta_orderavg_sd": 0.08295380155810984
+   }
+  },
+  {
+   "session": 743475441,
+   "area": "VISp",
+   "n_units": 157,
+   "n_pres": 251,
+   "pooled": {
+    "delta": 0.11691753212740683,
+    "delta_orderavg": 0.12856241910740554,
+    "delta_orderavg_sd": 0.13778169602848447
+   },
+   "tfres": {
+    "delta": 0.13123124680318657,
+    "delta_orderavg": 0.16803886364628448,
+    "delta_orderavg_sd": 0.17423521061990516
+   }
+  },
+  {
+   "session": 743475441,
+   "area": "VISrl",
+   "n_units": 251,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.06696320772631362,
+    "delta_orderavg": 0.07041033627733012,
+    "delta_orderavg_sd": 0.028571887021364005
+   },
+   "tfres": {
+    "delta": 0.0940327117418048,
+    "delta_orderavg": 0.07410823073571439,
+    "delta_orderavg_sd": 0.02421794683759647
+   }
+  },
+  {
+   "session": 744228101,
+   "area": "VIS",
+   "n_units": 293,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.06646210797415873,
+    "delta_orderavg": 0.049558213817882946,
+    "delta_orderavg_sd": 0.048502797406872564
+   },
+   "tfres": {
+    "delta": 0.05793105014965488,
+    "delta_orderavg": 0.054744524360043775,
+    "delta_orderavg_sd": 0.05136814485929655
+   }
+  },
+  {
+   "session": 744228101,
+   "area": "VISal",
+   "n_units": 122,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.10855094616168134,
+    "delta_orderavg": 0.05389672581831925,
+    "delta_orderavg_sd": 0.06543042685506864
+   },
+   "tfres": {
+    "delta": 0.10501454971191412,
+    "delta_orderavg": 0.06877403488313569,
+    "delta_orderavg_sd": 0.06447166097715357
+   }
+  },
+  {
+   "session": 744228101,
+   "area": "VISl",
+   "n_units": 188,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.056581508902123934,
+    "delta_orderavg": 0.038110809769502735,
+    "delta_orderavg_sd": 0.08003244786874063
+   },
+   "tfres": {
+    "delta": 0.06338818504400531,
+    "delta_orderavg": 0.03246918298896403,
+    "delta_orderavg_sd": 0.07759216537133945
+   }
+  },
+  {
+   "session": 744228101,
+   "area": "VISp",
+   "n_units": 126,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.23477070107100248,
+    "delta_orderavg": 0.15943214274208833,
+    "delta_orderavg_sd": 0.0758170177490092
+   },
+   "tfres": {
+    "delta": 0.2538262789653724,
+    "delta_orderavg": 0.17165365325466328,
+    "delta_orderavg_sd": 0.06673342727300771
+   }
+  },
+  {
+   "session": 744228101,
+   "area": "VISrl",
+   "n_units": 134,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.06635414419139692,
+    "delta_orderavg": 0.07002321260744804,
+    "delta_orderavg_sd": 0.07036207381113452
+   },
+   "tfres": {
+    "delta": 0.07885957631234886,
+    "delta_orderavg": 0.06993738097577322,
+    "delta_orderavg_sd": 0.07489499805996802
+   }
+  },
+  {
+   "session": 746083955,
+   "area": "VISal",
+   "n_units": 101,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.12095096920966505,
+    "delta_orderavg": 0.04795685524899988,
+    "delta_orderavg_sd": 0.05361458962894445
+   },
+   "tfres": {
+    "delta": 0.11926784588488504,
+    "delta_orderavg": 0.04091688760023777,
+    "delta_orderavg_sd": 0.0515343630826268
+   }
+  },
+  {
+   "session": 746083955,
+   "area": "VISl",
+   "n_units": 131,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.06465313855487996,
+    "delta_orderavg": 0.04054981256482902,
+    "delta_orderavg_sd": 0.025376084499766204
+   },
+   "tfres": {
+    "delta": 0.04419637120546893,
+    "delta_orderavg": 0.02972833274467937,
+    "delta_orderavg_sd": 0.021060233283417672
+   }
+  },
+  {
+   "session": 746083955,
+   "area": "VISp",
+   "n_units": 72,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.13682709093811232,
+    "delta_orderavg": 0.07585825795161799,
+    "delta_orderavg_sd": 0.06678851539810286
+   },
+   "tfres": {
+    "delta": 0.10651958375775425,
+    "delta_orderavg": 0.0670603573888096,
+    "delta_orderavg_sd": 0.07304959566064662
+   }
+  },
+  {
+   "session": 746083955,
+   "area": "VISpm",
+   "n_units": 282,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.23549797630077632,
+    "delta_orderavg": 0.17890513278468312,
+    "delta_orderavg_sd": 0.033475340024058456
+   },
+   "tfres": {
+    "delta": 0.24781336313301677,
+    "delta_orderavg": 0.17252412646823567,
+    "delta_orderavg_sd": 0.04585039400793684
+   }
+  },
+  {
+   "session": 746083955,
+   "area": "VISrl",
+   "n_units": 112,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.16597933197047465,
+    "delta_orderavg": 0.1407258785843148,
+    "delta_orderavg_sd": 0.04607128721869606
+   },
+   "tfres": {
+    "delta": 0.19535420740683207,
+    "delta_orderavg": 0.14640579049654412,
+    "delta_orderavg_sd": 0.05057794069624551
+   }
+  },
+  {
+   "session": 750332458,
+   "area": "VISal",
+   "n_units": 190,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.19049116803083618,
+    "delta_orderavg": 0.1779305763394306,
+    "delta_orderavg_sd": 0.03453798485524025
+   },
+   "tfres": {
+    "delta": 0.21520858473223275,
+    "delta_orderavg": 0.20875632550011505,
+    "delta_orderavg_sd": 0.028111904701833976
+   }
+  },
+  {
+   "session": 750332458,
+   "area": "VISam",
+   "n_units": 143,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.17634952639268037,
+    "delta_orderavg": 0.12970247225724385,
+    "delta_orderavg_sd": 0.04978171561117617
+   },
+   "tfres": {
+    "delta": 0.1911004315320158,
+    "delta_orderavg": 0.14158903204885204,
+    "delta_orderavg_sd": 0.05025152311141698
+   }
+  },
+  {
+   "session": 750332458,
+   "area": "VISl",
+   "n_units": 149,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.14470009130736453,
+    "delta_orderavg": 0.1615730755323127,
+    "delta_orderavg_sd": 0.032773097920675884
+   },
+   "tfres": {
+    "delta": 0.161091756723066,
+    "delta_orderavg": 0.17321819095652263,
+    "delta_orderavg_sd": 0.03259599640103733
+   }
+  },
+  {
+   "session": 750332458,
+   "area": "VISp",
+   "n_units": 192,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.2397917987746394,
+    "delta_orderavg": 0.1912619809281641,
+    "delta_orderavg_sd": 0.05201031195823573
+   },
+   "tfres": {
+    "delta": 0.2468829238635648,
+    "delta_orderavg": 0.21367917773270342,
+    "delta_orderavg_sd": 0.05450585255880708
+   }
+  },
+  {
+   "session": 750332458,
+   "area": "VISpm",
+   "n_units": 89,
+   "n_pres": 525,
+   "pooled": {
+    "delta": 0.23655885812234234,
+    "delta_orderavg": 0.07474410107658164,
+    "delta_orderavg_sd": 0.06384435209640485
+   },
+   "tfres": {
+    "delta": 0.2162801080100741,
+    "delta_orderavg": 0.07834925105956798,
+    "delta_orderavg_sd": 0.05115440126507951
+   }
+  },
+  {
+   "session": 750332458,
+   "area": "VISrl",
+   "n_units": 194,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.20515618708018032,
+    "delta_orderavg": 0.1464688862004243,
+    "delta_orderavg_sd": 0.06594348640260704
+   },
+   "tfres": {
+    "delta": 0.1854696664074846,
+    "delta_orderavg": 0.14812875073967652,
+    "delta_orderavg_sd": 0.056691833469235786
+   }
+  },
+  {
+   "session": 750749662,
+   "area": "VISal",
+   "n_units": 132,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.15741427715470416,
+    "delta_orderavg": 0.18351512391075367,
+    "delta_orderavg_sd": 0.038172562914618534
+   },
+   "tfres": {
+    "delta": 0.18726320214760955,
+    "delta_orderavg": 0.19276855140138785,
+    "delta_orderavg_sd": 0.046819825204567976
+   }
+  },
+  {
+   "session": 750749662,
+   "area": "VISam",
+   "n_units": 160,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.05276346429726134,
+    "delta_orderavg": 0.07427014164059798,
+    "delta_orderavg_sd": 0.02782083077723236
+   },
+   "tfres": {
+    "delta": 0.06463124034003796,
+    "delta_orderavg": 0.08690445102600546,
+    "delta_orderavg_sd": 0.02610683348486382
+   }
+  },
+  {
+   "session": 750749662,
+   "area": "VISl",
+   "n_units": 123,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.08384942248920418,
+    "delta_orderavg": 0.08443974730984055,
+    "delta_orderavg_sd": 0.029169680766709814
+   },
+   "tfres": {
+    "delta": 0.09453802290564994,
+    "delta_orderavg": 0.08354105224716755,
+    "delta_orderavg_sd": 0.034746806177837576
+   }
+  },
+  {
+   "session": 750749662,
+   "area": "VISp",
+   "n_units": 177,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.2786203759308725,
+    "delta_orderavg": 0.1809909482086499,
+    "delta_orderavg_sd": 0.039262827691495146
+   },
+   "tfres": {
+    "delta": 0.1605785361610154,
+    "delta_orderavg": 0.17720427307897782,
+    "delta_orderavg_sd": 0.04343900388315374
+   }
+  },
+  {
+   "session": 750749662,
+   "area": "VISpm",
+   "n_units": 153,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.0776137997326112,
+    "delta_orderavg": 0.09455083280896534,
+    "delta_orderavg_sd": 0.027184151709734476
+   },
+   "tfres": {
+    "delta": 0.07698453221547254,
+    "delta_orderavg": 0.09390473156591918,
+    "delta_orderavg_sd": 0.03104963513146052
+   }
+  },
+  {
+   "session": 750749662,
+   "area": "VISrl",
+   "n_units": 156,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1294349409573036,
+    "delta_orderavg": 0.16198786705720383,
+    "delta_orderavg_sd": 0.03600441749780751
+   },
+   "tfres": {
+    "delta": 0.14381957858103336,
+    "delta_orderavg": 0.1697100532600178,
+    "delta_orderavg_sd": 0.026548122640846102
+   }
+  },
+  {
+   "session": 751348571,
+   "area": "VISam",
+   "n_units": 152,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1139386651314454,
+    "delta_orderavg": 0.16677637631804923,
+    "delta_orderavg_sd": 0.07066673660852951
+   },
+   "tfres": {
+    "delta": 0.140781334085786,
+    "delta_orderavg": 0.1708199163077107,
+    "delta_orderavg_sd": 0.0771565654960111
+   }
+  },
+  {
+   "session": 751348571,
+   "area": "VISl",
+   "n_units": 81,
+   "n_pres": 600,
+   "pooled": {
+    "delta": -0.04337133355911464,
+    "delta_orderavg": 0.010756587058175362,
+    "delta_orderavg_sd": 0.06481112165592974
+   },
+   "tfres": {
+    "delta": 0.00830786022603917,
+    "delta_orderavg": 0.03899156808553673,
+    "delta_orderavg_sd": 0.05800930244904549
+   }
+  },
+  {
+   "session": 751348571,
+   "area": "VISp",
+   "n_units": 149,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.18955198328668396,
+    "delta_orderavg": 0.15720028749316156,
+    "delta_orderavg_sd": 0.03442262256751407
+   },
+   "tfres": {
+    "delta": 0.08593715581084066,
+    "delta_orderavg": 0.1011889957041423,
+    "delta_orderavg_sd": 0.07397835299922763
+   }
+  },
+  {
+   "session": 751348571,
+   "area": "VISpm",
+   "n_units": 97,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.16914765318844216,
+    "delta_orderavg": 0.16107037501389743,
+    "delta_orderavg_sd": 0.09385356830418137
+   },
+   "tfres": {
+    "delta": 0.19317457111123315,
+    "delta_orderavg": 0.1655743771201824,
+    "delta_orderavg_sd": 0.09155474602132435
+   }
+  },
+  {
+   "session": 751348571,
+   "area": "VISrl",
+   "n_units": 305,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.12673347100614357,
+    "delta_orderavg": 0.17039796946842276,
+    "delta_orderavg_sd": 0.042112661003168544
+   },
+   "tfres": {
+    "delta": 0.16967697393213585,
+    "delta_orderavg": 0.18165475837153816,
+    "delta_orderavg_sd": 0.03173194112788091
+   }
+  },
+  {
+   "session": 754312389,
+   "area": "VISal",
+   "n_units": 94,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.16498642369019564,
+    "delta_orderavg": 0.18171247354588663,
+    "delta_orderavg_sd": 0.060100567515391855
+   },
+   "tfres": {
+    "delta": 0.18035697537340814,
+    "delta_orderavg": 0.20583289153294435,
+    "delta_orderavg_sd": 0.11357436936695557
+   }
+  },
+  {
+   "session": 754312389,
+   "area": "VISam",
+   "n_units": 128,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.149948157598727,
+    "delta_orderavg": 0.16405970118561272,
+    "delta_orderavg_sd": 0.06716399241751717
+   },
+   "tfres": {
+    "delta": 0.08273783063745992,
+    "delta_orderavg": 0.1454497692238091,
+    "delta_orderavg_sd": 0.0666554781297032
+   }
+  },
+  {
+   "session": 754312389,
+   "area": "VISl",
+   "n_units": 91,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.009512121483204003,
+    "delta_orderavg": 0.05784756738023436,
+    "delta_orderavg_sd": 0.06093620928768023
+   },
+   "tfres": {
+    "delta": 0.0186023664390794,
+    "delta_orderavg": 0.06866891868734562,
+    "delta_orderavg_sd": 0.07038951529475336
+   }
+  },
+  {
+   "session": 754312389,
+   "area": "VISp",
+   "n_units": 233,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.26555984054061443,
+    "delta_orderavg": 0.19798937442001927,
+    "delta_orderavg_sd": 0.04632684928904722
+   },
+   "tfres": {
+    "delta": 0.1313083983248658,
+    "delta_orderavg": 0.09613224222715124,
+    "delta_orderavg_sd": 0.048908721259868754
+   }
+  },
+  {
+   "session": 754312389,
+   "area": "VISpm",
+   "n_units": 73,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.07971165655541607,
+    "delta_orderavg": 0.1093933857393383,
+    "delta_orderavg_sd": 0.04843160643178822
+   },
+   "tfres": {
+    "delta": 0.06693033048201685,
+    "delta_orderavg": 0.09963319237954972,
+    "delta_orderavg_sd": 0.04739934435405843
+   }
+  },
+  {
+   "session": 754312389,
+   "area": "VISrl",
+   "n_units": 113,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1208160019130261,
+    "delta_orderavg": 0.052214832861272924,
+    "delta_orderavg_sd": 0.12176978239036422
+   },
+   "tfres": {
+    "delta": 0.1237431840127086,
+    "delta_orderavg": 0.05567197933385133,
+    "delta_orderavg_sd": 0.11341180823233968
+   }
+  },
+  {
+   "session": 754829445,
+   "area": "VISam",
+   "n_units": 109,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.10090776461722173,
+    "delta_orderavg": 0.11037516373380524,
+    "delta_orderavg_sd": 0.08902667380127059
+   },
+   "tfres": {
+    "delta": 0.10147154153395332,
+    "delta_orderavg": 0.1072853495512585,
+    "delta_orderavg_sd": 0.08090318334851172
+   }
+  },
+  {
+   "session": 754829445,
+   "area": "VISp",
+   "n_units": 243,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.19320343692467365,
+    "delta_orderavg": 0.17546648748548282,
+    "delta_orderavg_sd": 0.043998451870858164
+   },
+   "tfres": {
+    "delta": 0.1904981148179275,
+    "delta_orderavg": 0.1633651749035392,
+    "delta_orderavg_sd": 0.0530227479877213
+   }
+  },
+  {
+   "session": 754829445,
+   "area": "VISpm",
+   "n_units": 66,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.14119541348694453,
+    "delta_orderavg": 0.12792858521366846,
+    "delta_orderavg_sd": 0.07254326621270939
+   },
+   "tfres": {
+    "delta": 0.1614553398678876,
+    "delta_orderavg": 0.1314508890872975,
+    "delta_orderavg_sd": 0.07416919337679462
+   }
+  },
+  {
+   "session": 754829445,
+   "area": "VISrl",
+   "n_units": 107,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.06352781351929843,
+    "delta_orderavg": 0.1170667732280354,
+    "delta_orderavg_sd": 0.050590318195661226
+   },
+   "tfres": {
+    "delta": 0.08610937352086248,
+    "delta_orderavg": 0.11644681510328607,
+    "delta_orderavg_sd": 0.04812758212656072
+   }
+  },
+  {
+   "session": 755434585,
+   "area": "VISal",
+   "n_units": 110,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.04544752572665609,
+    "delta_orderavg": 0.1620938806843254,
+    "delta_orderavg_sd": 0.05600854846958518
+   },
+   "tfres": {
+    "delta": 0.10041071386076922,
+    "delta_orderavg": 0.12885851711476057,
+    "delta_orderavg_sd": 0.02610646221087089
+   }
+  },
+  {
+   "session": 755434585,
+   "area": "VISam",
+   "n_units": 200,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.20993192130006127,
+    "delta_orderavg": 0.14777419805934452,
+    "delta_orderavg_sd": 0.050274821355848535
+   },
+   "tfres": {
+    "delta": 0.2205026849381294,
+    "delta_orderavg": 0.15314198362909878,
+    "delta_orderavg_sd": 0.04757949830580973
+   }
+  },
+  {
+   "session": 755434585,
+   "area": "VISl",
+   "n_units": 158,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.08686601763650093,
+    "delta_orderavg": 0.09617009345162846,
+    "delta_orderavg_sd": 0.022953565452605955
+   },
+   "tfres": {
+    "delta": 0.09665693117097278,
+    "delta_orderavg": 0.0947906893461011,
+    "delta_orderavg_sd": 0.015757390408291085
+   }
+  },
+  {
+   "session": 755434585,
+   "area": "VISp",
+   "n_units": 230,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.22829385555336207,
+    "delta_orderavg": 0.15891530002024884,
+    "delta_orderavg_sd": 0.05591803925053095
+   },
+   "tfres": {
+    "delta": 0.14706085940833247,
+    "delta_orderavg": 0.16846496952780568,
+    "delta_orderavg_sd": 0.03761630841123523
+   }
+  },
+  {
+   "session": 755434585,
+   "area": "VISpm",
+   "n_units": 156,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.12091428045663283,
+    "delta_orderavg": 0.12341331689901597,
+    "delta_orderavg_sd": 0.06864974565338823
+   },
+   "tfres": {
+    "delta": 0.17813048166787002,
+    "delta_orderavg": 0.13807403419508849,
+    "delta_orderavg_sd": 0.03769296228088484
+   }
+  },
+  {
+   "session": 755434585,
+   "area": "VISrl",
+   "n_units": 144,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.06881365387936333,
+    "delta_orderavg": 0.07123126618614957,
+    "delta_orderavg_sd": 0.028945214208455267
+   },
+   "tfres": {
+    "delta": 0.0854552952898193,
+    "delta_orderavg": 0.07802011081659707,
+    "delta_orderavg_sd": 0.03217797495340845
+   }
+  },
+  {
+   "session": 756029989,
+   "area": "VISal",
+   "n_units": 125,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.09813216865006817,
+    "delta_orderavg": 0.11287313360535292,
+    "delta_orderavg_sd": 0.046455289498162466
+   },
+   "tfres": {
+    "delta": 0.09511784877881552,
+    "delta_orderavg": 0.05913844004407431,
+    "delta_orderavg_sd": 0.05433868382175342
+   }
+  },
+  {
+   "session": 756029989,
+   "area": "VISam",
+   "n_units": 156,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1396308892116327,
+    "delta_orderavg": 0.09134253196792709,
+    "delta_orderavg_sd": 0.08690071735419869
+   },
+   "tfres": {
+    "delta": 0.12577143110700123,
+    "delta_orderavg": 0.0958661570224491,
+    "delta_orderavg_sd": 0.07475975816393837
+   }
+  },
+  {
+   "session": 756029989,
+   "area": "VISl",
+   "n_units": 121,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.11511353644544506,
+    "delta_orderavg": 0.1577812059294216,
+    "delta_orderavg_sd": 0.047953787353045015
+   },
+   "tfres": {
+    "delta": 0.10866799696952206,
+    "delta_orderavg": 0.17214779899882893,
+    "delta_orderavg_sd": 0.04763976640852196
+   }
+  },
+  {
+   "session": 756029989,
+   "area": "VISp",
+   "n_units": 167,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.19515207556806216,
+    "delta_orderavg": 0.13725349047958052,
+    "delta_orderavg_sd": 0.05288805855343154
+   },
+   "tfres": {
+    "delta": 0.1499797836722253,
+    "delta_orderavg": 0.11333780943049318,
+    "delta_orderavg_sd": 0.06877114351507607
+   }
+  },
+  {
+   "session": 756029989,
+   "area": "VISpm",
+   "n_units": 171,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.19617489474789696,
+    "delta_orderavg": 0.1041335155230538,
+    "delta_orderavg_sd": 0.04226151729561879
+   },
+   "tfres": {
+    "delta": 0.15273710879908184,
+    "delta_orderavg": 0.0933190799390858,
+    "delta_orderavg_sd": 0.032826597964869336
+   }
+  },
+  {
+   "session": 756029989,
+   "area": "VISrl",
+   "n_units": 81,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.04570445706674045,
+    "delta_orderavg": 0.053757731493571305,
+    "delta_orderavg_sd": 0.03412263003085234
+   },
+   "tfres": {
+    "delta": 0.03949506693232905,
+    "delta_orderavg": 0.05728065478243782,
+    "delta_orderavg_sd": 0.03831478664684903
+   }
+  },
+  {
+   "session": 757216464,
+   "area": "VIS",
+   "n_units": 129,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.049537004291130615,
+    "delta_orderavg": 0.06582786632721145,
+    "delta_orderavg_sd": 0.03555541558681663
+   },
+   "tfres": {
+    "delta": 0.08089463530739968,
+    "delta_orderavg": 0.07222854821356564,
+    "delta_orderavg_sd": 0.03939754632869246
+   }
+  },
+  {
+   "session": 757216464,
+   "area": "VISal",
+   "n_units": 134,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.15174301866463596,
+    "delta_orderavg": 0.17444358456937287,
+    "delta_orderavg_sd": 0.026962687538558273
+   },
+   "tfres": {
+    "delta": 0.20460171093212579,
+    "delta_orderavg": 0.17232463558671984,
+    "delta_orderavg_sd": 0.020717672634894446
+   }
+  },
+  {
+   "session": 757216464,
+   "area": "VISam",
+   "n_units": 144,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.20237050269576815,
+    "delta_orderavg": 0.0484726890510046,
+    "delta_orderavg_sd": 0.06209722605571331
+   },
+   "tfres": {
+    "delta": 0.18196974316496953,
+    "delta_orderavg": 0.051107140484190856,
+    "delta_orderavg_sd": 0.05705373680315006
+   }
+  },
+  {
+   "session": 757216464,
+   "area": "VISl",
+   "n_units": 159,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.18870298739618768,
+    "delta_orderavg": 0.15518833214870642,
+    "delta_orderavg_sd": 0.03851623845417229
+   },
+   "tfres": {
+    "delta": 0.2048476852379357,
+    "delta_orderavg": 0.16979541339977147,
+    "delta_orderavg_sd": 0.06006094474012501
+   }
+  },
+  {
+   "session": 757216464,
+   "area": "VISp",
+   "n_units": 261,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.18813413531346646,
+    "delta_orderavg": 0.13689641949978187,
+    "delta_orderavg_sd": 0.050204416653001654
+   },
+   "tfres": {
+    "delta": 0.18615348063632275,
+    "delta_orderavg": 0.13185661499957158,
+    "delta_orderavg_sd": 0.05454711975083281
+   }
+  },
+  {
+   "session": 757216464,
+   "area": "VISrl",
+   "n_units": 104,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.21728602232402824,
+    "delta_orderavg": 0.19512073039424094,
+    "delta_orderavg_sd": 0.03774972391496646
+   },
+   "tfres": {
+    "delta": 0.25454256820288124,
+    "delta_orderavg": 0.20728447339964082,
+    "delta_orderavg_sd": 0.045115967207373646
+   }
+  },
+  {
+   "session": 757970808,
+   "area": "VISal",
+   "n_units": 179,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.09660462723878181,
+    "delta_orderavg": 0.10778165578147152,
+    "delta_orderavg_sd": 0.057118246349045845
+   },
+   "tfres": {
+    "delta": 0.14105820955250767,
+    "delta_orderavg": 0.11602365989806163,
+    "delta_orderavg_sd": 0.05828613916685349
+   }
+  },
+  {
+   "session": 757970808,
+   "area": "VISam",
+   "n_units": 173,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.21720457485187633,
+    "delta_orderavg": 0.0673403847620583,
+    "delta_orderavg_sd": 0.06170648166201479
+   },
+   "tfres": {
+    "delta": 0.13926457876856516,
+    "delta_orderavg": 0.0889275662785154,
+    "delta_orderavg_sd": 0.04539557148054174
+   }
+  },
+  {
+   "session": 757970808,
+   "area": "VISli",
+   "n_units": 131,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.17041506303635137,
+    "delta_orderavg": 0.11531832102650767,
+    "delta_orderavg_sd": 0.061296198516829624
+   },
+   "tfres": {
+    "delta": 0.1668430978709981,
+    "delta_orderavg": 0.13789504057393479,
+    "delta_orderavg_sd": 0.0614812106220385
+   }
+  },
+  {
+   "session": 757970808,
+   "area": "VISp",
+   "n_units": 238,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.23925965408135821,
+    "delta_orderavg": 0.20350909515867102,
+    "delta_orderavg_sd": 0.05827373287955629
+   },
+   "tfres": {
+    "delta": 0.20926772428638812,
+    "delta_orderavg": 0.2239264362609876,
+    "delta_orderavg_sd": 0.07342957650674012
+   }
+  },
+  {
+   "session": 757970808,
+   "area": "VISrl",
+   "n_units": 155,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.09946676560641005,
+    "delta_orderavg": 0.1295182549970457,
+    "delta_orderavg_sd": 0.04759873572406803
+   },
+   "tfres": {
+    "delta": 0.138068502676926,
+    "delta_orderavg": 0.14335083358552356,
+    "delta_orderavg_sd": 0.049350044682412
+   }
+  },
+  {
+   "session": 758798717,
+   "area": "VISal",
+   "n_units": 193,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.22886899995326948,
+    "delta_orderavg": 0.16697702996775982,
+    "delta_orderavg_sd": 0.041010736301225405
+   },
+   "tfres": {
+    "delta": 0.12879615933284266,
+    "delta_orderavg": 0.1456273871810286,
+    "delta_orderavg_sd": 0.050472147474374555
+   }
+  },
+  {
+   "session": 758798717,
+   "area": "VISam",
+   "n_units": 114,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.2045056812543006,
+    "delta_orderavg": 0.11722806976908993,
+    "delta_orderavg_sd": 0.06022224866679652
+   },
+   "tfres": {
+    "delta": 0.23890212208472622,
+    "delta_orderavg": 0.12431995537640357,
+    "delta_orderavg_sd": 0.07323010138007603
+   }
+  },
+  {
+   "session": 758798717,
+   "area": "VISp",
+   "n_units": 184,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.08391409722967022,
+    "delta_orderavg": 0.13165750686140362,
+    "delta_orderavg_sd": 0.050046141394008446
+   },
+   "tfres": {
+    "delta": 0.048119809954455986,
+    "delta_orderavg": 0.14396189437065512,
+    "delta_orderavg_sd": 0.059704144574551546
+   }
+  },
+  {
+   "session": 758798717,
+   "area": "VISpm",
+   "n_units": 76,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.0185862351685053,
+    "delta_orderavg": 0.06575920265500895,
+    "delta_orderavg_sd": 0.08524047286626511
+   },
+   "tfres": {
+    "delta": 0.04122199808968227,
+    "delta_orderavg": 0.03926819248482482,
+    "delta_orderavg_sd": 0.05786620409324031
+   }
+  },
+  {
+   "session": 759883607,
+   "area": "VISal",
+   "n_units": 173,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.23238901592339234,
+    "delta_orderavg": 0.12585829608434326,
+    "delta_orderavg_sd": 0.10150033606031506
+   },
+   "tfres": {
+    "delta": 0.25023359259799355,
+    "delta_orderavg": 0.1181334339409176,
+    "delta_orderavg_sd": 0.09540595227088379
+   }
+  },
+  {
+   "session": 759883607,
+   "area": "VISam",
+   "n_units": 168,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.3432346690456826,
+    "delta_orderavg": 0.11009085564650718,
+    "delta_orderavg_sd": 0.10027996836321099
+   },
+   "tfres": {
+    "delta": 0.2809845122470831,
+    "delta_orderavg": 0.14396103837046317,
+    "delta_orderavg_sd": 0.07041700132941368
+   }
+  },
+  {
+   "session": 759883607,
+   "area": "VISp",
+   "n_units": 237,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.2200499795724173,
+    "delta_orderavg": 0.1385764776305463,
+    "delta_orderavg_sd": 0.039548254807980715
+   },
+   "tfres": {
+    "delta": 0.20209857685822155,
+    "delta_orderavg": 0.1468005786448535,
+    "delta_orderavg_sd": 0.040693241568282155
+   }
+  },
+  {
+   "session": 759883607,
+   "area": "VISpm",
+   "n_units": 168,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.37967201907931164,
+    "delta_orderavg": 0.17055110403297213,
+    "delta_orderavg_sd": 0.09319169497702927
+   },
+   "tfres": {
+    "delta": 0.3517586289333947,
+    "delta_orderavg": 0.16599460880823633,
+    "delta_orderavg_sd": 0.0958641130512688
+   }
+  },
+  {
+   "session": 760345702,
+   "area": "VISal",
+   "n_units": 168,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1549368789720701,
+    "delta_orderavg": 0.1403161610866829,
+    "delta_orderavg_sd": 0.05607044113115798
+   },
+   "tfres": {
+    "delta": 0.11127654071126727,
+    "delta_orderavg": 0.14418107488246107,
+    "delta_orderavg_sd": 0.061761463357713015
+   }
+  },
+  {
+   "session": 760345702,
+   "area": "VISam",
+   "n_units": 141,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.0579339121739652,
+    "delta_orderavg": 0.0937556896150449,
+    "delta_orderavg_sd": 0.049690444128846656
+   },
+   "tfres": {
+    "delta": 0.04600429585716955,
+    "delta_orderavg": 0.10591259397711449,
+    "delta_orderavg_sd": 0.05098111149035445
+   }
+  },
+  {
+   "session": 760345702,
+   "area": "VISl",
+   "n_units": 135,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.26555113349306464,
+    "delta_orderavg": 0.19308450017339177,
+    "delta_orderavg_sd": 0.08943745698953813
+   },
+   "tfres": {
+    "delta": 0.226158037324774,
+    "delta_orderavg": 0.1974603787684163,
+    "delta_orderavg_sd": 0.10455213967303804
+   }
+  },
+  {
+   "session": 760345702,
+   "area": "VISp",
+   "n_units": 200,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.31366727664817917,
+    "delta_orderavg": 0.246285767256099,
+    "delta_orderavg_sd": 0.048232428591505824
+   },
+   "tfres": {
+    "delta": 0.2872733420691692,
+    "delta_orderavg": 0.26196273326083186,
+    "delta_orderavg_sd": 0.05249401457121011
+   }
+  },
+  {
+   "session": 760345702,
+   "area": "VISpm",
+   "n_units": 119,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.31724018334171267,
+    "delta_orderavg": 0.21892887338228736,
+    "delta_orderavg_sd": 0.04150569491284014
+   },
+   "tfres": {
+    "delta": 0.21074070544464268,
+    "delta_orderavg": 0.2230147086980868,
+    "delta_orderavg_sd": 0.03330285743749229
+   }
+  },
+  {
+   "session": 760693773,
+   "area": "VISal",
+   "n_units": 279,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.09832673666981506,
+    "delta_orderavg": 0.11619484016535314,
+    "delta_orderavg_sd": 0.022220745761292342
+   },
+   "tfres": {
+    "delta": 0.07765962742231126,
+    "delta_orderavg": 0.08902904704044985,
+    "delta_orderavg_sd": 0.029899523288349206
+   }
+  },
+  {
+   "session": 760693773,
+   "area": "VISam",
+   "n_units": 138,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.08968897387140642,
+    "delta_orderavg": 0.10333527634387582,
+    "delta_orderavg_sd": 0.025505155636051217
+   },
+   "tfres": {
+    "delta": 0.0897499525797076,
+    "delta_orderavg": 0.11169098464267943,
+    "delta_orderavg_sd": 0.024260159979469405
+   }
+  },
+  {
+   "session": 760693773,
+   "area": "VISp",
+   "n_units": 217,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1937062603776633,
+    "delta_orderavg": 0.09375668673271406,
+    "delta_orderavg_sd": 0.054379940247273245
+   },
+   "tfres": {
+    "delta": 0.1197713955002916,
+    "delta_orderavg": 0.060080830102119405,
+    "delta_orderavg_sd": 0.06632413909195069
+   }
+  },
+  {
+   "session": 760693773,
+   "area": "VISpm",
+   "n_units": 113,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.10843157023537583,
+    "delta_orderavg": 0.03046434652900934,
+    "delta_orderavg_sd": 0.08124157140456792
+   },
+   "tfres": {
+    "delta": 0.08332960662567597,
+    "delta_orderavg": 0.01580142706120704,
+    "delta_orderavg_sd": 0.08982001317512567
+   }
+  },
+  {
+   "session": 760693773,
+   "area": "VISrl",
+   "n_units": 147,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.08009562569616784,
+    "delta_orderavg": 0.0957086771997316,
+    "delta_orderavg_sd": 0.06453678759313441
+   },
+   "tfres": {
+    "delta": 0.0822851982662243,
+    "delta_orderavg": 0.08495882373474288,
+    "delta_orderavg_sd": 0.07328760973976192
+   }
+  },
+  {
+   "session": 761418226,
+   "area": "VISal",
+   "n_units": 408,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.08854935856718735,
+    "delta_orderavg": 0.13036804445159705,
+    "delta_orderavg_sd": 0.050963497915588477
+   },
+   "tfres": {
+    "delta": 0.1005319396125032,
+    "delta_orderavg": 0.14068073442986606,
+    "delta_orderavg_sd": 0.04803089414831991
+   }
+  },
+  {
+   "session": 761418226,
+   "area": "VISp",
+   "n_units": 113,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.18684612929712321,
+    "delta_orderavg": 0.16012495114531802,
+    "delta_orderavg_sd": 0.0266975844549824
+   },
+   "tfres": {
+    "delta": 0.1619773536441945,
+    "delta_orderavg": 0.16189213459794985,
+    "delta_orderavg_sd": 0.034450888460109005
+   }
+  },
+  {
+   "session": 761418226,
+   "area": "VISpm",
+   "n_units": 126,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.05740504820452495,
+    "delta_orderavg": 0.06559501259792612,
+    "delta_orderavg_sd": 0.03692695722320769
+   },
+   "tfres": {
+    "delta": 0.08964909287450187,
+    "delta_orderavg": 0.07737503546934592,
+    "delta_orderavg_sd": 0.02764403695556358
+   }
+  },
+  {
+   "session": 761418226,
+   "area": "VISrl",
+   "n_units": 308,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.016651962117445337,
+    "delta_orderavg": 0.12309600365982287,
+    "delta_orderavg_sd": 0.052874954067905496
+   },
+   "tfres": {
+    "delta": 0.022346241931631036,
+    "delta_orderavg": 0.12622132350358606,
+    "delta_orderavg_sd": 0.053180215943791916
+   }
+  },
+  {
+   "session": 762120172,
+   "area": "VIS",
+   "n_units": 154,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.005362488603569249,
+    "delta_orderavg": 0.05064712236128408,
+    "delta_orderavg_sd": 0.07075915026694142
+   },
+   "tfres": {
+    "delta": 0.009542068410054158,
+    "delta_orderavg": 0.054164716933011406,
+    "delta_orderavg_sd": 0.07548836160823096
+   }
+  },
+  {
+   "session": 762120172,
+   "area": "VISal",
+   "n_units": 212,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.0862819951163794,
+    "delta_orderavg": 0.09704122063029304,
+    "delta_orderavg_sd": 0.07206326850140604
+   },
+   "tfres": {
+    "delta": 0.10604234867594933,
+    "delta_orderavg": 0.08331551198457525,
+    "delta_orderavg_sd": 0.08270094341630557
+   }
+  },
+  {
+   "session": 762120172,
+   "area": "VISam",
+   "n_units": 76,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.0632293239131328,
+    "delta_orderavg": 0.06477943543780743,
+    "delta_orderavg_sd": 0.07038426485371847
+   },
+   "tfres": {
+    "delta": 0.10043205606210938,
+    "delta_orderavg": 0.06909857162324747,
+    "delta_orderavg_sd": 0.08119259025737298
+   }
+  },
+  {
+   "session": 762120172,
+   "area": "VISl",
+   "n_units": 185,
+   "n_pres": 600,
+   "pooled": {
+    "delta": -0.06308241780054069,
+    "delta_orderavg": 0.050197003810377776,
+    "delta_orderavg_sd": 0.09085946615646781
+   },
+   "tfres": {
+    "delta": -0.05694677350952522,
+    "delta_orderavg": 0.052920975294955805,
+    "delta_orderavg_sd": 0.08726278922041064
+   }
+  },
+  {
+   "session": 762120172,
+   "area": "VISp",
+   "n_units": 234,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.18261428515129915,
+    "delta_orderavg": 0.20820449407481764,
+    "delta_orderavg_sd": 0.033193444653592585
+   },
+   "tfres": {
+    "delta": 0.18093475955662008,
+    "delta_orderavg": 0.20102257747682512,
+    "delta_orderavg_sd": 0.03944501673297182
+   }
+  },
+  {
+   "session": 762602078,
+   "area": "VIS",
+   "n_units": 342,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.029568908934551927,
+    "delta_orderavg": 0.08912726371967913,
+    "delta_orderavg_sd": 0.05045092703180102
+   },
+   "tfres": {
+    "delta": 0.05608166112180868,
+    "delta_orderavg": 0.1015687998477433,
+    "delta_orderavg_sd": 0.06011927606497879
+   }
+  },
+  {
+   "session": 762602078,
+   "area": "VISam",
+   "n_units": 153,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.0005779935404205683,
+    "delta_orderavg": -0.06723049056159225,
+    "delta_orderavg_sd": 0.07382001297187513
+   },
+   "tfres": {
+    "delta": -0.026783036138931876,
+    "delta_orderavg": -0.09391283002373305,
+    "delta_orderavg_sd": 0.08417580735549178
+   }
+  },
+  {
+   "session": 762602078,
+   "area": "VISmmp",
+   "n_units": 99,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.0944798298821494,
+    "delta_orderavg": 0.12435797381813579,
+    "delta_orderavg_sd": 0.03255287982484931
+   },
+   "tfres": {
+    "delta": 0.11097935399986684,
+    "delta_orderavg": 0.12018362177762,
+    "delta_orderavg_sd": 0.040572377946861846
+   }
+  },
+  {
+   "session": 762602078,
+   "area": "VISp",
+   "n_units": 219,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1825052133587429,
+    "delta_orderavg": 0.14827035863321075,
+    "delta_orderavg_sd": 0.03827707566983936
+   },
+   "tfres": {
+    "delta": 0.180914291170814,
+    "delta_orderavg": 0.16225834833916647,
+    "delta_orderavg_sd": 0.060540588370441024
+   }
+  },
+  {
+   "session": 762602078,
+   "area": "VISrl",
+   "n_units": 197,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.12853396155323965,
+    "delta_orderavg": 0.2342342604525086,
+    "delta_orderavg_sd": 0.07369589616977999
+   },
+   "tfres": {
+    "delta": 0.15004780650404945,
+    "delta_orderavg": 0.2648349333486015,
+    "delta_orderavg_sd": 0.07914469423837613
+   }
+  },
+  {
+   "session": 763673393,
+   "area": "VIS",
+   "n_units": 173,
+   "n_pres": 600,
+   "pooled": {
+    "delta": -0.04219594837756502,
+    "delta_orderavg": 0.01298247617798257,
+    "delta_orderavg_sd": 0.036847769758478206
+   },
+   "tfres": {
+    "delta": -0.03511801131725925,
+    "delta_orderavg": 0.022575844208119745,
+    "delta_orderavg_sd": 0.03638847807918277
+   }
+  },
+  {
+   "session": 763673393,
+   "area": "VISam",
+   "n_units": 216,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.19632535260429412,
+    "delta_orderavg": 0.15163339424667385,
+    "delta_orderavg_sd": 0.03347969387126022
+   },
+   "tfres": {
+    "delta": 0.14994383703947628,
+    "delta_orderavg": 0.1395472685079715,
+    "delta_orderavg_sd": 0.04584558545730981
+   }
+  },
+  {
+   "session": 763673393,
+   "area": "VISl",
+   "n_units": 105,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1457452156744938,
+    "delta_orderavg": 0.08196194134782779,
+    "delta_orderavg_sd": 0.035039623663959
+   },
+   "tfres": {
+    "delta": 0.11867758031944647,
+    "delta_orderavg": 0.0778706854354537,
+    "delta_orderavg_sd": 0.030628034986561813
+   }
+  },
+  {
+   "session": 763673393,
+   "area": "VISp",
+   "n_units": 175,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.32077391099647623,
+    "delta_orderavg": 0.2288197228298376,
+    "delta_orderavg_sd": 0.09142714875349482
+   },
+   "tfres": {
+    "delta": 0.11935274982056804,
+    "delta_orderavg": 0.15489181257262968,
+    "delta_orderavg_sd": 0.0377288944251246
+   }
+  },
+  {
+   "session": 763673393,
+   "area": "VISrl",
+   "n_units": 171,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.18618734778359233,
+    "delta_orderavg": 0.1085989429490587,
+    "delta_orderavg_sd": 0.03981512129592159
+   },
+   "tfres": {
+    "delta": 0.02096492040339419,
+    "delta_orderavg": 0.09607292632550189,
+    "delta_orderavg_sd": 0.0406441977597678
+   }
+  },
+  {
+   "session": 773418906,
+   "area": "VISal",
+   "n_units": 421,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.14910300487403944,
+    "delta_orderavg": 0.12813019259323616,
+    "delta_orderavg_sd": 0.043356469226560806
+   },
+   "tfres": {
+    "delta": 0.1353450481155117,
+    "delta_orderavg": 0.12009804176466446,
+    "delta_orderavg_sd": 0.0746521171585539
+   }
+  },
+  {
+   "session": 773418906,
+   "area": "VISam",
+   "n_units": 55,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.04429808885159578,
+    "delta_orderavg": 0.025875926739477858,
+    "delta_orderavg_sd": 0.08649838959403404
+   },
+   "tfres": {
+    "delta": 0.0616148620301054,
+    "delta_orderavg": 0.026793851745736078,
+    "delta_orderavg_sd": 0.09688634066980606
+   }
+  },
+  {
+   "session": 773418906,
+   "area": "VISmmp",
+   "n_units": 112,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.08367935506279432,
+    "delta_orderavg": 0.06316862871837997,
+    "delta_orderavg_sd": 0.11115351148984143
+   },
+   "tfres": {
+    "delta": 0.09714312863718175,
+    "delta_orderavg": 0.06422042404538743,
+    "delta_orderavg_sd": 0.0863071872210573
+   }
+  },
+  {
+   "session": 773418906,
+   "area": "VISp",
+   "n_units": 178,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.21518353104529017,
+    "delta_orderavg": 0.1406215916263237,
+    "delta_orderavg_sd": 0.10110333235301366
+   },
+   "tfres": {
+    "delta": 0.0398692482708394,
+    "delta_orderavg": 0.11111359061095509,
+    "delta_orderavg_sd": 0.12319235920725115
+   }
+  },
+  {
+   "session": 773418906,
+   "area": "VISrl",
+   "n_units": 121,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.12559536126249993,
+    "delta_orderavg": 0.10524243661806258,
+    "delta_orderavg_sd": 0.04371509959475857
+   },
+   "tfres": {
+    "delta": 0.12718772913772253,
+    "delta_orderavg": 0.10826141598454807,
+    "delta_orderavg_sd": 0.05290570196117547
+   }
+  },
+  {
+   "session": 791319847,
+   "area": "VISal",
+   "n_units": 116,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.12629601265931364,
+    "delta_orderavg": 0.09767068600138469,
+    "delta_orderavg_sd": 0.06749509742710737
+   },
+   "tfres": {
+    "delta": 0.15705184785952775,
+    "delta_orderavg": 0.10741569291686254,
+    "delta_orderavg_sd": 0.06497526393234086
+   }
+  },
+  {
+   "session": 791319847,
+   "area": "VISam",
+   "n_units": 141,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.17896632615352362,
+    "delta_orderavg": 0.06816891432083041,
+    "delta_orderavg_sd": 0.06448645919744998
+   },
+   "tfres": {
+    "delta": 0.19535072081768168,
+    "delta_orderavg": 0.07261809392014103,
+    "delta_orderavg_sd": 0.06865629147238683
+   }
+  },
+  {
+   "session": 791319847,
+   "area": "VISl",
+   "n_units": 149,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.18642804024145318,
+    "delta_orderavg": 0.07445519424938128,
+    "delta_orderavg_sd": 0.04709669504400481
+   },
+   "tfres": {
+    "delta": 0.1996761731197317,
+    "delta_orderavg": 0.07808373270883688,
+    "delta_orderavg_sd": 0.04684154489797391
+   }
+  },
+  {
+   "session": 791319847,
+   "area": "VISp",
+   "n_units": 241,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.3490285589283539,
+    "delta_orderavg": 0.1821007164585266,
+    "delta_orderavg_sd": 0.09888395448199226
+   },
+   "tfres": {
+    "delta": 0.3732450300425688,
+    "delta_orderavg": 0.17058798250632534,
+    "delta_orderavg_sd": 0.09624794593032253
+   }
+  },
+  {
+   "session": 791319847,
+   "area": "VISpm",
+   "n_units": 112,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.17597891473569555,
+    "delta_orderavg": 0.002318325812057592,
+    "delta_orderavg_sd": 0.10892469409955113
+   },
+   "tfres": {
+    "delta": 0.2036054828672836,
+    "delta_orderavg": -0.007583127356678836,
+    "delta_orderavg_sd": 0.12770021044961297
+   }
+  },
+  {
+   "session": 791319847,
+   "area": "VISrl",
+   "n_units": 160,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.25623483523328694,
+    "delta_orderavg": 0.1477811325631382,
+    "delta_orderavg_sd": 0.04481546639341657
+   },
+   "tfres": {
+    "delta": 0.2721202884782747,
+    "delta_orderavg": 0.15753178787864713,
+    "delta_orderavg_sd": 0.046122919761519894
+   }
+  },
+  {
+   "session": 797828357,
+   "area": "VISal",
+   "n_units": 137,
+   "n_pres": 572,
+   "pooled": {
+    "delta": 0.02726750057392811,
+    "delta_orderavg": 0.08977078296845535,
+    "delta_orderavg_sd": 0.0462983429722915
+   },
+   "tfres": {
+    "delta": 0.05389746506714921,
+    "delta_orderavg": 0.08962684068464419,
+    "delta_orderavg_sd": 0.04099977225278674
+   }
+  },
+  {
+   "session": 797828357,
+   "area": "VISam",
+   "n_units": 183,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.061337830398260865,
+    "delta_orderavg": 0.1113748283794712,
+    "delta_orderavg_sd": 0.05521683206496691
+   },
+   "tfres": {
+    "delta": 0.07775371136006072,
+    "delta_orderavg": 0.11194981265467556,
+    "delta_orderavg_sd": 0.048210771765192416
+   }
+  },
+  {
+   "session": 797828357,
+   "area": "VISl",
+   "n_units": 151,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.08724698141365676,
+    "delta_orderavg": 0.14412858188246663,
+    "delta_orderavg_sd": 0.11989460532215535
+   },
+   "tfres": {
+    "delta": -0.06341720304411852,
+    "delta_orderavg": 0.147235150300393,
+    "delta_orderavg_sd": 0.1322596196630776
+   }
+  },
+  {
+   "session": 797828357,
+   "area": "VISp",
+   "n_units": 239,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.1257967874784768,
+    "delta_orderavg": 0.18057256125023147,
+    "delta_orderavg_sd": 0.07698282106209862
+   },
+   "tfres": {
+    "delta": 0.15495630641212813,
+    "delta_orderavg": 0.18252095929865667,
+    "delta_orderavg_sd": 0.07348241021239538
+   }
+  },
+  {
+   "session": 797828357,
+   "area": "VISpm",
+   "n_units": 158,
+   "n_pres": 600,
+   "pooled": {
+    "delta": -0.0341311927047475,
+    "delta_orderavg": 0.042897325133805335,
+    "delta_orderavg_sd": 0.10026234603651102
+   },
+   "tfres": {
+    "delta": -0.039273573388021885,
+    "delta_orderavg": 0.042509288637486306,
+    "delta_orderavg_sd": 0.11473048545674104
+   }
+  },
+  {
+   "session": 798911424,
+   "area": "VISal",
+   "n_units": 213,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.09267419048907335,
+    "delta_orderavg": 0.08036297043035823,
+    "delta_orderavg_sd": 0.05462469204734405
+   },
+   "tfres": {
+    "delta": 0.113136818376818,
+    "delta_orderavg": 0.09002142766164623,
+    "delta_orderavg_sd": 0.050937579933898934
+   }
+  },
+  {
+   "session": 798911424,
+   "area": "VISam",
+   "n_units": 312,
+   "n_pres": 600,
+   "pooled": {
+    "delta": -0.016995157751489985,
+    "delta_orderavg": 0.04832587106710818,
+    "delta_orderavg_sd": 0.04041906287376207
+   },
+   "tfres": {
+    "delta": -0.004470494681121581,
+    "delta_orderavg": 0.05168733860563785,
+    "delta_orderavg_sd": 0.048854216179555036
+   }
+  },
+  {
+   "session": 798911424,
+   "area": "VISl",
+   "n_units": 177,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.11935362716740551,
+    "delta_orderavg": 0.07340965244700964,
+    "delta_orderavg_sd": 0.060767071023433386
+   },
+   "tfres": {
+    "delta": 0.1795067798373301,
+    "delta_orderavg": 0.09256246383268879,
+    "delta_orderavg_sd": 0.061045785536442146
+   }
+  },
+  {
+   "session": 798911424,
+   "area": "VISp",
+   "n_units": 235,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.30271717108196855,
+    "delta_orderavg": 0.19256137236225063,
+    "delta_orderavg_sd": 0.05870943725126429
+   },
+   "tfres": {
+    "delta": 0.23278683256645857,
+    "delta_orderavg": 0.16148606560854517,
+    "delta_orderavg_sd": 0.04137517289982153
+   }
+  },
+  {
+   "session": 798911424,
+   "area": "VISrl",
+   "n_units": 129,
+   "n_pres": 600,
+   "pooled": {
+    "delta": -0.06157720827931376,
+    "delta_orderavg": 0.06110553263718814,
+    "delta_orderavg_sd": 0.07009999106502811
+   },
+   "tfres": {
+    "delta": -0.09865527033242062,
+    "delta_orderavg": 0.050188543626929046,
+    "delta_orderavg_sd": 0.07705006843159558
+   }
+  },
+  {
+   "session": 799864342,
+   "area": "VISal",
+   "n_units": 137,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.16119731361527626,
+    "delta_orderavg": 0.15283386594738785,
+    "delta_orderavg_sd": 0.06630124985293033
+   },
+   "tfres": {
+    "delta": 0.12541280911762664,
+    "delta_orderavg": 0.10283981940995812,
+    "delta_orderavg_sd": 0.07553310485563751
+   }
+  },
+  {
+   "session": 799864342,
+   "area": "VISam",
+   "n_units": 114,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.09357952442753335,
+    "delta_orderavg": 0.16875156074937275,
+    "delta_orderavg_sd": 0.06330017895698006
+   },
+   "tfres": {
+    "delta": 0.11165146734607911,
+    "delta_orderavg": 0.1823063925712294,
+    "delta_orderavg_sd": 0.06632622668112977
+   }
+  },
+  {
+   "session": 799864342,
+   "area": "VISl",
+   "n_units": 126,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.05153449655014006,
+    "delta_orderavg": 0.13556497252650437,
+    "delta_orderavg_sd": 0.09560172303402233
+   },
+   "tfres": {
+    "delta": 0.0866198799525419,
+    "delta_orderavg": 0.1479811646565382,
+    "delta_orderavg_sd": 0.10437181432186043
+   }
+  },
+  {
+   "session": 799864342,
+   "area": "VISmma",
+   "n_units": 140,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.10789469793248241,
+    "delta_orderavg": 0.08739591626533699,
+    "delta_orderavg_sd": 0.02347500719265285
+   },
+   "tfres": {
+    "delta": 0.13701952899948244,
+    "delta_orderavg": 0.09606381058805182,
+    "delta_orderavg_sd": 0.028505380761081434
+   }
+  },
+  {
+   "session": 799864342,
+   "area": "VISp",
+   "n_units": 185,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.06274224580793761,
+    "delta_orderavg": 0.05187127687988922,
+    "delta_orderavg_sd": 0.08100915482578079
+   },
+   "tfres": {
+    "delta": -0.09431341265193433,
+    "delta_orderavg": -0.06444956472787368,
+    "delta_orderavg_sd": 0.0765272064257315
+   }
+  },
+  {
+   "session": 799864342,
+   "area": "VISrl",
+   "n_units": 116,
+   "n_pres": 600,
+   "pooled": {
+    "delta": 0.16796560742912653,
+    "delta_orderavg": 0.1572511151938504,
+    "delta_orderavg_sd": 0.05012920201992317
+   },
+   "tfres": {
+    "delta": 0.17011677803296987,
+    "delta_orderavg": 0.1684490526609695,
+    "delta_orderavg_sd": 0.04822252973752067
+   }
+  }
+ ],
+ "summary": {
+  "pooled_VISp": {
+   "n": 32,
+   "declared_positive": 32,
+   "orderavg_positive": 32,
+   "declared_mean": 0.20420643058457463,
+   "orderavg_mean": 0.1573042742677105,
+   "order_sd_median": 0.05500123116077764,
+   "abs_declared_median": 0.19442916797286275,
+   "r_declared_orderavg": 0.6890785194762893
+  },
+  "pooled_all": {
+   "n": 167,
+   "declared_positive": 156,
+   "orderavg_positive": 166,
+   "declared_mean": 0.12996969734566574,
+   "orderavg_mean": 0.11525677199529034,
+   "order_sd_median": 0.05361458962894445,
+   "abs_declared_median": 0.12559536126249993,
+   "r_declared_orderavg": 0.6629097163876481
+  },
+  "tfres_VISp": {
+   "n": 32,
+   "declared_positive": 30,
+   "orderavg_positive": 31,
+   "declared_mean": 0.16396070798039455,
+   "orderavg_mean": 0.14696004698811432,
+   "order_sd_median": 0.06012236647249629,
+   "abs_declared_median": 0.16847693489299836,
+   "r_declared_orderavg": 0.770535606170298
+  },
+  "tfres_all": {
+   "n": 167,
+   "declared_positive": 151,
+   "orderavg_positive": 164,
+   "declared_mean": 0.12312016392598288,
+   "orderavg_mean": 0.11529665227226872,
+   "order_sd_median": 0.05408494119160587,
+   "abs_declared_median": 0.1197713955002916,
+   "r_declared_orderavg": 0.650712724004999
+  }
+ }
+}

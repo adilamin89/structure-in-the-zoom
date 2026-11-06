@@ -131,7 +131,7 @@ amplitudes. Which tuning the shift reads (Section 4).
 **`--split-by score.npy`** (`split_by`): the top, bottom and a random third of the features at matched size, each against its own
 floor. Whether a feature property carries the shift; the most direction-selective third shifts more in all eight recordings (Section 4).
 
-**`--order sequential|antipodal|<list>`, `--antipode pairs.json`**: a declared accumulation order and the antipodal stall test. Order
+**`--order sequential|antipodal|<list>`, `--antipode pairs.json`**: a declared accumulation order and, with antipodal pairs, the share of the climb left after half the circle. Order
 effects and what sets them (Appendix E).
 
 **`--strata`, `--time-blocks E`, `--null-shift`**: nulls that keep a nuisance, an acquisition block or the labels' time order fixed.
@@ -165,8 +165,9 @@ with h5py directly.
 
 1. **Declare before you look.** Classes, class count and accumulation order are fixed first.
 2. **Six or more classes, ten or more samples per rung.** A two-class ladder fits a slope through two points.
-3. **For unordered classes, read the order-averaged shift**, and for ordered ones too whenever the SD over orders is comparable to
-   the shift: the declared-order value is a property of one path.
+3. **For unordered classes, read the order-averaged shift**, and for ordered ones too when the declared shift lies within two SDs
+   over random orders of zero or more than two from their average: the declared-order value is a property of one path, and
+   `rung summarize` says when.
 4. **Pass your nuisance structure as strata.** A shift that survives the within-stratum permutation is the label's; one the
    stratified null absorbs is composition.
 5. **Read the spectrum first**, and standardize when one direction dominates.
@@ -181,11 +182,11 @@ with h5py directly.
    Evaluated at each rung's sample counts (`scripts_canonical/finite_n_identity.py`, `--account`), the identity puts the within-class
    part of eight equal Gaussian classes of PR_class = 30 within 0.05 of the population identity's value on the same rungs once a
    class holds about 20, 8 and 3 times PR_class samples at σ = 0.2, 0.44 and 0.7, at higher ratios n/PR_class for classes of
-   lower PR.
+   lower PR. `--decompose` prints each class's own fluctuation dimension beside PR(W), which pools the classes.
 9. **For a depth profile, the inference is on the profile**, the integrated excess of the shift over its embedding value against the
    permutation null; per-layer counts are descriptive.
-10. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, the linear one follows a
-    few high-variance units.
+10. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, or only one separates
+    from its null, the linear one can follow a few high-variance units.
 11. **The shift reads how classes spread.** Classes that differ only by one small offset between near-identical items give it
     nothing to read, while a linear probe can still find that offset.
 12. **Any covariance statistic inherits a floor.** Read a principal-angle or other covariance comparison against its label-blind
@@ -246,6 +247,43 @@ circuit heads (AUC 0.92), and over ten default seeds the AUC is 0.93 ± 0.01. Ge
 
 Every number above is read from its artifact by `tests/test_readme_numbers.py`.
 
+## Runs on data the paper never saw
+
+`rung` was installed from this repository and run on a recording and on model families the paper never used.
+
+**Allen Brain Observatory two-photon imaging** (Visual Coding; 61 primary visual cortex experiments in three excitatory lines;
+drifting gratings, eight directions, about 75 presentations each, 86 to 474 cells). The release is NWB 1, read with h5py
+(`heldout_allen2p_extract.py` reproduces the release's own per-presentation response); temporal frequency serves as strata.
+
+```bash
+rung data X.npy direction.npy --antipode pairs.json --sectors --decompose --cov-floors --strata tf.npy --time-blocks 48
+```
+
+- Direction leaves its floor. The order-averaged shift is positive in 48 of 61 experiments and above its label permutations in 49
+  (median +0.07), and it stays above the time-blocked null in 47 of those 49.
+- The fluctuations lift and the class means pull down, as in the paper's imaging. The within-class part is positive in 47 of 61
+  (median +0.21) and the class-mean part is negative in 53 (median -0.07). The class means lie along the strong fluctuations
+  (median alignment a = 1.38), and a orders the class-mean part across experiments (Spearman -0.82). One fluctuation shape for every
+  class turns the order-averaged shift negative in 56 of 61; equal class means leave it positive in 57.
+- The class means are orientation-led in 60 of 61, and a median 68% of the principal-angle dissimilarity is label-blind floor.
+- The response definition is part of the probe. The release divides each presentation by its own one-second baseline; without that
+  division a falls in 55 of 61 experiments (median 1.01) and the class-mean part turns positive in 25. The sign follows a in both.
+- At this design, read the order-averaged shift. With 75 presentations per class and a few hundred cells the classes differ in their
+  own fluctuation dimension, and the shift along the declared angular order spans -0.62 to +0.72. Its SD over random orders (median
+  0.19) follows that difference (Spearman 0.98 with the spread of single-class log PR) and falls to 0.05 when every class has one
+  fluctuation shape. In the Allen Neuropixels populations the same SD is 0.05 (`allen_order_spread.json`).
+
+**Qwen2.5-0.5B** on `axes/world_knowledge32.json` (`rung llm --match-last-token`): the order-averaged shift is positive at all 25
+layers, from +0.014 at the embedding to +0.112 at the last layer, and the final-token-matched shift stays positive at every layer of
+the second half. **OLMo-2-1B at three training checkpoints** (`--revision`): the second-half matched shift is -0.013 untrained,
++0.032 after 21B tokens and +0.047 at the final checkpoint, where the order-averaged shift is certified at all 17 layers.
+
+**A new axis from a benchmark** (`axes/mmlu_subjects8_answer.json`, built with `rung axis` from `cais/mmlu`, eight subjects of 32
+questions). MMLU subjects end on few distinct tokens ('?', ':', '_____.'), and `rung llm` warns that the final token can carry the
+shift. Ending every prompt on the standard suffix `\nAnswer:` removes that: the subject shift then stays above its permutations at 22
+of the 24 layers past the embedding, at about half its size with the varied endings (mean over those layers +0.094 against +0.193).
+Give prompts a common ending whenever the classes differ in format.
+
 ## Further analyses in this repository
 
 The repository also carries analyses beyond the camera-ready: the language-model battery at four Pythia sizes and five
@@ -260,7 +298,7 @@ rung.py                  the instrument: zoom(), decompose(), account(), candida
                          cov_floors(), llm_battery(), head_scores(), build_axis(), nwb_counts(), and the rung command line
                          (data | features | nwb | llm | axis | plot | summarize); numpy core, torch and transformers for models
 theta_zoom.py            alias of rung (the name through 1.1.0)
-tests/                   pytest suite: the decomposition identity, the nulls, the stall test, the split at matched size, the
+tests/                   pytest suite: the decomposition identity, the nulls, the share of the climb left after half the circle, the split at matched size, the
                          sector fit, the declared orders, the validity mask, the floor law, the account, the candidate screen,
                          the feature ladder, the blocks, the loaders, the command line, and every number this README prints;
                          regressions against the paper's artifacts with RUNG_DATA_TESTS=1 (raw data under raw/)
@@ -322,6 +360,9 @@ the measured Allen results were compared with them; the two-term figure (`make_f
 | Lattices and constructed systems of known structure | lattice_ground_truth_score.json, xy_groundtruth.json, xy_onset.json, ising_spectral_account.json | lattice_ground_truth.py, lattice_ground_truth_score.py, xy_groundtruth.py, xy_onset.py, xy_split.py, ising_spectral_account.py |
 | Language models: the topic and construction lifts at four Pythia sizes, last-token controls, probes, sparse autoencoders, a known circuit, other architectures | llm_battery_*.json, llm_lasttoken_*.json, llm_lasttoken_fractions.json, llm_probes_*.json, llm_sae.json, llm_ioi.json, llm_architectures_*.json, llm_path_nulls.json | llm_battery.py, llm_lasttoken.py, llm_lasttoken_fractions.py, llm_probes.py, llm_sae.py, llm_ioi.py, llm_architectures.py, llm_path_nulls.py, llm_score.py |
 | Worked examples (`rung` on GT3 and on Pythia-160m) | worked_example_gt3.json, appm_lm_check.json | worked_example_lm_check.py |
+| Runs on data the paper never saw: Allen two-photon (release response and no per-presentation baseline), Section 5's controls, Qwen2.5-0.5B, OLMo-2-1B checkpoints, MMLU subjects | heldout_allen2p/, heldout_allen2p_nobaseline/, heldout_allen2p_controls.json, heldout_allen2p_summary.json, heldout_allen2p_experiments.json, heldout_qwen05_*.json, heldout_olmo2_1b_*.json | heldout_allen2p_extract.py, heldout_allen2p_controls.py, heldout_allen2p_score.py |
+| Allen Neuropixels: the declared-order shift against the order-averaged one and its SD over orders | allen_order_spread.json | allen_order_spread.py |
+| Allen's two-term misses against the finite-sample identity: the within-class part of all 167 populations, the shift's sign in 163 | allen_finite_n_identity.json | allen_finite_n_identity.py |
 | rung against the paper: replays of the paper's floors, the account on eight recordings, the attention heads | rung_acceptance_replay.json, rung_account_imaging.json, rung_heads_ioi.json | rung_acceptance_replay.py, rung_account_imaging.py, rung_heads_ioi.py, make_axis_ioi.py |
 | Appendix checks: coarse-graining, finite size, synthetic tuning width, the exact floor inverse | cr_graining_table.json, cr_finite_size_split.json, kappa_sweep.json, appendix_exception_tests.json | cr_graining_table.py, cr_finite_size_split.py, kappa_sweep.py, appendix_exception_tests.py |
 

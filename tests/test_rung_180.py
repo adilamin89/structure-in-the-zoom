@@ -61,9 +61,97 @@ def test_summary_says_neither_null_separates_when_neither_does():
     res = {"theta_obs": 0.1, "theta_floor": 0.1, "delta": 0.0, "n_classes": 8, "rung_sizes": [1, 2, 3], "n_perm": 100,
            "z": 0.2, "p_two": 0.4, "strat_p_two": 0.5, "n_floor_draws": 20, "theta_floor_se": 0.01}
     txt = " ".join(r.summarize_data(res, verbose=False)["lines"])
-    assert "neither null separates the shift" in txt and "ABSORBED" not in txt
+    assert "not separated from the label-permutation null to begin with" in txt and "ABSORBED" not in txt
     res["p_two"] = 0.01
     assert "ABSORBED" in " ".join(r.summarize_data(res, verbose=False)["lines"])
+
+
+def _res(**kw):
+    base = {"theta_obs": 0.2, "theta_floor": 0.1, "delta": 0.1, "n_classes": 8, "rung_sizes": [1, 2, 3], "n_perm": 500,
+            "z": 0.9, "p_two": 0.375, "n_floor_draws": 20, "theta_floor_se": 0.01,
+            "delta_orderavg": 0.16, "delta_orderavg_sd": 0.03, "p_two_orderavg": 0.002}
+    base.update(kw)
+    return base
+
+
+def test_second_nulls_give_a_verdict_per_statistic():
+    # the declared shift unseparated, the order-averaged one separated: each null says so per statistic, and the
+    # order-averaged shift is never called a product of drift when it survives the time blocks (X1 issue 14)
+    res = _res(strat_p_two=0.355, strat_p_two_orderavg=0.002, tb_p_two=0.679, tb_p_two_orderavg=0.002, n_time_blocks=13)
+    out = r.summarize_data(res, verbose=False)
+    txt = " ".join(out["lines"])
+    assert "the declared shift is not separated from the label-permutation null to begin with" in txt
+    assert "the order-averaged shift survives within-stratum relabelling" in txt
+    assert "the order-averaged shift survives: drift cannot account for it" in txt
+    assert "drift or slow state could produce" not in txt and "neither null" not in txt
+    assert out["verdict"]["beyond_drift_orderavg"] is True and out["verdict"]["label_linked_beyond_strata_orderavg"] is True
+    res = _res(p_two=0.002, tb_p_two=0.3, n_time_blocks=13, tb_p_two_orderavg=0.4)
+    txt = " ".join(r.summarize_data(res, verbose=False)["lines"])
+    assert "the declared shift does not survive: drift or slow state could produce it" in txt
+    assert "the order-averaged shift does not survive" in txt
+
+
+def test_summary_applies_rule_3_when_the_order_spread_is_large():
+    # within two order-SDs of zero (X1 issue 15)
+    txt = " ".join(r.summarize_data(_res(delta=0.085, delta_orderavg=0.164, delta_orderavg_sd=0.239), verbose=False)["lines"])
+    assert "within two SDs over random class orders" in txt and "README rule 3" in txt
+    # far from the orders' average although far from zero: an atypical path
+    txt = " ".join(r.summarize_data(_res(delta=0.582, p_two=0.002, delta_orderavg=0.024, delta_orderavg_sd=0.229),
+                                    verbose=False)["lines"])
+    assert "atypical path" in txt
+    # GT3-like: the declared shift sits inside the order spread and away from zero: no rule-3 line
+    txt = " ".join(r.summarize_data(_res(delta=0.231, p_two=0.005, delta_orderavg=0.335, delta_orderavg_sd=0.083),
+                                    verbose=False)["lines"])
+    assert "README rule 3" not in txt
+
+
+def _llm_json(tmp_path, layers):
+    path = tmp_path / "lm.json"
+    path.write_text(json.dumps({"model": "m", "n_perm": 500, "axes": {"ax": {"layers": layers}}}))
+    return str(path)
+
+
+def _layer(i, oa, p, oa_z, null_sd=0.02, null_sd_z=0.02):
+    return {"layer": i, "delta": oa, "p_two": p, "delta_orderavg": oa, "p_two_orderavg": p, "null_mean_orderavg": 0.0,
+            "null_sd_orderavg": null_sd, "delta_orderavg_z": oa_z, "null_mean_orderavg_z": 0.0, "null_sd_orderavg_z": null_sd_z}
+
+
+def test_llm_frames_line_separates_agree_disagree_and_one_frame(tmp_path):
+    # X1 issue 13: linear -0.151 beyond its null, z-scored +0.010 inside its null is 'one frame', never 'agree'
+    L = [_layer(0, 0.10, 0.002, 0.09), _layer(1, -0.151, 0.002, 0.010), _layer(2, 0.10, 0.002, -0.08)]
+    rep = r.summarize(_llm_json(tmp_path, L), verbose=False)
+    txt = " ".join(rep["axes"]["ax"]["reading"])
+    assert "agree in sign at 1/3 layers, disagree at 1" in txt and "one frame sits inside its null at 1 (layers 1)" in txt
+    assert rep["axes"]["ax"]["frames"] == {"agree": 1, "disagree": 1, "one": 1, "neither": 0}
+
+
+def test_llm_certified_layers_are_counted_by_sign(tmp_path):
+    # X1 issue 16: an untrained model whose certified layers are mostly negative is not read as a lift
+    L = [_layer(i, -0.02, 0.002, -0.02) for i in range(7)] + [_layer(7 + i, 0.02, 0.002, 0.02) for i in range(2)] \
+        + [_layer(9 + i, 0.001, 0.5, 0.001) for i in range(8)]
+    rep = r.summarize(_llm_json(tmp_path, L), verbose=False)
+    txt = rep["axes"]["ax"]["reading"][0]
+    assert "with mixed signs" in txt and "positive at 2/17" in txt and "negative at 7/17" in txt
+    assert rep["axes"]["ax"]["certified_orderavg_by_sign"]["negative"][0] == 7
+    L = [_layer(i, 0.05, 0.002, 0.05) for i in range(10)]
+    txt = r.summarize(_llm_json(tmp_path, L), verbose=False)["axes"]["ax"]["reading"][0]
+    assert txt.startswith("label-linked at most depths, the declared classes lifting the exponent")
+
+
+def test_class_pr_is_each_class_own_dimension():
+    rng = np.random.default_rng(0)
+    X = np.concatenate([rng.normal(size=(200, 30)) * np.r_[np.ones(k), np.zeros(30 - k)] for k in (2, 10)])
+    y = np.repeat([0, 1], 200)
+    cp = r.class_pr(X, y)
+    assert 1.5 < cp[0] < 2.2 and 8 < cp[1] < 10.5
+    d = r.decompose(*_structured(), n_null=4)
+    assert set(d["class_pr"]) == set(range(8))
+
+
+def test_antipode_wording_follows_appendix_m():
+    src = open(os.path.join(ROOT, "rung.py")).read() + open(os.path.join(ROOT, "README.md")).read()
+    assert "stall" not in src.lower().replace("install", "")
+    assert "the share of the climb left after half the circle" in src
 
 
 def test_decompose_reading_uses_the_papers_names(capsys):

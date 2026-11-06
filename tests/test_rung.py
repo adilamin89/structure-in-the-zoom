@@ -90,7 +90,7 @@ def _circle_classes(n_per=60, d=64, harmonic=1, seed=0):
     return means[labels] + rng.normal(size=(len(labels), d)), labels
 
 
-def test_deficit_ladder_and_the_stall_test():
+def test_deficit_ladder_and_the_share_left_after_half_the_circle():
     Xd, labels = _circle_classes(harmonic=1)
     Xe, _ = _circle_classes(harmonic=2)
     pairs = {c: (c + 4) % 8 for c in range(8)}

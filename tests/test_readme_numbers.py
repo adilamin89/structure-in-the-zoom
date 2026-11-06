@@ -142,3 +142,49 @@ def test_acceptance_section():
 def test_worked_example_split():
     w = load("worked_example_gt3.json")["decompose"]["delta_split_free"]
     printed(w["D"], "+0.358", 3); printed(w["Tb"] + w["Cb"] + w["Cx"], "-0.127", 3)
+
+
+def test_runs_on_data_the_paper_never_saw():
+    s = load("heldout_allen2p_summary.json")
+    b, nb, c = s["release_response"], s["no_baseline"], s["controls"]
+    assert b["n"] == 61 and c["n"] == 61 and "61 primary visual cortex experiments" in README
+    assert (b["n_cells_min"], b["n_cells_max"]) == (86, 474) and "86 to 474 cells" in README
+    for value, text in ((b["orderavg_positive"], "positive in 48 of 61"), (b["orderavg_p05"], "permutations in 49"),
+                        (b["orderavg_tb_survives"], "in 47 of those 49"), (b["within_positive"], "positive in 47 of 61"),
+                        (b["class_mean_negative"], "negative in 53"), (c["one_shape_negative"], "negative in 56 of 61"),
+                        (c["equal_means_positive"], "positive in 57"), (b["even_led"], "orientation-led in 60 of 61"),
+                        (nb["alignment_lower_than_release"], "falls in 55 of 61"), (nb["class_mean_positive"], "turns positive in 25")):
+        assert re.search(r"\d+", text).group() == str(value) and text in README, (value, text)
+    printed(b["orderavg_median"], "+0.07", 2); printed(b["within_median"], "+0.21", 2); printed(b["class_mean_median"], "-0.07", 2)
+    printed(b["alignment_median"], "1.38", 2); printed(b["spearman_alignment_class_mean"], "-0.82", 2)
+    assert f"{100 * b['pa_floor_share_median']:.0f}%" == "68%" and "median 68%" in README
+    printed(nb["alignment_median"], "1.01", 2)
+    printed(b["declared_min"], "-0.62", 2); printed(b["declared_max"], "+0.72", 2)
+    printed(c["order_sd_median"], "0.19", 2); printed(c["spearman_order_sd_class_logpr_sd"], "0.98", 2)
+    printed(c["order_sd_median_one_shape"], "0.05", 2)
+    printed(load("allen_order_spread.json")["summary"]["pooled_all"]["order_sd_median"], "0.05", 2)
+    # language models
+    q = load("heldout_qwen05_world_knowledge32.json")["axes"]["world_knowledge32"]["layers"]
+    oa = [l["delta_orderavg"] for l in q]
+    assert len(q) == 25 and all(v > 0 for v in oa) and "positive at all 25" in README
+    printed(oa[0], "+0.014", 3); printed(oa[-1], "+0.112", 3)
+    assert all(l["last_token_arms"]["matched"]["delta_orderavg_median"] > 0 for l in q[13:])
+    second = {}
+    for tag, name in (("step0", "stage1-step0-tokens0B"), ("step10k", "stage1-step10000-tokens21B"), ("main", "main")):
+        L = load(f"heldout_olmo2_1b_{name}.json")["axes"]["world_knowledge32"]["layers"]
+        second[tag] = float(np.mean([l["last_token_arms"]["matched"]["delta_orderavg_median"] for l in L[len(L) // 2 + 1:]]))
+        if tag == "main":
+            assert len(L) == 17 and all(l["delta_orderavg"] > 0 and l["p_two_orderavg"] <= 0.05 for l in L)
+    printed(second["step0"], "-0.013", 3); printed(second["step10k"], "+0.032", 3); printed(second["main"], "+0.047", 3)
+    m = load("heldout_qwen05_mmlu8_answer.json")["axes"]["mmlu8_answer"]["layers"][1:]
+    u = load("heldout_qwen05_mmlu8.json")["axes"]["mmlu8_full"]["layers"]
+    assert sum(l["delta_orderavg"] > 0 and l["p_two_orderavg"] <= 0.05 for l in m) == 22 and "at 22\nof the 24 layers" in README
+    printed(np.mean([l["delta_orderavg"] for l in m]), "+0.094", 3)
+    printed(np.mean([l["delta_orderavg"] for l in u[1:]]), "+0.193", 3)
+
+
+def test_allen_finite_n_identity_row():
+    v = load("allen_finite_n_identity.json")["verdict"]
+    assert v["n"] == 167 and v["sign_agree_W2"] == 163 and "all 167 populations, the shift's sign in 163" in README
+    s = load("allen_order_spread.json")["summary"]["pooled_all"]
+    assert s["n"] == 167

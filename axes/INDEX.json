@@ -122,5 +122,15 @@
   "Paul",
   "Kate",
   "Dan"
+ ],
+ "mmlu_subjects8_answer": [
+  "high_school_biology",
+  "high_school_us_history",
+  "high_school_macroeconomics",
+  "high_school_physics",
+  "professional_law",
+  "high_school_computer_science",
+  "philosophy",
+  "clinical_knowledge"
  ]
 }
