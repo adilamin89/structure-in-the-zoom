@@ -18,7 +18,9 @@ statistics get no p-value, the split is computed in float64 on centred data,
 and degenerate designs raise instead of returning a number; 1.8 the
 paper's two-term account, the candidate screen, the feature ladder, blocks
 and attention heads; 1.8.1 readings that call a permutation p unresolved
-when the permutation budget cannot give p < 0.05.)
+when the permutation budget cannot give p < 0.05; 1.9 `rung report`, one
+HTML page per result, and head scores whose class-union ladders come from
+class-block sums of the Gram matrix, exact and about 14 times faster.)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -56,7 +58,7 @@ data_canonical/ of this repository.
 """
 import numpy as np
 
-__version__ = "1.8.1"
+__version__ = "1.9.0"
 
 BIN_COUNTS_DEFAULT = (1, 2, 3, 4, 6, 8)
 
@@ -87,6 +89,38 @@ def _ladder(K, members, order, bin_counts):
         sizes.append(len(sel))
         prs.append(_subset_pr(K, sel))
     return _slope(sizes, prs), sizes, prs
+
+
+def _class_blocks(K, lab, nc):
+    """Class-block sums of a Gram matrix K (n x n) for labels lab in 0..nc-1: the diagonal sums d_c, S = P^T K P,
+    Q = P^T (K o K) P, G[c,d,e] = sum over rows i of class c of (K P)[i,d] (K P)[i,e], and the class sizes. Every rung of a
+    class ladder is a union of whole classes, and its row-centred PR follows from these sums alone (`_union_ladder_slopes`).
+    K should come from globally centred features: the PR is the same, the sums lose less to cancellation."""
+    P = np.zeros((len(lab), nc))
+    P[np.arange(len(lab)), lab] = 1.0
+    R = K @ P
+    return P.T @ np.diag(K), P.T @ K @ P, P.T @ (K * K) @ P, np.einsum("ic,id,ie->cde", P, R, R), P.sum(axis=0)
+
+
+def _union_ladder_slopes(blocks, orders, bin_counts):
+    """The ladder slope of every order in `orders` (rung k = the first bin_counts[k] classes), from class-block sums: for
+    the union indicator u with m rows, Tr Kc = u.d - u'Su/m and ||Kc||_F^2 = u'Qu - 2 sum_c u_c u'G_c u/m + (u'Su)^2/m^2,
+    exactly the row-centred PR that `_ladder` computes row by row, at O(C^3) per rung instead of O(n^2)."""
+    d, S, Q, G, m_c = blocks
+    orders = np.asarray(orders)
+    U = np.zeros((len(orders), len(bin_counts), len(m_c)))
+    for k, c in enumerate(bin_counts):
+        np.put_along_axis(U[:, k], orders[:, :c], 1.0, axis=1)
+    m = U @ m_c
+    sall = np.einsum("...c,cd,...d->...", U, S, U)
+    trc = U @ d - sall / m
+    fro = np.einsum("...c,cd,...d->...", U, Q, U) - 2.0 * np.einsum("...c,cde,...d,...e->...", U, G, U, U) / m + sall ** 2 / m ** 2
+    with np.errstate(divide="ignore", invalid="ignore"):
+        pr = np.where(np.isfinite(fro) & (fro > 0), trc * trc / fro, 1.0)
+    x = np.log(m)
+    y = np.log(np.maximum(pr, 1e-9))
+    xc = x - x.mean(axis=1, keepdims=True)
+    return (xc * (y - y.mean(axis=1, keepdims=True))).sum(axis=1) / (xc * xc).sum(axis=1)
 
 
 def _zscore(X):
@@ -1125,7 +1159,7 @@ def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
     if standardize:
         frame_list = [True]
 
-    results = {"model": model_name, "revision": revision, "n_perm": n_perm,
+    results = {"model": model_name, "revision": revision, "n_perm": n_perm, "rung_version": __version__,
                "k_orders": k_orders, "frames": "z" if standardize else frames, "axes": {}}
     for af in files:
         name, classes, prompts, labels, strata = _load_axis(af, use_strata)
@@ -1405,6 +1439,238 @@ def summarize(path, out_json=None, verbose=True):
     if out_json:
         _json.dump(report, open(out_json, "w"), indent=1)
     return report
+
+
+# ---- One page per result ----
+
+def _result_kind(d):
+    """'heads' (`rung llm --heads`), 'llm' (a battery), 'features' (a feature ladder) or 'data' (a zoom result): the
+    dispatch of `rung plot` and `rung summarize`, plus head scores."""
+    if "heads" in d and isinstance(d["heads"], list):
+        return "heads"
+    if "layers" in d or "axes" in d:
+        return "llm"
+    if "mode" in d and "pr_obs" in d and "rung_sizes" not in d:
+        return "features"
+    return "data"
+
+
+def _fmt(v):
+    if isinstance(v, bool) or v is None or isinstance(v, str):
+        return str(v)
+    if isinstance(v, (int, np.integer)):
+        return str(int(v))
+    v = float(v)
+    return "nan" if not np.isfinite(v) else f"{v:.6g}"
+
+
+def _plot_heads(d, out_png):
+    """Every head's permutation z as a layer-by-head map; heads named as known (e.g. found by path patching) outlined."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    hs = d["heads"]
+    L, I = max(h["layer"] for h in hs) + 1, max(h["index"] for h in hs) + 1
+    Z = np.full((L, I), np.nan)
+    for h in hs:
+        Z[h["layer"], h["index"]] = h["z"]
+    fig, ax = plt.subplots(figsize=(min(8.6, 1.6 + 0.42 * I), min(6.0, 1.2 + 0.32 * L)))
+    v = float(np.nanmax(np.abs(Z))) or 1.0
+    im = ax.imshow(Z, cmap="RdBu_r", vmin=-v, vmax=v, aspect="auto", origin="lower")
+    for name in d.get("known", []):
+        l_, i_ = (int(x) for x in name.split("."))
+        ax.add_patch(plt.Rectangle((i_ - 0.5, l_ - 0.5), 1, 1, fill=False, lw=1.6, ec="0.1"))
+    ax.set_xlabel("head"); ax.set_ylabel("layer")
+    ax.set_title("permutation z of each head's write along the axis" + (" (outlined: known heads)" if d.get("known") else ""), fontsize=9)
+    fig.colorbar(im, ax=ax, label="z", shrink=0.85)
+    fig.tight_layout(); fig.savefig(out_png, dpi=200); plt.close(fig)
+
+
+def _heads_lines(d, top=10):
+    hs = sorted(d["heads"], key=lambda h: -h["z"])
+    lines = [f"{len(hs)} heads of {d.get('model')} scored along {d.get('axis')} ({d.get('n_perm')} label permutations, "
+             f"{d.get('k_orders')} random class orders each); ranked by z: "
+             + ", ".join(f"{h['head']} {h['z']:+.1f}" for h in hs[:top])]
+    if d.get("known"):
+        aucs = ", ".join(f"{k[4:]} {v:.2f}" for k, v in d.items() if k.startswith("AUC_"))
+        lines.append(f"against the {len(d['known'])} known heads, AUC (0.5 = chance): {aucs}")
+    if all("within" in h for h in hs[:top]):
+        lines.append("of the top heads, " + ", ".join(f"{h['head']} {'fluctuations' if h['within'] > h['class_mean'] else 'class means'}"
+                                                     for h in hs[:top]) + " carry most of the shift (the split: which part is larger)")
+    lines.append("a training-free pre-screen: test the top heads causally (patching or ablation) before calling them a circuit")
+    return lines
+
+
+def _headline(d, kind):
+    """(label, value) rows for the numbers a reader quotes, each with the setting that qualifies it."""
+    rows = []
+    if kind == "heads":
+        rows += [("model", f"{d.get('model')}" + (f" @ {d['revision']}" if d.get("revision") else "")),
+                 ("axis", f"{d.get('axis')}: {len(d.get('classes', []))} classes, {d.get('n_prompts')} prompts"),
+                 ("label permutations per head", f"{d.get('n_perm')} (each with {d.get('k_orders')} random class orders)"),
+                 ("seeds", "the paper's (Appendix I)" if d.get("paper_seeds") else "default")]
+        rows += [(f"AUC of {k[4:]} against the known heads", f"{v:.3f}") for k, v in d.items() if k.startswith("AUC_")]
+        return rows
+    if kind == "llm":
+        axes_ = d["axes"] if "axes" in d else {"battery": d}
+        rows += [("model", f"{d.get('model')}" + (f" @ {d['revision']}" if d.get("revision") else "")),
+                 ("axes", ", ".join(axes_)), ("layers", str(max(len(a_["layers"]) for a_ in axes_.values()))),
+                 ("label permutations per layer", str(d.get("n_perm"))), ("random class orders", str(d.get("k_orders")))]
+        return rows
+    se = d.get("theta_floor_se")
+    rows.append(("theta_obs = floor + shift", f"{d['theta_obs']:+.3f} = {d['theta_floor']:+.3f} {'-' if d['delta'] < 0 else '+'} {abs(d['delta']):.3f}"))
+    if se is not None and np.isfinite(se):
+        rows.append(("the floor's standard error", f"{se:.3f} ({d.get('n_floor_draws')} draws); a shift inherits it"))
+    if kind == "features":
+        rows.append(("exchangeable control (random in both arms)", f"{d['delta_control']:+.3f}"))
+        if "p_two" in d:
+            rows.append(("against relabellings of the features", f"z = {d['z']:+.1f}, two-sided p = {d['p_two']:.3f} ({d['n_null']} draws)"))
+        rows.append(("design", f"rungs {d['sizes']} of {d['n_features']} features, {d['n_samples']} samples"))
+        return rows
+    if "p_two" in d and d.get("n_perm"):
+        rows.append(("declared order against label permutations",
+                     f"z = {d['z']:+.1f}, two-sided p = {d['p_two']:.3f} ({d['n_perm']} permutations; p cannot fall below "
+                     f"{1.0 / (d['n_perm'] + 1):.3f})"))
+    if "delta_orderavg" in d and np.isfinite(d["delta_orderavg"]):
+        txt = f"{d['delta_orderavg']:+.3f} (SD over {d.get('k_orders')} random orders {d['delta_orderavg_sd']:.3f})"
+        if "p_two_orderavg" in d:
+            txt += f", p = {d['p_two_orderavg']:.3f}"
+        rows.append(("order-averaged shift", txt))
+    if "decompose" in d:
+        f = d["decompose"]["delta_split_free"]
+        rows.append(("within-class part D", f"{f['D']:+.3f}"))
+        rows.append(("class-mean part Tb + Cb + Cx", f"{f['Tb'] + f['Cb'] + f['Cx']:+.3f} (decompose's own floor draws)"))
+    rows.append(("design", f"{d.get('n_samples')} samples by {d.get('n_features')} features, {d.get('n_classes')} classes, "
+                           f"rungs {d.get('rung_sizes')}"))
+    return rows
+
+
+def _plot_summary(d, out_png):
+    """A `rung data` result at a glance, from the numbers it stored (nothing recomputed): the declared and order-averaged
+    shifts against their label-permutation nulls (mean +- 2 SD; the order-averaged one with its SD over random orders),
+    the split into the within-class and class-mean parts, and the class-mean harmonics when sectors were run. Drawn at
+    the report's display width (8.6 in at 100 px/in), so type is true size. Returns False when the result holds none."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    panels = []
+    if "null_mean" in d and np.isfinite(d.get("null_sd", np.nan)):
+        panels.append("nulls")
+    if "decompose" in d:
+        panels.append("split")
+    if isinstance(d.get("sectors"), dict) and "named" in d["sectors"]:
+        panels.append("sectors")
+    if not panels:
+        return False
+    fig, axes = plt.subplots(1, len(panels), figsize=(8.6 * len(panels) / 3, 2.9), squeeze=False)
+    red, grey, blue = "#c23b3b", "0.62", "#2f5d8a"
+    for ax, kind in zip(axes[0], panels):
+        if kind == "nulls":
+            rows = [("declared", d["delta"], d["null_mean"], d["null_sd"], None)]
+            if np.isfinite(d.get("null_sd_orderavg", np.nan)):
+                rows.append(("order-\naveraged", d["delta_orderavg"], d["null_mean_orderavg"], d["null_sd_orderavg"], d.get("delta_orderavg_sd")))
+            for i, (lab, v, m, sd, osd) in enumerate(rows):
+                ax.barh(i, 4 * sd, left=m - 2 * sd, height=0.4, color=grey, alpha=0.55)
+                ax.errorbar(v, i, xerr=osd if osd else None, fmt="o", color=red, capsize=3, ms=5)
+            ax.set_yticks(range(len(rows))); ax.set_yticklabels([r_[0] for r_ in rows])
+            ax.axvline(0, color="0.3", lw=0.6); ax.set_ylim(-0.7, len(rows) - 0.3)
+            ax.set_xlabel("shift (grey: null, mean $\\pm$ 2 SD;\nbar: SD over random orders)", fontsize=8)
+            ax.set_title("shift vs label permutations")
+        elif kind == "split":
+            f = d["decompose"]["delta_split_free"]
+            vals = [f["D"], f["Tb"] + f["Cb"] + f["Cx"], d["decompose"]["delta"]]
+            ax.bar([0, 1, 2], vals, color=[red, blue, "none"], edgecolor=[red, blue, "0.2"], width=0.6)
+            ax.set_xticks([0, 1, 2]); ax.set_xticklabels(["within-\nclass D", "class\nmeans", "shift"])
+            ax.axhline(0, color="0.3", lw=0.6)
+            lo, hi = min(0, *vals), max(0, *vals); pad = 0.12 * (hi - lo or 1)
+            ax.set_ylim(lo - pad, hi + pad)
+            for x_, v in enumerate(vals):
+                ax.text(x_, v + (0.02 if v >= 0 else -0.02) * (hi - lo or 1), f"{v:+.3f}", ha="center",
+                        va="bottom" if v >= 0 else "top", fontsize=8)
+            ax.set_title("what carries the shift")
+        else:
+            nm = d["sectors"]["named"]
+            keys = [k for k in ("a", "c1", "b2", "c3", "b4") if k in nm]
+            ax.bar(range(len(keys)), [nm[k] for k in keys], width=0.6,
+                   color=[grey if k == "a" else (red if k.startswith("c") else blue) for k in keys])
+            ax.set_xticks(range(len(keys))); ax.set_xticklabels(keys); ax.axhline(0, color="0.3", lw=0.6)
+            ax.set_xlabel("red: odd (direction)\nblue: even (orientation)", fontsize=8)
+            ax.set_title("class-mean harmonics")
+        for sp in ("top", "right"):
+            ax.spines[sp].set_visible(False)
+    fig.tight_layout(); fig.savefig(out_png, dpi=200); plt.close(fig)
+    return True
+
+
+def report(path, out_html=None, title=None):
+    """One self-contained HTML page for a rung result JSON (`rung data`, `rung features` or `rung llm`): the figure that
+    `rung plot` draws, the reading that `rung summarize` prints, the numbers a reader quotes with their settings, and
+    every scalar the run returned. Nothing is recomputed. Returns the path written."""
+    import base64
+    import html
+    import json as _json
+    import os
+    import tempfile
+    d = _json.load(open(path))
+    kind = _result_kind(d)
+    out_html = out_html or os.path.splitext(path)[0] + ".html"
+    with tempfile.TemporaryDirectory() as tmp:
+        png = os.path.join(tmp, "figure.png")
+        if kind == "heads":
+            _plot_heads(d, png)
+            reading = [("", _heads_lines(d))]
+        elif kind == "llm":
+            import contextlib
+            import io
+            with contextlib.redirect_stdout(io.StringIO()):   # _plot_battery announces its (temporary) file
+                _plot_battery(path, png)
+            reading = [(name, a_["reading"]) for name, a_ in summarize(path, verbose=False)["axes"].items()]
+        elif kind == "features":
+            _plot_features(d, png)
+            reading = [("", _feature_ladder_lines(d))]
+        else:
+            _plot_data(d, png)
+            reading = [("", summarize_data(d, verbose=False)["lines"])]
+        img = base64.b64encode(open(png, "rb").read()).decode() if os.path.exists(png) else None
+        png2 = os.path.join(tmp, "summary.png")
+        img2 = base64.b64encode(open(png2, "rb").read()).decode() if kind == "data" and _plot_summary(d, png2) else None
+    e = html.escape
+    name = os.path.basename(path)
+    title = title or f"rung: {name}"
+    scal = {k: v for k, v in d.items() if not isinstance(v, (list, dict))}
+    if kind == "data" and "decompose" in d:
+        scal.update({f"decompose.{k}": v for k, v in d["decompose"]["delta_split_free"].items() if not isinstance(v, (list, dict))})
+    parts = [f"<h1>{e(title)}</h1>",
+             f"<p class=meta>{e(name)} &middot; {e({'heads': 'an attention-head', 'llm': 'a language-model', 'features': 'a feature-ladder', 'data': 'a data'}[kind])} "
+             f"result &middot; made by rung {e(str(d.get('rung_version', '(version not recorded)')))}; page by rung {e(__version__)}</p>"]
+    if img:
+        parts.append(f'<figure><img alt="the result\'s figure" src="data:image/png;base64,{img}"></figure>')
+    if img2:
+        parts.append(f'<figure><img alt="the shift against its nulls, its split and harmonics" src="data:image/png;base64,{img2}"></figure>')
+    parts.append("<h2>Reading</h2>")
+    for head, lines in reading:
+        if head:
+            parts.append(f"<h3>{e(head)}</h3>")
+        parts.append("<ul>" + "".join(f"<li>{e(line.strip())}</li>" for line in lines) + "</ul>")
+    parts.append("<h2>Numbers</h2><table>" + "".join(f"<tr><th>{e(a_)}</th><td>{e(b_)}</td></tr>" for a_, b_ in _headline(d, kind)) + "</table>")
+    parts.append("<details><summary>Every number the run returned</summary><table>"
+                 + "".join(f"<tr><th>{e(k)}</th><td>{e(_fmt(v))}</td></tr>" for k, v in sorted(scal.items())) + "</table></details>")
+    parts.append('<p class=meta>Reading rules: <a href="https://github.com/adilamin89/structure-in-the-zoom#reading-the-numbers">'
+                 "README, Reading the numbers</a>. The paper: Structure is in the zoom (NeurReps 2026).</p>")
+    css = """:root{--bg:#fff;--fg:#1f2328;--mute:#59636e;--line:#d1d9e0;--head:#f6f8fa}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1117;--fg:#e6edf3;--mute:#9198a1;--line:#3d444d;--head:#151b23}}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;margin:0}
+main{max-width:860px;margin:0 auto;padding:24px 16px}h1{font-size:22px;margin:0 0 4px}h2{font-size:17px;margin:28px 0 8px}
+h3{font-size:15px;margin:16px 0 4px}.meta{color:var(--mute);font-size:13px}figure{margin:16px 0}
+img{max-width:100%;height:auto;max-height:440px;background:#fff;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+th{background:var(--head);font-weight:600;width:38%}td{font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+li{margin:4px 0}details{margin:20px 0}summary{cursor:pointer;color:var(--mute)}a{color:#0969da}"""
+    page = (f"<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
+            f"<title>{e(title)}</title><style>{css}</style></head><body><main>{''.join(parts)}</main></body></html>")
+    with open(out_html, "w") as fh:
+        fh.write(page)
+    return out_html
 
 
 # ---- The four-term split of a rung's deficit (Section 5 and Appendix K) ----
@@ -2260,15 +2526,22 @@ def feature_ladder(X, positions=None, order=None, sizes=None, n_anchors=50, n_fl
     return out
 
 
-def _print_feature_ladder(r):
+def _feature_ladder_lines(r):
+    """The plain-language reading of one `feature_ladder` result, line by line."""
     how = "nearest neighbours of random anchors" if r["mode"] == "positions" else "features in the given order"
-    print(f"feature ladder ({how}; rungs {r['sizes']} of {r['n_features']} features, {r['n_samples']} samples):")
-    print(f"  theta_obs {r['theta_obs']:+.3f} = floor {r['theta_floor']:+.3f} + shift {r['delta']:+.3f}; "
-          f"exchangeable control (random in both arms) {r['delta_control']:+.3f}")
+    lines = [f"feature ladder ({how}; rungs {r['sizes']} of {r['n_features']} features, {r['n_samples']} samples):",
+             f"  theta_obs {r['theta_obs']:+.3f} = floor {r['theta_floor']:+.3f} + shift {r['delta']:+.3f}; "
+             f"exchangeable control (random in both arms) {r['delta_control']:+.3f}"]
     if "p_two" in r:
-        print(f"  against {r['n_null']} relabellings of the features: z = {r['z']:+.1f}, two-sided p = {r['p_two']:.3f}")
+        lines.append(f"  against {r['n_null']} relabellings of the features: z = {r['z']:+.1f}, two-sided p = {r['p_two']:.3f}")
     else:
-        print("  (add --n-null N for a p-value in this population; the paper reads the sign across recordings)")
+        lines.append("  (add --n-null N for a p-value in this population; the paper reads the sign across recordings)")
+    return lines
+
+
+def _print_feature_ladder(r):
+    for line in _feature_ladder_lines(r):
+        print(line)
 
 
 # ---- Coarse-graining features into blocks (Appendix G) ----
@@ -2436,7 +2709,7 @@ def head_scores(H, labels, layers, paper_seeds=False, n_perm=100, k_orders=50, n
     null_draws = []
     for _ in range(n_perm):
         pl = lab[nrng.permutation(n)]
-        null_draws.append(([np.where(pl == c)[0] for c in range(nc)], [nrng.permutation(nc).tolist() for _ in range(k_orders)]))
+        null_draws.append((pl, [nrng.permutation(nc).tolist() for _ in range(k_orders)]))
     rows = []
     for j, l in enumerate(layers):
         for h in range(H.shape[1]):
@@ -2448,8 +2721,11 @@ def head_scores(H, labels, layers, paper_seeds=False, n_perm=100, k_orders=50, n
             lg = np.array([[np.log(max(_subset_pr(K, frng.choice(n, s_, replace=False)), 1e-9)) for s_ in sizes]
                            for _ in range(n_floor_draws)])
             th_f = _slope(sizes, np.exp(lg.mean(axis=0)))
-            dbar = float(np.mean([_ladder(K, mem, o, bc)[0] for o in orders])) - th_f
-            vals = np.array([np.mean([_ladder(K, m_, o, bc)[0] for o in os_]) - th_f for m_, os_ in null_draws])
+            # every ladder below is a union of whole classes: class-block sums of the centred Gram give its PRs exactly
+            Xg = Xs - Xs.mean(axis=0)
+            Kg = Xg @ Xg.T
+            dbar = float(_union_ladder_slopes(_class_blocks(Kg, lab, nc), orders, bc).mean()) - th_f
+            vals = np.array([_union_ladder_slopes(_class_blocks(Kg, pl, nc), os_, bc).mean() - th_f for pl, os_ in null_draws])
             z = float((dbar - vals.mean()) / vals.std()) if vals.std() > 0 else 0.0
             Xc = X - X.mean(0)
             M = np.stack([X[lab == c].mean(0) for c in range(nc)]) - X.mean(0)
@@ -2792,6 +3068,11 @@ def main():
     p.add_argument("battery_json")
     p.add_argument("--out", default="battery.png")
 
+    rp = sub.add_parser("report", formatter_class=fmt, help="one self-contained HTML page for a rung JSON: figure, reading, numbers")
+    rp.add_argument("result_json")
+    rp.add_argument("--out", default=None, help="the page (default: the JSON's name with .html)")
+    rp.add_argument("--title", default=None)
+
     a = ap.parse_args()
     if a.cmd == "summarize":
         dj = _json.load(open(a.battery_json))
@@ -2811,6 +3092,8 @@ def main():
             _plot_features(dj, a.out); print("wrote", a.out)
         else:
             _plot_data(dj, a.out); print("wrote", a.out)
+    elif a.cmd == "report":
+        print("wrote", report(a.result_json, a.out, title=a.title))
     elif a.cmd == "axis":
         axis_from_dataset(a.dataset, a.text_field, a.label_field, a.out, config=a.config, split=a.split,
                           n_classes=a.n_classes, n_per_class=a.n_per_class, strata_field=a.strata_field,
@@ -2850,6 +3133,7 @@ def main():
         r = feature_ladder(X, positions=pos, order=order, sizes=_int_list(a.sizes), n_anchors=a.anchors,
                            n_floor_draws=a.floor_draws, seed=a.seed, floor_seed=a.seed + 958, n_null=a.n_null)
         _print_feature_ladder(r)
+        r["rung_version"] = __version__
         if a.out:
             _json.dump(r, open(a.out, "w"), indent=1, default=_json_default); print("wrote", a.out)
         if a.plot:
@@ -2977,6 +3261,7 @@ def main():
                 r.update({"delta": float("nan"), "theta_obs": float("nan"), "theta_floor": float("nan"), "n_classes": 0, "rung_sizes": []})
         if valid is not None:
             r["n_samples_total"], r["n_samples_valid"] = int(len(valid)), int(valid.sum())
+        r["rung_version"] = __version__
         if a.out:
             _json.dump(r, open(a.out, "w"), indent=1, default=_json_default)
             print("wrote", a.out)

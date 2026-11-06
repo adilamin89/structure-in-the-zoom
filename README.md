@@ -1,5 +1,7 @@
 # Structure is in the zoom
 
+[![Open the quickstart in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb)
+
 **Probing neural symmetry through dimensionality scaling.** Adil Amin, ZEHEN Labs. NeurReps 2026 workshop (Proceedings of
 Machine Learning Research). This repository holds `rung`, the paper's measurement as a tested tool, and the code and data
 behind every number in the paper.
@@ -41,7 +43,11 @@ pip install git+https://github.com/adilamin89/structure-in-the-zoom   # numpy, s
 # X.npy: any samples-by-features array; labels.npy: one integer label per row
 rung data X.npy labels.npy --decompose --out r.json --plot r.png
 rung summarize r.json                                                  # the reading, in plain language
+rung report r.json                                                     # r.html: figure, reading, numbers
 ```
+
+[examples/quickstart.ipynb](examples/quickstart.ipynb) runs the toy below and holds the commands for a recording and a language
+model; it renders on GitHub and opens in Jupyter, VS Code or Colab (the badge above).
 
 The same from Python:
 
@@ -212,8 +218,10 @@ z-scored shift beside the linear one.
 at any checkpoint, the final-token report and control; every attention head with `--heads`. Topics lift every layer of four Pythia
 models, and the late lift survives final-token matching (Appendix I).
 
-**`rung axis`, `rung summarize`, `rung plot`**: an axis JSON from a Hugging Face dataset (it reports texts cut at `--max-chars`, which
-can make the final token follow the class); a plain-language reading of any result; the figure for any result.
+**`rung axis`, `rung summarize`, `rung plot`, `rung report`**: an axis JSON from a Hugging Face dataset (it reports texts cut at
+`--max-chars`, which can make the final token follow the class); a plain-language reading of any result; the figure for any result;
+one self-contained HTML page for any result (the figure, the reading, the numbers a reader quotes with their settings and, for
+`rung data`, the shift against its nulls, its split and the harmonics), to share or archive beside the JSON.
 
 **Loaders**: `.npy`, `.npz:key`, `.mat:variable`, `.csv`, text; `--transpose` when X is stored features by samples.
 `rung nwb session.nwb --intervals trials --label direction --out s` writes trials-by-units spike counts, labels and each row's time
@@ -263,9 +271,9 @@ the public raw data and how the scripts read them, and a claim-by-claim table of
 ```
 rung.py                  the instrument: zoom(), decompose(), account(), candidates(),
                          feature_ladder(), blocks(), sectors(), cov_floors(), llm_battery(),
-                         head_scores(), build_axis(), nwb_counts(), and the rung command line
-                         (data | features | nwb | llm | axis | plot | summarize); numpy core,
-                         torch and transformers for models
+                         head_scores(), build_axis(), nwb_counts(), report(), and the rung
+                         command line (data | features | nwb | llm | axis | plot | summarize |
+                         report); numpy core, torch and transformers for models
 theta_zoom.py            alias of rung (the name through 1.1.0)
 tests/                   pytest suite: the decomposition identity, the nulls, the share of the
                          climb left after half the circle, the split at matched size, the
