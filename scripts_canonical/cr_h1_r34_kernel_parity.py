@@ -12,7 +12,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import h1_allen_engine as E  # noqa: E402
 
-RAW = HERE.parent / "raw"   # the eight Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
+RAW = HERE.parent / "raw"
 spec = importlib.util.spec_from_file_location("m", HERE / "cr_h1_m_pvc11.py"); M = importlib.util.module_from_spec(spec); spec.loader.exec_module(M)
 om = E.om
 
@@ -45,7 +45,7 @@ for fp in sorted(RAW.glob("gratings*.npy")):
     print(rows[-1]["id"][9:30], "R %.3f margin %+.3f order %+.3f" % (rows[-1]["R"], rows[-1]["margin"], rows[-1]["order_within"]), flush=True)
 for fp in sorted((HERE.parent / "data_canonical" / "h1_allen").glob("session_*.json")):
     v = json.load(open(fp)); sid = v["session"]; a = v["areas"]["VISp"]
-    S = E.load_session(sid); idx = E.populations(S)["VISp"]; X, lab, cell = S["X"][:, idx], S["lab"], S["cell"]; h = E.halves(cell)
+    S = E.load_session(sid); idx = E.populations(S)["VISp"]; P = E.pop_view(S, "VISp", idx); X, lab, cell = P["X"], P["lab"], P["cell"]; h = E.halves(cell)  # H5-R1
     Kmat = om.split_half_K(om.residuals(X[h == 0], lab[h == 0], cell[h == 0], "noise"), om.residuals(X[h == 1], lab[h == 1], cell[h == 1], "noise"))
     rows.append({"prep": "allen", "id": sid, **parity(Kmat), "bc": classmean_bc(E.tf_residualize(X, lab, cell), lab, 8), "ds_fraction": a["ds_fraction"],
                  "order_within": float(np.mean([o["within"] for o in a["order_tfres"]]))})

@@ -95,6 +95,14 @@
    67,
    261
   ],
-  "n_visp": 32
+  "n_visp": 32,
+  "presentations_per_population": [
+   251,
+   600
+  ],
+  "visp_presentations": [
+   251,
+   600
+  ]
  }
 }

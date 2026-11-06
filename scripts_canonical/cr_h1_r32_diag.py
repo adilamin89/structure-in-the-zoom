@@ -14,7 +14,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import h1_allen_engine as E  # noqa: E402
 
-RAW = HERE.parent / "raw"   # the eight Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
+RAW = HERE.parent / "raw"
 
 
 def variants(X, lab, K=8):
@@ -38,8 +38,9 @@ for s in json.load(open(HERE.parent / "data_canonical" / "allen_expansion_all_se
     S = E.load_session(s["session"]); idx = E.populations(S).get("VISp")
     if idx is None:
         continue
-    Y = E.tf_residualize(S["X"][:, idx], S["lab"], S["cell"])
-    res["allen"].append({"session": s["session"], "N": int(len(idx)), **variants(Y, S["lab"])})
+    P = E.pop_view(S, "VISp", idx)   # H5-R1 masking path
+    Y = E.tf_residualize(P["X"], P["lab"], P["cell"])
+    res["allen"].append({"session": s["session"], "N": int(P["X"].shape[1]), **variants(Y, P["lab"])})
 for fp in sorted(RAW.glob("gratings*.npy")):
     dat = np.load(fp, allow_pickle=True).item()
     X = np.ascontiguousarray(np.asarray(dat["sresp"], np.float32).T); X /= X.std() + 1e-9

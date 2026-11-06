@@ -310,6 +310,20 @@ positions; e.g. `raw/gratings_drifting_GT3_2019_04_05_1.npy`), spontaneous sessi
 docstring names the files it reads.
 `python render_all.py` prints every table and headline number from the artifacts in `data_canonical/`.
 
+### Allen invalid intervals
+
+Every Allen number in the camera-ready excludes what the release itself marks invalid: presentations that overlap an
+`invalid_times` interval tagged with the population's probe (the probe sent no data), `all_probes` or `stimulus`, units on
+electrodes with `valid_data` False, and presentations in which a population whose valid-time rate predicts 10 or more spikes
+fires none (one population, session 743475441 VISp, is silent before 2135 s without a flag). `h4_allen_fetch_nwb.sh` fetches the
+32 session NWBs into `raw/allen_nwb/`; `h4_allen_invalid_map.py` writes the per-population masks to `data_canonical/allen_masks/`
+(shipped) and `data_canonical/h4_allen_invalid_map.json`. `h1_allen_engine.pop_view` takes every Allen generator's presentations and
+units through the masks; `ALLEN_VARIANT=none` reproduces the unmasked values, `A` uses the release's flags alone, `B` (the
+default) is the paper. The `h5_*_local.py` scripts run the Modal-era Allen generators (`allen_expansion.py`,
+`run74_allen_permutations_modal.py`, `allen_multipoles.py`, `modal_allen_withinclass_pr.py`, `modal_allen_crossfit.py`) on the
+local counts through the same path; unmasked, they reproduce the Modal outputs to 5e-7. `rung --invalid-intervals` applies the
+same exclusion to any recording.
+
 ### Claim, artifact, script
 
 Rows marked *Camera-ready* refer to the NeurReps 2026 paper; the other rows use the section numbers of the

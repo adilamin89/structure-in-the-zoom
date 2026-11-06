@@ -8,8 +8,8 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-COUNTS = HERE.parent / "raw" / "allen_counts"   # written by h1_allen_counts_modal.py from the Allen Brain Observatory NWBs
-RAW = HERE.parent / "raw"   # the eight Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
+COUNTS = HERE.parent / "raw" / "allen_counts"
+RAW = HERE.parent / "raw"
 
 
 def rates(lab):
@@ -29,9 +29,23 @@ for fp in sorted(RAW.glob("gratings*.npy")):
     lab = np.clip(np.digitize(phi % (2 * np.pi), np.linspace(0, 2 * np.pi, 9)) - 1, 0, 7)
     r, e = rates(lab)
     out["imaging"].append({"name": fp.stem, "rate": r, "random": e, "n": int(len(lab))})
+# H5-R1: the same rate over each VISp population's masked presentation sequence (the rows its statistics use)
+import sys  # noqa: E402
+sys.path.insert(0, str(HERE))
+import h1_allen_engine as E  # noqa: E402
+out["allen_visp_masked"] = []
+for f in sorted(COUNTS.glob("session_*.npz")):
+    S = E.load_session(int(f.stem.split("_")[1])); idx = E.populations(S).get("VISp")
+    if idx is None:
+        continue
+    P = E.pop_view(S, "VISp", idx); st = np.load(f)["start"][P["rows"]]
+    r, e = rates(P["lab"][np.argsort(st)])
+    out["allen_visp_masked"].append({"session": S["sid"], "rate": r, "random": e, "n": int(len(P["rows"]))})
+am = [x["rate"] for x in out["allen_visp_masked"]]
 a = [x["rate"] for x in out["allen"]]; im = [x["rate"] for x in out["imaging"]]
 out["summary"] = {"allen_median": float(np.median(a)), "allen_range": [float(min(a)), float(max(a))],
                   "allen_random_median": float(np.median([x["random"] for x in out["allen"]])),
+                  "allen_visp_masked_median": float(np.median(am)), "allen_visp_masked_range": [float(min(am)), float(max(am))],
                   "imaging_range": [float(min(im)), float(max(im))], "imaging_random_range": [float(min(x["random"] for x in out["imaging"])), float(max(x["random"] for x in out["imaging"]))]}
 print(json.dumps(out["summary"], indent=1))
 for x in out["imaging"]:

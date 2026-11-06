@@ -14,6 +14,7 @@ there the split's two parts carry a finite-sample transfer (App K); the total is
 Out: ../figures_canonical/fig_c11_twoterm.png (+ camera-ready figures/)."""
 import glob
 import json
+import os
 from pathlib import Path
 
 import numpy as np
@@ -78,22 +79,25 @@ chk = {
     "V1 delta sign": (sgn(*v1["delta"]), 8), "V1 delta r": (round(r(*v1["delta"]), 2), 0.88),
     "V1 delta mean|err|": (round(float(np.abs(v1["delta"][0] - v1["delta"][1]).mean()), 3), 0.038),
     "V1 class-mean r": (round(r(*v1["class_mean"]), 2), 0.99),
-    "Allen delta sign": (sgn(*al["delta"]), 153), "Allen n": (len(al_area), 167),
+    "Allen delta sign": (sgn(*al["delta"]), 152), "Allen n": (len(al_area), 167),
     "Allen VISp delta sign": (sgn(al["delta"][0][visp], al["delta"][1][visp]), 31),
-    "Allen delta r": (round(r(*al["delta"]), 2), 0.68), "Allen VISp delta r": (round(r(al["delta"][0][visp], al["delta"][1][visp]), 2), 0.83),
+    "Allen delta r": (round(r(*al["delta"]), 2), 0.68), "Allen VISp delta r": (round(r(al["delta"][0][visp], al["delta"][1][visp]), 2), 0.84),
     "Allen class-mean r": (round(r(*al["class_mean"]), 2), 0.95), "Allen class-mean sign": (sgn(*al["class_mean"]), 161),
     "macaque delta sign": (sgn(*mq["delta"]), 3),
     "lattice+spin-wave delta sign": (sgn(*lat["delta"]) + sgn(*sw["delta"]), 40), "lattice+spin-wave n": (len(lat_nd) + len(sw["delta"][0]), 40),
     "lattice Spearman": (round(stats.spearmanr(*lat["delta"])[0], 2), 0.87),
 }
+VARIANT = os.environ.get("ALLEN_VARIANT", "B")   # none | A | B; B = the paper (Allen invalid_times + invalid electrodes + silence rule)   # H5-R1: a masked variant reports, never asserts
 for k, (got, want) in chk.items():
-    print(f"CHECK {k}: {got} (paper {want})")
-    assert got == want, k
+    print(f"CHECK {k}: {got} (paper {want})" + ("" if got == want else "  CHANGED"))
+    if VARIANT == "B":
+        assert got == want, k
 if pol is not None:
     for k, (got, want) in {"polar XY delta sign": (sgn(*pol["delta"]), 32), "polar XY n": (len(pol_nd), 32),
                            "all lattice + spin-wave delta sign": (sgn(*lat["delta"]) + sgn(*sw["delta"]) + sgn(*pol["delta"]), 72)}.items():
-        print(f"CHECK {k}: {got} (paper {want})")
-        assert got == want, k
+        print(f"CHECK {k}: {got} (paper {want})" + ("" if got == want else "  CHANGED"))
+        if VARIANT == "B":
+            assert got == want, k
 
 # ---- draw
 plt.rcParams.update({"font.size": 7, "axes.titlesize": 7.5, "axes.labelsize": 7, "xtick.labelsize": 6.5, "ytick.labelsize": 6.5})

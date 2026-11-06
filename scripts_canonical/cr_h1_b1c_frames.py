@@ -21,7 +21,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import h1_allen_engine as E  # noqa: E402
 
-RAW = HERE.parent / "raw"   # the eight Stringer et al. 2021 grating recordings (Figshare 8279387), saved as .npy
+RAW = HERE.parent / "raw"
 OUT = HERE.parent / "data_canonical" / "cr_h1_b1c.json"
 NS, DRAWS = (64, 128, 256), 10
 
@@ -73,12 +73,13 @@ def main():
         S = E.load_session(sid); idx0 = E.populations(S).get("VISp")
         if idx0 is None:
             continue
-        lab = S["lab"]; Y = E.tf_residualize(S["X"][:, idx0], lab, S["cell"])
-        for N in [n for n in NS if n <= len(idx0)] + [len(idx0)]:
-            for d in range(DRAWS if N < len(idx0) else 1):
-                cols = np.sort(np.random.default_rng(1000 * N + d).choice(len(idx0), N, replace=False)) if N < len(idx0) else np.arange(len(idx0))
+        P = E.pop_view(S, "VISp", idx0)   # H5-R1 masking path
+        lab = P["lab"]; Y = E.tf_residualize(P["X"], lab, P["cell"]); n0 = P["X"].shape[1]
+        for N in [n for n in NS if n <= n0] + [n0]:
+            for d in range(DRAWS if N < n0 else 1):
+                cols = np.sort(np.random.default_rng(1000 * N + d).choice(n0, N, replace=False)) if N < n0 else np.arange(n0)
                 for fr, Z in frames(Y[:, cols], lab).items():
-                    out["allen"].append({"session": sid, "N": int(N), "full": bool(N == len(idx0)), "draw": d, "frame": fr,
+                    out["allen"].append({"session": sid, "N": int(N), "full": bool(N == n0), "draw": d, "frame": fr,
                                          **terms(Z, lab), "class_means_ladder": E.ladder(Z, lab)["class_means"]})
         print(f"allen {sid} done ({time.time() - t0:.0f}s)", flush=True)
     summ = {}

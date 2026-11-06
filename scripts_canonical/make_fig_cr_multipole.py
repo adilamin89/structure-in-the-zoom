@@ -9,7 +9,7 @@ Fig 3 (fig_allen_expansion.png): per-population direction-aligned shifts across
 sub-columns with annotated means and counts.
 Fig 2 (fig_multipole_two_panel.png, three panels): GT3's class-mean correlation and its two sectors; the shift of
 the most and least direction-selective thirds per recording; the shape overlap of two classes' fluctuations against
-their separation (cr_failure_interrogation.json: neighbours share most, antipodes recover only off the localized
+their separation (cr_failure_interrogation.json, C6: neighbours share most, antipodes recover only off the localized
 recordings).
 
 Outputs to figures/theta_eft/.
@@ -95,7 +95,7 @@ gt3 = next(r for r in mh["rows"] if "drifting_GT3" in r["name"])["coef"]
 a0, b, c, b4, c3 = gt3["a"], gt3["b2"], gt3["c1"], gt3["b4"], gt3["c3"]
 
 tags = ["D1", "D2", "D3", "L1", "L2", "L3", "C1", "C2"]
-fi = json.load(open(DATA / "cr_failure_interrogation.json"))["rows"]          # fluctuation shape overlaps, 16 classes
+fi = json.load(open(DATA / "cr_failure_interrogation.json"))["rows"]          # C6: fluctuation shape overlaps, 16 classes
 assert [r["name"].split("_")[1] for r in fi] == ["drifting"] * 3 + ["local"] * 3 + ["low"] * 2
 kn = [r["Kn_profile"] for r in fi]
 ds = json.load(open(DATA / "run59_shift_by_direction_selectivity.json"))["verdict"]   # registered DSI thirds
@@ -103,7 +103,7 @@ assert ds["tags"] == tags
 
 plt.rcParams.update({"font.size": 7, "axes.titlesize": 7.5, "axes.labelsize": 7, "xtick.labelsize": 6.5,
                      "ytick.labelsize": 6.5, "legend.fontsize": 6.2})
-fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(6.0, 2.05), gridspec_kw={"width_ratios": [1.05, 1.0, 1.0]})
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(6.0, 1.85), gridspec_kw={"width_ratios": [1.05, 1.0, 1.0]})   # C15: 1.85 in tall (was 2.05) for the page; fonts unchanged
 
 phi = np.linspace(0, np.pi, 400)
 deg = np.degrees(phi)

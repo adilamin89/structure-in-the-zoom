@@ -18,12 +18,13 @@ for s in json.load(open(HERE.parent / "data_canonical" / "allen_expansion_all_se
     S = E.load_session(s["session"]); idx = E.populations(S).get("VISp")
     if idx is None:
         continue
-    lab, cell = S["lab"], S["cell"]
-    Y = E.tf_residualize(S["X"][:, idx], lab, cell)
+    P = E.pop_view(S, "VISp", idx)   # H5-R1 masking path
+    lab, cell = P["lab"], P["cell"]
+    Y = E.tf_residualize(P["X"], lab, cell)
     M = np.stack([Y[lab == c].mean(0) for c in range(8)]); R = Y - M[lab]
     h = E.halves(cell)
     Ra = R[h == 0]; lam, V = np.linalg.eigh(Ra.T @ Ra)
-    row = {"session": s["session"], "N": int(len(idx))}
+    row = {"session": s["session"], "N": int(P["X"].shape[1])}
     for k in (0, 1, 3, 5):
         Vk = V[:, -k:] if k else np.zeros((R.shape[1], 0))
         Rk = R - (R @ Vk) @ Vk.T

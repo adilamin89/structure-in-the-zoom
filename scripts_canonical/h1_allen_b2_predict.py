@@ -19,13 +19,14 @@ out = []
 for sid in sids:
     S = E.load_session(sid)
     for a, idx in E.populations(S).items():
-        X, lab = S["X"][:, idx], S["lab"]
-        Y = E.tf_residualize(X, lab, S["cell"])
-        sig, _ = E.sigma_split(X, lab, S["cell"], "noise")
+        P = E.pop_view(S, a, idx)   # H5-R1 masking path
+        X, lab = P["X"], P["lab"]
+        Y = E.tf_residualize(X, lab, P["cell"])
+        sig, _ = E.sigma_split(X, lab, P["cell"], "noise")
         sizes = [int((lab < k).sum()) for k in B.RUNGS]
         cmp_, c_full, us = B.classmean_prediction(B.full_terms(Y, lab), sizes)
         wp = E.mean_field(sig)
-        out.append({"session": sid, "area": a, "N": int(len(idx)), "sigma_noise": sig, "within_pred": wp, "classmean_pred": cmp_,
+        out.append({"session": sid, "area": a, "N": int(X.shape[1]), "sigma_noise": sig, "within_pred": wp, "classmean_pred": cmp_,
                     "delta_pred": wp + cmp_, "c_full": c_full})
     print(sid, len(out), flush=True)
 json.dump(out, open(HERE.parent / "data_canonical" / "h1_allen_b2_predictions.json", "w"), indent=1)

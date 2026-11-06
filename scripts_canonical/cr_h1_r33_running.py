@@ -12,7 +12,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import h1_allen_engine as E  # noqa: E402
 
-RUN = HERE.parent / "raw" / "allen_running"   # written by h1_allen_running_modal.py from the Allen Brain Observatory NWBs
+RUN = HERE.parent / "raw" / "allen_running"
 rows = []
 for s in json.load(open(HERE.parent / "data_canonical" / "allen_expansion_all_sessions.json"))["results"]:
     sid = s["session"]; S = E.load_session(sid); idx = E.populations(S).get("VISp")
@@ -20,8 +20,9 @@ for s in json.load(open(HERE.parent / "data_canonical" / "allen_expansion_all_se
         continue
     r = np.load(RUN / f"session_{sid}.npz"); c = np.load(E.COUNTS / f"session_{sid}.npz")
     assert np.allclose(r["start"], c["start"]), sid
-    sp = r["speed"]; lab = S["lab"]
-    Y = E.tf_residualize(S["X"][:, idx], lab, S["cell"]); R = Y - np.stack([Y[lab == k].mean(0) for k in range(8)])[lab]
+    P = E.pop_view(S, "VISp", idx, extra={"speed": r["speed"]})   # H5-R1 masking path
+    sp = P["speed"]; lab = P["lab"]
+    Y = E.tf_residualize(P["X"], lab, P["cell"]); R = Y - np.stack([Y[lab == k].mean(0) for k in range(8)])[lab]
     lam, V = np.linalg.eigh(R.T @ R); V = V[:, ::-1]; lam = lam[::-1]
     sc = R @ V[:, :3]
     rr = [float(np.corrcoef(sc[:, k], sp)[0, 1]) if sp.std() > 0 else float("nan") for k in range(3)]

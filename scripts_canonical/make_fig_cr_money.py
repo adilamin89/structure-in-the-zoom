@@ -148,6 +148,11 @@ ax.plot([r["theta_floor"] for r in spat], [r["delta_spatial"] for r in spat], "s
         mec=BLUEG, mew=0.9, zorder=3)
 al = [v for r in load("allen_floors_all_sessions.json")["results"] if r.get("status") == "ok" for v in r["areas"].values()]
 ax.plot([v["theta_floor_dir"] for v in al], [v["delta_dir8"] for v in al], "o", ms=1.6, color="#e8a0a8", zorder=2)
+XLIM, YLIM = (-0.08, 1.0), (-0.21, 0.52)   # x from -0.08: four Allen direction-ladder floors are negative (to -0.064)
+inside = sum(XLIM[0] < v["theta_floor_dir"] < XLIM[1] and YLIM[0] < v["delta_dir8"] < YLIM[1] for v in al)
+print(f"CHECK Allen points {len(al)}, inside the axes {inside}, positive {sum(v['delta_dir8'] > 0 for v in al)}; "
+      f"floor_dir {min(v['theta_floor_dir'] for v in al):+.3f}..{max(v['theta_floor_dir'] for v in al):+.3f}")
+assert len(al) == 167 and inside == 167
 ax.plot([r["theta_random"] for r in dirx], [r["delta"] for r in dirx], "o", ms=3.4, color=RED, zorder=4)
 llm_x = [r["floor"] for m in LLM for r in LLM[m]]; llm_y = [r["dbar50_run37"] for m in LLM for r in LLM[m]]
 print(f"CHECK LM points {len(llm_y)} (13 + 33), all positive {sum(y > 0 for y in llm_y)}; "
@@ -163,11 +168,11 @@ for g in GT3[1:]:
                 shrinkA=4.0, shrinkB=3.2))
 ax.text(0.17, 0.36, "V1, stimulus\ndirection (8)", fontsize=6.3, color=RED, va="center", linespacing=0.95)
 ax.text(0.17, 0.13, "Neuropixels,\n167 populations", fontsize=6.3, color="#c9606e", va="center", linespacing=0.95)
-ax.text(0.55, -0.125, "V1, random stimuli (18)", fontsize=6.3, color=GRAY, va="center", ha="center")
-ax.text(0.55, -0.18, "and neighbouring neurons (10)", fontsize=6.3, color=BLUEG, va="center", ha="center")
+ax.text(0.46, -0.125, "V1, random stimuli (18)", fontsize=6.3, color=GRAY, va="center", ha="center")
+ax.text(0.46, -0.18, "and neighbouring neurons (10)", fontsize=6.3, color=BLUEG, va="center", ha="center")
 ax.text(0.99, 0.255, "language models, topics,\nevery layer (2 sizes),\naveraged over orders", fontsize=6.0, color=PURPLE,
         va="center", ha="right", linespacing=0.95)
-ax.set_xlim(0, 1.0); ax.set_ylim(-0.21, 0.52)
+ax.set_xlim(*XLIM); ax.set_ylim(*YLIM)
 ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0]); ax.set_xticklabels(["0", "0.25", "0.5", "0.75", "1"])
 ax.set_xlabel(r"floor exponent $\theta_{\rm floor}$"); ax.set_ylabel(r"shift $\delta = \theta_{\rm obs} - \theta_{\rm floor}$")
 ax.set_title("C  every ladder at its floor", loc="left", fontweight="bold", x=-0.17)

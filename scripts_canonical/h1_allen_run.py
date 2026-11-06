@@ -31,12 +31,14 @@ def run_session(sid):
            "areas": {}, "quality_VISp": None}
     for a, idx in E.populations(S).items():
         assert abs(rep[a] - stored[a]["delta_dir8"]) < 1e-6, (sid, a, rep[a], stored[a]["delta_dir8"])
-        out["areas"][a] = E.analyze_population(S["X"][:, idx], S["lab"], S["tf"], full=True, n_perm=N_PERM)
+        P = E.pop_view(S, a, idx)   # H5-R1 masking path
+        out["areas"][a] = E.analyze_population(P["X"], P["lab"], P["tf"], full=True, n_perm=N_PERM)
         print(f"[{sid}] {a:6s} N {len(idx):3d} pooled {out['areas'][a]['pooled']['delta']:+.3f} tfres "
               f"{out['areas'][a]['tfres']['delta']:+.3f} ({time.time() - t0:.0f}s)", flush=True)
     q = E.populations(S, quality=True, min_units=QUALITY_MIN).get("VISp")
     if q is not None:
-        out["quality_VISp"] = E.analyze_population(S["X"][:, q], S["lab"], S["tf"], full=True, n_perm=N_PERM)
+        P = E.pop_view(S, "VISp", q)
+        out["quality_VISp"] = E.analyze_population(P["X"], P["lab"], P["tf"], full=True, n_perm=N_PERM)
     fp.write_text(json.dumps(out, default=float))
     print(f"[{sid}] DONE {len(out['areas'])} areas ({time.time() - t0:.0f}s)", flush=True)
     return sid, "ok"

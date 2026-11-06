@@ -19,7 +19,8 @@ for f in sorted(glob.glob(str(DATA / "h1_allen" / "session_*.json"))):
         rows.append({"session": d["session"], "area": area, "N": q["N"],
                      "delta_pred": q["delta_pred"], "delta": m["delta"],
                      "classmean_pred": q["classmean_pred"], "class_means": m["class_means"],
-                     "within_pred": q["within_pred"], "within": m["within"]})
+                     "within_pred": q["within_pred"], "within": m["within"], "sigma": v["sigma_noise"],
+                     "shuffle_within": float(np.mean([s["within"] for s in v["resid_shuf"]]))})
 assert len(rows) == 167, len(rows)
 sg = lambda x: np.sign(x)
 miss = [r for r in rows if sg(r["delta_pred"]) != sg(r["delta"])]
@@ -39,6 +40,10 @@ out = {
     "miss_within_pred_positive": int(sum(r["within_pred"] > 0 for r in miss)),
     "all_within_measured_negative": int(sum(r["within"] < 0 for r in rows)),
     "all_classmean_sign_right": int(sum(sg(r["classmean_pred"]) == sg(r["class_means"]) for r in rows)),
+    "sigma_median_miss": float(np.median([r["sigma"] for r in miss])), "sigma_median_hit": float(np.median([r["sigma"] for r in hit])),
+    "sigma_mannwhitney_p": float(__import__("scipy.stats", fromlist=["x"]).mannwhitneyu([r["sigma"] for r in miss], [r["sigma"] for r in hit]).pvalue),
+    "shuffle_within_median_miss": float(np.median([r["shuffle_within"] for r in miss])),
+    "shuffle_within_median_hit": float(np.median([r["shuffle_within"] for r in hit])),
     "cut": cut, "misses": miss,
 }
 for k, v in out.items():

@@ -24,13 +24,14 @@ Arms (the input X of every statistic):
 """
 import importlib.util
 import json
+import os
 from pathlib import Path
 
 import numpy as np
 from scipy import stats
 
 HERE = Path(__file__).resolve().parent
-COUNTS = HERE.parent / "raw" / "allen_counts"   # written by h1_allen_counts_modal.py from the Allen Brain Observatory NWBs
+COUNTS = HERE.parent / "raw" / "allen_counts"
 
 
 def _load(name, fname):
@@ -72,10 +73,43 @@ def populations(S, quality=False, min_units=MIN_UNITS):
     return out
 
 
+# ------------------------------------------------------------------------------------------------------------ H5 masking path
+VARIANT = os.environ.get("ALLEN_VARIANT", "B")   # none | A | B; B = the paper (Allen invalid_times + invalid electrodes + silence rule)
+MASKS = HERE.parent / "data_canonical" / "allen_masks"
+_MCACHE = {}
+
+
+def pop_rows_cols(S, area, idx):
+    """H5-R1 (ex0_REGISTERED): one population's valid presentation rows and kept unit columns for this sandbox's variant.
+    'none': all rows, idx. 'A': Allen's invalid_times (the probe of any of the population's units, all_probes, stimulus) and
+    units on valid_data False electrodes dropped. 'B': A + the silence rule. Masks from h4_allen_invalid_map.py (H4-R15).
+    idx may be a subset of the area's units (the quality arm): the kept columns are idx's units in units_keep, idx order."""
+    idx = np.asarray(idx)
+    if VARIANT == "none":
+        return np.arange(len(S["lab"])), idx
+    if S["sid"] not in _MCACHE:
+        _MCACHE[S["sid"]] = dict(np.load(MASKS / f"session_{S['sid']}.npz"))
+    m = _MCACHE[S["sid"]]
+    ukeep, valid = m[f"{area}__units_keep"], m[f"{area}__valid{VARIANT}"]
+    assert len(valid) == len(S["lab"]) and (S["area"][ukeep] == area).all() and (S["area"][idx] == area).all(), (S["sid"], area)
+    return np.where(valid)[0], idx[np.isin(idx, ukeep)]
+
+
+def pop_view(S, area, idx, extra=None):
+    """One population through the masking path: X (presentations x units), lab, tf, cell, and every per-presentation array in
+    extra (e.g. running speed) taken through the same rows."""
+    rows, cols = pop_rows_cols(S, area, idx)
+    v = {"X": S["X"][np.ix_(rows, cols)], "lab": S["lab"][rows], "tf": S["tf"][rows], "cell": S["cell"][rows],
+         "rows": rows, "cols": cols}
+    for k, a in (extra or {}).items():
+        v[k] = np.asarray(a)[rows]
+    return v
+
+
 def reproduce_stored(S):
     """allen_expansion.py's delta_dir8 with its exact rng sequence (one rng 42 per session, consumed by every area's
-    direction ladder, orientation ladder and random-stimulus ladder in sorted-area order). Returns {area: delta}."""
-    X, ori = S["X"], S["dirs"][S["lab"]]
+    direction ladder, orientation ladder and random-stimulus ladder in sorted-area order). Returns {area: delta}.
+    H5: each population through pop_view (its own valid rows and kept units)."""
     rng = np.random.default_rng(42); out = {}
 
     def pr(Y):
@@ -85,7 +119,8 @@ def reproduce_stored(S):
     def sl(s, p):
         return np.polyfit(np.log(s), np.log(p), 1)[0]
     for a, idx in populations(S).items():
-        Xa = X[:, idx]
+        P = pop_view(S, a, idx)
+        Xa, ori = P["X"], S["dirs"][P["lab"]]
         mem = [np.where(ori == c)[0] for c in S["dirs"]]
         sizes = [len(np.concatenate(mem[:c])) for c in RUNGS]
         prs = [pr(Xa[np.concatenate(mem[:c])]) for c in RUNGS]
@@ -95,7 +130,7 @@ def reproduce_stored(S):
         for _ in range(10):
             for s in [len(np.concatenate(mo[:c])) for c in (1, 2, 3, 4)]:
                 rng.choice(len(Xa), s, replace=False)
-        rs = [50, 100, 200, min(400, len(Xa)), len(Xa)]
+        rs = [50, 100, 200, min(400, len(Xa)), len(Xa)] if len(Xa) >= 200 else [r for r in (50, 100) if r < len(Xa)] + [len(Xa)]  # H5-R1 addendum
         for k in (3, 10):
             for s in rs:
                 for _ in range(k):
