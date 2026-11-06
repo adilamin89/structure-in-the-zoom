@@ -9,8 +9,9 @@ Sources (each a committed artifact; CHECK lines assert every number the paper qu
   XY nematic lattice (L 16/32, T 1.0/1.1) ...... xy_twoterm.json lattice
   spin waves (same order, rotating fluctuations) xy_twoterm.json spinwave
   XY lattice, polar-ordered side (T 0.6-0.85) . xy_polar_twoterm.json
-Lattice ensembles with fewer configurations per class than twice the class's fluctuation dimension (n/d_w < 2) are drawn open:
-there the split's two parts carry a finite-sample transfer (App K); the total is unaffected.
+Lattice and spin-wave ensembles whose sampling term exceeds 0.05 are drawn open: the floor's first rungs estimate the pooled
+fluctuations from one class's worth of samples, so the within-class part sits below the overlap law by about (m-1) PR_class/(n ln K),
+m = K/[1+(K-1) sigma], PR_class the class's population PR (App K; fig_twoterm_marker.json, generator fig_twoterm_marker.py).
 Out: ../figures_canonical/fig_twoterm.png (+ camera-ready figures/)."""
 import glob
 import json
@@ -62,14 +63,17 @@ xy = json.load(open(DATA / "xy_twoterm.json"))
 def _lat(rows):
     return ({p: (np.array([r[f"pred_{p}"] for r in rows]), np.array([r[p] for r in rows])) for p in PARTS},
             np.array([r["per_class"] / r["PR_class"] for r in rows]))
-lat, lat_nd = _lat(xy["lattice"])
+lat, _ = _lat(xy["lattice"])
+crit = {(c["group"], c["key"]): c["open_new"] for c in json.load(open(DATA / "fig_twoterm_marker.json"))}
+lat_nd = np.array([not crit[("nem", f"L{r['L']}_T{r['T']:.2f}_n{r['per_class']}_e{r['ens']}")] for r in xy["lattice"]])
+sw_nd = np.array([not crit[("sw", f"n{r['per_class']}_s{r['seed']}")] for r in xy["spinwave"]])
 sw = {p: (np.array([r[f"pred_{p}"] for r in xy["spinwave"]]), np.array([r[p] for r in xy["spinwave"]])) for p in PARTS}
 pol_f = DATA / "xy_polar_twoterm.json"
 pol = pol_nd = None
 if pol_f.exists():   # Keys measured_*; measured delta = within + class-mean of the same split run
     prow = json.load(open(pol_f))["rows"]
     pol = {p: (np.array([r[f"pred_{p}"] for r in prow]), np.array([r[f"measured_{p}"] for r in prow])) for p in PARTS}
-    pol_nd = np.array([r["n_over_d"] for r in prow])
+    pol_nd = np.array([not crit[("polar", f"T{r['T']:.2f}_e{r['ens']}")] for r in prow])
 
 # ---- CHECK: every number the text quotes from this figure
 sgn = lambda a, b: int((np.sign(a) == np.sign(b)).sum())
@@ -87,6 +91,7 @@ chk = {
     "lattice+spin-wave delta sign": (sgn(*lat["delta"]) + sgn(*sw["delta"]), 40), "lattice+spin-wave n": (len(lat_nd) + len(sw["delta"][0]), 40),
     "lattice Spearman": (round(stats.spearmanr(*lat["delta"])[0], 2), 0.87),
 }
+chk["lattice + spin-wave open"] = (int((~lat_nd).sum() + (~sw_nd).sum() + ((~pol_nd).sum() if pol is not None else 0)), 52)
 VARIANT = os.environ.get("ALLEN_VARIANT", "B")   # none | A | B; B = the paper (Allen invalid_times + invalid electrodes + silence rule)   # a masked variant reports, never asserts
 for k, (got, want) in chk.items():
     print(f"CHECK {k}: {got} (paper {want})" + ("" if got == want else "  CHANGED"))
@@ -112,7 +117,7 @@ LIM = {"within": (-0.25, 0.75), "class_mean": (-1.35, 0.45), "delta": (-1.15, 0.
 
 def lattice(ax, P, nd, part, marker, label):
     x, y = P[part]
-    big = nd >= 2
+    big = nd          # True = filled: the sampling term is at most 0.05
     ax.plot(x[big], y[big], marker, color=LAT, ms=3.0, mew=0.6, zorder=3, label=label)
     ax.plot(x[~big], y[~big], marker, color=LAT, mfc="none", ms=3.0, mew=0.6, zorder=3)
 
@@ -128,7 +133,9 @@ for ax, part in zip(axs, PARTS):
     lattice(ax, lat, lat_nd, part, "s", "XY nematic lattice")
     if pol is not None:
         lattice(ax, pol, pol_nd, part, "s", None)
-    ax.plot(*sw[part], "^", color=LAT, ms=3.2, mew=0, zorder=3, label="spin waves")
+    x, y = sw[part]
+    ax.plot(x[sw_nd], y[sw_nd], "^", color=LAT, ms=3.2, mew=0, zorder=3, label="spin waves")
+    ax.plot(x[~sw_nd], y[~sw_nd], "^", color=LAT, mfc="none", ms=3.2, mew=0.6, zorder=3)
     ax.plot(*v1[part], "o", color=V1C, ms=3.6, mew=0, zorder=4, label="mouse V1, imaging (8)")
     ax.plot(*mq[part], "D", color=MQC, ms=3.4, mew=0, zorder=5, label="macaque V1 (3)")
     ax.set_xlim(lo, hi); ax.set_ylim(lo, hi); ax.set_aspect("equal")

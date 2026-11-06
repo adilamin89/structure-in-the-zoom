@@ -80,3 +80,17 @@ def test_every_named_file_exists():
         if not hits:
             missing.append(n)
     assert not missing, sorted(missing)
+
+
+def test_finite_n_rule():
+    """README rule 8: samples per class, in units of PR_class, at which the identity evaluated at each rung's sample counts puts the
+    within part of eight equal Gaussian classes of PR_class = 30 within 0.05 of the population identity's value on the same rungs (finite_n_rule.json 'rule',
+    D = W2 - W1)."""
+    for sigma, text in ((0.2, "20"), (0.44, "8"), (0.7, "3")):
+        assert f"{load('finite_n_rule.json')['rule'][f'{sigma}_0.05']:.0f}" == text, (sigma, text)
+    assert "within 0.05 of the population identity's value on the same rungs" in README and "about 20, 8 and 3 times" in README and "σ = 0.2, 0.44 and 0.7" in README and "PR_class = 30" in README
+    grid = load("finite_n_rule.json")["grid"]                  # 'later for classes of lower PR': at PR 5 the deficit is larger
+    for sigma, r in ((0.44, 8), (0.7, 4)):
+        d5, d30 = (next(q["D"] for q in grid if q["sigma"] == sigma and q["PR_class"] == pr and q["n_over_PR"] == r) for pr in (5, 30))
+        assert d5 < d30 < 0, (sigma, d5, d30)
+    assert "at higher ratios n/PR_class for classes of" in README

@@ -158,10 +158,15 @@ ladder figure for an array and one panel per axis for a model, with both null ba
 6. **Compare subsets at matched size only.** The shift depends on the number of features.
 7. **Read `D` and `Tb`, not the raw pooling and trace terms,** wherever the within-class scale changes with the class.
 8. **Sample each class well before reading the split.** In the paper's grating recordings the within-class part turned positive
-   only once each class held 0.46 to 1.2 times its own fluctuation dimension in samples, and below about twice that dimension
-   estimation moves weight between the within-class part `D` and the class-mean terms (`Tb + Cb + Cx`) while their sum, the shift,
-   stands. Compare the samples per class with PR(W), which the sign-law line prints, and read `D` net of the finite-sample bias
-   with `--n-bias`.
+   only once each class held 0.46 to 1.2 times its own fluctuation dimension in samples. The floor's first rungs estimate the
+   pooled fluctuations, of dimension about m PR_class with m = K/[1+(K-1)σ] (σ the classes' mean fluctuation overlap), from as
+   many samples as a declared rung spends on one class, so `D` sits below its population value, by about (m-1) PR_class/(n ln K)
+   at n samples per class (an endpoint, first-order estimate), while the class-mean terms (`Tb + Cb + Cx`) move the other way.
+   Evaluated at each rung's sample counts (`scripts_canonical/finite_n_identity.py`), the identity puts the within-class part of
+   eight equal Gaussian classes of PR_class = 30 within 0.05 of the population identity's value on the same rungs once a class
+   holds about 20, 8 and 3 times PR_class samples at σ = 0.2, 0.44 and 0.7, at higher ratios n/PR_class for classes of
+   lower PR. Compare the samples per class with PR(W), which the sign-law line prints; `--n-bias` measures the part that
+   remains when every class has one covariance shape.
 9. **For a depth profile, the inference is on the profile**, the integrated excess of the shift over its embedding value
    against the permutation null, not on a count of significant layers.
 10. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, the linear one
