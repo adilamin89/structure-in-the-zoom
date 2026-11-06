@@ -23,4 +23,4 @@ VERDICT {
  "W2_orders_GT1_GT2_GT3": false,
  "W3_growth_lt_1.15_all": false
 }
-wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run58_within_class_spectrum_vs_trials.json
+wrote data_canonical/run58_within_class_spectrum_vs_trials.json

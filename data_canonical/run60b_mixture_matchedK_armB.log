@@ -171,4 +171,4 @@ VERDICT {
  "K4_DS_gt_OS_count": 7,
  "K4": false
 }
-wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run60b_mixture_matchedK_armB.json in 487s
+wrote data_canonical/run60b_mixture_matchedK_armB.json in 487s

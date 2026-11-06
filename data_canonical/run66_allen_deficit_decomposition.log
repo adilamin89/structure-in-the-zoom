@@ -2,7 +2,7 @@
 https://modal.com/apps/adila-75793/main/ap-nexpUEXYjLCev32jjXDbPm
 ✓ Created objects.
 ├── 🔨 Created mount 
-│   /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/scr
+│   scr
 │   ipts_canonical/run66_allen_deficit_decomposition_modal.py
 ├── 🔨 Created mount PythonPackage:deficit_split
 └── 🔨 Created function process_session.
@@ -249,7 +249,7 @@ VERDICT {
  "max_sum_check": 9.044848203743072e-15,
  "max_pr_identity_rel": 1.3399550634544393e-06
 }
-wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run66_allen_deficit_decomposition.json in 40s
+wrote data_canonical/run66_allen_deficit_decomposition.json in 40s
 Stopping app - local entrypoint completed.
 Runner terminated.
 ✓ App completed. View run at 

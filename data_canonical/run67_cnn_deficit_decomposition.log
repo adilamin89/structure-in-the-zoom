@@ -173,4 +173,4 @@ VERDICT {
  "max_sum_check": 3.4416913763379853e-15,
  "max_pr_identity_rel": 3.018764379078497e-07
 }
-wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run67_cnn_deficit_decomposition.json in 112s
+wrote data_canonical/run67_cnn_deficit_decomposition.json in 112s

@@ -231,4 +231,4 @@ VERDICT {
  "E2": false,
  "E3": false
 }
-wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run65_pythia_deficit_decomposition.json in 26s
+wrote data_canonical/run65_pythia_deficit_decomposition.json in 26s

@@ -26,11 +26,11 @@ loading allenai/OLMo-1B-hf (mps)...
 [OLMo-1B-hf / language_type] encoding 128 prompts...
     encoded 50/128
     encoded 100/128
-/Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/arxiv_supplement/scripts_canonical/run55_blind_probe_physics.py:70: RuntimeWarning: invalid value encountered in scalar divide
+scripts_canonical/run55_blind_probe_physics.py:70: RuntimeWarning: invalid value encountered in scalar divide
   return {"d_eff_full": float(tot ** 2 / (lam ** 2).sum()),
-/Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/arxiv_supplement/scripts_canonical/run55_blind_probe_physics.py:71: RuntimeWarning: invalid value encountered in scalar divide
+scripts_canonical/run55_blind_probe_physics.py:71: RuntimeWarning: invalid value encountered in scalar divide
   "top1_eig_frac": float(lam[0] / tot), "top3_eig_frac": float(lam[:3].sum() / tot),
-/Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/arxiv_supplement/scripts_canonical/run55_blind_probe_physics.py:72: RuntimeWarning: invalid value encountered in scalar divide
+scripts_canonical/run55_blind_probe_physics.py:72: RuntimeWarning: invalid value encountered in scalar divide
   "top1_dim_var_frac": float(vs[0] / v.sum()), "top1pct_dims_var_frac": float(vs[:k1].sum() / v.sum()),
   L00 linear=+0.000(p1.00) zscore=+0.000(p1.00) pc1=+0.000(p1.00) pc4=+0.000(p1.00) kernel=+0.000(p1.00) | d_eff=nan top1eig=nan top1dim=nan (0s)
   L01 linear=-0.274(p0.03) zscore=-0.149(p0.12) pc1=-0.030(p0.74) pc4=+0.030(p0.74) kernel=+0.017(p0.54) | d_eff=1.9 top1eig=0.71 top1dim=0.53 (0s)

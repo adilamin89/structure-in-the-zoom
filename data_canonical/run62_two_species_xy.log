@@ -56,4 +56,4 @@ VERDICT {
   "pass": true
  }
 }
-wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run62_two_species_xy.json in 190s
+wrote data_canonical/run62_two_species_xy.json in 190s

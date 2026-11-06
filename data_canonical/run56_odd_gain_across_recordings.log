@@ -124,4 +124,4 @@ VERDICT {
  ],
  "kappa": 1.1760318436590254
 }
-wrote /Users/adilamin/Work/research_2026/scaliwng_laws/paper_3ic/theta_project/data_canonical/run56_odd_gain_across_recordings.json in 381s
+wrote data_canonical/run56_odd_gain_across_recordings.json in 381s
