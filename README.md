@@ -56,8 +56,8 @@ import numpy as np
 from rung import zoom, decompose, summarize_data
 
 X, labels = np.load("X.npy"), np.load("labels.npy")
-r = zoom(X, labels)                      # floor, shift, permutation p, order-averaged shift
-r["decompose"] = decompose(X, labels)    # within-class and class-mean parts
+r = zoom(X, labels, workers=0)           # floor, shift, permutation p, order-averaged shift
+r["decompose"] = decompose(X, labels, workers=0)    # within-class and class-mean parts
 summarize_data(r)                        # the plain-language reading
 ```
 
@@ -79,12 +79,14 @@ rung data X.npy labels.npy --decompose --out toy.json --plot toy.png && rung sum
 The shift comes out positive and above every label permutation, and the split puts nearly all of it in the within-class part,
 as built: the classes differ only in their fluctuations.
 
-**Permutation budget.** The defaults (500 label permutations, 50 random class orders, 20 floor draws) suit a few hundred samples.
-At recording scale they take long: Appendix M's GT3 command, with 200 permutations on 4,442 samples by 11,311 features, takes
-about 70 minutes on one laptop core, most of it the permutations and the floors of the random orders. For a first look there,
-add `--n-perm 100 --k-orders 10 --floor-draws 5` and rerun with the defaults for the numbers you report. A
-permutation p cannot fall below 1/(n_perm + 1): with fewer than 20 permutations no shift can reach p < 0.05, and `rung summarize`
-calls such a reading unresolved, never unseparated.
+**Speed and the permutation budget.** The defaults (500 label permutations, 50 random class orders, 20 floor draws) hold at
+recording scale. Every ladder that accumulates whole classes and every floor draw comes from products with the Gram matrix, and
+the split's traces from the same matrix (`--arithmetic fast`, the default), on threads (`--workers`): Appendix M's GT3 command,
+200 permutations on 4,442 samples by 11,311 features, takes 48 s of one laptop core's time in 1.11, against 33 minutes in 1.10
+measured the same way (CPU time), and returns the same numbers to 5e-15 with the same permutation p. `--paper-floor`,
+`--floor-by-rung` and `--paper-seeds` keep the row-by-row arithmetic of the paper's runs, which replays their printed values bit
+for bit and takes the old time. A permutation p cannot fall below 1/(n_perm + 1): with fewer than 20 permutations no shift can
+reach p < 0.05, and `rung summarize` calls such a reading unresolved, never unseparated.
 
 For a language model, clone the repository (the paper's prompt axes are in `axes/`) and add the model extras:
 
@@ -96,9 +98,9 @@ rung llm --model EleutherAI/pythia-160m --axis axes/world_knowledge32.json \
 rung plot lm.json --out lm.png && rung summarize lm.json
 ```
 
-The final-token arms of `--match-last-token` take about three quarters of that run (Appendix M: about 19 minutes on one laptop
-core). Drop the flag for a first look at every layer's shift in both frames, and add it back before reading a lift as more than
-its final tokens.
+`--match-last-token` adds, at every layer, the final-token control; read a lift as more than its final tokens only with it. The
+run takes 47 s of one laptop core's time in 1.11, model encoding included (16 minutes in 1.10); with `--paper-seeds`, which
+replays the paper's cells in their row-by-row arithmetic, about 11 minutes.
 
 `pip install -e ".[nwb]"` adds h5py for NWB and MATLAB v7.3 files; `".[scripts]"` adds what the analysis scripts need (h5py,
 numba, scikit-learn). `rung --version` prints the release; every option's default is in `rung <command> --help`.
@@ -227,6 +229,14 @@ z-scored shift beside the linear one.
 
 **`--paper-floor`**, `--floor-draws`, `--floor-seed`, `--floor-by-rung`, `--rungs`: the floor's draws and the ladder's rungs.
 `--paper-floor` draws the floor as the paper's imaging, Allen and macaque generators do and replays their printed values.
+
+**`--workers N`, `--arithmetic auto|fast|rows`** (`workers=`, `fast=` in Python): how a run spends its time, never what it
+returns. `--workers` runs the ladders, the floors and the split's traces on N threads (default 0: every core but one, at most eight, past
+which one run gains little; Python's default is 1); every random draw is made first, in the order a serial run makes it, so any N returns the same numbers bit for
+bit. `fast` computes every ladder that accumulates whole classes (the declared one, each random order, each permuted labelling)
+from class-block sums of the Gram matrix and the floor's full-set rung once, and agrees with `rows`, every ladder row by row, to
+about 1e-12 with the same permutation p. `auto` picks `rows` under `--paper-floor`, `--floor-by-rung` and `--paper-seeds`, so the
+paper's replays stay exact, and `fast` otherwise; the result records which (`arithmetic`).
 
 **`rung llm`** (`--revision`, `--match-last-token`, `--frames`, `--heads`, `--untrained`): every layer's shift in the linear and the
 z-scored frame at any checkpoint or with random weights, the final-token report and control; every attention head with `--heads`. Topics lift every layer of four Pythia

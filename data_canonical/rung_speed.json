@@ -1,0 +1,29 @@
+{
+ "machine": "arm64 macOS-26.6.2-arm64-arm-64bit-Mach-O",
+ "cpu_count": 18,
+ "python": "3.14.4",
+ "gt3": {
+  "rung_old": "1.10.0",
+  "rung_new": "1.11.0",
+  "cpu_s_old": 1982.205155,
+  "cpu_s_new": 47.598417999999995,
+  "cpu_ratio": 41.64434950338056,
+  "max_rel_diff": 5.1760595532320476e-15,
+  "p_values_identical": true,
+  "arithmetic_new": "fast"
+ },
+ "lm": {
+  "rung_old": "1.10.0",
+  "rung_new": "1.11.0",
+  "cpu_s_old": 965.285887,
+  "cpu_s_new": 46.608287,
+  "cpu_ratio": 20.710606399243982,
+  "max_rel_diff": 1.580777966626132e-14,
+  "p_values_identical": true,
+  "arithmetic_new": "fast"
+ },
+ "lm_paper": {
+  "cpu_s_new": 683.285596,
+  "arithmetic": "rows"
+ }
+}

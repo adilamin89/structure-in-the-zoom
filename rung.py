@@ -25,7 +25,10 @@ head-score AUCs beside their random-set null and the write-norm baseline,
 the untrained comparator (--untrained), and `rung heads` for any unit stack;
 data that leave a statistic undefined (fewer than three classes, no variance,
 classes with no within-class variance) no longer stop a run: that part reads
-'undefined' or 'degenerate' with its reason, while invalid input still raises.)
+'undefined' or 'degenerate' with its reason, while invalid input still raises; 1.11 speed: every ladder that
+accumulates whole classes from class-block sums (fast, the default outside the paper's replay conventions, equal to
+the row-by-row values to about 1e-12) and the ladders, floors and the split's traces on threads (workers), every
+random draw made first in the serial order so that any number of threads returns bit-identical values.)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -63,20 +66,53 @@ data_canonical/ of this repository.
 """
 import numpy as np
 
-__version__ = "1.10.0"
+__version__ = "1.11.0"
 
 BIN_COUNTS_DEFAULT = (1, 2, 3, 4, 6, 8)
 
 
 def _subset_pr(K, idx):
-    """PR of the row-centered subset via the precomputed full Gram matrix."""
-    Ks = K[np.ix_(idx, idx)]
-    rm = Ks.mean(axis=1)
+    """PR of the row-centered subset via the precomputed full Gram matrix. The centring and squaring run in place on the
+    subset's own copy: the same operations in the same order as (Ks - r - r' + t), then (Kc * Kc).sum(), so the value is
+    bit-identical, with one m x m buffer instead of three."""
+    Kc = K[np.ix_(idx, idx)]
+    rm = Kc.mean(axis=1)
     tm = rm.mean()
-    Kc = Ks - rm[:, None] - rm[None, :] + tm
+    Kc -= rm[:, None]
+    Kc -= rm[None, :]
+    Kc += tm
     tr = float(np.trace(Kc))
-    tr2 = float((Kc * Kc).sum())
+    tr2 = float(np.square(Kc, out=Kc).sum())
     return tr * tr / tr2 if np.isfinite(tr2) and tr2 > 0 else 1.0
+
+
+def _subset_log_prs(K, KK, idx_list, full=None):
+    """log PR (floored at 1e-9) of each row-centred subset in idx_list, from indicator products with K and KK = K o K: for
+    the indicator u of a subset S of m rows, Tr Kc = u.diag(K) - u'Ku/m and |Kc|^2 = u'(K o K)u - 2 |(Ku)_S|^2/m + (u'Ku)^2/m^2,
+    the row-centred PR of `_subset_pr` in algebra, for every subset in two matrix products. A subset whose sums keep less
+    than 1e-6 of themselves through the centring is computed row by row; full replaces the value of a subset of every row.
+    K should come from globally centred features."""
+    n = len(K)
+    U = np.zeros((n, len(idx_list)))
+    for j, idx in enumerate(idx_list):
+        U[idx, j] = 1.0
+    m = U.sum(axis=0)
+    KU = K @ U
+    uku = (U * KU).sum(axis=0)
+    sq = (U * KU * KU).sum(axis=0)
+    ukku = (U * (KK @ U)).sum(axis=0)
+    t1 = np.diagonal(K) @ U
+    trc = t1 - uku / m
+    fro = ukku - 2.0 * sq / m + uku * uku / (m * m)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        pr = np.where(np.isfinite(fro) & (fro > 0), trc * trc / fro, 1.0)
+        cond = np.minimum(np.where(ukku > 0, fro / ukku, 0.0), np.where(t1 > 0, trc / t1, 0.0))
+    out = np.log(np.maximum(pr, 1e-9))
+    for j in np.where(~(cond >= 1e-6))[0]:
+        out[j] = np.log(max(_subset_pr(K, idx_list[j]), 1e-9))
+    if full is not None:
+        out[m == n] = full
+    return out
 
 
 def _slope(sizes, prs):
@@ -96,21 +132,28 @@ def _ladder(K, members, order, bin_counts):
     return _slope(sizes, prs), sizes, prs
 
 
-def _class_blocks(K, lab, nc):
+def _class_blocks(K, lab, nc, KK=None):
     """Class-block sums of a Gram matrix K (n x n) for labels lab in 0..nc-1: the diagonal sums d_c, S = P^T K P,
     Q = P^T (K o K) P, G[c,d,e] = sum over rows i of class c of (K P)[i,d] (K P)[i,e], and the class sizes. Every rung of a
     class ladder is a union of whole classes, and its row-centred PR follows from these sums alone (`_union_ladder_slopes`).
-    K should come from globally centred features: the PR is the same, the sums lose less to cancellation."""
+    K should come from globally centred features: the PR is the same, the sums lose less to cancellation. KK: K * K,
+    computed once by a caller that needs the sums for many labellings of the same K (the same values, no n x n
+    temporary per call)."""
     P = np.zeros((len(lab), nc))
     P[np.arange(len(lab)), lab] = 1.0
     R = K @ P
-    return P.T @ np.diag(K), P.T @ K @ P, P.T @ (K * K) @ P, np.einsum("ic,id,ie->cde", P, R, R), P.sum(axis=0)
+    return (P.T @ np.diag(K), P.T @ K @ P, P.T @ (K * K if KK is None else KK) @ P, np.einsum("ic,id,ie->cde", P, R, R),
+            P.sum(axis=0))
 
 
-def _union_ladder_slopes(blocks, orders, bin_counts):
-    """The ladder slope of every order in `orders` (rung k = the first bin_counts[k] classes), from class-block sums: for
-    the union indicator u with m rows, Tr Kc = u.d - u'Su/m and ||Kc||_F^2 = u'Qu - 2 sum_c u_c u'G_c u/m + (u'Su)^2/m^2,
-    exactly the row-centred PR that `_ladder` computes row by row, at O(C^3) per rung instead of O(n^2)."""
+def _union_ladders(blocks, orders, bin_counts):
+    """Every order's ladder from class-block sums (rung k = the first bin_counts[k] classes): for the union indicator u
+    with m rows, Tr Kc = u.d - u'Su/m and ||Kc||_F^2 = u'Qu - 2 sum_c u_c u'G_c u/m + (u'Su)^2/m^2, exactly the
+    row-centred PR that `_ladder` computes row by row, at O(C^3) per rung instead of O(n^2). Returns the slopes, the
+    rung PRs and sizes (orders x rungs), and each order's worst conditioning: the smallest of ||Kc||^2 / u'Qu and
+    Tr Kc / u.d over its rungs, the share of each sum that survives the centring. Rounding in the block sums costs
+    about m * 1e-16 / conditioning of a PR's relative precision, so a caller that needs the row-by-row value to
+    ~1e-10 recomputes the orders whose conditioning falls below ~1e-6 row by row."""
     d, S, Q, G, m_c = blocks
     orders = np.asarray(orders)
     U = np.zeros((len(orders), len(bin_counts), len(m_c)))
@@ -118,14 +161,74 @@ def _union_ladder_slopes(blocks, orders, bin_counts):
         np.put_along_axis(U[:, k], orders[:, :c], 1.0, axis=1)
     m = U @ m_c
     sall = np.einsum("...c,cd,...d->...", U, S, U)
-    trc = U @ d - sall / m
-    fro = np.einsum("...c,cd,...d->...", U, Q, U) - 2.0 * np.einsum("...c,cde,...d,...e->...", U, G, U, U) / m + sall ** 2 / m ** 2
+    ud = U @ d
+    trc = ud - sall / m
+    uqu = np.einsum("...c,cd,...d->...", U, Q, U)
+    fro = uqu - 2.0 * np.einsum("...c,cde,...d,...e->...", U, G, U, U) / m + sall ** 2 / m ** 2
     with np.errstate(divide="ignore", invalid="ignore"):
         pr = np.where(np.isfinite(fro) & (fro > 0), trc * trc / fro, 1.0)
+        cond = np.minimum(np.where(uqu > 0, fro / uqu, 0.0), np.where(ud > 0, trc / ud, 0.0)).min(axis=1)
     x = np.log(m)
     y = np.log(np.maximum(pr, 1e-9))
     xc = x - x.mean(axis=1, keepdims=True)
-    return (xc * (y - y.mean(axis=1, keepdims=True))).sum(axis=1) / (xc * xc).sum(axis=1)
+    return (xc * (y - y.mean(axis=1, keepdims=True))).sum(axis=1) / (xc * xc).sum(axis=1), pr, m, cond
+
+
+def _union_ladder_slopes(blocks, orders, bin_counts):
+    """The ladder slope of every order in `orders` from class-block sums (see `_union_ladders`)."""
+    return _union_ladders(blocks, orders, bin_counts)[0]
+
+
+def _workers(workers, task_bytes=0):
+    """The number of threads for `workers`: a positive count as given; 0 (or None) for one per core but one, at most
+    eight, and fewer when each thread's largest temporary (task_bytes) would not fit in half of the physical memory.
+    Eight: the work is memory-bound, and past it one run gains little (Appendix M's GT3 command on an 18-core laptop:
+    20 s with 8 threads, 19 s with 17, which held 37% more memory)."""
+    import os
+    if workers is not None and int(workers) > 0:
+        return int(workers)
+    if workers is not None and int(workers) < 0:
+        raise ValueError(f"workers must be 0 (one per core) or a positive count; got {workers}")
+    cores = len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else (os.cpu_count() or 1)
+    w = max(1, min(cores - 1, 8))
+    try:
+        mem = os.sysconf("SC_PHYS_PAGES") * os.sysconf("SC_PAGE_SIZE")
+        if task_bytes > 0:
+            w = min(w, max(1, int(0.5 * mem // task_bytes)))
+    except (ValueError, OSError, AttributeError):
+        pass
+    return w
+
+
+def _pmap(fn, items, workers):
+    """[fn(x) for x in items], evaluated by `workers` threads when workers > 1. The heavy work in every task (fancy
+    indexing, reductions, BLAS) releases the GIL; each task reads shared arrays and writes nothing shared, and results
+    come back in the order of `items`, so the values are bit-identical to the serial loop for any number of threads."""
+    items = list(items)
+    if workers <= 1 or len(items) <= 1:
+        return [fn(x) for x in items]
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(min(workers, len(items))) as ex:
+        return list(ex.map(fn, items))
+
+
+def _fast_default(fast, floor_by_rung=False, perm_seed=None, order_seed=None):
+    """fast=None resolves to False under the paper's replay conventions (a floor drawn rung by rung, or the explicit
+    permutation and order seeds of --paper-seeds), so those runs keep the arithmetic of rung 1.10 bit for bit; else True."""
+    if fast is None:
+        return not (floor_by_rung or perm_seed is not None or order_seed is not None)
+    return bool(fast)
+
+
+def _rng_state(rng):
+    """A copy of a generator's state, to replay its next draws elsewhere (`_rng_replay`)."""
+    return type(rng.bit_generator), rng.bit_generator.state
+
+
+def _rng_replay(state):
+    bg = state[0]()
+    bg.state = state[1]
+    return np.random.Generator(bg)
 
 
 def _zscore(X):
@@ -160,21 +263,31 @@ def spectrum(X):
     the variance fraction of the single largest feature. An effective
     dimension near 1 with a leading fraction near 1 means a rogue dimension
     dominates and the linear participation ratio is blind to any declared
-    axis; standardize=True in zoom() is the repair."""
+    axis; standardize=True in zoom() is the repair. Computed on the smaller Gram matrix (samples or features), whose
+    nonzero eigenvalues are the spectrum's: the effective dimension from its traces, Tr(G)^2 / Tr(G^2), and the leading
+    eigenvalue by Lanczos from a fixed start (no full decomposition)."""
     X = np.asarray(X, dtype=np.float64)
     Xc = X - X.mean(axis=0, keepdims=True)
-    lam = np.linalg.svd(Xc, compute_uv=False) ** 2
     v = Xc.var(axis=0)
-    tot = lam.sum()
-    return {"d_eff_full": float(tot ** 2 / (lam ** 2).sum()) if tot > 0 else float("nan"),
-            "top1_eig_frac": float(lam[0] / tot) if tot > 0 else float("nan"),
+    G = Xc @ Xc.T if Xc.shape[0] <= Xc.shape[1] else Xc.T @ Xc
+    tot = float(np.trace(G))
+    if not tot > 0:
+        nan = float("nan")
+        return {"d_eff_full": nan, "top1_eig_frac": nan, "top1_dim_var_frac": nan}
+    if len(G) > 16:
+        from scipy.sparse.linalg import eigsh
+        lam1 = float(eigsh(G, k=1, which="LA", v0=np.random.default_rng(0).standard_normal(len(G)))[0][0])
+    else:
+        lam1 = float(np.linalg.eigvalsh(G)[-1])
+    return {"d_eff_full": tot ** 2 / float((G * G).sum()), "top1_eig_frac": lam1 / tot,
             "top1_dim_var_frac": float(v.max() / v.sum()) if v.sum() > 0 else float("nan")}
 
 
 def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
          n_floor_draws=20, bin_counts=None, strata=None, seed=0,
          floor_seed=None, perm_seed=None, order_seed=None, standardize=False,
-         antipode=None, order=None, shift_null=False, time_blocks=None, keep_null=False, floor_by_rung=False):
+         antipode=None, order=None, shift_null=False, time_blocks=None, keep_null=False, floor_by_rung=False,
+         fast=None, workers=1):
     """Axis-resolved decomposition of the dimensionality-scaling exponent.
 
     Parameters
@@ -229,6 +342,18 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         second half of the classes carries; that reading needs the first half
         of the declared order to hold one member of each pair, which this
         checks and reports as `antipode_first_half_has_no_pair`.
+    fast : how the ladders and floors are computed. True: every ladder that accumulates whole classes (the declared one,
+        every random order, every relabelling of every null) from class-block sums of the Gram matrix, one O(n^2 C) pass
+        per labelling and O(C^3) per ladder; every floor draw from indicator products with the Gram matrix and its
+        elementwise square, all of a floor's draws in two matrix products; the floor's full-set rung, a permutation of
+        every row that each draw shares, once. A ladder or draw whose sums lose too much to the centring is computed row
+        by row. The values equal the row-by-row ones to about 1e-12. False: everything row by row, the arithmetic of rung
+        1.10 and of the paper's generators, bit for bit. None (default): False under the paper's replay conventions
+        (floor_by_rung, or an explicit perm_seed or order_seed), True otherwise. The random draws are the same either
+        way. Reported as `arithmetic`.
+    workers : threads that evaluate the ladders and floors: 1 (default) none, 0 one per core but one, at most
+        eight (fewer if memory is short), or a count. Every random draw is made first, in the serial order of the
+        streams, and the results are reduced in that order, so any number of workers returns bit-identical values.
 
     Returns dict with delta, theta_obs, theta_floor, p_two, z,
     delta_orderavg (+sd, p_two_orderavg, z_orderavg), the per-rung ladders
@@ -293,41 +418,146 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         warnings.warn(f"zoom: {n_samples} samples -> full Gram of {8*n_samples**2/1e9:.1f} GB in float64 and "
                       f"time growing as n^2 (about {(n_samples/6400)**2*3.4:.0f} min per 100 permutations on one core); "
                       "subsample stimuli per class (rung sizes stay matched) or run per-layer jobs in parallel.", stacklevel=2)
+    fast = _fast_default(fast, floor_by_rung, perm_seed, order_seed)
     K = X @ X.T
     members = [np.where(lab == c)[0] for c in range(n_classes)]
     canonical = declared_order(classes, order)
     run = same_class_rate(lab)
+    counts = [len(m) for m in members]
 
-    th_obs, sizes, pr_obs = _ladder(K, members, canonical, bc)
-    logs = np.zeros((n_floor_draws, len(sizes)))
+    def sizes_of(o):
+        # an order's rung sizes; every relabelling below keeps the class counts, so they hold for all of them
+        return tuple(sum(counts[i] for i in o[:c]) for c in bc)
+
+    # 1. Every random draw, in the serial order of the streams: the floor, the random orders, each null's relabellings,
+    #    the pair-preserving orders. Evaluating them afterwards, in any order and on any number of threads, leaves
+    #    every value as the serial loop computes it.
+    sizes = list(sizes_of(canonical))
     cells = ([(i, k) for k in range(len(sizes)) for i in range(n_floor_draws)] if floor_by_rung
              else [(i, k) for i in range(n_floor_draws) for k in range(len(sizes))])
-    for i, k in cells:
-        logs[i, k] = np.log(max(_subset_pr(K, frng.choice(n, sizes[k], replace=False)), 1e-9))
+    floor_draws = [frng.choice(n, sizes[k], replace=False) for i, k in cells]
+    orders = [orng.permutation(n_classes).tolist() for _ in range(k_orders)]
+    null_orders = orders[:k_null_orders] if k_null_orders > 0 and orders else []
+
+    def within(groups):
+        # n_perm relabellings, each permuting the labels inside every group
+        out_ = []
+        for _ in range(n_perm):
+            sl = lab.copy()
+            for idx in groups:
+                sl[idx] = sl[idx[prng.permutation(len(idx))]]
+            out_.append(sl)
+        return out_
+    relabel = {}
+    if n_perm:
+        relabel["perm"] = [lab[prng.permutation(n)] for _ in range(n_perm)]
+    if strata is not None and n_perm:
+        strata = np.asarray(strata)
+        if strata.shape != (n,):
+            raise ValueError(f"strata must hold one stratum id per row ({n}); got {strata.shape}")
+        relabel["strat"] = within([np.where(strata == s)[0] for s in np.unique(strata)])
+    if shift_null and n_perm:
+        relabel["shift"] = [np.roll(lab, int(prng.integers(1, n))) for _ in range(n_perm)]
+    if time_blocks is not None and n_perm:
+        tb = np.asarray(time_blocks)
+        if tb.shape != (n,):
+            raise ValueError(f"time_blocks must hold one block id per row ({n}); got {tb.shape}")
+        bmem = [np.where(tb == b)[0] for b in np.unique(tb)]
+        relabel["tb"] = within(bmem)
+    pp = None
+    if strata is not None:
+        groups = pair_groups(lab, np.asarray(strata), n_classes)
+        if len(groups) >= 2 and max(len(g) for g in groups) >= 2:
+            pp, n_pp = pair_preserving_orders(groups, k_max=5000, rng=orng)
+            sub_idx = (list(range(len(pp))) if len(pp) <= max(k_orders, 50)
+                       else [int(i) for i in orng.choice(len(pp), max(k_orders, 50), replace=False)])
+            sub = [pp[i] for i in sub_idx]
+            if n_perm:
+                relabel["pair"] = within([np.where(np.asarray(strata) == s_)[0] for s_ in np.unique(strata)])
+
+    # every accumulation order is read against a floor at its own rung sizes: with unequal classes another order
+    # has other sizes. Equal sizes reuse the declared floor; new sizes draw from a separate stream, in order of first
+    # use, so the floor, permutation and order streams of a given seed are unchanged. Each new floor's draws are
+    # replayed from the stream's state where they are evaluated.
+    xrng = np.random.default_rng([floor_seed if floor_seed is not None else seed, 7919])
+    decl = tuple(sizes)
+    key_state = {}
+    for o in orders + (pp or []):
+        key = sizes_of(o)
+        if key != decl and key not in key_state:
+            key_state[key] = _rng_state(xrng)
+            for _ in range(n_floor_draws):
+                for s in key:
+                    xrng.choice(n, s, replace=False)
+
+    # 2. Evaluate.
+    log_full = np.log(max(_subset_pr(K, np.arange(n)), 1e-9)) if fast and n in sizes else None
+    KK = K * K if fast else None      # fast: the class blocks of every labelling and every floor draw by matrix products
+
+    def log_pr(idx):
+        return log_full if log_full is not None and len(idx) == n else np.log(max(_subset_pr(K, idx), 1e-9))
+
+    def read(lb, ords):
+        """Slopes and rung PRs of one labelling's ladders (lab or a relabelling) in the orders given."""
+        mem = members if lb is lab else None
+        if fast:
+            sl, pr, _, cond = _union_ladders(_class_blocks(K, lb, n_classes, KK), ords, bc)
+            sl, pr = list(sl), [list(p) for p in pr]
+            for j in np.where(cond < 1e-6)[0]:      # too much lost to the centring: this ladder row by row
+                mem = mem or [np.where(lb == c)[0] for c in range(n_classes)]
+                sl[j], _, pr[j] = _ladder(K, mem, ords[j], bc)
+            return sl, pr
+        mem = mem or [np.where(lb == c)[0] for c in range(n_classes)]
+        res = [_ladder(K, mem, o, bc) for o in ords]
+        return [r[0] for r in res], [r[2] for r in res]
+
+    def task(t):
+        if t[0] == "cells":                 # fast: the declared floor's draws in one batch
+            return _subset_log_prs(K, KK, t[1], log_full)
+        if t[0] == "cell":
+            return log_pr(t[1])
+        if t[0] == "key":
+            g = _rng_replay(t[2])
+            draws = [[g.choice(n, s, replace=False) for s in t[1]] for _ in range(n_floor_draws)]
+            if fast:
+                return _subset_log_prs(K, KK, [idx for row in draws for idx in row], log_full).reshape(n_floor_draws, len(t[1]))
+            return np.array([[log_pr(idx) for idx in row] for row in draws])
+        return read(t[1], t[2])
+
+    orig_orders = [canonical] + orders + (pp or [])
+    fam_orders = {"perm": [canonical] + null_orders, "strat": [canonical] + null_orders, "shift": [canonical],
+                  "tb": [canonical] + null_orders, "pair": pp and sub}
+    tasks = (([("cells", floor_draws)] if fast else [("cell", idx) for idx in floor_draws])
+             + [("key", key, st) for key, st in key_state.items()]
+             + ([("read", lab, orig_orders)] if fast else [("read", lab, [o]) for o in orig_orders])
+             + [("read", lb, fam_orders[f]) for f, rl in relabel.items() for lb in rl])
+    res = iter(_pmap(task, tasks, _workers(workers, 8 * n * n)))
+
+    # 3. Reduce, in the serial order.
+    logs = np.zeros((n_floor_draws, len(sizes)))
+    cell_vals = next(res) if fast else None
+    for j, (i, k) in enumerate(cells):
+        logs[i, k] = cell_vals[j] if fast else next(res)
     th_floor = _slope(sizes, np.exp(logs.mean(axis=0)))
     # the slope is linear in its response, so the floor's slope is the mean of the single-draw slopes and its standard
     # error is their SD over sqrt(draws): the uncertainty a reported shift inherits from the floor
     draw_slopes = np.array([_slope(sizes, np.exp(lg)) for lg in logs])
     th_floor_sd = float(draw_slopes.std(ddof=1)) if n_floor_draws > 1 else float("nan")
+    floors = {decl: th_floor}
+    for key in key_state:
+        floors[key] = _slope(key, np.exp(next(res).mean(axis=0)))
+    if fast:
+        sl_o, pr_o = next(res)
+    else:
+        parts = [next(res) for _ in orig_orders]
+        sl_o, pr_o = [p[0][0] for p in parts], [p[1][0] for p in parts]
+    th_obs, pr_obs = float(sl_o[0]), pr_o[0]
+    reads ={f: [next(res) for _ in rl] for f, rl in relabel.items()}
+
+    def shifts(sl, ords):
+        # each ladder against the floor at its own rung sizes
+        return [s - floors[sizes_of(o)] for s, o in zip(sl, ords)]
     d_obs = th_obs - th_floor
-
-    # every accumulation order is read against a floor at its own rung sizes: with unequal classes another order
-    # has other sizes. Equal sizes reuse the declared floor; new sizes draw from a separate stream so the floor,
-    # permutation and order streams of a given seed are unchanged.
-    floors = {tuple(sizes): th_floor}
-    xrng = np.random.default_rng([floor_seed if floor_seed is not None else seed, 7919])
-
-    def floor_for(sz):
-        key = tuple(sz)
-        if key not in floors:
-            lg = np.array([[np.log(max(_subset_pr(K, xrng.choice(n, s, replace=False)), 1e-9)) for s in key]
-                           for _ in range(n_floor_draws)])
-            floors[key] = _slope(key, np.exp(lg.mean(axis=0)))
-        return floors[key]
-
-    def shift_of(mem, o):
-        th, sz, _ = _ladder(K, mem, o, bc)
-        return th - floor_for(sz)
 
     floor_means = np.exp(logs.mean(axis=0))
     deficit = [float(np.log(max(o, 1e-9)) - np.log(max(f, 1e-9))) for o, f in zip(pr_obs, floor_means)]
@@ -344,7 +574,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
            "deficit": deficit,
            "n_perm": int(n_perm), "k_orders": int(k_orders),
            "n_floor_draws": int(n_floor_draws), "n_samples": int(n_samples),
-           "n_features": int(X.shape[1])}
+           "n_features": int(X.shape[1]), "arithmetic": "fast" if fast else "rows"}
     out["order"] = [classes[i].item() if hasattr(classes[i], "item") else classes[i] for i in canonical]
     out["same_class_rate"] = run
     if run["excess_se"] > 3 and not run["grouped_by_class"] and time_blocks is None:
@@ -368,19 +598,18 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
                           f"{clash[:3]}; the share of the climb left after half the circle needs one member of each pair before any partner "
                           "(relabel the classes so the pairs sit half a cycle apart).", stacklevel=2)
 
-    orders = [orng.permutation(n_classes).tolist() for _ in range(k_orders)]
-    d_orders = [shift_of(members, o) for o in orders]
+    d_orders = shifts(sl_o[1:1 + len(orders)], orders)
     out["delta_orderavg"] = float(np.mean(d_orders)) if d_orders else float("nan")
     out["delta_orderavg_sd"] = float(np.std(d_orders)) if d_orders else float("nan")
 
+    def nulls(f, with_orders=True):
+        # each relabelling's declared-order shift, and its shift averaged over the null orders
+        c = [sl[0] - th_floor for sl, _ in reads[f]]
+        a = [np.mean(shifts(sl[1:], null_orders)) if null_orders else float("nan") for sl, _ in reads[f]] if with_orders else None
+        return c, a
+
     if n_perm:
-        null_c, null_a = [], []
-        for _ in range(n_perm):
-            pl = lab[prng.permutation(n)]
-            mem = [np.where(pl == c)[0] for c in range(n_classes)]
-            null_c.append(_ladder(K, mem, canonical, bc)[0] - th_floor)
-            null_a.append(np.mean([shift_of(mem, o) for o in orders[:k_null_orders]])
-                          if k_null_orders > 0 and orders else float("nan"))
+        null_c, null_a = nulls("perm")
         for tag, obs, null in (("", d_obs, null_c),
                                ("_orderavg", out["delta_orderavg"], null_a)):
             z, pv, nm, ns = _null_stats(obs, null)
@@ -389,75 +618,37 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         if keep_null:
             out["null_draws"] = [float(v) for v in null_c]
 
-    if strata is not None and n_perm:
-        strata = np.asarray(strata)
-        if strata.shape != (n,):
-            raise ValueError(f"strata must hold one stratum id per row ({n}); got {strata.shape}")
-        smem = {s: np.where(strata == s)[0] for s in np.unique(strata)}
-        null_s, null_sa = [], []
-        for _ in range(n_perm):
-            sl = lab.copy()
-            for idx in smem.values():
-                sl[idx] = sl[idx[prng.permutation(len(idx))]]
-            mem = [np.where(sl == c)[0] for c in range(n_classes)]
-            null_s.append(_ladder(K, mem, canonical, bc)[0] - th_floor)
-            # the same within-stratum relabelling read by the order-averaged statistic (README rule 3 with rule 4)
-            null_sa.append(np.mean([shift_of(mem, o) for o in orders[:k_null_orders]])
-                           if k_null_orders > 0 and orders else float("nan"))
+    if "strat" in relabel:
+        # the same within-stratum relabelling read by the order-averaged statistic (README rule 3 with rule 4)
+        null_s, null_sa = nulls("strat")
         out["strat_z"], out["strat_p_two"], out["strat_null_mean"], out["strat_null_sd"] = _null_stats(d_obs, null_s)
         (out["strat_z_orderavg"], out["strat_p_two_orderavg"],
          out["strat_null_mean_orderavg"], out["strat_null_sd_orderavg"]) = _null_stats(out["delta_orderavg"], null_sa)
         if keep_null:
             out["strat_null_draws"] = [float(v) for v in null_s]
 
-    if shift_null and n_perm:
-        null_sh = []
-        for _ in range(n_perm):
-            sl = np.roll(lab, int(prng.integers(1, n)))
-            mem = [np.where(sl == c)[0] for c in range(n_classes)]
-            null_sh.append(_ladder(K, mem, canonical, bc)[0] - th_floor)
+    if "shift" in relabel:
+        null_sh = nulls("shift", with_orders=False)[0]
         out["shift_z"], out["shift_p_two"], out["shift_null_mean"], out["shift_null_sd"] = _null_stats(d_obs, null_sh)
 
-    if time_blocks is not None and n_perm:
-        tb = np.asarray(time_blocks)
-        if tb.shape != (n,):
-            raise ValueError(f"time_blocks must hold one block id per row ({n}); got {tb.shape}")
-        bmem = [np.where(tb == b)[0] for b in np.unique(tb)]
-        null_t, null_ta = [], []
-        for _ in range(n_perm):
-            tl = lab.copy()
-            for idx in bmem:
-                tl[idx] = tl[idx[prng.permutation(len(idx))]]
-            mem = [np.where(tl == c)[0] for c in range(n_classes)]
-            null_t.append(_ladder(K, mem, canonical, bc)[0] - th_floor)
-            null_ta.append(np.mean([shift_of(mem, o) for o in orders[:k_null_orders]])
-                           if k_null_orders > 0 and orders else float("nan"))
+    if "tb" in relabel:
+        null_t, null_ta = nulls("tb")
         for tag, obs, null in (("", d_obs, null_t), ("_orderavg", out["delta_orderavg"], null_ta)):
             z, pv, nm, ns = _null_stats(obs, null)
             out[f"tb_z{tag}"], out[f"tb_p_two{tag}"] = z, pv
             out[f"tb_null_mean{tag}"], out[f"tb_null_sd{tag}"] = nm, ns
         out["n_time_blocks"] = len(bmem)
 
-    if strata is not None:
-        groups = pair_groups(lab, np.asarray(strata), n_classes)
-        if len(groups) >= 2 and max(len(g) for g in groups) >= 2:
-            pp, n_pp = pair_preserving_orders(groups, k_max=5000, rng=orng)
-            sub = pp if len(pp) <= max(k_orders, 50) else [pp[i] for i in orng.choice(len(pp), max(k_orders, 50), replace=False)]
-            out["pair_groups"] = [[classes[i].item() if hasattr(classes[i], "item") else classes[i] for i in g] for g in groups]
-            out["n_pair_orders"] = int(n_pp)
-            out["delta_pairavg"] = float(np.mean([shift_of(members, o) for o in pp]))
-            if n_perm:
-                obs_sub = float(np.mean([shift_of(members, o) for o in sub]))
-                smem = [np.where(np.asarray(strata) == s_)[0] for s_ in np.unique(strata)]
-                null_p = []
-                for _ in range(n_perm):
-                    sl = lab.copy()
-                    for idx in smem:
-                        sl[idx] = sl[idx[prng.permutation(len(idx))]]
-                    mem = [np.where(sl == c)[0] for c in range(n_classes)]
-                    null_p.append(np.mean([shift_of(mem, o) for o in sub]))
-                out["pairavg_z"], out["pairavg_p_two"], out["pairavg_null_mean"], out["pairavg_null_sd"] = _null_stats(obs_sub, null_p)
-                out["n_pair_orders_in_null"] = len(sub)
+    if pp is not None:
+        d_pp = shifts(sl_o[1 + len(orders):], pp)
+        out["pair_groups"] = [[classes[i].item() if hasattr(classes[i], "item") else classes[i] for i in g] for g in groups]
+        out["n_pair_orders"] = int(n_pp)
+        out["delta_pairavg"] = float(np.mean(d_pp))
+        if n_perm:
+            obs_sub = float(np.mean([d_pp[i] for i in sub_idx]))
+            null_p = [np.mean(shifts(sl, sub)) for sl, _ in reads["pair"]]
+            out["pairavg_z"], out["pairavg_p_two"], out["pairavg_null_mean"], out["pairavg_null_sd"] = _null_stats(obs_sub, null_p)
+            out["n_pair_orders_in_null"] = len(sub)
 
     out["n_floor_sequences"] = len(floors)   # rung-size sequences read against their own floor
     return out
@@ -1122,13 +1313,13 @@ def last_token_report(last_ids, labels, decode=None):
     return out
 
 
-def last_token_arms(X, labels, last_ids, n_sub=20, n_perm=100, k_orders=20, seed=1500, standardize=False):
+def last_token_arms(X, labels, last_ids, n_sub=20, n_perm=100, k_orders=20, seed=1500, standardize=False, fast=None, workers=1):
     """The last-token control of Appendix I for one layer: n_sub subsamples with m prompts per class ending on m
     distinct last tokens (m = the smallest class's count of distinct last tokens), and n_sub size-matched random
     subsamples with no token matching; the order-averaged shift and its permutation p for each. The lexical part of
     a lift is the drop from the random arm to the matched arm; if the random arm also loses the lift, the subsample
     is too small to tell. standardize reads the arms in the z-scored frame. The arms use ordinary label
-    permutations: axis strata are not carried into them. Returns None when m < 6."""
+    permutations: axis strata are not carried into them. fast and workers as in zoom. Returns None when m < 6."""
     X = np.asarray(X); labels = np.asarray(labels); last_ids = np.asarray(last_ids)
     classes = np.unique(labels)
     m = min(len(np.unique(last_ids[labels == c])) for c in classes)
@@ -1147,7 +1338,7 @@ def last_token_arms(X, labels, last_ids, n_sub=20, n_perm=100, k_orders=20, seed
     out = {"m_per_class": int(m), "frame": "z" if standardize else "linear"}
     for arm, subs in arms.items():
         vals = [zoom(X[k], labels[k], n_perm=n_perm, k_orders=k_orders, k_null_orders=k_orders,
-                     seed=int(rng.integers(1 << 30)), standardize=standardize) for k in subs]
+                     seed=int(rng.integers(1 << 30)), standardize=standardize, fast=fast, workers=workers) for k in subs]
         out[arm] = {"delta_orderavg_median": float(np.median([v["delta_orderavg"] for v in vals])),
                     "p_two_orderavg_median": float(np.median([v["p_two_orderavg"] for v in vals]))}
     return out
@@ -1155,7 +1346,8 @@ def last_token_arms(X, labels, last_ids, n_sub=20, n_perm=100, k_orders=20, seed
 
 def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
                 max_len=128, out_path=None, paper_seeds=False, revision=None,
-                use_strata=True, standardize=False, dtype=None, frames="both", match_last_token=False, untrained=None):
+                use_strata=True, standardize=False, dtype=None, frames="both", match_last_token=False, untrained=None,
+                fast=None, workers=1):
     """Per-layer zoom() over last-token hidden states for one or more axes.
 
     axis_files: list of axis JSON paths and/or directories. The model is loaded
@@ -1168,9 +1360,11 @@ def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
     and its null are reported in each frame and layers where the two disagree
     in sign beyond one null SD are flagged (a few high-variance units can set
     the linear sign). Every axis gets a last-token report; match_last_token
-    adds the matched and size-matched random arms per layer. Returns
+    adds the matched and size-matched random arms per layer. fast and workers as in zoom; with paper_seeds, fast=None
+    keeps every ladder row by row, the last-token arms included. Returns
     {"model", "revision", "axes": {name: {...}}}.
     """
+    fast = _fast_default(fast, perm_seed=3700 if paper_seeds else None)
     import json as _json
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -1193,6 +1387,7 @@ def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
         frame_list = [True]
 
     results = {"model": model_name, "revision": revision, "untrained_seed": untrained, "n_perm": n_perm, "rung_version": __version__,
+               "arithmetic": "fast" if fast else "rows",
                "k_orders": k_orders, "frames": "z" if standardize else frames, "axes": {}}
     for af in files:
         name, classes, prompts, labels, strata = _load_axis(af, use_strata)
@@ -1230,9 +1425,10 @@ def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
             for zf in frame_list:
                 if paper_seeds:
                     r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata,
-                             floor_seed=100 * l + 1, perm_seed=3700, order_seed=3701, standardize=zf)
+                             floor_seed=100 * l + 1, perm_seed=3700, order_seed=3701, standardize=zf, fast=fast, workers=workers)
                 else:
-                    r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata, seed=l, standardize=zf)
+                    r = zoom(X, labels, n_perm=n_perm, k_orders=k_orders, strata=strata, seed=l, standardize=zf, fast=fast,
+                             workers=workers)
                 suffix = "_z" if (zf and len(frame_list) == 2) else ""
                 row.update({k + suffix: r[k] for k in keys if k in r})
             if r.get("degenerate"):
@@ -1258,7 +1454,7 @@ def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
                 # the arms read the battery's first frame (linear unless only z was asked) at its budget, capped at
                 # the control's own 100 permutations and 20 orders
                 arms = last_token_arms(X, labels, last, n_perm=min(n_perm, 100), k_orders=min(k_orders, 20),
-                                       standardize=frame_list[0])
+                                       standardize=frame_list[0], fast=fast, workers=workers)
                 row["last_token_arms"] = arms
                 if arms is not None:
                     msg += (f" | matched {arms['matched']['delta_orderavg_median']:+.3f} vs random "
@@ -1797,6 +1993,37 @@ def traces(Y, lab):
     return b1, w1, b2, w2, x
 
 
+def _traces_gram(K, idx, lab):
+    """traces(X[idx], lab) from the Gram matrix K of the rows (any common offset), at O(m^2 C) instead of O(m^2 d). With
+    P the subset's class indicator, n_c its class sizes, a_c = P_c / n_c, u = 1/m and G = K[idx, idx]:
+    the class means' Gram D_cd = (a_c - u)' G (a_d - u), so b1 = sum_c (n_c/m) D_cc and b2 = sum_cd (n_c n_d/m^2) D_cd^2;
+    the residuals' Gram E = (I - P A') G (I - A P'), so w1 = Tr E / m and w2 = |E|^2 / m^2; and the cross term
+    x = sum_c (n_c/m^2) |T_c - (T A)_c P'|^2 with T_c = (a_c - u)' G. The values equal traces' to rounding."""
+    G = K[np.ix_(idx, idx)]
+    m = len(idx)
+    _, l = np.unique(lab, return_inverse=True)
+    C = int(l.max()) + 1
+    P = np.zeros((m, C)); P[np.arange(m), l] = 1.0
+    nc = P.sum(axis=0)
+    GA = (G @ P) / nc                                   # column c: G a_c
+    s = G.sum(axis=1)
+    AGA = (P / nc).T @ GA                               # a_c' G a_d
+    sa = s @ (P / nc)                                   # 1' G a_c
+    D = AGA - sa[:, None] / m - sa[None, :] / m + s.sum() / m ** 2
+    w = nc / m
+    b1 = float((w * np.diag(D)).sum())
+    b2 = float((np.outer(w, w) * D * D).sum())
+    T = GA.T - s[None, :] / m
+    T -= (T @ (P / nc))[:, l]
+    x = float(((T * T).sum(axis=1) * nc).sum() / m ** 2)
+    G -= GA[:, l]
+    G -= GA[:, l].T
+    G += AGA[l][:, l]
+    w1 = float(np.trace(G)) / m
+    w2 = float(np.square(G, out=G).sum()) / m ** 2
+    return b1, w1, b2, w2, x
+
+
 def logterms(t):
     b1, w1, b2, w2, x = t
     return {"lt": 2 * np.log(b1 + w1), "lw2": np.log(w2), "lb": np.log1p(b2 / w2), "lbx": np.log1p((b2 + 2 * x) / w2),
@@ -1922,14 +2149,18 @@ def _undefined_split(reason):
 
 
 def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_size=10, n_shuffle=0, n_bias=0,
-              floor_by_rung=False):
+              floor_by_rung=False, fast=None, workers=1):
     """The exact split of every rung's deficit and of the shift for the ladder that accumulates the classes in
     `order` (default: sorted labels) with `bin_counts` classes per rung (default: the paper's ladder). Returns the
     per-rung terms, the four slopes of the shift (and the scale-free regrouping), the private slopes, exactness
     checks, the sign-law readout of the full set, with n_shuffle > 0 the label-permutation baseline and the excess
     over it, and with n_bias > 0 the same split on bias_null(mode='shape') surrogates (seeds 0..n_bias-1) and the
     data net of it: the within part counts as class-dependent fluctuation structure only beyond that null.
-    floor_by_rung draws the floor rung by rung, as the paper's generators do (see zoom)."""
+    floor_by_rung draws the floor rung by rung, as the paper's generators do (see zoom). fast and workers as in zoom: fast
+    computes every subset's traces from the rows' Gram matrix (exact in algebra, O(m^2 C) instead of O(m^2 d)) and reads a
+    floor draw of every row off the top rung (the same rows in another order); None means False with floor_by_rung, True
+    otherwise. Reported as `arithmetic`."""
+    fast = _fast_default(fast, floor_by_rung)
     X = np.asarray(X, np.float64); labels = np.asarray(labels)
     if not np.all(np.isfinite(X)):
         raise ValueError("decompose: X holds NaN or inf")
@@ -1952,9 +2183,11 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_si
         if all(flat[c] for c in order[:k]):
             return _undefined_split(f"the first {k} classes of the declared order ({order[:k]}) have no within-class variance, so the "
                                     "split is undefined at that rung; put a class with variance first or drop the constant classes")
-    out = _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size, floor_by_rung)
+    gram = (X @ X.T) if fast else None           # the rows' Gram, shared by the split and its label shuffles
+    out = _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size, floor_by_rung, workers, fast, gram)
     if out is None:
         return out
+    out["arithmetic"] = "fast" if fast else "rows"
     out["sign_law"] = sign_law(X, labels)
     out["class_pr"] = class_pr(X, labels)
     if n_bias > 0:
@@ -1965,7 +2198,7 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_si
             except ValueError as e:                     # no surrogate keeps every class's variance: the null is undefined
                 out["bias_null"] = {"undefined": str(e)}
                 break
-            r = _decompose_once(Y, ly, order, bin_counts, n_null, seed, min_size, floor_by_rung)
+            r = _decompose_once(Y, ly, order, bin_counts, n_null, seed, min_size, floor_by_rung, workers, fast)
             if r is not None:
                 bias.append(r)
         if bias:
@@ -1980,7 +2213,8 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_si
     shuf = []
     for s in range(n_shuffle):
         srng = np.random.default_rng(700 + s)
-        r = _decompose_once(X, labels[srng.permutation(len(labels))], order, bin_counts, n_null, seed, min_size, floor_by_rung)
+        r = _decompose_once(X, labels[srng.permutation(len(labels))], order, bin_counts, n_null, seed, min_size, floor_by_rung,
+                            workers, fast, gram)
         if r is not None:
             shuf.append(r)
     if not shuf:
@@ -2010,26 +2244,46 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_si
     return out
 
 
-def _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size, floor_by_rung=False):
+def _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size, floor_by_rung=False, workers=1, fast=False, gram=None):
     rng = np.random.default_rng(seed)
     members = [np.where(labels == c)[0] for c in order]
     K = len(order)
-    sizes, ks, obs = [], [], []
+    sizes, ks, sels = [], [], []
     for c in bin_counts:
         sel = np.concatenate(members[:c])
         if len(sel) < min_size:
             continue
-        sizes.append(int(len(sel))); ks.append(int(c))
-        t = logterms(traces(X[sel], labels[sel])); t["pr_check"] = pr_centered(X[sel]); obs.append(t)
+        sizes.append(int(len(sel))); ks.append(int(c)); sels.append(sel)
     if len(sizes) < 3:
         return None
     dropped = [int(c) for c in bin_counts if c not in ks]
     flo = [dict(lt=0.0, lw2=0.0, lb=0.0, lbx=0.0, ld=0.0, tb=0.0, lw1=0.0, pr=0.0, traces=np.zeros(5)) for _ in sizes]
     cells = ([k for k in range(len(sizes)) for _ in range(n_null)] if floor_by_rung
              else [k for _ in range(n_null) for k in range(len(sizes))])
-    for k in cells:
-        idx = rng.choice(len(X), sizes[k], replace=False)
-        t = logterms(traces(X[idx], labels[idx]))
+    # every floor draw first, in the serial order; the traces are then evaluated on any number of threads and summed in
+    # that order. fast: the traces from the rows' Gram matrix (O(m^2 C) per subset, not O(m^2 d)), and a draw of every
+    # row is the top rung's rows in another order, whose traces are the top rung's
+    draws = [rng.choice(len(X), sizes[k], replace=False) for k in cells]
+    top_full = fast and sizes[-1] == len(X)
+    if fast and gram is None:
+        Xg = X - X.mean(0)
+        gram = Xg @ Xg.T
+
+    def terms(t):
+        if fast:
+            o = logterms(_traces_gram(gram, t[1], labels[t[1]]))
+            if t[0] == "obs":
+                o["pr_check"] = _subset_pr(gram, t[1])
+            return o
+        if t[0] == "floor":
+            return logterms(traces(X[t[1]], labels[t[1]]))
+        o = logterms(traces(X[t[1]], labels[t[1]])); o["pr_check"] = pr_centered(X[t[1]])
+        return o
+    tasks = [("obs", s) for s in sels] + [("floor", idx) for idx in draws if not (top_full and len(idx) == len(X))]
+    res = _pmap(terms, tasks, _workers(workers, 24 * X.shape[0] ** 2 if fast else 8 * (3 * X.shape[0] * X.shape[1] + X.shape[0] ** 2)))
+    obs, fl = res[:len(sels)], iter(res[len(sels):])
+    for k, idx in zip(cells, draws):
+        t = obs[-1] if top_full and len(idx) == len(X) else next(fl)
         for key in flo[k]:
             if key == "traces":
                 flo[k][key] = flo[k][key] + np.array(t[key]) / n_null
@@ -2129,7 +2383,7 @@ def _joint_cells(arrays):
 
 
 def candidates(X, label_sets, strata=None, halves=None, n_perm=200, seed=0, standardize=False, alpha=0.05,
-               n_floor_draws=20, floor_seed=None):
+               n_floor_draws=20, floor_seed=None, fast=None, workers=1):
     """Which of several candidate labels organizes a population: each candidate's shift against label permutations, ranked
     by z = (shift - null mean) / null SD, which does not depend on the floor draw. The screen asks for a positive shift,
     so its p is one-sided.
@@ -2144,7 +2398,9 @@ def candidates(X, label_sets, strata=None, halves=None, n_perm=200, seed=0, stan
         ranks first on the other half with p <= alpha.
     Permutations for candidate i on half h use the stream seed + 100 (h + 1) + i (seed + i without halves), the paper's
     screen at seed 0; the floor (which sets the shift, never z or p) is drawn rung by rung from floor_seed when given.
+    fast and workers as in zoom (fast=None: rows when floor_seed is given, fast otherwise).
     """
+    fast = _fast_default(fast, floor_by_rung=floor_seed is not None)
     X = np.asarray(X, dtype=np.float64)
     names = list(label_sets)
     L = {k: np.asarray(v) for k, v in label_sets.items()}
@@ -2178,17 +2434,25 @@ def candidates(X, label_sets, strata=None, halves=None, n_perm=200, seed=0, stan
         bc = _rung_classes(len(classes), None)
         order = list(range(len(classes)))
         groups = [np.where(st == v)[0] for v in np.unique(st)] if st is not None else None
-        obs = _ladder(G, [np.where(lab == c)[0] for c in order], order, bc)[0]
-        null = []
+        rel = []                                   # every relabelling first, in the stream's order
         for _ in range(n_perm):
             if groups is None:
-                yp = lab[rng.permutation(len(lab))]
+                rel.append(lab[rng.permutation(len(lab))])
             else:
                 yp = lab.copy()
                 for i in groups:
                     yp[i] = lab[i][rng.permutation(len(i))]
-            null.append(_ladder(G, [np.where(yp == c)[0] for c in order], order, bc)[0])
-        return obs, np.asarray(null)
+                rel.append(yp)
+        GG = G * G if fast and n_perm else None
+
+        def slope(yp):
+            if fast:
+                sl, _, _, cond = _union_ladders(_class_blocks(G, yp, len(classes), GG), [order], bc)
+                if cond[0] >= 1e-6:
+                    return float(sl[0])
+            return _ladder(G, [np.where(yp == c)[0] for c in order], order, bc)[0]
+        vals = _pmap(slope, [lab] + rel, _workers(workers, 8 * len(lab) ** 2))
+        return vals[0], np.asarray(vals[1:])
 
     def screen(rows, off):
         res = {}
@@ -2196,7 +2460,8 @@ def candidates(X, label_sets, strata=None, halves=None, n_perm=200, seed=0, stan
             y = L[name][rows]
             st = strata_of(name, rows)
             r = zoom(X[rows], y, n_perm=0, k_orders=0, seed=seed + off + i, standardize=standardize,
-                     n_floor_draws=n_floor_draws, floor_seed=floor_seed, floor_by_rung=floor_seed is not None)
+                     n_floor_draws=n_floor_draws, floor_seed=floor_seed, floor_by_rung=floor_seed is not None, fast=fast,
+                     workers=workers)
             obs, null = label_null(X[rows], y, st, np.random.default_rng(seed + off + i))
             z, _, nm, ns = _null_stats(obs, null)
             row = {"delta": r["delta"], "theta_floor": r["theta_floor"], "theta_floor_se": r["theta_floor_se"],
@@ -2945,7 +3210,7 @@ def head_scores(H, labels, layers, paper_seeds=False, n_perm=100, k_orders=50, n
             elif frac >= 1 - 1e-12:
                 row["flag"] = "constant within every class"
             if split:
-                dc = decompose(X, lab, n_null=10, seed=l * 100 + h + 1)
+                dc = decompose(X, lab, n_null=10, seed=l * 100 + h + 1, fast=False if paper_seeds else None)
                 if dc is not None and not dc.get("undefined"):
                     f = dc["delta_split_free"]
                     row.update(within=f["D"], class_mean=f["Tb"] + f["Cb"] + f["Cx"], delta_declared=dc["delta"])
@@ -3195,6 +3460,8 @@ def _main():
     d.add_argument("--paper-floor", action="store_true", help="the floor of the paper's imaging, Allen and macaque generators: ten draws, seed 42, rung by rung (replays their printed shifts and splits exactly)")
     d.add_argument("--out", default=None, help="write the result JSON here")
     d.add_argument("--plot", default=None, help="write a ladder figure (PNG) here")
+    d.add_argument("--workers", type=int, default=0, help="threads for the ladders and floors (0: one per core but one, at most eight, fewer if memory is short). Every random draw is made first in the serial order, so any count returns bit-identical values")
+    d.add_argument("--arithmetic", choices=["auto", "fast", "rows"], default="auto", help="fast: every ladder that accumulates whole classes (declared, random orders, every permutation) from class-block sums of the Gram matrix, and the floor's full-set rung once; equal to rows to about 1e-12 and much faster. rows: every ladder row by row, the arithmetic of rung 1.10 and of the paper's generators, bit for bit. auto: rows under --paper-floor and --floor-by-rung, fast otherwise")
     d.add_argument("--standardize", action="store_true", help="z-score every feature first (the repair when one dimension dominates the spectrum)")
     d.add_argument("--split-by", default=None, help="per-feature score file (one value per feature): also run the top, bottom and a random third of the features at matched size, each with its own floor (Section 4)")
     d.add_argument("--order", default=None, help="the declared accumulation order: sequential (default), antipodal (one member of each antipodal pair first), or a comma-separated list of class labels")
@@ -3256,6 +3523,8 @@ def _main():
     m.add_argument("--no-strata", action="store_true", help="ignore *.strata.json sidecars")
     m.add_argument("--out", default=None, help="write JSON here")
     m.add_argument("--paper-seeds", action="store_true", help="the paper's seeding convention (reproduces the published per-layer cells)")
+    m.add_argument("--workers", type=int, default=0, help="threads for the ladders and floors (0: one per core but one, at most eight, fewer if memory is short). Every random draw is made first in the serial order, so any count returns bit-identical values")
+    m.add_argument("--arithmetic", choices=["auto", "fast", "rows"], default="auto", help="fast: every ladder that accumulates whole classes (declared, random orders, every permutation) from class-block sums of the Gram matrix, and the floor's full-set rung once; equal to rows to about 1e-12 and much faster. rows: every ladder row by row, the arithmetic of rung 1.10 and of the paper's generators, bit for bit. auto: rows under --paper-seeds, fast otherwise")
     m.add_argument("--dtype", choices=["fp16", "bf16", "fp32"], default=None, help="model dtype; default float16 on mps/cuda, float32 on cpu; bf16 repairs float16 overflow in early checkpoints")
     m.add_argument("--standardize", action="store_true", help="z-score every unit per layer before the Gram (z frame only)")
     m.add_argument("--frames", choices=["linear", "z", "both"], default="both", help="feature frame(s): the linear Gram (the paper's), per-unit z-scored, or both with a sign-disagreement flag")
@@ -3437,8 +3706,9 @@ def _main():
                   + ("; class sizes " + str(dict(zip(*[v.tolist() for v in np.unique(labels, return_counts=True)]))) if labels is not None else ""))
         if a.paper_floor:
             a.floor_draws, a.floor_seed, a.floor_by_rung = 10, 42, True
-        fkw = {"n_floor_draws": a.floor_draws, "floor_seed": a.floor_seed, "floor_by_rung": a.floor_by_rung}
-        dkw = {"n_null": a.floor_draws, "seed": a.floor_seed if a.floor_seed is not None else a.seed, "floor_by_rung": a.floor_by_rung}
+        ckw = {"fast": {"auto": None, "fast": True, "rows": False}[a.arithmetic], "workers": a.workers}
+        fkw = {"n_floor_draws": a.floor_draws, "floor_seed": a.floor_seed, "floor_by_rung": a.floor_by_rung, **ckw}
+        dkw = {"n_null": a.floor_draws, "seed": a.floor_seed if a.floor_seed is not None else a.seed, "floor_by_rung": a.floor_by_rung, **ckw}
         sp = spectrum(X)
         print(f"spectrum: d_eff_full={sp['d_eff_full']:.1f} top1_eig_frac={sp['top1_eig_frac']:.2f} top1_dim_var_frac={sp['top1_dim_var_frac']:.2f}"
               + ("  <- one dimension dominates; consider --standardize" if sp["top1_eig_frac"] > 0.5 else ""))
@@ -3459,7 +3729,7 @@ def _main():
             if a.split_by:
                 score = _load_array(a.split_by).astype(float).ravel()
                 sp_r = split_by(X, labels, score, seed=a.seed, n_perm=a.n_perm, k_orders=a.k_orders, strata=strata,
-                                standardize=a.standardize, antipode=antipode, order=order, bin_counts=rungs)
+                                standardize=a.standardize, antipode=antipode, order=order, bin_counts=rungs, **ckw)
                 r["split_by"] = sp_r
                 print(f"split by score, {sp_r['n_features_per_subset']} of {sp_r['n_features_total']} features per subset (matched size, own floors):")
                 for name, rr in sp_r["subsets"].items():
@@ -3495,7 +3765,7 @@ def _main():
                 else:
                     bscore = _load_array(a.block_by).astype(float).ravel()
                 rb = blocks(X, labels, bscore, sizes=bsz, n_perm=a.block_perm, seed=a.seed, k_orders=0 if not a.block_perm else a.k_orders,
-                            order=order, bin_counts=rungs)
+                            order=order, bin_counts=rungs, **ckw)
                 _print_blocks(rb); r["blocks"] = rb
         if cand:
             cs = ({os.path.splitext(os.path.basename(a.labels))[0]: labels, **cand} if labels is not None else cand)
@@ -3506,7 +3776,7 @@ def _main():
             else:
                 cst = strata
             rc = candidates(X, cs, strata=cst, halves=halves_c, n_perm=a.n_perm if a.n_perm else 200, seed=a.seed,
-                            standardize=a.standardize, n_floor_draws=a.floor_draws, floor_seed=a.floor_seed)
+                            standardize=a.standardize, n_floor_draws=a.floor_draws, floor_seed=a.floor_seed, **ckw)
             rc["strata"] = a.candidate_strata + (" + --strata" if strata is not None else "")
             _print_candidates(rc); r["candidates"] = rc
             if labels is None:
@@ -3532,7 +3802,8 @@ def _main():
         llm_battery(a.model, a.axis, a.device, a.n_perm, a.k_orders, a.max_len,
                     a.out, paper_seeds=a.paper_seeds, revision=a.revision,
                     use_strata=not a.no_strata, standardize=a.standardize, dtype=a.dtype,
-                    frames=a.frames, match_last_token=a.match_last_token, untrained=a.untrained)
+                    frames=a.frames, match_last_token=a.match_last_token, untrained=a.untrained,
+                    fast={"auto": None, "fast": True, "rows": False}[a.arithmetic], workers=a.workers)
 
 
 if __name__ == "__main__":

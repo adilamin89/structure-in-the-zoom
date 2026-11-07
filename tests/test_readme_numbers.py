@@ -201,3 +201,15 @@ def test_allen_finite_n_identity_row():
     assert v["n"] == 167 and v["sign_agree_W2"] == 163 and "all 167 populations, the shift's sign in 163" in README
     s = load("allen_order_spread.json")["summary"]["pooled_all"]
     assert s["n"] == 167
+
+
+def test_speed_paragraph():
+    """The README's runtimes and agreement, read back from scripts_canonical/rung_speed.py's artifact."""
+    d = load("rung_speed.json")
+    g, l, lp = d["gt3"], d["lm"], d["lm_paper"]
+    text = " ".join(README.split())
+    assert g["p_values_identical"] and l["p_values_identical"]
+    assert f"takes {g['cpu_s_new']:.0f} s of one laptop core's time in 1.11, against {g['cpu_s_old'] / 60:.0f} minutes in 1.10" in text
+    assert f"returns the same numbers to {g['max_rel_diff']:.0e} with the same permutation p" in text
+    assert f"takes {l['cpu_s_new']:.0f} s of one laptop core's time in 1.11, model encoding included ({l['cpu_s_old'] / 60:.0f} minutes in 1.10)" in text
+    assert f"in their row-by-row arithmetic, about {lp['cpu_s_new'] / 60:.0f} minutes" in text
