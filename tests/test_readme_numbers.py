@@ -78,7 +78,12 @@ def test_covariance_floors():
 
 def test_every_named_file_exists():
     # table cells escape file globs (a backslash before each asterisk) so that GitHub does not render them as italics: read them as plain globs
-    names = set(re.findall(r"([A-Za-z0-9_\-*/]+\.(?:json|py|sh|png))", README.replace("\\*", "*")))
+    # absolute links to this repository (the README renders on PyPI too) name repository files: check those files as well
+    text = README.replace("\\*", "*")
+    for prefix in ("https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/",
+                   "https://github.com/adilamin89/structure-in-the-zoom/blob/main/"):
+        text = text.replace(prefix, "")
+    names = set(re.findall(r"([A-Za-z0-9_\-*/]+\.(?:json|py|sh|png))", text))
     missing = []
     for n in names:
         if n.startswith(("http", "raw/")) or n in ("X.npy", "r.json", "lt.json", "lm.json", "v1.json", "pairs.json", "my.json",
@@ -213,3 +218,8 @@ def test_speed_paragraph():
     assert f"returns the same numbers to {g['max_rel_diff']:.0e} with the same permutation p" in text
     assert f"takes {l['cpu_s_new']:.0f} s of one laptop core's time in 1.11, model encoding included ({l['cpu_s_old'] / 60:.0f} minutes in 1.10)" in text
     assert f"in their row-by-row arithmetic, about {lp['cpu_s_new'] / 60:.0f} minutes" in text
+def test_within_arm_sentence():
+    s = load("meanfree_shift_exact.json")["score"]
+    lo, hi = s["meanfree_shift_range"]
+    assert s["n_cells"] == 32 and s["R11a_both_nulls_p_le_0.05"] == 32 and lo > 0
+    assert f"positive shift on all 32 label-blind halves, {lo:+.2f} to {hi:+.2f}" in " ".join(README.split())

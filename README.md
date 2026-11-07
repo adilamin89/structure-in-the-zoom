@@ -12,7 +12,7 @@ at random, 0.30 when stimulus directions are added class by class, and 0.35 when
 are floors, what random subsets of the same sizes return through the same estimator; direction alone leaves its floor
 (0.305 = a floor of 0.065 + a shift of 0.240). `rung` makes that split for any reported exponent.
 
-![One population, many probes](figures_canonical/fig_probes.png)
+![One population, many probes](https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/figures_canonical/fig_probes.png)
 
 ## What rung tells you
 
@@ -33,7 +33,7 @@ every layer of a language model at any training checkpoint, with no probe or mod
 A decoder tells whether a label can be read out; the shift tells how much of a reported exponent the label accounts for and what
 sets that share. The grouping of samples into classes carries the shift. How much the order in which the classes enter moves it
 depends on the design: little in the paper's grating recordings, more than the shift itself where classes differ in their own
-fluctuation dimension and hold few samples (the Allen two-photon runs in [PAPER.md](PAPER.md)). `rung` reports the order-averaged shift and its SD over
+fluctuation dimension and hold few samples (the Allen two-photon runs in [PAPER.md](https://github.com/adilamin89/structure-in-the-zoom/blob/main/PAPER.md)). `rung` reports the order-averaged shift and its SD over
 orders beside the declared one, and `rung summarize` says which to read (rule 3).
 
 ## Install and run
@@ -46,7 +46,7 @@ rung summarize r.json                                                  # the rea
 rung report r.json                                                     # r.html: figure, reading, numbers
 ```
 
-[examples/quickstart.ipynb](examples/quickstart.ipynb) runs the toy below and holds the commands for a recording and a language
+[examples/quickstart.ipynb](https://github.com/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb) runs the toy below and holds the commands for a recording and a language
 model; it renders on GitHub and opens in Jupyter, VS Code or Colab (the badge above).
 
 The same from Python:
@@ -130,7 +130,7 @@ rung data gt3_X.npy gt3_labels.npy --sectors --decompose --n-perm 200 --out gt3.
 
 The Python step writes presentations by neurons and eight 45-degree direction classes, the input of Appendix M's worked example.
 
-<img src="figures_canonical/worked_example_gt3_rung.png" alt="rung's ladder figure for GT3" width="420">
+<img src="https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/figures_canonical/worked_example_gt3_rung.png" alt="rung's ladder figure for GT3" width="420">
 
 The ladder starts low (one class spans few directions) and climbs faster than its floor as each class brings new directions. The
 run prints the floor and the shift with its permutation p, the floor's own standard error, the split into the within-class part
@@ -144,7 +144,7 @@ rung llm --model EleutherAI/pythia-160m --axis axes/world_knowledge32.json \
          --paper-seeds --match-last-token --out lm.json
 ```
 
-![The language-model battery](figures_canonical/fig_llm_pipeline.png)
+![The language-model battery](https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/figures_canonical/fig_llm_pipeline.png)
 
 Declared topics lift every layer, more with depth; `--match-last-token` adds, at every layer, subsamples matched on the number of
 distinct final tokens per class and size-matched random subsamples, so the lexical part of a lift is the drop from the second to
@@ -183,6 +183,20 @@ label permutations. Before comparing an exponent across conditions, recordings o
 (Eq. 3: the full-set class-mean remainder c, negative exactly when PR(W)/PR(B) exceeds 1 + 2(1 - a)/beta, a the means' alignment
 with the fluctuations); `--n-bias` the finite-sample bias null. What carries a lift. In imaging the within-class part is +0.29 to
 +0.64 and the class-mean part -0.08 to -0.35 (Section 5).
+
+**`--arm between|within|both`** (`classmean_share`, `within_arm`): the paper's two arms, which separate what the classes' means
+carry from what their fluctuations carry. `between`: the class means alone, their share of the variance (Tr B / Tr C) against label
+permutations, with z, a one-sided p and the excess over what relabelling gives. `within`: the shift with the class means removed,
+the paper's mean-free design (Appendix K, 'Class means removed'): the rows split without the labels (`--arm-halves oddeven|time|file`), on each half every
+row projected off the span of that half's class means, against permutations that each remove their own permuted span, unrestricted
+and inside `--time-blocks`, with the within-class part before and after removal; `--decoder` adds a held-out decoder after removal
+(the span fitted on each training fold; needs scikit-learn), since the offset a removal leaves can stay decodable. A lift the within
+arm keeps is fluctuation structure that differs between classes; one only the between arm reads is the class means. With the class
+means removed the eight imaging recordings keep a positive shift on all 32 label-blind halves, +0.04 to +0.51, above both
+permutation nulls in every half (data_canonical/meanfree_shift_exact.json, Appendix K's design). The between arm's
+permutations make the labels exchangeable, which is more than equal means: classes whose fluctuations differ widen its null, so read
+a p near the threshold beside the within arm, whose null is conservative when the class means are strong. Head scores print both
+rankings (z and the class-mean share's z); `bias_null(mode="meanfree")` is the equal-means surrogate.
 
 **`--account`** (`account`): the measured within-class part beside the mean-field overlap law ln[K/(1+(K-1) sigma)]/ln K (sigma from
 split halves) and the identity at the rungs' sample counts; the class-mean part beside Eq. 3 carried through the rungs; their sum
@@ -289,11 +303,12 @@ with h5py directly.
     a large one whose parts cancel can sit near zero, and a head the answer depends on can sit below zero. Reading the two parts
     separately does not change that: each is a slope of log PR, while reliance follows the variance a read-out uses. When an answer
     runs through a linear read-out of the class means, the class-mean share and a probe screen for reliance more directly (on the
-    paper's GPT-2 circuit the class-mean share ranked the patched heads at 0.96, z at 0.92); an intervention decides.
+    paper's GPT-2 circuit the class-mean share ranked the patched heads at 0.96, z at 0.92); head scores print that share's own
+    permutation z beside z (the between arm, `--arm`), and an intervention decides.
 
 ## The paper
 
-[PAPER.md](PAPER.md) holds what the paper shows, rung run against the paper's own numbers, runs on data the paper never saw,
+[PAPER.md](https://github.com/adilamin89/structure-in-the-zoom/blob/main/PAPER.md) holds what the paper shows, rung run against the paper's own numbers, runs on data the paper never saw,
 the public raw data and how the scripts read them, and a claim-by-claim table of artifacts and the scripts that write them.
 
 ## Repository

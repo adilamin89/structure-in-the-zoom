@@ -159,6 +159,9 @@ def ranking_summary():
 
 
 def main():
+    if not DATA.is_dir():
+        raise SystemExit("rung-render prints the paper's numbers from data_canonical/ in a clone of the repository: "
+                         "git clone https://github.com/adilamin89/structure-in-the-zoom && cd structure-in-the-zoom && pip install -e .")
     llm_summary()
     certified_summary()
     multipole_summary()
