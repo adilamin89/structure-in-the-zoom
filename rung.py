@@ -30,7 +30,10 @@ accumulates whole classes from class-block sums (fast, the default outside the p
 the row-by-row values to about 1e-12) and the ladders, floors and the split's traces on threads (workers), every
 random draw made first in the serial order so that any number of threads returns bit-identical values; 1.12 the
 paper's two arms: between, the class means alone (classmean_share, and a second head ranking by its z), and within, the
-shift with each half's class-mean span removed (within_arm, the paper's mean-free design), with rung data --arm.)
+shift with each half's class-mean span removed (within_arm, the paper's mean-free design), with rung data --arm; 1.13
+the arms' calibrated nulls, each keeping what its claim leaves free: a wild bootstrap of each class's residuals for the
+between arm, Freedman-Lane (fitted class means plus permuted residuals) for the within arm; the paper's permutation nulls
+under --arm-null permutation and --paper-floor.)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -68,7 +71,7 @@ data_canonical/ of this repository.
 """
 import numpy as np
 
-__version__ = "1.12.0"
+__version__ = "1.13.0"
 
 BIN_COUNTS_DEFAULT = (1, 2, 3, 4, 6, 8)
 
@@ -1023,10 +1026,16 @@ def _arms_lines(r):
     elif b:
         txt = f"between arm (the class means alone): Tr B / Tr C = {b['share']:.3f}"
         if "z" in b:
-            txt += (f" against {b['null_mean']:.3f} +- {b['null_sd']:.3f} for {b['n_perm']} label permutations"
+            wild = b.get("null", "permutation") == "wild"
+            txt += (f" against {b['null_mean']:.3f} +- {b['null_sd']:.3f} for {b['n_perm']} "
+                    + ("draws of each class's own residuals with random signs (equal means, each class's fluctuations kept)" if wild
+                       else "label permutations")
                     + (" inside strata" if b.get("stratified") else "") + f" (excess {b['excess']:+.3f}, z {b['z']:+.1f}, one-sided p "
-                    f"{b['p_one']:.3f}): " + ("the class means are separated beyond what relabelling gives" if b["p_one"] <= 0.05
-                                               else "the class means are not separated beyond relabelling"))
+                    f"{b['p_one']:.3f}): "
+                    + (("the class means are separated beyond their sampling noise" if b["p_one"] <= 0.05
+                        else "the class means are not separated beyond their sampling noise") if wild else
+                       ("the class means are separated beyond what relabelling gives" if b["p_one"] <= 0.05
+                        else "the class means are not separated beyond relabelling")))
         out.append(txt)
     w = r.get("within")
     if w:
@@ -1038,7 +1047,9 @@ def _arms_lines(r):
             if "meanfree_shift" not in h:
                 continue
             txt = f"within arm (class means removed), half {hv} of {w['halves']} ({h['n']} rows): shift {h['meanfree_shift']:+.3f}"
-            for name, lab in (("unrestricted", "label permutations"), ("blocks", "permutations inside time blocks")):
+            fl = w.get("null", "permutation") == "freedman-lane"
+            for name, lab in (("unrestricted", "Freedman-Lane (class means kept, residuals permuted)" if fl else "label permutations"),
+                              ("blocks", "Freedman-Lane inside time blocks" if fl else "permutations inside time blocks")):
                 if f"null_{name}" in h:
                     nl = h[f"null_{name}"]
                     txt += f"; {lab} {nl['mean']:+.3f} (max {nl['max']:+.3f}, p {nl['p_one']:.3f})"
@@ -2178,22 +2189,30 @@ def _classmean_shares(Xc, labs, nc):
     return out
 
 
-def classmean_share(X, labels, n_perm=200, seed=0, strata=None):
+def classmean_share(X, labels, n_perm=200, seed=0, strata=None, null="wild"):
     """The between arm: the class means' share of the variance, Tr B / Tr C = sum_c n_c |m_c - m|^2 / sum_i |x_i - m|^2,
-    read against n_perm label permutations (inside strata when given). It reads the class means alone, with no ladder
-    and no floor: the separated classes before anything inside them. Returns the share, the null's mean and SD, z, the
-    one-sided p (a share above the permutations), and the excess over the null mean, which removes the share label
-    noise alone gives at this class count and sample size, about (K - 1) / (n - 1). The permutations make the labels
-    exchangeable, which is more than equal means: when the classes' fluctuations differ, the excess stays zero in
-    expectation but z spreads wider than its permutation SD (SD 1.6 over seeds in a toy where each class triples its own
-    features' SD), so a p near the threshold is read beside the within arm."""
+    read against n_perm draws of a null (inside strata when given). It reads the class means alone, with no ladder and no
+    floor: the separated classes before anything inside them. Returns the share, the null's mean and SD, z, the one-sided p
+    (a share above the null), and the excess over the null mean, which removes the share sampling noise alone gives at this
+    class count and sample size, about (K - 1) / (n - 1).
+    null: the claim is that the class means differ, so the null keeps everything that claim leaves free, each class's own
+    fluctuations included.
+      'wild'         (default) each class's centred residuals times independent random signs (scaled by sqrt(n_c / (n_c - 1))),
+                     added back to the fitted mean under equal class means (the grand mean, or each stratum's mean with strata):
+                     every class keeps its covariance and no row repeats. On null_calibration.py's populations, n_c / PR_class
+                     0.5 to 16 and heavy-tailed gains: z SD 0.97 to 1.05, one-sided type-I 3.5 to 5.5% at 0.05.
+      'permutation'  label permutations (rung 1.12 and the paper's runs): exact for exchangeable classes, liberal when the
+                     classes' fluctuations differ (type-I 12.5 to 28% at 0.05 on the same populations), because a permutation
+                     also mixes the fluctuations the claim leaves free."""
     X = np.asarray(X, np.float64); labels = np.asarray(labels)
     if not np.all(np.isfinite(X)):
         raise ValueError("classmean_share: X holds NaN or inf")
+    if null not in ("wild", "permutation"):
+        raise ValueError("classmean_share: null is 'wild' or 'permutation'")
     Xc = X - X.mean(0)
     classes = np.unique(labels)
     lab = np.searchsorted(classes, labels); nc = len(classes); n = len(lab)
-    out = {"n_perm": int(n_perm), "n_classes": int(nc)}
+    out = {"n_perm": int(n_perm), "n_classes": int(nc), "null": null}
     if not float((Xc * Xc).sum()) > 0:
         out["undefined"] = "no variance"
         return out
@@ -2201,22 +2220,36 @@ def classmean_share(X, labels, n_perm=200, seed=0, strata=None):
         out["undefined"] = "fewer than two classes"
         return out
     rng = np.random.default_rng(seed)
-    groups = [np.where(np.asarray(strata) == v)[0] for v in np.unique(strata)] if strata is not None else None
-    rel = []
-    for _ in range(n_perm):
-        if groups is None:
-            rel.append(lab[rng.permutation(n)])
-        else:
-            yp = lab.copy()
-            for i in groups:
-                yp[i] = lab[i][rng.permutation(len(i))]
-            rel.append(yp)
-    vals = _classmean_shares(Xc, [lab] + rel, nc)
+    st = np.zeros(n, int) if strata is None else np.searchsorted(np.unique(strata), np.asarray(strata))
+    if null == "permutation":
+        groups = [np.where(st == v)[0] for v in np.unique(st)] if strata is not None else None
+        rel = []
+        for _ in range(n_perm):
+            if groups is None:
+                rel.append(lab[rng.permutation(n)])
+            else:
+                yp = lab.copy()
+                for i in groups:
+                    yp[i] = lab[i][rng.permutation(len(i))]
+                rel.append(yp)
+        vals = _classmean_shares(Xc, [lab] + rel, nc)
+    else:
+        fit = np.zeros_like(Xc)                                 # H0: equal class means (inside each stratum)
+        res = np.zeros_like(Xc)
+        for v in np.unique(st):
+            iv = st == v
+            fit[iv] = Xc[iv].mean(0)
+            for c in np.unique(lab[iv]):
+                i = np.where(iv & (lab == c))[0]
+                if len(i) > 1:
+                    res[i] = (Xc[i] - Xc[i].mean(0)) * np.sqrt(len(i) / (len(i) - 1))
+        signs = [rng.choice((-1.0, 1.0), size=(n, 1)) for _ in range(n_perm)]    # every draw first, in order
+        vals = _classmean_shares(Xc, [lab], nc) + [_classmean_shares(Y - Y.mean(0), [lab], nc)[0] for Y in (fit + s * res for s in signs)]
     out["share"] = vals[0]
     if n_perm:
-        null = np.asarray(vals[1:])
-        nm, ns = float(null.mean()), float(null.std())
-        out.update(null_mean=nm, null_sd=ns, z=float((vals[0] - nm) / ns) if ns > 0 else 0.0, p_one=_one_sided_p(vals[0], null),
+        nul = np.asarray(vals[1:])
+        nm, ns = float(nul.mean()), float(nul.std())
+        out.update(null_mean=nm, null_sd=ns, z=float((vals[0] - nm) / ns) if ns > 0 else 0.0, p_one=_one_sided_p(vals[0], nul),
                    excess=vals[0] - nm, stratified=strata is not None)
     return out
 
@@ -2276,23 +2309,32 @@ def _decoder_after_removal(X, lab, cols, seed):
 
 
 def within_arm(X, labels, halves="oddeven", n_perm=200, time_blocks=None, n_null=10, seed=42, perm_seed=7000,
-               bin_counts=None, decoder=False, n_perm_decoder=50, workers=1):
+               bin_counts=None, decoder=False, n_perm_decoder=50, workers=1, null="freedman-lane"):
     """The within arm: the shift with the class means removed, the fluctuations that differ between classes alone (the
     paper's mean-free design, Appendix K; scripts_canonical/meanfree_shift_exact.py). The rows are split without the
     labels (halves: 'oddeven' row parity, 'time' first and second half in row order, or one 0/1 per row). On each half,
     every row is projected off the span of that half's centred class means (K - 1 directions), which sets every class
     mean to the grand mean, and the declared ladder's shift is read on what is left against a floor drawn rung by rung
     from `seed` (n_null draws; the paper's ten from 42), with its within-class part D and, beside it, the same on the half
-    before removal (retention = mean-free D / raw D). Nulls: n_perm label permutations of the half, unrestricted and,
-    with time_blocks (one block id per row of X), inside blocks; each draw removes its own permuted span and keeps the
-    floor's draws. Permutations for half h use the stream perm_seed + 10 h (+ 1 inside blocks); the paper's halves read
-    S1 = 'oddeven' at 7000 and S2 = 'time' at 7100. decoder: also a held-out LDA / QDA accuracy after removal, the span
+    before removal (retention = mean-free D / raw D). Nulls, n_perm draws each, unrestricted and, with time_blocks (one block
+    id per row of X), inside blocks; every draw keeps the floor's draws. The claim is that the fluctuations differ between
+    classes with the means set aside, so the null keeps the class means and makes the fluctuations exchangeable:
+      'freedman-lane'  (default) the half's fitted class means plus its residuals permuted across rows, then the whole
+                       observed procedure (the null data's own span removed, the ladder, the floor). On null_calibration.py's
+                       populations, n_c / PR_class 0.5 to 16 and heavy-tailed gains: z SD 1.02 to 1.12, one-sided type-I 3.5 to
+                       4.5% at 0.05.
+      'permutation'    the paper's runs and rung 1.12: label permutations, each draw removing its own permuted span. At or
+                       below its level in the Gaussian regimes (type-I 1 to 4.5%), liberal under heavy-tailed gains (11%).
+    Draws for half h use the stream perm_seed + 10 h (+ 1 inside blocks); the paper's halves read S1 = 'oddeven' at 7000
+    and S2 = 'time' at 7100 (its permutation null). decoder: also a held-out LDA / QDA accuracy after removal, the span
     fitted on each training fold (needs scikit-learn), on up to 256 random columns, against n_perm_decoder permutations
     of the whole procedure: the offset a removal leaves (about K / n per class in high dimension) can stay decodable, so a
     decoder after removal is checked, never assumed at chance."""
     X = np.asarray(X, np.float64); labels = np.asarray(labels)
     if not np.all(np.isfinite(X)):
         raise ValueError("within_arm: X holds NaN or inf")
+    if null not in ("freedman-lane", "permutation"):
+        raise ValueError("within_arm: null is 'freedman-lane' or 'permutation'")
     n = len(labels)
     classes = np.unique(labels)
     lab = np.searchsorted(classes, labels); nc = len(classes)
@@ -2309,7 +2351,7 @@ def within_arm(X, labels, halves="oddeven", n_perm=200, time_blocks=None, n_null
         raise ValueError(f"time_blocks must hold one block id per row ({n}); got {tb.shape}")
     bc = _rung_classes(nc, bin_counts)
     out = {"halves": halves if isinstance(halves, str) else "given", "n_perm": int(n_perm), "n_null": int(n_null), "seed": int(seed),
-           "perm_seed": int(perm_seed), "rung_classes": list(bc)}
+           "perm_seed": int(perm_seed), "rung_classes": list(bc), "null": null}
     for hv in (0, 1):
         sel = np.where(h == hv)[0]
         Xh, yh = X[sel] - X[sel].mean(0), lab[sel]
@@ -2341,9 +2383,26 @@ def within_arm(X, labels, halves="oddeven", n_perm=200, time_blocks=None, n_null
             if name == "blocks" and blocks is None:
                 continue
             rng = np.random.default_rng(perm_seed + 10 * hv + (0 if name == "unrestricted" else 1))
-            rel = [_relabel_within(yh, blocks, rng) for _ in range(n_perm)]
-            nd = np.asarray(_pmap(lambda y: _gram_shift(removed(y), y, nc, bc, n_null, seed), rel,
-                                  _workers(workers, 24 * len(sel) ** 2)))
+            if null == "permutation":
+                rel = [_relabel_within(yh, blocks, rng) for _ in range(n_perm)]
+                nd = np.asarray(_pmap(lambda y: _gram_shift(removed(y), y, nc, bc, n_null, seed), rel,
+                                      _workers(workers, 24 * len(sel) ** 2)))
+            else:
+                # Freedman-Lane: X* = M[y] + R[pi]. Its Gram comes from blocks of the half's (M, R), with no n^2 d product per draw;
+                # its own class-mean span from the class sums of R[pi]
+                M = np.stack([Xh[yh == c].mean(0) for c in range(nc)])
+                R = Xh - M[yh]
+                RR, MR, MM = R @ R.T, M @ R.T, M @ M.T
+                idx = np.arange(len(yh))
+                perms = [_relabel_within(idx, blocks, rng) for _ in range(n_perm)]   # every draw first, in order
+
+                def fl_shift(pi):
+                    A = MR[yh][:, pi]
+                    G = MM[yh][:, yh] + A + A.T + RR[pi][:, pi]
+                    Xs = M[yh] + R[pi]
+                    P = Xs @ _mean_span(Xs, yh, nc)
+                    return _gram_shift(G - P @ P.T, yh, nc, bc, n_null, seed)
+                nd = np.asarray(_pmap(fl_shift, perms, _workers(workers, 24 * len(sel) ** 2)))
             if n_perm:
                 res[f"null_{name}"] = {"mean": float(nd.mean()), "sd": float(nd.std()), "max": float(nd.max()),
                                        "p_one": _one_sided_p(obs, nd), "draws": nd.tolist()}
@@ -3761,7 +3820,8 @@ def _main():
     d.add_argument("--decompose", action="store_true", help="the shift split into its within-class part D and class-mean part Tb + Cb + Cx (exact four-term split, Section 5, Appendix K), with the sign law of Eq. 3")
     d.add_argument("--n-shuffle", type=int, default=5, help="with --decompose: label permutations for each term's sampling baseline (0 disables)")
     d.add_argument("--n-bias", type=int, default=0, help="with --decompose: surrogates of the finite-sample bias null (class means kept, one covariance shape for every class)")
-    d.add_argument("--arm", choices=["between", "within", "both"], default=None, help="the paper's two arms: between = the class means alone (their share of the variance, Tr B / Tr C, against label permutations); within = the shift with each half's own class-mean span removed, on label-blind halves, against permutations that each remove their own span (Appendix K's mean-free design); both")
+    d.add_argument("--arm", choices=["between", "within", "both"], default=None, help="the paper's two arms: between = the class means alone (their share of the variance, Tr B / Tr C); within = the shift with each half's own class-mean span removed, on label-blind halves (Appendix K's mean-free design); both. Their nulls: --arm-null")
+    d.add_argument("--arm-null", choices=["calibrated", "permutation"], default="calibrated", help="the arms' nulls: calibrated = a wild bootstrap of each class's residuals for the between arm and Freedman-Lane (fitted class means + permuted residuals) for the within arm, each valid under its own claim; permutation = the paper's label permutations (rung 1.12; --paper-floor implies it)")
     d.add_argument("--arm-halves", default="oddeven", help="with --arm within: oddeven (row parity), time (first and second half of the rows), or a file of 0/1 per row")
     d.add_argument("--decoder", action="store_true", help="with --arm within: a held-out LDA / QDA accuracy after removal, the span fitted on each training fold, against permutations of the whole procedure (needs scikit-learn)")
     d.add_argument("--decoder-perm", type=int, default=50, help="with --decoder: permutations of the decoding procedure")
@@ -4003,6 +4063,8 @@ def _main():
                   + ("; class sizes " + str(dict(zip(*[v.tolist() for v in np.unique(labels, return_counts=True)]))) if labels is not None else ""))
         if a.paper_floor:
             a.floor_draws, a.floor_seed, a.floor_by_rung = 10, 42, True
+        # the arms' nulls: calibrated (wild bootstrap between, Freedman-Lane within) unless asked for, or replaying, the paper's
+        arm_null = "permutation" if a.paper_floor else a.arm_null
         ckw = {"fast": {"auto": None, "fast": True, "rows": False}[a.arithmetic], "workers": a.workers}
         fkw = {"n_floor_draws": a.floor_draws, "floor_seed": a.floor_seed, "floor_by_rung": a.floor_by_rung, **ckw}
         dkw = {"n_null": a.floor_draws, "seed": a.floor_seed if a.floor_seed is not None else a.seed, "floor_by_rung": a.floor_by_rung, **ckw}
@@ -4049,11 +4111,13 @@ def _main():
                 else:
                     _print_decomposition(rd); r["decompose"] = rd
             if a.arm in ("between", "both"):
-                r["between"] = classmean_share(_zscore(X) if a.standardize else X, labels, n_perm=a.n_perm, seed=a.seed, strata=strata)
+                r["between"] = classmean_share(_zscore(X) if a.standardize else X, labels, n_perm=a.n_perm, seed=a.seed, strata=strata,
+                                               null="permutation" if arm_null == "permutation" else "wild")
             if a.arm in ("within", "both"):
                 r["within"] = within_arm(_zscore(X) if a.standardize else X, labels, halves=arm_h, n_perm=a.n_perm, time_blocks=tb,
                                          n_null=a.floor_draws, seed=dkw["seed"], perm_seed=7000 + a.seed, bin_counts=rungs,
-                                         decoder=a.decoder, n_perm_decoder=a.decoder_perm, workers=a.workers)
+                                         decoder=a.decoder, n_perm_decoder=a.decoder_perm, workers=a.workers,
+                                         null="permutation" if arm_null == "permutation" else "freedman-lane")
             if a.arm:
                 _print_arms(r)
             if a.account:

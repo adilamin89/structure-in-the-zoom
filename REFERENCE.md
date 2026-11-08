@@ -173,18 +173,25 @@ with the fluctuations); `--n-bias` the finite-sample bias null. What carries a l
 +0.64 and the class-mean part -0.08 to -0.35 (Section 5).
 
 **`--arm between|within|both`** (`classmean_share`, `within_arm`): the paper's two arms, which separate what the classes' means
-carry from what their fluctuations carry. `between`: the class means alone, their share of the variance (Tr B / Tr C) against label
-permutations, with z, a one-sided p and the excess over what relabelling gives. `within`: the shift with the class means removed,
+carry from what their fluctuations carry. `between`: the class means alone, their share of the variance (Tr B / Tr C), with z, a
+one-sided p and the excess over the null's mean. `within`: the shift with the class means removed,
 the paper's mean-free design (Appendix K, 'Class means removed'): the rows split without the labels (`--arm-halves oddeven|time|file`), on each half every
-row projected off the span of that half's class means, against permutations that each remove their own permuted span, unrestricted
-and inside `--time-blocks`, with the within-class part before and after removal; `--decoder` adds a held-out decoder after removal
+row projected off the span of that half's class means, against nulls unrestricted and inside `--time-blocks`, with the within-class
+part before and after removal; `--decoder` adds a held-out decoder after removal
 (the span fitted on each training fold; needs scikit-learn), since the offset a removal leaves can stay decodable. A lift the within
 arm keeps is fluctuation structure that differs between classes; one only the between arm reads is the class means. With the class
 means removed the eight imaging recordings keep a positive shift on all 32 label-blind halves, +0.04 to +0.51, above both
-permutation nulls in every half (data_canonical/meanfree_shift_exact.json, Appendix K's design). The between arm's
-permutations make the labels exchangeable, which is more than equal means: classes whose fluctuations differ widen its null, so read
-a p near the threshold beside the within arm, whose null is conservative when the class means are strong. Head scores print both
-rankings (z and the class-mean share's z); `bias_null(mode="meanfree")` is the equal-means surrogate.
+permutation nulls in every half (data_canonical/meanfree_shift_exact.json, Appendix K's design). Each arm's null keeps what its
+claim leaves free (`--arm-null`, 1.13): the between arm claims only that the means differ, so its default null is a wild bootstrap
+that flips the signs of each class's own residuals and keeps every class's fluctuations; the within arm claims that the
+fluctuations differ with the means set aside, so its default is Freedman-Lane, the half's fitted class means plus its residuals
+permuted across rows, run through the whole observed procedure. Label permutations (`--arm-null permutation`, and what
+`--paper-floor` replays) make the classes exchangeable, which is more than either claim: on synthetic populations they ran liberal
+for the between arm whenever the classes' fluctuations differed and liberal for the within arm under heavy-tailed gains, while the
+two defaults held their level (`scripts_canonical/null_calibration.py`, data_canonical/null_calibration.json). Under Freedman-Lane, unrestricted and inside 48-presentation epochs, the mean-free shift clears both nulls at p <= 0.05 in 31 of
+the 32 halves (50 draws each; `scripts_canonical/meanfree_freedman_lane.py`); the one that does not, the first time half of
+low-contrast GT1, holds the smallest shift of the 32, +0.039, at p = 3/51 unrestricted and 9/51 inside epochs. Head scores print both
+rankings (z and the class-mean share's permutation z); `bias_null(mode="meanfree")` is the equal-means surrogate.
 
 **`--account`** (`account`): the measured within-class part beside the mean-field overlap law ln[K/(1+(K-1) sigma)]/ln K (sigma from
 split halves) and the identity at the rungs' sample counts; the class-mean part beside Eq. 3 carried through the rungs; their sum

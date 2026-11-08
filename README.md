@@ -6,7 +6,7 @@ Research), and `rung`, the tool that splits an exponent into the part sampling g
 
 [![The five-minute talk](https://img.shields.io/badge/talk-5%20min-c0392b?logo=youtube&logoColor=white)](https://youtu.be/S4kUtP37KLM)
 [![Open the quickstart in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb)
-[![rung 1.12.0](https://img.shields.io/badge/rung-1.12.0-24292f)](https://github.com/adilamin89/structure-in-the-zoom/tags)
+[![rung 1.13.0](https://img.shields.io/badge/rung-1.13.0-24292f)](https://github.com/adilamin89/structure-in-the-zoom/tags)
 [![MIT license](https://img.shields.io/badge/license-MIT-2f6f9f)](https://github.com/adilamin89/structure-in-the-zoom/blob/main/LICENSE)
 
 ## One recording, three exponents
@@ -55,8 +55,8 @@ population returns another exponent.
 Clouds of one shape add trials and no new dimensions. Clouds stretched different ways each add dimensions the others held weakly,
 so the direction ladder climbs faster than its floor, while the class means stack variance onto a few strong ones. The split is
 exact: the within-class part runs +0.29 to +0.64 across the eight grating recordings, the class-mean part -0.08 to -0.35. Remove
-the class means from every trial and linear decoders fall to chance, while the shift still clears its permutation test in every
-half of every recording.
+the class means from every trial and linear decoders fall to chance, while the shift still clears the paper's permutation test in
+every half of every recording, and rung 1.13's calibrated null in 31 of the 32.
 
 ### Two measured terms give the sign where it changes
 
@@ -82,7 +82,7 @@ axis lifts every layer, more so late.
 ## Try it
 
 ```bash
-pip install "git+https://github.com/adilamin89/structure-in-the-zoom@v1.12.0"
+pip install "git+https://github.com/adilamin89/structure-in-the-zoom@v1.13.0"
 rung data X.npy labels.npy --decompose --out r.json    # X: samples by features; one label per row
 rung summarize r.json                                  # the reading; rung report r.json writes a page
 ```
