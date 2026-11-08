@@ -9,7 +9,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data_canonical")
-README = "\n".join(open(os.path.join(ROOT, f)).read() for f in ("README.md", "PAPER.md"))
+README = "\n".join(open(os.path.join(ROOT, f)).read() for f in ("README.md", "REFERENCE.md", "PAPER.md"))
 
 
 def load(name):
@@ -83,10 +83,10 @@ def test_every_named_file_exists():
     for prefix in ("https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/",
                    "https://github.com/adilamin89/structure-in-the-zoom/blob/main/"):
         text = text.replace(prefix, "")
-    names = set(re.findall(r"([A-Za-z0-9_\-*/]+\.(?:json|py|sh|png))", text))
+    names = set(re.findall(r"([A-Za-z0-9_\-*/]+\.(?:json|py|sh|png|gif))", text))
     missing = []
     for n in names:
-        if n.startswith(("http", "raw/")) or n in ("X.npy", "r.json", "lt.json", "lm.json", "v1.json", "pairs.json", "my.json",
+        if n.startswith(("http", "raw/", "//")) or n in ("X.npy", "r.json", "lt.json", "lm.json", "v1.json", "pairs.json", "my.json",
                                                         "r.png", "lt.png", "v1.png", "strata.json", "gt3.json", "gt3.png",
                                                         "heads.json", "lm.png", "toy.json", "toy.png"):   # command-line examples
             continue
@@ -223,3 +223,60 @@ def test_within_arm_sentence():
     lo, hi = s["meanfree_shift_range"]
     assert s["n_cells"] == 32 and s["R11a_both_nulls_p_le_0.05"] == 32 and lo > 0
     assert f"positive shift on all 32 label-blind halves, {lo:+.2f} to {hi:+.2f}" in " ".join(README.split())
+
+
+def test_front_page_numbers():
+    """The front page's numbers that are not also in REFERENCE.md or PAPER.md, read back from their artifacts in README.md alone."""
+    front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
+    w = load("worked_example_gt3_rung.json")
+    assert (w["n_samples"], w["n_features"]) == (4442, 11311)
+    assert "One recording of 11,311 mouse V1 neurons gives three" in front and "4,442 presentations by 11,311 neurons" in front
+    g = load("rung_speed.json")["gt3"]
+    assert f"neurons, takes {g['cpu_s_new']:.0f} s of one laptop core in rung 1.11 and later ({g['cpu_s_old'] / 60:.0f} minutes in 1.10)" in front
+    ok = [r for r in load("stringer_theta_decomposition.json")["rows"] if r.get("status") == "ok"]
+    lo, hi = min(r["theta_obs"] for r in ok), max(r["theta_obs"] for r in ok)
+    assert len(ok) == 18 and f"Random-stimulus exponents from {lo:.2f} to {hi:.2f} track their floors in all 18" in front
+    # Allen: the pooled arm's positives (Figure 1), the residualized arm's negatives and always-positive baseline, and the two terms'
+    # signs at the rungs' sample counts (W2: overall and among the negatives) and in mean field (W0)
+    pooled = [v["delta_dir8"] for s in load("allen_expansion_all_sessions.json")["results"] if s.get("status") == "ok" for v in s["areas"].values()]
+    rows = load("allen_finite_n_identity.json")["rows"]
+    dm = np.array([q["delta_measured"] for q in rows]); cm = np.array([q["classmean_pred"] for q in rows])
+    ag = {k: np.sign(np.array([q[k] for q in rows]) + cm) == np.sign(dm) for k in ("W0", "W2")}
+    neg = int((dm < 0).sum())
+    assert len(rows) == len(pooled) == 167
+    assert f"the shift is negative in {neg} of the {len(rows)} populations; the two terms, computed at the rungs' own sample counts, " \
+           f"get {int(ag['W2'].sum())} of the {len(rows)} signs and {int((ag['W2'] & (dm < 0)).sum())} of those {neg}, where always " \
+           f"guessing positive gets {len(rows) - neg}" in front
+    # XY: the two terms' sign in every lattice and spin-wave ensemble (40 nematic lattices and spin waves, 32 polar)
+    xy = load("xy_twoterm.json")
+    pol = [v for v in load("xy_polar_twoterm.json")["summary"].values() if isinstance(v, dict)]       # one entry per temperature
+    n_pol, ok_pol = sum(v["n"] for v in pol), sum(v["sign_agree_delta"] for v in pol)
+    assert xy["sign_agree"] == xy["n"] and ok_pol == n_pol and xy["n"] + n_pol == 72
+    assert "the two terms give it in all 72 lattice and spin-wave ensembles" in front
+    sp = load("rung_heads_ioi.json")["default_spread"]["AUC_z"]
+    io = load("llm_ioi.json")
+    assert f"at AUC {sp['mean']:.2f} (the mean of ten seeds), beside {io['AUC_probe_acc']:.2f} for a trained linear classifier and " \
+           f"{io['AUC_classmean_frac']:.2f} for the heads' class-mean variance share" in front
+    rep = next(r for r in load("rung_acceptance_replay.json")["rows"] if r["name"].startswith("GT3"))
+    s = rep["default_20_seeds"]
+    gt3 = next(r for r in load("orientation_zoom.json")["results"] if r["name"].startswith("gratings_drifting_GT3"))
+    assert f"default floor of 20 random ladders, shift {rep['default']['delta']:+.3f}" in front
+    assert f"+{rep['default']['delta']:.3f} to {gt3['delta']:+.3f} under different draws ({gt3['delta']:+.3f} in Figure 1)" in front
+    assert f"`--paper-floor` replays Table 9's {rep['replay']['delta']:+.3f}" in front and abs(rep["replay"]["delta"] - rep["paper"]["delta"]) < 1e-5
+    assert f"the mean over 20 seeds of the default floor, {s['mean']:+.3f} ± {s['sd']:.3f}" in front
+
+
+def test_front_page_toy_reading():
+    """The reading the front page prints for the quickstart notebook's toy is what rung returns on it."""
+    import rung as r
+    rng = np.random.default_rng(0)
+    X = rng.standard_normal((512, 64))
+    y = np.repeat(np.arange(8), 64)
+    X *= 1 + 2 * (y[:, None] == np.arange(64)[None, :] // 4)
+    res = r.zoom(X, y, workers=1)
+    res["decompose"] = r.decompose(X, y, n_null=20, seed=0, n_shuffle=5, workers=1)     # as `rung data --decompose` calls it
+    d = res["decompose"]["delta_split_free"]
+    front = open(os.path.join(ROOT, "README.md")).read()
+    assert f"theta_obs = {res['theta_obs']:+.3f} = floor {res['theta_floor']:+.3f} + shift {res['delta']:+.3f} ..." in front
+    assert f"declared order: z = {res['z']:+.1f}, two-sided Monte Carlo p = {res['p_two']:.3f} ..." in front
+    assert f"within-class part D {d['D']:+.3f} + class-mean part (Tb + Cb + Cx) {d['Tb'] + d['Cb'] + d['Cx']:+.3f} ..." in front

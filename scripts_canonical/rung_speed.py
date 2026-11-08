@@ -3,7 +3,7 @@ under an older rung (OLD, e.g. a clone at tag v1.10.0) and under this one, with 
 time of each process (user + system, getrusage) is recorded: one core's time. The jobs run one after another on an otherwise idle
 machine: concurrent processes contend for memory bandwidth and the matrix units, which inflates the CPU time of the fast arithmetic
 (two-fold when this script ran all five jobs at once) more than the row-by-row one's. Every numeric field of the two results is compared.
-  gt3      rung data gt3_X.npy gt3_labels.npy --sectors --decompose --n-perm 200        (Appendix M; README GT3 recipe makes the inputs)
+  gt3      rung data gt3_X.npy gt3_labels.npy --sectors --decompose --n-perm 200        (Appendix M; the GT3 recipe in REFERENCE.md makes the inputs)
   lm       rung llm --model EleutherAI/pythia-160m --axis axes/world_knowledge32.json --match-last-token
   lm_paper the same with --paper-seeds (row-by-row arithmetic: the paper's cells, bit for bit), this rung only
 Run: python rung_speed.py OLD_DIR GT3_DIR      Out: data_canonical/rung_speed.json"""
