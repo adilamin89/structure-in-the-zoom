@@ -71,7 +71,7 @@ data_canonical/ of this repository.
 """
 import numpy as np
 
-__version__ = "1.13.0"
+__version__ = "1.13.1"
 
 BIN_COUNTS_DEFAULT = (1, 2, 3, 4, 6, 8)
 
@@ -421,7 +421,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     if n_samples > 5000:
         import warnings
         warnings.warn(f"zoom: {n_samples} samples -> full Gram of {8*n_samples**2/1e9:.1f} GB in float64 and "
-                      f"time growing as n^2 (about {(n_samples/6400)**2*3.4:.0f} min per 100 permutations on one core); "
+                      "time growing as n^2; "
                       "subsample stimuli per class (rung sizes stay matched) or run per-layer jobs in parallel.", stacklevel=2)
     fast = _fast_default(fast, floor_by_rung, perm_seed, order_seed)
     K = X @ X.T
@@ -1006,6 +1006,17 @@ def _p_unresolved(p, n_perm, alpha=0.05):
             + "; rerun with --n-perm 200 or more")
 
 
+def _p_floor_note(p, n_perm):
+    """How a Monte Carlo p sits against its floor 1/(n_perm + 1): at the floor (no permutation reached the observed value)
+    the true p can be anywhere below it, so the note says so; above it, the floor is printed for scale."""
+    fl = 1.0 / (n_perm + 1)
+    if p is None or not np.isfinite(p):
+        return f"(floor 1/({n_perm} + 1) = {fl:.3f})"
+    if int(round(p * (n_perm + 1))) <= 1:
+        return f"(at its floor 1/({n_perm} + 1): no permutation reached the observed value)"
+    return f"(floor 1/({n_perm} + 1) = {fl:.3f})"
+
+
 def _second_null_verdict(p_label, p_second, alpha=0.05, n_perm=None):
     """One statistic against a nuisance-keeping second null: 'unresolved' when the permutation budget cannot give p below
     alpha, 'unseparated' when the label permutations do not separate it to begin with, otherwise 'survives' or 'absorbed'
@@ -1095,7 +1106,7 @@ def summarize_data(result, verbose=True):
         cert = bool(result["p_two"] < 0.05)
         unres = _p_unresolved(result["p_two"], n_perm)
         lines.append(f"declared order: z = {result['z']:+.1f}, two-sided Monte Carlo p = {result['p_two']:.3f} "
-                     f"(resolution {floor_p:.3f}); "
+                     + _p_floor_note(result["p_two"], n_perm) + "; "
                      + ("label-linked at p < 0.05" if cert else unres or "not separated from the label-permutation null"))
         verdict["certified"] = cert
         if unres:
@@ -1120,10 +1131,12 @@ def summarize_data(result, verbose=True):
             verdict["read_orderavg"] = True
     for key, name, what, kept, lost in (
             ("strat", "nuisance-preserving null (labels permuted within strata)", "label_linked_beyond_strata",
-             "survives within-stratum relabelling: label-linked beyond the nuisance",
-             "is ABSORBED by within-stratum relabelling: it reads nuisance composition, not the labels"),
+             "survives within-stratum relabelling: evidence of label-linked structure beyond the supplied strata",
+             "is ABSORBED by within-stratum relabelling: it stays compatible with the strata's composition, so it cannot be "
+             "credited to the labels beyond them"),
             ("tb", f"time-blocked null ({result.get('n_time_blocks')} blocks; labels permuted within blocks, which keeps drift and slow state)",
-             "beyond_drift", "survives: drift cannot account for it", "does not survive: drift or slow state could produce it")):
+             "beyond_drift", "survives: drift and slow state at the blocks' scale do not account for it",
+             "does not survive: drift or slow state could produce it")):
         if f"{key}_p_two" not in result:
             continue
         txt = f"{name}: p = {result[f'{key}_p_two']:.3f}"
@@ -1172,19 +1185,29 @@ def summarize_data(result, verbose=True):
         lines.append(f"split (Section 5): within-class part D {f['D']:+.3f} + class-mean part (Tb + Cb + Cx) {cm:+.3f} = shift {dc['delta']:+.3f}"
                      " (decompose's own floor draws)")
         verdict.update(within_part=float(f["D"]), class_mean_part=float(cm))
-        cp = dc.get("class_pr"); sl0 = dc.get("sign_law") or {}
+        split_est = "class_pr_split" in dc                 # rung 1.13.1+: the split-half estimate, which no sample count caps
+        cp = dc.get("class_pr_split") or dc.get("class_pr"); sl0 = dc.get("sign_law") or {}
         if cp and dc.get("rungs"):
             n_pc = dc["rungs"][-1]["size"] / max(dc["rung_classes"][-1], 1)
             v = [x for x in cp.values() if np.isfinite(x)]
             if v:
-                lines.append(f"sampling: {n_pc:.0f} samples per class against each class's own fluctuation dimension {min(v):.1f} to {max(v):.1f} "
-                             f"(median {float(np.median(v)):.1f})" + (f"; PR(W) {sl0['PR_W']:.1f} pools the classes" if "PR_W" in sl0 else "")
-                             + ("" if n_pc > max(v) else "; below a class's own dimension the within-class part can read near zero "
-                                "where structure exists (Section 2)"))
+                cn = dc.get("class_n")             # rung 1.13.1+: each class's own count against its own dimension
+                if cn:
+                    pairs = [(cn[k], d) for k, d in cp.items() if k in cn and np.isfinite(d)]
+                    below = sum(n_ <= d for n_, d in pairs)
+                    ratio = min(n_ / d for n_, d in pairs)
+                else:
+                    below, ratio = (0 if n_pc > max(v) else len(v)), n_pc / max(v)
+                lines.append(f"sampling: {n_pc:.0f} samples per class on average against each class's own fluctuation dimension {min(v):.1f} to {max(v):.1f} "
+                             f"(median {float(np.median(v)):.1f}{', from split halves' if split_est else ''})"
+                             + (f"; PR(W) {sl0['PR_W']:.1f} pools the classes" if "PR_W" in sl0 else "")
+                             + ("" if not below else (f"; {below} of {len(v)} classes hold no more samples than their own dimension" if cn else "")
+                                + "; below a class's own dimension the within-class part reads low, near zero or below where structure "
+                                "exists (Section 2; --decompose --n-bias sets the split against a surrogate sampled the same way)"))
+                verdict["samples_per_class_over_dimension"] = float(ratio)
         sl = dc.get("sign_law")
         if sl and "degenerate" not in sl:
-            lines.append(f"sign law (Eq. 3): full-set class-mean remainder c {sl['c_full']:+.3f}, negative exactly when PR(W)/PR(B) = "
-                         f"{sl['ratio']:.1f} exceeds 1 + 2(1 - a)/beta = {sl['threshold_full']:.1f} (a {sl['alignment']:.2f}, beta {sl['trB_trW']:.3f}); "
+            lines.append(f"sign law (Eq. 3): full-set class-mean remainder c {sl['c_full']:+.3f}, " + _sign_law_clause(sl) + "; "
                          + ("its sign predicts the class-mean part's, and here they agree" if np.sign(sl["c_full"]) == np.sign(cm)
                             else "its sign predicts the class-mean part's, and here they DIFFER (a first rung with class-mean variance, or a small part)"))
         if "net_of_bias" in dc:
@@ -2126,17 +2149,43 @@ def _lsq_slope(x, y):
     return float(np.linalg.lstsq(A, y, rcond=None)[0][1])
 
 
-def class_pr(X, labels):
-    """Each class's own fluctuation dimension: the participation ratio of its residuals around its mean, {class: PR}.
-    The sampling threshold of Section 2 compares a class's sample count with this number; PR(W), which pools the
-    classes, can sit above or below it."""
+def class_pr(X, labels, estimate="sample", n_split=10, seed=0):
+    """Each class's own fluctuation dimension, {class: PR}. estimate='sample': the participation ratio of the class's
+    residuals around its mean, which n samples cap below n (it climbs with n while a class is sampled below its dimension).
+    estimate='split': (Tr Sigma_c)^2 / Tr Sigma_c^2 with Tr Sigma_c from the residuals (unbiased) and Tr Sigma_c^2 from
+    n_split random split halves, each centred on its own mean (A B^T from the class Gram, double-centred), so no
+    sample-size cap enters (the population PR_class of Appendix K and README rule 8; a ratio of unbiased traces, so a few
+    percent high at 32 samples and about 15% at 16 on a 1/j^0.7 spectrum of PR 86). The sampling threshold of Section 2
+    compares a class's sample count with the split estimate; PR(W), which pools the classes, can sit above or below it."""
     X = np.asarray(X, np.float64); labels = np.asarray(labels)
+    if estimate not in ("sample", "split"):
+        raise ValueError("class_pr: estimate is 'sample' or 'split'")
+    rng = np.random.default_rng(seed)
     out = {}
     for c in np.unique(labels):
+        key = int(c) if np.issubdtype(type(c), np.integer) else str(c)
         Z = X[labels == c] - X[labels == c].mean(0)
-        G = Z @ Z.T if len(Z) <= Z.shape[1] else Z.T @ Z
-        t2 = float((G * G).sum())
-        out[int(c) if np.issubdtype(type(c), np.integer) else str(c)] = float(np.trace(G) ** 2 / t2) if t2 > 0 else float("nan")
+        n = len(Z)
+        if estimate == "sample" or n < 4:
+            G = Z @ Z.T if n <= Z.shape[1] else Z.T @ Z
+            t2 = float((G * G).sum())
+            out[key] = (float(np.trace(G) ** 2 / t2) if t2 > 0 else float("nan")) if estimate == "sample" else float("nan")
+            continue
+        t = float((Z * Z).sum()) / (n - 1)
+        G = Z @ Z.T if n <= Z.shape[1] else None
+        acc = 0.0
+        for _ in range(n_split):
+            q = rng.permutation(n); a, b = q[: n // 2], q[n // 2:]
+            if G is not None:
+                M = G[np.ix_(a, b)]
+                M = M - M.mean(0, keepdims=True) - M.mean(1, keepdims=True) + M.mean()   # (A - mean A)(B - mean B)^T
+                v = float((M * M).sum())
+            else:
+                A, B = Z[a] - Z[a].mean(0), Z[b] - Z[b].mean(0)
+                v = float(((A.T @ A) * (B.T @ B)).sum())
+            acc += v / ((len(a) - 1) * (len(b) - 1))
+        T = acc / n_split
+        out[key] = float(t * t / T) if T > 0 else float("nan")
     return out
 
 
@@ -2308,14 +2357,14 @@ def _decoder_after_removal(X, lab, cols, seed):
     return hl / len(lab), hq / len(lab)
 
 
-def within_arm(X, labels, halves="oddeven", n_perm=200, time_blocks=None, n_null=10, seed=42, perm_seed=7000,
+def within_arm(X, labels, halves="oddeven", n_perm=200, time_blocks=None, n_null=20, seed=42, perm_seed=7000,
                bin_counts=None, decoder=False, n_perm_decoder=50, workers=1, null="freedman-lane"):
     """The within arm: the shift with the class means removed, the fluctuations that differ between classes alone (the
     paper's mean-free design, Appendix K; scripts_canonical/meanfree_shift_exact.py). The rows are split without the
     labels (halves: 'oddeven' row parity, 'time' first and second half in row order, or one 0/1 per row). On each half,
     every row is projected off the span of that half's centred class means (K - 1 directions), which sets every class
     mean to the grand mean, and the declared ladder's shift is read on what is left against a floor drawn rung by rung
-    from `seed` (n_null draws; the paper's ten from 42), with its within-class part D and, beside it, the same on the half
+    from `seed` (n_null draws, 20 as on the command line; the paper's ten from 42), with its within-class part D and, beside it, the same on the half
     before removal (retention = mean-free D / raw D). Nulls, n_perm draws each, unrestricted and, with time_blocks (one block
     id per row of X), inside blocks; every draw keeps the floor's draws. The claim is that the fluctuations differ between
     classes with the means set aside, so the null keeps the class means and makes the fluctuations exchangeable:
@@ -2487,7 +2536,7 @@ def _undefined_split(reason):
     return {"undefined": reason, "delta": nan, "delta_split_free": {"D": nan, "Tb": nan, "Cb": nan, "Cx": nan}}
 
 
-def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_size=10, n_shuffle=0, n_bias=0,
+def decompose(X, labels, order=None, bin_counts=None, n_null=20, seed=42, min_size=10, n_shuffle=0, n_bias=0,
               floor_by_rung=False, fast=None, workers=1):
     """The exact split of every rung's deficit and of the shift for the ladder that accumulates the classes in
     `order` (default: sorted labels) with `bin_counts` classes per rung (default: the paper's ladder). Returns the
@@ -2498,7 +2547,8 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_si
     floor_by_rung draws the floor rung by rung, as the paper's generators do (see zoom). fast and workers as in zoom: fast
     computes every subset's traces from the rows' Gram matrix (exact in algebra, O(m^2 C) instead of O(m^2 d)) and reads a
     floor draw of every row off the top rung (the same rows in another order); None means False with floor_by_rung, True
-    otherwise. Reported as `arithmetic`."""
+    otherwise. Reported as `arithmetic`. n_null floor draws, 20 by default as on the command line (--floor-draws; rung
+    1.13.0 and earlier defaulted to 10 here); the paper's generators drew 10 from seed 42 rung by rung (--paper-floor)."""
     fast = _fast_default(fast, floor_by_rung)
     X = np.asarray(X, np.float64); labels = np.asarray(labels)
     if not np.all(np.isfinite(X)):
@@ -2529,6 +2579,8 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=10, seed=42, min_si
     out["arithmetic"] = "fast" if fast else "rows"
     out["sign_law"] = sign_law(X, labels)
     out["class_pr"] = class_pr(X, labels)
+    out["class_pr_split"] = class_pr(X, labels, estimate="split")
+    out["class_n"] = {k: int(np.sum(labels == c)) for k, c in zip(out["class_pr"], np.unique(labels))}   # keyed as class_pr
     if n_bias > 0:
         bias = []
         for s_ in range(n_bias):
@@ -2665,6 +2717,18 @@ def largest_term(d, keys=("A", "P", "Cb", "Cx")):
     return max(keys, key=lambda k: abs(d[k]))
 
 
+def _sign_law_clause(sl):
+    """Eq. 3 in words for one result: c < 0 exactly when PR(W)/PR(B) exceeds 1 + 2(1 - a)/beta. When the alignment a exceeds
+    1 + beta/2 that threshold is below zero, every ratio exceeds it and the remainder is negative whatever the ratio."""
+    thr, a, b = sl["threshold_full"], sl["alignment"], sl["trB_trW"]
+    if np.isfinite(thr) and thr < 0:
+        return (f"always negative here: it is negative when PR(W)/PR(B) exceeds 1 + 2(1 - a)/beta, a threshold below zero ({thr:.1f}) "
+                f"because the means' alignment a {a:.2f} exceeds 1 + beta/2 = {1 + b / 2:.2f} (beta {b:.3f}), so any ratio exceeds it "
+                f"(here {sl['ratio']:.1f})")
+    return (f"negative exactly when PR(W)/PR(B) = {sl['ratio']:.1f} exceeds 1 + 2(1 - a)/beta = {thr:.1f} "
+            f"(a {a:.2f}, beta {b:.3f})")
+
+
 def _print_decomposition(r):
     if r.get("undefined"):
         print(f"decompose (Section 5): undefined: {r['undefined']}")
@@ -2688,13 +2752,14 @@ def _print_decomposition(r):
     elif sl:
         agree = sl["class_mean_negative"] == sl["law_says_negative"]
         print(f"  sign law (Eq. 3): full-set class-mean remainder c {sl['c_full']:+.3f}, whose sign predicts the class-mean part's; "
-              f"PR(W)/PR(B) = {sl['PR_W']:.1f}/{sl['PR_B']:.1f} = {sl['ratio']:.1f} against 1 + 2(1 - a)/beta = {sl['threshold_full']:.1f} "
+              f"PR(W)/PR(B) = {sl['PR_W']:.1f}/{sl['PR_B']:.1f} = {sl['ratio']:.1f} against 1 + 2(1 - a)/beta = {sl['threshold_full']:.1f}"
+              + (" (below zero: always negative)" if sl["threshold_full"] < 0 else "") + " "
               f"(a {sl['alignment']:.2f}, beta = Tr B/Tr W {sl['trB_trW']:.3f}; with a = 0 the threshold is 1 + 2/beta = {sl['threshold_x_free']:.1f}, "
               "sufficient when the alignment is positive) " + ("(sign as the law says)" if agree else "(MISMATCH with the law: report it)"))
         if r.get("rungs"):
             n_pc = r["rungs"][-1]["size"] / max(r["rung_classes"][-1], 1)
-            cp = r.get("class_pr")
-            own = (f"each class's own fluctuation dimension (PR of its residuals) {min(cp.values()):.1f} to {max(cp.values()):.1f}, "
+            cp = {k: v for k, v in (r.get("class_pr_split") or r.get("class_pr") or {}).items() if np.isfinite(v)}
+            own = (f"each class's own fluctuation dimension (split halves) {min(cp.values()):.1f} to {max(cp.values()):.1f}, "
                    f"median {float(np.median(list(cp.values()))):.1f}; " if cp else "")
             print(f"  samples per class {n_pc:.0f} against {own}PR(W) {sl['PR_W']:.1f}, which pools the classes (README rule 8: the "
                   "within-class part needs each class sampled beyond its own fluctuation dimension; --account prints the sampling term)")
@@ -3633,6 +3698,34 @@ def _load_array(path):
     return np.asarray(z[key])
 
 
+def _load_labels(path, what="labels"):
+    """One class id per row from a file, as integers. Integer values (stored as int or as whole floats) are kept. Text
+    values (a csv or txt column of words, a string npy) are coded 0, 1, ... in sorted order of their values, which is then
+    the declared accumulation order unless --order sets another; returns the values in that order. A non-integer number
+    stops the run: casting 0.5 and 0.7 to integers would merge them silently, and a continuous variable is cut into
+    classes by the user (how it is cut is part of the probe)."""
+    try:
+        a = np.asarray(_load_array(path)).ravel()
+    except ValueError:                                   # np.loadtxt on words: read the column as text
+        if not path.endswith((".csv", ".txt")):
+            raise
+        a = np.loadtxt(path, dtype=str, delimiter="," if path.endswith(".csv") else None).ravel()
+    if a.dtype.kind in "USO":
+        vals = np.unique(a.astype(str))
+        return np.searchsorted(vals, a.astype(str)), [str(v) for v in vals]
+    if a.dtype.kind == "b":
+        return a.astype(int), None
+    if a.dtype.kind == "f":
+        if not np.all(np.isfinite(a)):
+            raise ValueError(f"{what} ({path}) hold NaN or inf; drop those rows from X and the labels first")
+        bad = a[a != np.round(a)]
+        if bad.size:
+            raise ValueError(f"{what} ({path}) hold non-integer values (e.g. {bad[0]:g}): rung reads one class per distinct "
+                             "integer or word; cut a continuous variable into classes first (e.g. np.digitize), since how it "
+                             "is cut is part of the probe")
+    return a.astype(int), None
+
+
 def nwb_counts(path, intervals, label, strata=None, window=None, units_where=None):
     """Trials-by-units spike counts from an NWB file, read with h5py (pip install -e '.[nwb]'). intervals: a table under
     /intervals (e.g. 'trials', 'drifting_gratings_presentations'); label (and strata): its columns, coded as integers in
@@ -3796,7 +3889,7 @@ def _main():
 
     d = sub.add_parser("data", formatter_class=fmt, help="any samples-by-features array with one label per row")
     d.add_argument("X", help="samples-by-features array (npy, npz:key, mat:variable, csv, txt)")
-    d.add_argument("labels", nargs="?", default=None, help="integer class labels, one per sample (optional with --candidates)")
+    d.add_argument("labels", nargs="?", default=None, help="one class label per sample: integers, or words coded in sorted order (optional with --candidates)")
     d.add_argument("--transpose", action="store_true", help="X is stored features by samples: transpose it on loading")
     d.add_argument("--strata", default=None, help="nuisance stratum ids, one per sample, for the nuisance-preserving null")
     d.add_argument("--n-perm", type=int, default=500, help="label permutations for the shift's null (0 disables)")
@@ -3813,7 +3906,7 @@ def _main():
     d.add_argument("--arithmetic", choices=["auto", "fast", "rows"], default="auto", help="fast: every ladder that accumulates whole classes (declared, random orders, every permutation) from class-block sums of the Gram matrix, and the floor's full-set rung once; equal to rows to about 1e-12 and much faster. rows: every ladder row by row, the arithmetic of rung 1.10 and of the paper's generators, bit for bit. auto: rows under --paper-floor and --floor-by-rung, fast otherwise")
     d.add_argument("--standardize", action="store_true", help="z-score every feature first (the repair when one dimension dominates the spectrum)")
     d.add_argument("--split-by", default=None, help="per-feature score file (one value per feature): also run the top, bottom and a random third of the features at matched size, each with its own floor (Section 4)")
-    d.add_argument("--order", default=None, help="the declared accumulation order: sequential (default), antipodal (one member of each antipodal pair first), or a comma-separated list of class labels")
+    d.add_argument("--order", default=None, help="the declared accumulation order: sequential (default: sorted label values), antipodal (one member of each antipodal pair first), or a comma-separated list of class labels (the words, for word labels)")
     d.add_argument("--sectors", action="store_true", help="the harmonics of the class-mean kernel for a cyclic axis (labels in cyclic order, class k at angle 2 pi k/K): sector balance, even and odd amplitudes, coherence of adjacent and antipodal classes (Section 4)")
     d.add_argument("--null-shift", action="store_true", help="labels are in time order: add the circular-shift null, which rolls the label sequence and keeps its autocorrelation")
     d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks that the declared order's first half holds one member of each pair and reports late_fraction as the share of the climb left after half the circle (Appendices E and K)")
@@ -3891,7 +3984,7 @@ def _main():
 
     hd = sub.add_parser("heads", formatter_class=fmt, help="score every unit of a stack H (layers, units, samples, features) along one label per sample, as --heads does for attention-head writes: SAE latents grouped by head, writes of models --heads does not know, cached runs")
     hd.add_argument("H", help=".npy (or .npz:key) array, 4D (layers, units, samples, features) or 3D (units, samples, features)")
-    hd.add_argument("labels", help="one integer label per sample")
+    hd.add_argument("labels", help="one label per sample: integers, or words coded in sorted order")
     hd.add_argument("--layer-names", default=None, help="the layer index of each slice of H, comma-separated (default 0, 1, ...)")
     hd.add_argument("--known", default=None, help="units found by other means, as layer.index, comma-separated: each score's AUC against them with its random-set null")
     hd.add_argument("--n-perm", type=int, default=100, help="label permutations per unit, each averaged over --k-orders orders")
@@ -3956,7 +4049,7 @@ def _main():
         H = H[None] if H.ndim == 3 else H
         if H.ndim != 4:
             raise SystemExit(f"H must be (layers, units, samples, features) or (units, samples, features); got shape {H.shape}")
-        y = np.asarray(_load_array(a.labels)).ravel()
+        y = _load_labels(a.labels)[0]
         if len(y) != H.shape[2]:
             raise SystemExit(f"{len(y)} labels for {H.shape[2]} samples")
         layer_names = _int_list(a.layer_names) if a.layer_names else list(range(H.shape[0]))
@@ -4018,9 +4111,13 @@ def _main():
         X = X.T if a.transpose else X
         if a.labels is None and not a.candidates:
             raise SystemExit("rung data needs labels (or --candidates)")
-        labels = _load_array(a.labels).astype(int).ravel() if a.labels else None
-        strata = _load_array(a.strata).astype(int).ravel() if a.strata else None
-        cand = {os.path.splitext(os.path.basename(f))[0]: _load_array(f).astype(int).ravel() for f in (a.candidates or [])}
+        labels, label_values = _load_labels(a.labels) if a.labels else (None, None)
+        if label_values is not None:
+            print(f"labels: {len(label_values)} classes coded in sorted order of their values ("
+                  + ", ".join(f"{v} = {i}" for i, v in enumerate(label_values[:12])) + (", ..." if len(label_values) > 12 else "")
+                  + "); that is the declared order unless --order sets another")
+        strata = _load_labels(a.strata, "strata")[0] if a.strata else None
+        cand = {os.path.splitext(os.path.basename(f))[0]: _load_labels(f, "candidate labels")[0] for f in (a.candidates or [])}
         n_rows = len(X)
         for name_, arr_ in ([("labels", labels)] if labels is not None else []) + list(cand.items()) + (
                 [("strata", strata)] if strata is not None else []):
@@ -4031,7 +4128,14 @@ def _main():
             antipode = {int(k): int(v) for k, v in _json.load(open(a.antipode)).items()}
         order = a.order
         if order not in (None, "sequential", "antipodal"):
-            order = [int(v) for v in order.split(",")]
+            vals = [v.strip() for v in order.split(",")]
+            if label_values is not None:                 # word labels: --order names the words
+                unknown = [v for v in vals if v not in label_values]
+                if unknown:
+                    raise SystemExit(f"--order names {', '.join(unknown)}, which the labels do not hold ({', '.join(label_values[:12])})")
+                order = [label_values.index(v) for v in vals]
+            else:
+                order = [int(v) for v in vals]
         rungs = tuple(_int_list(a.rungs)) if a.rungs else None
         tb = None
         if a.time_blocks:
@@ -4152,6 +4256,8 @@ def _main():
                 r.update({"delta": float("nan"), "theta_obs": float("nan"), "theta_floor": float("nan"), "n_classes": 0, "rung_sizes": []})
         if valid is not None:
             r["n_samples_total"], r["n_samples_valid"] = int(len(valid)), int(valid.sum())
+        if label_values is not None:
+            r["label_values"] = label_values
         r["rung_version"] = __version__
         if a.out:
             _json.dump(r, open(a.out, "w"), indent=1, default=_json_default)

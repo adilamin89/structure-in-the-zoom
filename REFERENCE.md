@@ -28,7 +28,7 @@ orders beside the declared one, and `rung summarize` says which to read (rule 3)
 
 ```bash
 pip install git+https://github.com/adilamin89/structure-in-the-zoom   # numpy, scipy, matplotlib
-# X.npy: any samples-by-features array; labels.npy: one integer label per row
+# X.npy: any samples-by-features array; labels.npy: one label per row (integers, or words, coded in sorted order)
 rung data X.npy labels.npy --decompose --out r.json --plot r.png
 rung summarize r.json                                                  # the reading, in plain language
 rung report r.json                                                     # r.html: figure, reading, numbers

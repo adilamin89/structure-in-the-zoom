@@ -20,7 +20,7 @@ NeurReps 2026, Proceedings of Machine Learning Research).
 
 [![The five-minute talk](https://img.shields.io/badge/talk-5%20min-c0392b?logo=youtube&logoColor=white)](https://youtu.be/S4kUtP37KLM)
 [![Open the quickstart in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb)
-[![rung 1.13.0](https://img.shields.io/badge/rung-1.13.0-24292f)](https://github.com/adilamin89/structure-in-the-zoom/tags)
+[![rung 1.13.1](https://img.shields.io/badge/rung-1.13.1-24292f)](https://github.com/adilamin89/structure-in-the-zoom/tags)
 [![MIT license](https://img.shields.io/badge/license-MIT-2f6f9f)](https://github.com/adilamin89/structure-in-the-zoom/blob/main/LICENSE)
 
 ## What it answers
@@ -69,7 +69,7 @@ paper found with it.
 ## Quickstart
 
 ```bash
-pip install "git+https://github.com/adilamin89/structure-in-the-zoom@v1.13.0"
+pip install "git+https://github.com/adilamin89/structure-in-the-zoom@v1.13.1"
 ```
 
 A toy that runs in seconds: eight classes with the same mean, each stretching its own four features.
@@ -112,8 +112,8 @@ $ rung summarize gt3.json
 theta_obs = +0.305 = floor +0.074 + shift +0.231 (8 classes, rungs [547, 1110, 1678, 2210,
   3334, 4442]); the floor's standard error 0.004 (20 draws) is the uncertainty the shift
   inherits from it
-declared order: z = +13.1, two-sided Monte Carlo p = 0.002 (resolution 0.002); label-linked
-  at p < 0.05
+declared order: z = +13.1, two-sided Monte Carlo p = 0.002 (at its floor 1/(500 + 1): no
+  permutation reached the observed value); label-linked at p < 0.05
   ⋮
 split (Section 5): within-class part D +0.358 + class-mean part (Tb + Cb + Cx) -0.127 =
   shift +0.231 (decompose's own floor draws)
@@ -141,8 +141,8 @@ $ rung summarize gt3.json
 theta_obs = +0.305 = floor +0.074 + shift +0.231 (8 classes, rungs [547, 1110, 1678, 2210,
   3334, 4442]); the floor's standard error 0.004 (20 draws) is the uncertainty the shift
   inherits from it
-declared order: z = +13.1, two-sided Monte Carlo p = 0.002 (resolution 0.002); label-linked
-  at p < 0.05
+declared order: z = +13.1, two-sided Monte Carlo p = 0.002 (at its floor 1/(500 + 1): no
+  permutation reached the observed value); label-linked at p < 0.05
 order-averaged shift +0.335 (SD over orders 0.083), p = 0.002; same sign as the declared
   order
 per-rung log-PR deficit below the floor, by classes accumulated 1: -0.439, 2: -0.565, 3:
@@ -150,11 +150,12 @@ per-rung log-PR deficit below the floor, by classes accumulated 1: -0.439, 2: -0
 share of the climb remaining after 4 of 8 classes: 0.62
 split (Section 5): within-class part D +0.358 + class-mean part (Tb + Cb + Cx) -0.127 =
   shift +0.231 (decompose's own floor draws)
-sampling: 555 samples per class against each class's own fluctuation dimension 17.8 to 29.3
-  (median 26.3); PR(W) 73.2 pools the classes
-sign law (Eq. 3): full-set class-mean remainder c -0.318, negative exactly when PR(W)/PR(B)
-  = 14.6 exceeds 1 + 2(1 - a)/beta = -5.4 (a 1.51, beta 0.158); its sign predicts the
-  class-mean part's, and here they agree
+sampling: 555 samples per class on average against each class's own fluctuation dimension
+  18.9 to 32.1 (median 29.0, from split halves); PR(W) 73.2 pools the classes
+sign law (Eq. 3): full-set class-mean remainder c -0.318, always negative here: it is
+  negative when PR(W)/PR(B) exceeds 1 + 2(1 - a)/beta, a threshold below zero (-5.4) because
+  the means' alignment a 1.51 exceeds 1 + beta/2 = 1.08 (beta 0.158), so any ratio exceeds
+  it (here 14.6); its sign predicts the class-mean part's, and here they agree
 class-mean kernel: even amplitude 0.337, odd 0.154, sector balance 2.35
 ```
 
@@ -216,10 +217,10 @@ third laboratory, one of them negative (-0.35).
 ### Inside a language model
 
 At one layer, each prompt is a point: the model's hidden state at its last token. The ladder adds the prompts topic by topic; its
-floor adds random prompts of the same counts, which sample every topic from the start. If each topic's prompts vary along directions
-of their own, every new topic brings new dimensions and the ladder climbs faster than its floor: a positive shift says the label has
-carved that layer's representation into class-specific subspaces, the same reading as the clouds above with prompts for trials and
-hidden units for neurons. It is geometry beside decoding: a linear probe asks whether the classes can be told apart, which their
+floor adds random prompts of the same counts, which sample every topic from the start. If the topics' prompts vary in different ways,
+each new topic adds directions the others occupy weakly and the ladder climbs faster than its floor: a positive shift says the
+topics differ in how their prompts vary, the same reading as the clouds above with prompts for trials and hidden units for
+neurons. It is geometry beside decoding: a linear probe asks whether the classes can be told apart, which their
 means can carry, while the shift asks whether each class brings dimensions of its own (in V1, removing the class means sends
 decoders to chance and leaves the shift). Use it to see at which depth a label becomes organized, to compare checkpoints
 (`--revision`) or models, to catch a label organized only through its surface form, and to rank attention heads for an
@@ -270,8 +271,9 @@ you quote a shift.
 3. **For unordered classes, read the order-averaged shift**, and for ordered ones too when the declared shift lies within two SDs
    over random orders of zero or more than two from their average: the declared-order value is a property of one path, and
    `rung summarize` says when.
-4. **Pass your nuisance structure as strata.** A shift that survives the within-stratum permutation is the label's; one the
-   stratified null absorbs is composition.
+4. **Pass your nuisance structure as strata.** A shift that survives the within-stratum permutation is evidence of
+   label-linked structure beyond the strata you supplied; one the stratified null absorbs stays compatible with their composition
+   and cannot be credited to the label beyond them.
 5. **Read the spectrum first**, and standardize when one direction dominates.
 6. **Compare subsets at matched size only.** The shift depends on the number of features.
 7. **Read D and the class-mean part** wherever the within-class scale changes with the class: the raw pooling and trace terms
@@ -289,8 +291,9 @@ you quote a shift.
    permutation null; per-layer counts are descriptive.
 10. **Report a model's shift in both frames.** Where the linear and the z-scored readings disagree in sign, or only one separates
     from its null, the linear one can follow a few high-variance units.
-11. **The shift reads how classes spread.** Classes that differ only by one small offset between near-identical items give it
-    nothing to read, while a linear probe can still find that offset.
+11. **The shift reads how classes spread.** On the paper's BLiMP minimal pairs the null that swaps labels within each
+    pair absorbs the shift at every layer of Pythia-2.8B, while past the embedding a grammaticality probe trained on other pairs
+    still prefers the grammatical member of a held-out pair.
 12. **Any covariance statistic inherits a floor.** Read a principal-angle or other covariance comparison against its label-blind
     floor (`--cov-floors`) before comparing it across designs.
 13. **Quote a shift with the floor's standard error.** Two runs with independent floors of the same draw count differ with an SD of

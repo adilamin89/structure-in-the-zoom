@@ -82,7 +82,7 @@ def test_second_nulls_give_a_verdict_per_statistic():
     txt = " ".join(out["lines"])
     assert "the declared shift is not separated from the label-permutation null to begin with" in txt
     assert "the order-averaged shift survives within-stratum relabelling" in txt
-    assert "the order-averaged shift survives: drift cannot account for it" in txt
+    assert "the order-averaged shift survives: drift and slow state at the blocks' scale do not account for it" in txt
     assert "drift or slow state could produce" not in txt and "neither null" not in txt
     assert out["verdict"]["beyond_drift_orderavg"] is True and out["verdict"]["label_linked_beyond_strata_orderavg"] is True
     res = _res(p_two=0.002, tb_p_two=0.3, n_time_blocks=13, tb_p_two_orderavg=0.4)

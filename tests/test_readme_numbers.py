@@ -278,10 +278,10 @@ def test_front_page_reading():
     """The front page prints `rung summarize` for its run on the paper's recording twice: cut to the exponent's, the declared order's
     and the split's lines (the skipped lines marked by a vertical ellipsis) in the quickstart, and in full (wrapped) in the details
     below it; its glosses, the report's alt text and the clouds animation's alt text read their numbers from the same run
-    (data_canonical/readme_gt3.json, rung 1.13.0)."""
+    (data_canonical/readme_gt3.json, rung 1.13.1; its numbers equal 1.13.0's)."""
     import rung as r
     g = load("readme_gt3.json")
-    assert g["rung_version"] == "1.13.0" and (g["n_samples"], g["n_features"], g["n_classes"]) == (4442, 11311, 8)
+    assert g["rung_version"] == "1.13.1" and (g["n_samples"], g["n_features"], g["n_classes"]) == (4442, 11311, 8)
     front = open(os.path.join(ROOT, "README.md")).read()
     flat = " ".join(front.split())
     blocks = front.split("$ rung summarize gt3.json\n")
