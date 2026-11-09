@@ -230,12 +230,20 @@ def test_front_page_numbers():
     front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
     w = load("worked_example_gt3_rung.json")
     assert (w["n_samples"], w["n_features"]) == (4442, 11311)
-    assert "One recording of 11,311 mouse V1 neurons gives three" in front and "4,442 presentations by 11,311 neurons" in front
+    assert "One recording of 11,311 mouse V1 neurons gives three" in front and "4,442 trials by 11,311 neurons in eight drift directions" in front
     g = load("rung_speed.json")["gt3"]
-    assert f"neurons, takes {g['cpu_s_new']:.0f} s of one laptop core in rung 1.11 and later ({g['cpu_s_old'] / 60:.0f} minutes in 1.10)" in front
+    assert f"(200 permutations) takes {g['cpu_s_new']:.0f} s of one laptop core in rung 1.11 and later ({g['cpu_s_old'] / 60:.0f} minutes in 1.10)" in front
     ok = [r for r in load("stringer_theta_decomposition.json")["rows"] if r.get("status") == "ok"]
     lo, hi = min(r["theta_obs"] for r in ok), max(r["theta_obs"] for r in ok)
-    assert len(ok) == 18 and f"Random-stimulus exponents from {lo:.2f} to {hi:.2f} track their floors in all 18" in front
+    assert len(ok) == 18 and f"Random-stimulus exponents, {lo:.2f} to {hi:.2f} across all 18 imaging recordings, sit on their floors" in front
+    assert abs(np.mean([r["shift_obs"] for r in ok])) < 0.01                       # 'sit on their floors': mean shift -0.002
+    assert f"sit on their floors (mean shift {np.mean([r['shift_obs'] for r in ok]):+.3f})" in front
+    sp = next(r for r in load("neuron_zoom_spatial.json")["rows"] if r["name"].startswith("gratings_drifting_GT3"))
+    assert f"so does adding neighbouring neurons ({sp['theta_spatial']:.3f} against a floor of {sp['theta_floor']:.3f} in the recording above)" in front
+    assert abs(sp["theta_spatial"] - sp["theta_floor"]) < 0.01
+    g3 = load("readme_gt3.json")
+    assert (f"memory and time grow with the square of the number of samples (the Gram alone is 8n² bytes, "
+            f"{8 * g3['n_samples'] ** 2 / 1e9:.2f} GB for these {g3['n_samples']:,})") in front
     # Allen: the pooled arm's positives (Figure 1), the residualized arm's negatives and always-positive baseline, and the two terms'
     # signs at the rungs' sample counts (W2: overall and among the negatives) and in mean field (W0)
     pooled = [v["delta_dir8"] for s in load("allen_expansion_all_sessions.json")["results"] if s.get("status") == "ok" for v in s["areas"].values()]
@@ -244,15 +252,15 @@ def test_front_page_numbers():
     ag = {k: np.sign(np.array([q[k] for q in rows]) + cm) == np.sign(dm) for k in ("W0", "W2")}
     neg = int((dm < 0).sum())
     assert len(rows) == len(pooled) == 167
-    assert f"the shift is negative in {neg} of the {len(rows)} populations; the two terms, computed at the rungs' own sample counts, " \
-           f"get {int(ag['W2'].sum())} of the {len(rows)} signs and {int((ag['W2'] & (dm < 0)).sum())} of those {neg}, where always " \
-           f"guessing positive gets {len(rows) - neg}" in front
+    assert f"the two terms, computed at the rungs' own sample counts, get the sign in {int(ag['W2'].sum())} of {len(rows)} Allen " \
+           f"Neuropixels populations with each direction's temporal-frequency tuning removed, including " \
+           f"{int((ag['W2'] & (dm < 0)).sum())} of the {neg} negative ones (always guessing positive gets {len(rows) - neg})" in front
     # XY: the two terms' sign in every lattice and spin-wave ensemble (40 nematic lattices and spin waves, 32 polar)
     xy = load("xy_twoterm.json")
     pol = [v for v in load("xy_polar_twoterm.json")["summary"].values() if isinstance(v, dict)]       # one entry per temperature
     n_pol, ok_pol = sum(v["n"] for v in pol), sum(v["sign_agree_delta"] for v in pol)
     assert xy["sign_agree"] == xy["n"] and ok_pol == n_pol and xy["n"] + n_pol == 72
-    assert "the two terms give it in all 72 lattice and spin-wave ensembles" in front
+    assert "the two terms give its sign in all 72 lattice and spin-wave ensembles" in front
     sp = load("rung_heads_ioi.json")["default_spread"]["AUC_z"]
     io = load("llm_ioi.json")
     assert f"at AUC {sp['mean']:.2f} (the mean of ten seeds), beside {io['AUC_probe_acc']:.2f} for a trained linear classifier and " \
@@ -266,17 +274,159 @@ def test_front_page_numbers():
     assert f"the mean over 20 seeds of the default floor, {s['mean']:+.3f} ± {s['sd']:.3f}" in front
 
 
-def test_front_page_toy_reading():
-    """The reading the front page prints for the quickstart notebook's toy is what rung returns on it."""
+def test_front_page_reading():
+    """The front page prints `rung summarize` for its run on the paper's recording twice: cut to the exponent's, the declared order's
+    and the split's lines (the skipped lines marked by a vertical ellipsis) in the quickstart, and in full (wrapped) in the details
+    below it; its glosses, the report's alt text and the clouds animation's alt text read their numbers from the same run
+    (data_canonical/readme_gt3.json, rung 1.13.0)."""
     import rung as r
-    rng = np.random.default_rng(0)
-    X = rng.standard_normal((512, 64))
-    y = np.repeat(np.arange(8), 64)
-    X *= 1 + 2 * (y[:, None] == np.arange(64)[None, :] // 4)
-    res = r.zoom(X, y, workers=1)
-    res["decompose"] = r.decompose(X, y, n_null=20, seed=0, n_shuffle=5, workers=1)     # as `rung data --decompose` calls it
-    d = res["decompose"]["delta_split_free"]
+    g = load("readme_gt3.json")
+    assert g["rung_version"] == "1.13.0" and (g["n_samples"], g["n_features"], g["n_classes"]) == (4442, 11311, 8)
     front = open(os.path.join(ROOT, "README.md")).read()
-    assert f"theta_obs = {res['theta_obs']:+.3f} = floor {res['theta_floor']:+.3f} + shift {res['delta']:+.3f} ..." in front
-    assert f"declared order: z = {res['z']:+.1f}, two-sided Monte Carlo p = {res['p_two']:.3f} ..." in front
-    assert f"within-class part D {d['D']:+.3f} + class-mean part (Tb + Cb + Cx) {d['Tb'] + d['Cb'] + d['Cx']:+.3f} ..." in front
+    flat = " ".join(front.split())
+    blocks = front.split("$ rung summarize gt3.json\n")
+    assert len(blocks) == 3
+    cut, full = (b.split("```", 1)[0] for b in blocks[1:])
+    L = r.summarize_data(g, verbose=False)["lines"]
+    i = next(i for i, l in enumerate(L) if l.startswith("split (Section 5)"))
+    assert " ".join(full.split()) == " ".join(" ".join(L).split())
+    assert " ".join(cut.split()) == " ".join(" ".join([L[0], L[1], "\u22ee", L[i]]).split())
+    fs = g["decompose"]["delta_split_free"]; cm = fs["Tb"] + fs["Cb"] + fs["Cx"]
+    assert abs(fs["D"] + cm - g["delta"]) < 1e-9
+    R = g["decompose"]["rungs"]
+    assert [q["classes"] for q in R] == [1, 2, 3, 4, 6, 8] and "the rungs hold the trials of the first 1, 2, 3, 4, 6 and all 8 directions" in flat
+    assert (f"random subsets of the same sizes give {g['theta_floor']:.3f} of the exponent {g['theta_obs']:.3f}, and adding whole "
+            f"directions class by class gives the other {g['delta']:+.3f}") in flat
+    assert f"`z = +{g['z']:.1f}`: the shift sits {g['z']:.0f} standard deviations above the same ladder with the labels permuted" in flat
+    assert abs(g["pr_obs"][-1] - g["pr_floor"][-1]) < 1e-9 * g["pr_obs"][-1]
+    assert (f"One direction's trials span {g['pr_obs'][0]:.0f} dimensions where random trials from all eight span "
+            f"{g['pr_floor'][0]:.0f}; both ladders end at the full set's {g['pr_obs'][-1]:.0f}, so the direction ladder climbs further") in flat
+    assert f"carry the shift (the within-class part D, {fs['D']:+.3f}), and the class means pull it down (the class-mean part Tb + Cb + Cx, {cm:+.3f})" in flat
+    assert f"default floor of 20 random ladders, shift {g['delta']:+.3f}" in flat and g["n_floor_draws"] == 20
+    # the clouds animation's ladders: PR(W) from the rung traces, the floor's from the rung's D (as the generator draws them)
+    tr = np.array([q["traces_obs"] for q in R]); ldw = np.log(tr[:, 1] ** 2 / tr[:, 3]); ldw_f = ldw - np.array([q["D"] for q in R])
+    lo, lf = np.array([q["log_pr_obs"] for q in R]), np.array([q["log_pr_floor"] for q in R])
+    span = lambda a: f"{np.exp(a[0]):.0f} to {np.exp(a[-1]):.0f}"
+    assert (f"fluctuations alone climbs from {span(ldw)} on the direction ladder against {span(ldw_f)} on its floor, a within-class "
+            f"part of {fs['D']:+.3f}; with the class means the whole rung climbs from {span(lo)} against {span(lf)}, the shift of "
+            f"{g['delta']:+.3f}; class means {cm:+.3f}") in flat
+    x = np.log([q["size"] for q in R]); slope = lambda y: float(np.polyfit(x, y, 1)[0])
+    assert abs(slope(ldw - ldw_f) - fs["D"]) < 1e-9 and abs(slope(lo - lf) - g["delta"]) < 1e-9
+
+
+def test_front_page_hero():
+    """The first screen's animation (media/hero.gif) and its alt text: the ladders and slopes of the front page's run, the exponent
+    as floor plus shift, the shift as its two parts (the generator, make_hero_anim.py, asserts the same on every frame it draws)."""
+    g = load("readme_gt3.json")
+    front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
+    assert os.path.exists(os.path.join(ROOT, "media", "hero.gif"))
+    fs = g["decompose"]["delta_split_free"]; cm = fs["Tb"] + fs["Cb"] + fs["Cx"]
+    x = np.log(g["rung_sizes"]); slope = lambda y: float(np.polyfit(x, np.log(y), 1)[0])
+    assert abs(slope(g["pr_obs"]) - g["theta_obs"]) < 1e-9 and abs(slope(g["pr_floor"]) - g["theta_floor"]) < 1e-9
+    assert abs(g["pr_obs"][-1] - g["pr_floor"][-1]) < 1e-9 * g["pr_obs"][-1]          # 'meets it at the full set'
+    assert abs(g["theta_obs"] - g["theta_floor"] - g["delta"]) < 1e-9 and abs(fs["D"] + cm - g["delta"]) < 1e-9
+    assert (f"climbs from {g['pr_obs'][0]:.0f} to {g['pr_obs'][-1]:.0f} dimensions, while its floor, random trials with the labels "
+            f"ignored, starts at {g['pr_floor'][0]:.0f} and meets it at the full set: slopes {g['theta_obs']:.3f} and "
+            f"{g['theta_floor']:.3f}. The exponent {g['theta_obs']:.3f} is the floor {g['theta_floor']:.3f} plus a shift of "
+            f"{g['delta']:+.3f}, which the fluctuations within each direction ({fs['D']:+.3f}) and the class means ({cm:+.3f}) add up to") in front
+
+
+def test_front_page_toy():
+    """The quickstart toy, run exactly as the README prints it (its Python block, then `rung data X.npy labels.npy --decompose`),
+    prints the reading the README shows, and runs in seconds (CPU time; wall time in a sandbox can be capped)."""
+    import resource
+    import subprocess
+    import sys
+    import tempfile
+    import rung as r
+    front = open(os.path.join(ROOT, "README.md")).read()
+    py = front.split("```python\n", 1)[1].split("```", 1)[0]
+    assert "rung data X.npy labels.npy --decompose --out toy.json\nrung summarize toy.json" in front
+    with tempfile.TemporaryDirectory() as tmp:
+        env = {**os.environ, "PYTHONPATH": ROOT}
+        t0 = resource.getrusage(resource.RUSAGE_CHILDREN)
+        subprocess.run([sys.executable, "-c", py], cwd=tmp, check=True, env=env)
+        subprocess.run([sys.executable, "-m", "rung", "data", "X.npy", "labels.npy", "--decompose", "--out", "toy.json"], cwd=tmp,
+                       check=True, env=env, capture_output=True)
+        t1 = resource.getrusage(resource.RUSAGE_CHILDREN)
+        toy = json.load(open(os.path.join(tmp, "toy.json")))
+    cpu = t1.ru_utime + t1.ru_stime - t0.ru_utime - t0.ru_stime
+    assert cpu < 10, cpu
+    L = r.summarize_data(toy, verbose=False)["lines"]
+    sp = next(l for l in L if l.startswith("split (Section 5)"))
+    block = front.split("rung summarize toy.json", 1)[1].split("```text\n", 1)[1].split("```", 1)[0]
+    assert " ".join(block.split()) == " ".join(" ".join([L[0], "\u22ee", sp]).split())
+    fs = toy["decompose"]["delta_split_free"]
+    cm, sh = fs["Tb"] + fs["Cb"] + fs["Cx"], toy["decompose"]["shuffle"]["delta_split"]
+    cm_shuf = sh["Tb"] + sh["Cb"] + sh["Cx"]
+    assert abs(cm - cm_shuf) < 0.01                                                   # 'matches what the same split gives with the labels shuffled'
+    assert (f"of the shift {toy['delta']:+.3f}, the within-class part D is {fs['D']:+.3f}, and the class-mean part, {cm:+.3f}, matches "
+            f"what the same split gives with the labels shuffled ({cm_shuf:+.3f})") in " ".join(front.split())
+    assert [q["classes"] for q in toy["decompose"]["rungs"]] == [1, 2, 3, 4, 6, 8] and "the samples of the first 1, 2, 3, 4, 6 and all 8 classes" in front
+    assert fs["D"] > 0.8 * toy["delta"]                       # 'the reading says so': the toy's classes differ only in their fluctuations
+
+
+def test_front_page_lm():
+    """The GPT-2 animation (media/lm_heads.gif) and its alt text: the battery's counts, the run drawn (the paper's seeds, which replay
+    llm_ioi.json) and its AUC, the boxed heads; the text's AUCs are test_front_page_numbers'."""
+    hi, io = load("rung_heads_ioi.json"), load("llm_ioi.json")
+    front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
+    assert os.path.exists(os.path.join(ROOT, "media", "lm_heads.gif"))
+    assert hi["paper_seeds"]["replays_llm_ioi"] and len(hi["heads_paper_seeds"]) == 144 and len(io["positive_set"]) == 11
+    assert io["n_prompts"] == len(io["prompts"]) == 128 and io["frac_logit_diff_positive"] == 1.0
+    assert sorted(hi["paper_seeds"]["rank_negative"]) == ["10.7", "11.10"]
+    names = json.load(open(os.path.join(ROOT, "axes", "ioi_names.json")))
+    assert list(names)[io["labels"][0]] == "Mary" and len(names) == 8
+    assert (f"Three of the 128 prompts, the first '{io['prompts'][0]}', each with the name to be said; the right name's logit beats the "
+            "other name's on all 128") in front
+    assert "the two negative name movers dashed, 3rd and 4th by z" in front and hi["paper_seeds"]["rank_negative"] == {"10.7": 3, "11.10": 4}
+    assert f"in the run drawn the solid-boxed heads outrank the others at AUC {hi['paper_seeds']['AUC_z']:.2f}" in front
+    ranks = [q for sd in hi["default_seeds"] for q in sd["rank_negative"].values()]
+    assert len(hi["default_seeds"]) == 10 and max(ranks) == 7
+    assert "The two negative name movers, which push against the answer, rank in the top seven of the 144 heads in all ten seeds" in front
+
+
+def test_front_page_xy_sentence():
+    """'positive while polar order holds, negative from T = 0.9 to 1.1 as it melts, near zero above' (the J1/J2 = 0.42 curve, L = 32,
+    the XY animation's data): positive with its 95% interval above zero up to 0.85, below zero from 0.9 to 1.1, and within 0.01 of zero
+    from 1.2 (the paper prints two decimals)."""
+    pts = load("lattice_ground_truth_score.json")["xy"]["points"]
+    T = sorted(float(k.split("_T")[1]) for k in pts if k.startswith("L32_J0.42_"))
+    P = {t: pts[f"L32_J0.42_T{t}"] for t in T}
+    assert all(P[t]["equilibrated"] for t in T)
+    assert all(P[t]["ci95"][0] > 0 for t in T if t <= 0.85)
+    assert [t for t in T if P[t]["ci95"][1] < 0 and abs(P[t]["delta_director"]) >= 0.01] == [0.9, 1.0, 1.1]
+    assert all(abs(P[t]["delta_director"]) < 0.01 for t in T if t >= 1.2)
+    assert "positive while polar order holds, negative from T = 0.9 to 1.1 as it melts, near zero above" in " ".join(
+        open(os.path.join(ROOT, "README.md")).read().split())
+
+
+def test_front_page_macaque():
+    """The macaque sentence: two arrays positive, one negative at its printed value, the two terms' sign in all three."""
+    front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
+    mac = load("macaque_pvc11_twoterm.json")["rows"]
+    neg = [q["measured_delta"] for q in mac if q["measured_delta"] < 0]
+    assert len(mac) == 3 and len(neg) == 1 and all(np.sign(q["delta_pred"]) == np.sign(q["measured_delta"]) for q in mac)
+    assert (f"In mean field they also give the signs of all three macaque V1 arrays from a third laboratory, one of them negative "
+            f"({neg[0]:.2f})") in front
+
+
+def test_front_page_layers():
+    """The Pythia layers paragraph and animation (media/lm_layers.gif): topics above their permutation null at every layer of
+    Pythia-2.8B with the order-averaged shift at the embedding and the last layer; TruthfulQA's count past the embedding with every
+    question ending on a question mark; BLiMP below its permutation null and inside the within-pair swap null (llm_score L4)."""
+    front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
+    assert os.path.exists(os.path.join(ROOT, "media", "lm_layers.gif"))
+    bat = load("llm_battery_pythia-2.8b-deduped.json")
+    tl, bl = bat["batteries"]["world_knowledge32"]["layers"], bat["batteries"]["blimp_B"]["layers"]
+    t_n = sum(r["perm"]["p_one"] <= 0.05 for r in tl)
+    q = load(os.path.join("llm_benchmark", "llm_benchmark_score.json"))["pythia-2.8b-deduped/tqa_category_26"]
+    L4 = load("llm_score.json")["L4"]["pythia-2.8b-deduped"]
+    below = sum(r["perm"]["p_two"] <= 0.05 and r["dbar50_run37"] < r["perm"]["null_mean"] for r in bl)
+    assert len(tl) == t_n == 33 and set(q["distinct_last_tokens"]) <= {1, 2} and L4["swap_absorbs"] == 33
+    assert (f"eight topics lift all {t_n} layers above their permutation null, more so late (order-averaged shift "
+            f"{tl[0]['dbar50_run37']:+.2f} at the embedding, {tl[-1]['dbar50_run37']:+.2f} at the last layer), and TruthfulQA's "
+            f"categories lift {q['B1_past_embedding'].split('/')[0]} of the 32 layers past the embedding although every question ends "
+            f"on a question mark") in front
+    assert (f"BLiMP's grammaticality labels sit far below their permutation null at {below} of 33 layers and inside the null that "
+            f"swaps labels within each sentence pair at all {L4['swap_absorbs']}") in front
