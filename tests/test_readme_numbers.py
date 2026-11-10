@@ -83,12 +83,12 @@ def test_every_named_file_exists():
     for prefix in ("https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/",
                    "https://github.com/adilamin89/structure-in-the-zoom/blob/main/"):
         text = text.replace(prefix, "")
-    names = set(re.findall(r"([A-Za-z0-9_\-*/]+\.(?:json|py|sh|png|gif))", text))
+    names = set(re.findall(r"([A-Za-z0-9_\-*/]+(?:\.[A-Za-z0-9_\-*]+)*\.(?:json|py|sh|png|gif))", text))   # dotted stems: pythia-2.8b
     missing = []
     for n in names:
         if n.startswith(("http", "raw/", "//")) or n in ("X.npy", "r.json", "lt.json", "lm.json", "v1.json", "pairs.json", "my.json",
                                                         "r.png", "lt.png", "v1.png", "strata.json", "gt3.json", "gt3.png",
-                                                        "heads.json", "lm.png", "toy.json", "toy.png"):   # command-line examples
+                                                        "heads.json", "lm.png", "toy.json", "toy.png", "s_meta.json", "o.json"):   # command-line examples
             continue
         hits = [p for base in ("", "scripts_canonical", "data_canonical", "figures_canonical", "tests")
                 for p in glob.glob(os.path.join(ROOT, base, n))]
@@ -232,7 +232,7 @@ def test_front_page_numbers():
     assert (w["n_samples"], w["n_features"]) == (4442, 11311)
     assert "One recording of 11,311 mouse V1 neurons gives three" in front and "4,442 trials by 11,311 neurons in eight drift directions" in front
     g = load("rung_speed.json")["gt3"]
-    assert f"(200 permutations) takes {g['cpu_s_new']:.0f} s of one laptop core in rung 1.11 and later ({g['cpu_s_old'] / 60:.0f} minutes in 1.10)" in front
+    assert f"Appendix M's command for GT3 (200 permutations) took {g['cpu_s_new']:.0f} s of one laptop core in rung 1.11's benchmark" in front
     ok = [r for r in load("stringer_theta_decomposition.json")["rows"] if r.get("status") == "ok"]
     lo, hi = min(r["theta_obs"] for r in ok), max(r["theta_obs"] for r in ok)
     assert len(ok) == 18 and f"Random-stimulus exponents, {lo:.2f} to {hi:.2f} across all 18 imaging recordings, sit on their floors" in front
@@ -243,7 +243,7 @@ def test_front_page_numbers():
     assert abs(sp["theta_spatial"] - sp["theta_floor"]) < 0.01
     g3 = load("readme_gt3.json")
     assert (f"memory and time grow with the square of the number of samples (the Gram alone is 8n² bytes, "
-            f"{8 * g3['n_samples'] ** 2 / 1e9:.2f} GB for these {g3['n_samples']:,})") in front
+            f"{8 * g3['n_samples'] ** 2 / 1e9:.2f} GB for GT3's {g3['n_samples']:,})") in front
     # Allen: the pooled arm's positives (Figure 1), the residualized arm's negatives and always-positive baseline, and the two terms'
     # signs at the rungs' sample counts (W2: overall and among the negatives) and in mean field (W0)
     pooled = [v["delta_dir8"] for s in load("allen_expansion_all_sessions.json")["results"] if s.get("status") == "ok" for v in s["areas"].values()]
@@ -430,3 +430,67 @@ def test_front_page_layers():
             f"on a question mark") in front
     assert (f"BLiMP's grammaticality labels sit far below their permutation null at {below} of 33 layers and inside the null that "
             f"swaps labels within each sentence pair at all {L4['swap_absorbs']}") in front
+
+
+def test_language_model_prompt_clouds():
+    """The prompt-clouds paragraph and animation (README v4): Pythia-2.8B topics against rung's shape surrogate, every number from
+    data_canonical/lm_shape_surrogate_pythia-2.8b.json (scripts_canonical/lm_shape_surrogate.py)."""
+    import rung as r
+    front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
+    d = load("lm_shape_surrogate_pythia-2.8b.json")
+    cov, sm, l24 = d["frames"]["cov"], d["summary"]["cov"], d["layer24"]
+    r24 = cov[24]
+    assert d["rung"] == r.__version__ and d["n_per_class"] == 32 and len(cov) == 33 == sm["n_layers"]
+    assert sm["net_D_positive"] == 33 == d["summary"]["z"]["net_D_positive"]          # in both frames
+    assert max(sm["surrogate_share_of_shift_max"], d["summary"]["z"]["surrogate_share_of_shift_max"]) < 0.5
+    assert (f"layer 24's shift falls from {r24['delta']:+.2f} to {r24['surrogate_delta']:+.2f}; at all 33 layers, the embedding included, what the topics' own "
+            f"fluctuations add is positive ({sm['net_D_min']:+.3f} to {sm['net_D_max']:+.3f}), and the class means add almost nothing beyond "
+            f"the surrogate ({sm['net_class_means_min']:+.3f} to {sm['net_class_means_max']:+.3f})") in front
+    dims = r24["class_dim_split"]
+    n_below = sum(v > d["n_per_class"] for v in dims)
+    assert f"{ {7: 'Seven'}[n_below]} of the eight topics hold fewer prompts (32) than their estimated fluctuation dimension ({min(dims):.0f} to {max(dims):.0f} at layer 24, from split halves)" in front
+    assert f"shift of {r24['delta']:+.2f}; a control that keeps every topic's centre" in front and f"one fluctuation shape has a mean shift of {r24['surrogate_delta']:+.2f}" in front
+    assert (round(100 * l24["plane_share_of_class_means"]), round(100 * l24["plane_share_of_all"])) == (44, 7)
+    assert os.path.exists(os.path.join(ROOT, "media", "lm_clouds.gif")) and os.path.exists(os.path.join(ROOT, "scripts_canonical", "lm_shape_surrogate.py"))
+
+
+def test_what_to_do_next_quotes_rung():
+    """The README's 'What to do next' table quotes rung's own printed words; each must still be in rung.py."""
+    import rung as r
+    src = open(r.__file__).read()
+    front = open(os.path.join(ROOT, "README.md")).read()
+    table = front.split("### What to do next", 1)[1].split("### From Python", 1)[0]
+    quoted = [q for row in table.splitlines() if row.startswith("| `") for q in re.findall(r"`([^`]+)`", row.split("|")[1])]
+    assert len(quoted) >= 10
+    for q in quoted:
+        for part in q.split("..."):
+            part = part.strip()
+            assert not part or part in src, part
+    for opt in re.findall(r"`(--[a-z-]+)", table):
+        assert f'"{opt}"' in src, opt
+
+
+def test_install_line_and_python_block(tmp_path):
+    """The install line names this release's tag, and the From Python block runs as printed on the quickstart's toy."""
+    import contextlib
+    import io
+    import rung as r
+    front = open(os.path.join(ROOT, "README.md")).read()
+    assert f'pip install "rung @ git+https://github.com/adilamin89/structure-in-the-zoom@v{r.__version__}"' in front
+    toy = front.split("```python\n", 1)[1].split("```", 1)[0]
+    block = front.split("### From Python", 1)[1].split("```python\n", 1)[1].split("```", 1)[0]
+    cwd = os.getcwd()
+    try:
+        os.chdir(tmp_path)
+        exec(toy, {})
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            exec(block, {})
+    finally:
+        os.chdir(cwd)
+    out = buf.getvalue()
+    assert out.startswith("theta_obs = +0.511 = floor +0.271 + shift +0.240") and "split (Section 5): within-class part D" in out
+    assert "`decompose(X, y, seed=0, n_shuffle=5)` repeats the command line's split" in " ".join(front.split())
+    X, y = np.load(tmp_path / "X.npy"), np.load(tmp_path / "labels.npy")
+    printed_d = re.search(r"within-class part D \+([0-9.]+) \+ class-mean part", front.split("rung summarize toy.json", 1)[1]).group(1)
+    assert f"{r.decompose(X, y, seed=0, n_shuffle=5)['delta_split_free']['D']:.3f}" == printed_d

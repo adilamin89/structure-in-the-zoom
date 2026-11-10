@@ -1,5 +1,10 @@
 # Structure is in the zoom
 
+[![The five-minute talk](https://img.shields.io/badge/talk-5%20min-c0392b?logo=youtube&logoColor=white)](https://youtu.be/S4kUtP37KLM)
+[![Open the quickstart in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb)
+[![rung 1.13.1](https://img.shields.io/badge/rung-1.13.1-24292f)](https://github.com/adilamin89/structure-in-the-zoom/tags)
+[![MIT license](https://img.shields.io/badge/license-MIT-2f6f9f)](https://github.com/adilamin89/structure-in-the-zoom/blob/main/LICENSE)
+
 <img src="https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/media/hero.gif" width="100%" alt="rung in use on one mouse V1 recording, 4,442 trials by 11,311 neurons in eight drift directions. A terminal runs rung data and rung summarize; below, the ladder that adds whole directions class by class climbs from 29 to 53 dimensions, while its floor, random trials with the labels ignored, starts at 45 and meets it at the full set: slopes 0.305 and 0.074. The exponent 0.305 is the floor 0.074 plus a shift of +0.231, which the fluctuations within each direction (+0.358) and the class means (-0.127) add up to.">
 
 **`rung` tells you how much of a dimensionality exponent is sampling and how much is structure, and what carries the structure.**
@@ -15,24 +20,19 @@ population's exponent. One recording of 11,311 mouse V1 neurons gives three: 0.2
 directions are added class by class, and 0.35 when neurons are added nearest neighbours first. Each is its path's floor plus the
 shift that path adds.
 
-Code and data for *Structure is in the zoom: probing neural symmetry through dimensionality scaling* (Adil Amin, ZEHEN Labs;
-NeurReps 2026, Proceedings of Machine Learning Research).
+The paper: *Structure is in the zoom: probing neural symmetry through dimensionality scaling* (Adil Amin, ZEHEN Labs; accepted at
+NeurReps 2026, Proceedings of Machine Learning Research, to appear). If you use rung or its results, please cite it ([citation](#citation));
+questions and bug reports go to the [issues](https://github.com/adilamin89/structure-in-the-zoom/issues).
 
-[![The five-minute talk](https://img.shields.io/badge/talk-5%20min-c0392b?logo=youtube&logoColor=white)](https://youtu.be/S4kUtP37KLM)
-[![Open the quickstart in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb)
-[![rung 1.13.1](https://img.shields.io/badge/rung-1.13.1-24292f)](https://github.com/adilamin89/structure-in-the-zoom/tags)
-[![MIT license](https://img.shields.io/badge/license-MIT-2f6f9f)](https://github.com/adilamin89/structure-in-the-zoom/blob/main/LICENSE)
+**On this page:** [what it answers](#what-it-answers) · [quickstart](#quickstart) · [your data](#your-data) ·
+[what the paper found](#what-the-paper-found-with-it) · [the talk](#the-talk) · [the approach](#the-approach)
 
 ## What it answers
-
-`rung data` takes `X`, samples by features (trials by neurons, prompts by hidden units), and one class label per row, as .npy,
-.npz:key, .mat:variable, .csv or .txt. A continuous variable, such as an angle or a time, is cut into classes first, and how it is
-cut is part of the probe (REFERENCE.md cuts GT3's drift directions into eight 45° bins).
 
 **Is my exponent structure, or what random sampling gives anyway?** `rung data X.npy labels.npy` prints the floor (random
 subsets of the same sizes, labels ignored), the shift your labels add, and how far the shift sits above label permutations.
 
-**What carries the shift: the fluctuations within each class, or the class means?** `--decompose` splits it exactly into the two;
+**What carries the shift: the fluctuations within each class, or the class means?** `--decompose` splits it exactly into these two parts;
 `--arm within` removes the class means and tests what is left.
 
 **Which of my labels organizes the data?** `--candidates direction.npy contrast.npy session.npy --halves oddeven` ranks them,
@@ -69,8 +69,13 @@ paper found with it.
 ## Quickstart
 
 ```bash
-pip install "git+https://github.com/adilamin89/structure-in-the-zoom@v1.13.1"
+pip install "rung @ git+https://github.com/adilamin89/structure-in-the-zoom@v1.13.1"
+# for rung llm and rung axis (adds torch, transformers and datasets):
+pip install "rung[models] @ git+https://github.com/adilamin89/structure-in-the-zoom@v1.13.1"
 ```
+
+Python 3.10 or later, with numpy, scipy and matplotlib; `rung[nwb]` adds h5py for NWB and MATLAB v7.3 files. The paper's prompt axes
+(`axes/`) come with a clone of the repository, not with pip.
 
 A toy that runs in seconds: eight classes with the same mean, each stretching its own four features.
 
@@ -98,13 +103,16 @@ split (Section 5): within-class part D +0.212 + class-mean part (Tb + Cb + Cx) +
 ```
 
 The rungs are the ladder's steps, here the samples of the first 1, 2, 3, 4, 6 and all 8 classes. `split` divides the shift into
-the within-class part D, from the fluctuations around each class mean, and the class-mean part Tb + Cb + Cx (Section 5 of the paper
-defines the split, Appendix M the four terms). The toy's classes differ only in how their fluctuations are stretched, and the reading agrees: of the shift
+the within-class part D, from the fluctuations around each class mean, and the class-mean part Tb + Cb + Cx: the class means' share of the trace, their own
+concentration and their overlap with the fluctuations (Section 5 of the paper defines the split, Appendix M the four terms). The split
+draws its own floor ('decompose's own floor draws'), so its total can differ from the first line's shift in the third decimal. The toy's classes differ only in how their fluctuations are stretched, and the reading agrees: of the shift
 +0.240, the within-class part D is +0.212, and the class-mean part, +0.028, matches what the same split gives with the
 labels shuffled (+0.026).
 
+### Reading a real result
+
 On the paper's recording (GT3 from Stringer et al. 2021; [REFERENCE.md](https://github.com/adilamin89/structure-in-the-zoom/blob/main/REFERENCE.md#worked-examples)
-builds the two inputs from the public download), the lines that matter are these:
+and the quickstart notebook build the two inputs from the public download in four lines), the lines that matter are these:
 
 ```text
 $ rung data gt3_X.npy gt3_labels.npy --sectors --decompose --out gt3.json
@@ -123,15 +131,13 @@ split (Section 5): within-class part D +0.358 + class-mean part (Tb + Cb + Cx) -
   same sizes give 0.074 of the exponent 0.305, and adding whole directions class by class gives the other +0.231. One
   direction's trials span 29 dimensions where random trials from all eight span 45; both ladders end at the full set's
   53, so the direction ladder climbs further.
-- `z = +13.1`: the shift sits 13 standard deviations above the same ladder with the labels permuted.
+- `z = +13.1`: the shift sits 13 standard deviations above the same ladder with the labels permuted. The declared order adds the
+  classes in their labels' order (directions 0 to 7 here); a p at its floor means no permutation reached the observed shift.
 - `split`: the fluctuations within each direction carry the shift (the within-class part D, +0.358), and the class means pull it
   down (the class-mean part Tb + Cb + Cx, -0.127).
 
-Appendix M's command for this recording (200 permutations) takes 48 s of one laptop core in rung 1.11 and later (33 minutes in 1.10).
-rung works on the samples' Gram matrix, so memory and time grow with the square of the number of samples (the Gram alone is 8n²
-bytes, 0.16 GB for these 4,442), while the number of features enters once. From Python: `from rung import zoom, decompose`; the
-[quickstart notebook](https://github.com/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb) runs the toy in
-Colab, and REFERENCE.md works through a language model the same way.
+A shift has no universal scale: read it against its own permutations (z, p) and the floor's standard error, which the first two lines
+print.
 
 <details>
 <summary>The full reading, the report page and the floor's draws</summary>
@@ -170,6 +176,72 @@ over 20 seeds of the default floor, +0.234 ± 0.004; `--paper-floor` replays Tab
 
 </details>
 
+### What to do next
+
+`rung data` prints a few checks as it runs and `rung summarize` the reading; each row below gives what a line means and the option
+that answers it.
+
+| When the output says | it means | next |
+|---|---|---|
+| `not separated from the label-permutation null` | the shift is within what permuted labels give, at this design and permutation budget | screen other labels (`--candidates`); with `--decompose`, read the `sampling` line |
+| `unresolved: ... permutations cannot give p below ...` | the permutation budget cannot reach p < 0.05 | `--n-perm 200` or more |
+| `OPPOSITE sign to the declared order`, `read the order-averaged shift` | the declared shift depends on the order the classes are added in | report the order-averaged shift, the mean over random class orders (rule 3) |
+| `negative shift` | the class ladder's exponent sits below its floor | `--decompose`: the split, and the sign law (where the class means sit against the strongest fluctuations), show which terms pull it down |
+| `sampling: ... reads low` | some classes hold no more samples than their own fluctuation dimension (the participation ratio of a class's trials around their mean), so the within-class part reads low | more samples per class; `--decompose --n-bias 10` reads the split against a surrogate that keeps every class mean and gives all classes one fluctuation shape, sampled the same way (rule 8) |
+| `one dimension dominates` | one covariance direction holds over half the variance | `--standardize` if a few features cause it (rule 5) |
+| `OPPOSITE sign to the linear frame` | the sign depends on how the features are scaled | report both frames (rule 10) |
+| `ABSORBED by within-stratum relabelling` | the shift stays compatible with the nuisance's composition | it cannot be credited to the label beyond the strata (rule 4) |
+| `split (Section 5): within-class part D ... + class-mean part ...` | how the shift divides between the fluctuations within classes and the class means | `--arm between` tests the class means' share of the variance and `--arm within` the shift with the class means removed, each against its own null |
+
+### From Python
+
+```python
+import numpy as np
+from rung import zoom, decompose, summarize_data
+
+X, y = np.load("X.npy"), np.load("labels.npy")      # samples by features, one integer label per row
+r = zoom(X, y)                     # floor, shift, label-permutation z and p, order-averaged shift
+r["decompose"] = decompose(X, y)   # the within-class part D and the class-mean part
+summarize_data(r)                  # prints the reading, as rung summarize does
+```
+
+`zoom` returns a dictionary: `theta_obs`, `theta_floor` and `delta` (the shift), `z` and `p_two` against the label permutations,
+`delta_orderavg`, and the ladders (`rung_sizes`, `pr_obs`, `pr_floor`); `decompose(...)["delta_split_free"]` holds `D` and the
+class-mean terms `Tb`, `Cb`, `Cx`. The draw counts are the command line's (500 permutations, 50 orders, 20 floor draws) but the seeds
+differ, so the split can move in the third decimal; `decompose(X, y, seed=0, n_shuffle=5)` repeats the command line's split.
+`summarize_data` prints the reading and returns its lines and a verdict dictionary. The
+[quickstart notebook](https://github.com/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb) runs the toy, its
+reading and this code in Colab.
+
+## Your data
+
+**Inputs.** `X` is samples by features (trials by neurons, prompts by hidden units, images by channels) as .npy, .npz:key,
+.mat:variable (naming one array in the file), .csv or .txt (`--transpose` if it is stored features by samples); it must be finite:
+drop rows with NaN or inf, or mark them invalid with `--valid`. Labels give one class per row, as integers or
+words; words are coded in sorted order, which is the declared order unless `--order` names another. A continuous variable, such as an
+angle or a time, is cut into classes first, and how it is cut is part of the probe (REFERENCE.md cuts GT3's drift directions into
+eight 45° bins); a numeric label with a fractional value, such as 0.5, stops the run instead of being merged into a class.
+
+- **Spikes in an NWB file:** `rung nwb session.nwb --intervals trials --label direction --out s` writes `s_X.npy` (trials by units),
+  `s_labels.npy` and `s_times.npy` for `rung data` (`--units-where location=VISp` keeps one area); when the file marks invalid
+  intervals it also writes `s_invalid.npy`: filter it by the tags in `s_meta.json`, then pass it with
+  `--sample-times s_times.npy --invalid-intervals s_invalid.npy`.
+- **A language model:** an axis is a JSON file, `{"topic": ["prompt", ...], ...}`; a clone's `axes/` holds the paper's, and `rung axis`
+  builds one from a Hugging Face dataset. `rung llm --model EleutherAI/pythia-160m --axis axes/world_knowledge32.json
+  --match-last-token --out lm.json` reads the embedding and every layer at each prompt's last token (prompts cut at 128 tokens,
+  `--max-len`), with the final-token control; in rung 1.11's benchmark it took 47 s of one laptop core, model encoding included.
+  `--device mps` or `cuda` runs larger models.
+
+**What rung needs.** rung computes a shift from three rungs up; read one from six or more classes and ten or more samples per rung
+(rule 2). The split converges slowly: in rule 8's simulations of eight Gaussian classes it came within 0.05 of
+its population value only once each class held about 3 to 20 times its own fluctuation dimension in samples, depending on how much the
+classes overlap (`rung summarize` prints the dimensions), so read it against the surrogate (`--n-bias`) unless the classes are sampled
+far beyond that. rung works on the samples' Gram matrix, so memory and time grow with the
+square of the number of samples (the Gram alone is 8n² bytes, 0.16 GB for GT3's 4,442); Appendix M's command for GT3 (200 permutations) took 48 s of one laptop core in rung 1.11's benchmark.
+
+**Outputs.** `--out r.json` holds the result's numbers; `rung summarize r.json` reads it in plain words, `rung report r.json` writes one
+self-contained HTML page (figure, reading, numbers), and `rung plot r.json --out r.png` the figure alone.
+
 ## What the paper found with it
 
 ### The floor
@@ -180,7 +252,7 @@ class by class lifts the exponent above its floor in all eight grating recording
 frequencies pooled), and eight topics lift every layer of Pythia-160m and 2.8B (averaged over class orders).
 
 <details>
-<summary>Figure 1 of the paper</summary>
+<summary>Figure 1 of the paper: every ladder's shift against its floor</summary>
 
 ![Figure 1 of the paper](https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/media/fig1.png)
 
@@ -217,14 +289,26 @@ third laboratory, one of them negative (-0.35).
 ### Inside a language model
 
 At one layer, each prompt is a point: the model's hidden state at its last token. The ladder adds the prompts topic by topic; its
-floor adds random prompts of the same counts, which sample every topic from the start. If the topics' prompts vary in different ways,
-each new topic adds directions the others occupy weakly and the ladder climbs faster than its floor: a positive shift says the
-topics differ in how their prompts vary, the same reading as the clouds above with prompts for trials and hidden units for
-neurons. It is geometry beside decoding: a linear probe asks whether the classes can be told apart, which their
-means can carry, while the shift asks whether each class brings dimensions of its own (in V1, removing the class means sends
-decoders to chance and leaves the shift). Use it to see at which depth a label becomes organized, to compare checkpoints
-(`--revision`) or models, to catch a label organized only through its surface form, and to rank attention heads for an
-intervention.
+floor adds random prompts of the same counts, with the topics mixed. A positive shift says the topics bring dimensions faster than
+random prompts do, through where they sit or through how their prompts vary; the split and a surrogate say which (the clouds above read V1
+the same way, with trials for prompts and neurons for hidden units).
+
+<img src="https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/media/lm_clouds.gif" width="100%" alt="Pythia-2.8B (deduped) layer 24 of 32, eight topics of 32 prompts, each prompt's last-token state. Left: the 256 prompts as dots in the plane of the topic centres (44% of the centres' spread, 7% of all variance), coloured by topic; the topic ladder adds whole topics while its floor draws prompts with the topics mixed. Right: the participation ratio of the topic ladder climbs from 18 to 53 and that of the floor from 21 to 53, a shift of +0.10; a control that keeps every topic's centre and gives all topics one fluctuation shape has a mean shift of +0.02. Statistics over all 256 prompts: how strongly topics organize the layer, not what the model uses">
+
+In Pythia-2.8B (deduped) the topics differ in how their prompts vary, as V1's directions do. Give every topic one shared
+fluctuation shape while keeping its centre (a surrogate; the mean of ten), and layer 24's shift falls from +0.10 to
++0.02; at all 33 layers, the embedding included, what the topics' own
+fluctuations add is positive (+0.039 to +0.111), and the class means add almost nothing beyond the surrogate
+(-0.003 to +0.010). Seven of the eight topics hold fewer prompts (32) than their estimated fluctuation
+dimension (30 to 68 at layer 24, from split halves), so the plain split reads the within-class part low; the surrogate, sampled the same way, is the
+comparison to quote ([lm_shape_surrogate.py](https://github.com/adilamin89/structure-in-the-zoom/blob/main/scripts_canonical/lm_shape_surrogate.py); for your own arrays, `rung data X.npy y.npy --decompose
+--n-bias 10`).
+
+A shift and a linear probe read different things: a probe asks whether the classes can be told apart, which their means can
+carry, while the shift asks whether adding classes adds dimensions faster than random sampling (in V1, removing the class means sends
+linear decoders to chance and leaves a positive shift). Use it to see at which depth a label becomes organized, to compare checkpoints
+(`--revision`) or models, to catch a label organized only through its final token (`--match-last-token`) or its carrier sentences
+(strata), and to rank attention heads as candidates for an intervention.
 
 <img src="https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/media/lm_layers.gif" width="100%" alt="Pythia-2.8B's 32 layers and its embedding as four columns, one per label: topics, TruthfulQA categories, ETHICS domains, BLiMP grammaticality; each cell coloured by that layer's order-averaged shift (clipped at 0.15 either way) and dotted where above the label-permutation null (one-sided p of 0.05 or less, uncorrected). Topics lift every layer, TruthfulQA nearly every one, ETHICS stays near zero in the middle layers, BLiMP sits far below its null: the carrier sentences. The shift reads how strongly a label organizes a layer, not what the model uses, and a count over one model's layers is one draw">
 
@@ -344,8 +428,8 @@ scripts_canonical/       one script per analysis, named for what it computes; mo
 data_canonical/          the result files behind the reported numbers
 figures_canonical/       the figures (drawn with matplotlib 3.10, one with 3.11)
 media/                   this page's pictures: the animations (rung in use, the clouds, the XY
-                         lattice, Pythia's layers, GPT-2's heads), Figure 1, the report page, a
-                         still of the talk
+                         lattice, Pythia's prompt clouds and layers, GPT-2's heads), Figure 1, the
+                         report page, a still of the talk
 examples/                the quickstart notebook
 pyproject.toml           pip install -e . gives the rung command (and theta-zoom as an alias)
 ```
