@@ -159,17 +159,55 @@ weights, the comparator any 'with nothing trained' claim needs; `rung report` sh
 `rung heads H.npy labels.npy` scores any stack of units the same way: SAE latents grouped by head, writes cached from a model
 `--heads` does not know.
 
+## The split at finite samples
+
+The README's rule 8 in full: why to sample each class well before reading the split.
+
+In the paper's grating recordings the within-class part turned positive
+only once each class held 0.46 to 1.2 times its own fluctuation dimension in samples. The floor's first rungs estimate the pooled
+fluctuations, of dimension about m PR_class with m = K/[1+(K-1)σ] (σ the classes' mean fluctuation overlap), from as many
+samples as a declared rung spends on one class, so `D` sits below its population value, by about (m-1) PR_class/(n ln K) at n
+samples per class (an endpoint, first-order estimate), while the class-mean terms (`Tb + Cb + Cx`) move the other way.
+Evaluated at each rung's sample counts (`scripts_canonical/finite_n_identity.py`, `--account`), the identity puts the within-class
+part of eight equal Gaussian classes of PR_class = 30 within 0.05 of the population identity's value on the same rungs once a
+class holds about 20, 8 and 3 times PR_class samples at σ = 0.2, 0.44 and 0.7, at higher ratios n/PR_class for classes of
+lower PR. `--decompose` prints each class's own fluctuation dimension beside PR(W), which pools the classes. When a class
+holds no more samples than its own dimension, rung reads the split net of the shape surrogate (each class's mean, size and
+variance kept, one fluctuation shape for all, ten draws) and `rung summarize` leads with it: at 32 prompts per topic in
+Pythia-2.8B's layer 24 the raw split gives the within-class part +0.005 and the net split +0.079.
+
+## What a head's z reads
+
+The README's rule 14 in full: a head's z says where the axis organizes writes, not where the answer comes from.
+
+It is a signed significance against its
+own null, not an effect size, and the net of a within-class and a class-mean part: a small but consistent write can rank high,
+a large one whose parts cancel can sit near zero, and a head the answer depends on can sit below zero. Reading the two parts
+separately does not change that: each is a slope of log PR, while reliance follows the variance a read-out uses. When an answer
+runs through a linear read-out of the class means, the class-mean share and a probe screen for reliance more directly (on the
+paper's GPT-2 circuit the class-mean share ranked the patched heads at 0.96, z at 0.92 in that run, 0.93 over ten seeds); head scores print that share's own
+permutation z beside z (the between arm, `--arm`), and an intervention decides.
+
 ## Feature reference
 
 Each entry: what it returns, the question it answers, one command, and what the paper found with it.
 
 **`rung data X labels`**: the floor `theta_floor` and its standard error, the shift `delta`, the order-averaged shift, each against
 label permutations. Before comparing an exponent across conditions, recordings or models: how much of it is floor.
-`rung data X.npy labels.npy --plot r.png`. GT3's three exponents: two are floors (Section 3).
+`rung data X.npy labels.npy --plot r.png`. GT3's three exponents: two are floors (Section 3). The order-averaged shift (1.14) is
+the mean over every class order, exact for up to ten classes: a ladder's slope is linear in its rungs' log PR, so the average
+over the 40,320 orders of eight classes is a weighted sum over the 191 class unions a ladder can visit, each read
+once from class-block sums of the Gram matrix; its SD over orders and each permutation's order average are exact too, and
+with unequal classes the floor is drawn at every union size, its standard error printed (`delta_orderavg_se`). The 50 random
+orders stay beside it as a check (`delta_orderavg_random`): on GT3 the exact value is +0.321, the random orders
+gave +0.335 +- 0.012 (data_canonical/readme_gt3.json). `--paper-floor`,
+`--floor-by-rung` and `--paper-seeds` keep the random orders, so the paper's replays keep their values.
 
 **`--decompose`** (`decompose`): the within-class part D and the class-mean part Tb + Cb + Cx, which sum to the shift; the sign law
 (Eq. 3: the full-set class-mean remainder c, negative exactly when PR(W)/PR(B) exceeds 1 + 2(1 - a)/beta, a the means' alignment
-with the fluctuations); `--n-bias` the finite-sample bias null. What carries a lift. In imaging the within-class part is +0.29 to
+with the fluctuations); `--n-bias` the finite-sample bias null, drawn by default (10 surrogates, 1.14) when a class holds no more
+samples than its own fluctuation dimension or too few to estimate it, the split then read net of it: at 32 prompts per topic in Pythia-2.8B's layer 24 the
+raw within-class part is +0.005 and the net one +0.079 (data_canonical/lm_shape_surrogate_pythia-2.8b.json). What carries a lift. In imaging the within-class part is +0.29 to
 +0.64 and the class-mean part -0.08 to -0.35 (Section 5).
 
 **`--arm between|within|both`** (`classmean_share`, `within_arm`): the paper's two arms, which separate what the classes' means

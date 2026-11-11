@@ -56,7 +56,7 @@ every row); the candidate screen replays Appendix H's Allen screen exactly (each
 replays Appendix D's GT3 row; the blocks replay Appendix G's table to float32 rounding; `--account` on the eight grating
 recordings tracks the shift's size with r = 0.88 (Figure 3; all eight shifts are positive, so imaging does not test the sign), and the identity at the rungs' sample counts tracks the
 held-out within-class part with a mean error of -0.004; `rung llm --heads --paper-seeds` replays Appendix I's ranking of GPT-2's
-circuit heads (AUC 0.92), and over ten default seeds the AUC is 0.93 ± 0.01. Generators: `rung_acceptance_replay.py`,
+circuit heads (AUC 0.92), and over ten default seeds (rung 1.14, every class order) the AUC is 0.930 ± 0.005. Generators: `rung_acceptance_replay.py`,
 `rung_account_imaging.py`, `rung_heads_ioi.py`.
 
 ## Runs on data the paper never saw

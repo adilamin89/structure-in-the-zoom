@@ -12,8 +12,9 @@
   "sports"
  ],
  "n_per_class": 32,
- "rung": "1.13.1",
+ "rung": "1.14.0",
  "estimators": "decompose(n_null=20, seed=42, n_bias=10); class_pr(estimate='split'); zoom(n_perm=0, k_orders=50, seed=0)",
+ "states": "pythia-2.8b-deduped__main__topics.npz",
  "device": "mps",
  "dtype": "fp16",
  "frames": {
@@ -1437,7 +1438,7 @@
   "theta_obs": 0.5340716021010397,
   "theta_floor": 0.4293810182555549,
   "delta": 0.10469058384548474,
-  "delta_orderavg": 0.08760070932774618,
+  "delta_orderavg": 0.08097572494517263,
   "theta_floor_se": 0.006436303689494807,
   "plane_share_of_class_means": 0.4416449255018126,
   "plane_share_of_all": 0.07172182510151809,

@@ -107,7 +107,7 @@ def test_version_is_one_string():
     if not path.exists():
         pytest.skip("rung installed without its source tree")
     toml = path.read_text()
-    assert f'version = "{r.__version__}"' in toml and r.__version__ == "1.13.1"
+    assert f'version = "{r.__version__}"' in toml          # the release pins its own number in test_rung_114
 
 
 def test_split_class_dimension_is_not_capped_by_the_sample_count():

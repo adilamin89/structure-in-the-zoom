@@ -89,9 +89,14 @@ def test_ill_conditioned_ladders_fall_back_to_rows():
     # class means 50 times the fluctuations: a one-class rung keeps ~1e-7 of its uncentred sum, so those ladders are
     # recomputed row by row and agree with rows to rounding of the slope alone
     X, y = _toy(3, tuned=50.0)
-    a = r.zoom(X, y, n_perm=6, k_orders=4, fast=False)
-    b = r.zoom(X, y, n_perm=6, k_orders=4, fast=True)
+    a = r.zoom(X, y, n_perm=6, k_orders=4, fast=False, order_average="random")
+    b = r.zoom(X, y, n_perm=6, k_orders=4, fast=True, order_average="random")
     assert abs(a["delta_orderavg"] - b["delta_orderavg"]) < 1e-14 and abs(a["null_mean"] - b["null_mean"]) < 1e-14
+    # the exact order average falls back union by union: the ill-conditioned one-class unions row by row, the others from
+    # the block sums (equal to rows to about 1e-12)
+    a = r.zoom(X, y, n_perm=6, k_orders=4, fast=False, order_average="exact")
+    b = r.zoom(X, y, n_perm=6, k_orders=4, fast=True, order_average="exact")
+    assert abs(a["delta_orderavg"] - b["delta_orderavg"]) < 1e-10 and abs(a["null_mean_orderavg"] - b["null_mean_orderavg"]) < 1e-10
 
 
 def test_auto_keeps_the_replay_conventions_row_by_row():
@@ -106,7 +111,7 @@ def test_auto_keeps_the_replay_conventions_row_by_row():
 def test_rows_are_rung_1_10_bit_for_bit():
     # values rung 1.10.0 returned on this design (float.hex), every null family included
     X, y = _toy()
-    res = r.zoom(X, y, fast=False, workers=3, **_designs()[1][2])
+    res = r.zoom(X, y, fast=False, workers=3, order_average="random", **_designs()[1][2])   # 1.10's statistic: random orders
     pinned = {"delta": "-0x1.4fe69a0b541e0p-5", "delta_orderavg": "-0x1.4a47dc5df6290p-5", "null_mean": "0x1.baa18c67264edp-8",
               "strat_null_mean_orderavg": "0x1.8992208e1d7fbp-4", "shift_null_mean": "0x1.3855b1ead9363p-7",
               "tb_null_mean_orderavg": "0x1.83fae568c2fbep-9", "delta_pairavg": "-0x1.24d5c68d1ff2fp-4",

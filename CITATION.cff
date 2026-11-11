@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use rung or its results, please cite the paper below."
+title: "rung: axis-resolved dimensionality scaling"
+type: software
+version: 1.14.0
+license: MIT
+repository-code: "https://github.com/adilamin89/structure-in-the-zoom"
+authors:
+  - family-names: Amin
+    given-names: Adil
+    orcid: "https://orcid.org/0000-0001-6570-7718"
+preferred-citation:
+  type: conference-paper
+  title: "Structure is in the zoom: probing neural symmetry through dimensionality scaling"
+  authors:
+    - family-names: Amin
+      given-names: Adil
+      orcid: "https://orcid.org/0000-0001-6570-7718"
+  collection-title: "Proceedings of the NeurReps Workshop (Symmetry and Geometry in Neural Representations)"
+  year: 2026
+  identifiers:
+    - type: other
+      value: "arXiv:2611.08506"
+      description: arXiv preprint

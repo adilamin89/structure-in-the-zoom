@@ -51,7 +51,7 @@ def _heads(offset=0.0, seed=0):
 def test_block_ladders_replay_the_row_by_row_ladders(paper_seeds, offset):
     H, labels = _heads(offset)
     kw = dict(paper_seeds=paper_seeds, n_perm=8, k_orders=6, n_floor_draws=4)
-    fast = r.head_scores(H, labels, [3, 7], split=False, **kw)
+    fast = r.head_scores(H, labels, [3, 7], split=False, order_average="random", **kw)   # the reference reads random orders
     ref = _reference_head_scores(H, labels, [3, 7], **kw)
     for a, b in zip(fast, ref):
         assert a["delta_orderavg"] == pytest.approx(b["delta_orderavg"], abs=1e-9)

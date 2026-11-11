@@ -94,7 +94,7 @@ def test_second_nulls_give_a_verdict_per_statistic():
 def test_summary_applies_rule_3_when_the_order_spread_is_large():
     # within two order-SDs of zero (X1 issue 15)
     txt = " ".join(r.summarize_data(_res(delta=0.085, delta_orderavg=0.164, delta_orderavg_sd=0.239), verbose=False)["lines"])
-    assert "within two SDs over random class orders" in txt and "README rule 3" in txt
+    assert "within two SDs over class orders" in txt and "README rule 3" in txt
     # far from the orders' average although far from zero: an atypical path
     txt = " ".join(r.summarize_data(_res(delta=0.582, p_two=0.002, delta_orderavg=0.024, delta_orderavg_sd=0.229),
                                     verbose=False)["lines"])

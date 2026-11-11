@@ -33,7 +33,11 @@ paper's two arms: between, the class means alone (classmean_share, and a second 
 shift with each half's class-mean span removed (within_arm, the paper's mean-free design), with rung data --arm; 1.13
 the arms' calibrated nulls, each keeping what its claim leaves free: a wild bootstrap of each class's residuals for the
 between arm, Freedman-Lane (fitted class means plus permuted residuals) for the within arm; the paper's permutation nulls
-under --arm-null permutation and --paper-floor.)
+under --arm-null permutation and --paper-floor; 1.14 the order-averaged shift over every class order, exact (a linear functional
+of the log PR of the unions a ladder visits, read once per labelling from class-block sums; its nulls and its SD over orders
+too), the split read net of the shape surrogate by default when a class holds no more samples than its own fluctuation
+dimension, the drift check (early vs late halves against random interleaved splits), and classes cut from a continuous
+variable (cells of equal width or count, wall positions turned through one cell, a guard band, within-cell residualization).)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -71,7 +75,7 @@ data_canonical/ of this repository.
 """
 import numpy as np
 
-__version__ = "1.13.1"
+__version__ = "1.14.0"
 
 BIN_COUNTS_DEFAULT = (1, 2, 3, 4, 6, 8)
 
@@ -159,11 +163,25 @@ def _union_ladders(blocks, orders, bin_counts):
     Tr Kc / u.d over its rungs, the share of each sum that survives the centring. Rounding in the block sums costs
     about m * 1e-16 / conditioning of a PR's relative precision, so a caller that needs the row-by-row value to
     ~1e-10 recomputes the orders whose conditioning falls below ~1e-6 row by row."""
-    d, S, Q, G, m_c = blocks
+    m_c = blocks[4]
     orders = np.asarray(orders)
     U = np.zeros((len(orders), len(bin_counts), len(m_c)))
     for k, c in enumerate(bin_counts):
         np.put_along_axis(U[:, k], orders[:, :c], 1.0, axis=1)
+    pr, m, cond = _union_prs(blocks, U)
+    cond = cond.min(axis=1)
+    x = np.log(m)
+    y = np.log(np.maximum(pr, 1e-9))
+    xc = x - x.mean(axis=1, keepdims=True)
+    return (xc * (y - y.mean(axis=1, keepdims=True))).sum(axis=1) / (xc * xc).sum(axis=1), pr, m, cond
+
+
+def _union_prs(blocks, U):
+    """The row-centred PR of every union of whole classes whose indicators are the rows of U (..., C), from class-block sums
+    (`_class_blocks`): Tr Kc = u.d - u'Su/m, ||Kc||_F^2 = u'Qu - 2 sum_c u_c u'G_c u/m + (u'Su)^2/m^2. Returns the PRs, the
+    unions' sizes and each union's conditioning (the smaller share of u'Qu and of u.d that survives the centring; see
+    `_union_ladders`)."""
+    d, S, Q, G, m_c = blocks
     m = U @ m_c
     sall = np.einsum("...c,cd,...d->...", U, S, U)
     ud = U @ d
@@ -172,16 +190,82 @@ def _union_ladders(blocks, orders, bin_counts):
     fro = uqu - 2.0 * np.einsum("...c,cde,...d,...e->...", U, G, U, U) / m + sall ** 2 / m ** 2
     with np.errstate(divide="ignore", invalid="ignore"):
         pr = np.where(np.isfinite(fro) & (fro > 0), trc * trc / fro, 1.0)
-        cond = np.minimum(np.where(uqu > 0, fro / uqu, 0.0), np.where(ud > 0, trc / ud, 0.0)).min(axis=1)
-    x = np.log(m)
-    y = np.log(np.maximum(pr, 1e-9))
-    xc = x - x.mean(axis=1, keepdims=True)
-    return (xc * (y - y.mean(axis=1, keepdims=True))).sum(axis=1) / (xc * xc).sum(axis=1), pr, m, cond
+        cond = np.minimum(np.where(uqu > 0, fro / uqu, 0.0), np.where(ud > 0, trc / ud, 0.0))
+    return pr, m, cond
 
 
 def _union_ladder_slopes(blocks, orders, bin_counts):
     """The ladder slope of every order in `orders` from class-block sums (see `_union_ladders`)."""
     return _union_ladders(blocks, orders, bin_counts)[0]
+
+
+EXACT_ORDERS_MAX_CLASSES = 10        # 10! = 3,628,800 orders, enumerated in chunks of 9! by their first class
+
+
+def _rung_subsets(n_classes, bin_counts):
+    """Every union a ladder can visit: the subsets of the classes with a rung's class count, as bitmasks (class i = bit i), in
+    rung order and, inside a rung, in lexicographic order of their classes; and the position of each bitmask (-1 elsewhere)."""
+    import itertools
+    masks = [sum(1 << i for i in s) for c in bin_counts for s in itertools.combinations(range(n_classes), c)]
+    pos = np.full(1 << n_classes, -1, dtype=np.int64)
+    pos[np.array(masks)] = np.arange(len(masks))
+    return masks, pos
+
+
+def _permutations(k):
+    """All k! orderings of 0..k-1 as a (k!, k) int8 array, lexicographic."""
+    P = np.zeros((1, 0), dtype=np.int8)
+    for j in range(k):
+        # insert the next element after every prefix of j elements: build orderings of j + 1 from those of j
+        P = np.concatenate([np.insert(P, i, j, axis=1) for i in range(j + 1)])
+    return P[np.lexsort(P.T[::-1])]
+
+
+def _order_chunks(counts, bin_counts):
+    """Every class order in chunks of (K - 1)! (one chunk per first class): for each order, the position of its rung unions in
+    `_rung_subsets` and the least-squares weights of its ladder slope, w_k = (x_k - mean x) / sum (x - mean x)^2 with x_k the log
+    size of its k-th rung, so that its slope is sum_k w_k y(S_k) for any per-union response y. Deterministic."""
+    K = len(counts)
+    _, pos = _rung_subsets(K, bin_counts)
+    rest = _permutations(K - 1) if K > 1 else np.zeros((1, 0), np.int8)
+    cols = np.asarray(bin_counts) - 1
+    cnt = np.asarray(counts, dtype=np.float64)
+    for f in range(K):
+        others = np.array([i for i in range(K) if i != f], dtype=np.int8)
+        O = np.concatenate([np.full((len(rest), 1), f, np.int8), others[rest]], axis=1)
+        masks = np.cumsum(np.left_shift(1, O.astype(np.int64)), axis=1)[:, cols]
+        x = np.log(np.cumsum(cnt[O], axis=1)[:, cols])
+        xc = x - x.mean(axis=1, keepdims=True)
+        yield pos[masks], xc / (xc * xc).sum(axis=1, keepdims=True)
+
+
+def _order_coefficients(counts, bin_counts):
+    """a_S for every rung union S: the order-averaged ladder slope over all K! class orders is sum_S a_S y_S for any per-union
+    response y (the slope is linear in its responses). Equal class sizes give every order the same rung sizes, so a_S =
+    w_k / C(K, c_k); unequal sizes enumerate the orders once (sizes only, no data)."""
+    import math
+    masks, _ = _rung_subsets(len(counts), bin_counts)
+    if len(set(counts)) == 1:
+        x = np.log(np.asarray(bin_counts, dtype=np.float64) * counts[0])
+        xc = x - x.mean()
+        w = xc / (xc * xc).sum()
+        return np.concatenate([np.full(math.comb(len(counts), c), w[k] / math.comb(len(counts), c)) for k, c in enumerate(bin_counts)])
+    a = np.zeros(len(masks))
+    for idx, w in _order_chunks(counts, bin_counts):
+        a += np.bincount(idx.ravel(), weights=w.ravel(), minlength=len(masks))
+    return a / math.factorial(len(counts))
+
+
+def _order_moments(counts, bin_counts, v):
+    """Mean and SD over all K! class orders of the ladder statistic sum_k w_k(o) v(S_k(o)), v one value per rung union."""
+    import math
+    s1 = s2 = 0.0
+    for idx, w in _order_chunks(counts, bin_counts):
+        d = (w * v[idx]).sum(axis=1)
+        s1 += float(d.sum()); s2 += float((d * d).sum())
+    n = math.factorial(len(counts))
+    mean = s1 / n
+    return mean, float(np.sqrt(max(s2 / n - mean * mean, 0.0)))
 
 
 def _workers(workers, task_bytes=0):
@@ -292,7 +376,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
          n_floor_draws=20, bin_counts=None, strata=None, seed=0,
          floor_seed=None, perm_seed=None, order_seed=None, standardize=False,
          antipode=None, order=None, shift_null=False, time_blocks=None, keep_null=False, floor_by_rung=False,
-         fast=None, workers=1):
+         fast=None, workers=1, order_average="auto"):
     """Axis-resolved decomposition of the dimensionality-scaling exponent.
 
     Parameters
@@ -302,7 +386,8 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         accumulated in label order (0, 1, 2, ...); for unordered axes the
         order-averaged outputs are the partition-level statistics.
     n_perm : label permutations for the per-layer null (0 disables).
-    k_orders : random accumulation orders for the order-averaged shift.
+    k_orders : random accumulation orders for the order-averaged shift (0: none); with the exact order average they are
+        its check (delta_orderavg_random).
     k_null_orders : orders averaged per permuted labeling (conservative if
         smaller than k_orders; Appendix I reads each permuted labelling over
         its own random orders).
@@ -359,6 +444,19 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     workers : threads that evaluate the ladders and floors: 1 (default) none, 0 one per core but one, at most
         eight (fewer if memory is short), or a count. Every random draw is made first, in the serial order of the
         streams, and the results are reduced in that order, so any number of workers returns bit-identical values.
+    order_average : how the order-averaged shift averages over class orders. 'exact': over every one of the K! orders. A
+        ladder slope is linear in its rungs' log PR, so the average over orders is sum_S a_S [log PR(S) - F(|S|)] over the
+        unions S a ladder can visit (191 at eight classes with the default rungs), each read once from class-block sums,
+        with a_S the average weight the orders give S and F the floor's mean log PR at S's size: the declared floor when the
+        classes are equal in size, else n_floor_draws random subsets at every distinct union size (a stream of its own), the
+        only randomness left (delta_orderavg_se). The SD over orders (delta_orderavg_sd) and each null draw's order average
+        are exact too. The k_orders random orders are still drawn and read, as delta_orderavg_random with its Monte Carlo SE,
+        so the declared-order results and every random draw keep their 1.13 values; the order-averaged statistics and their
+        nulls change. 'random': the mean over the
+        k_orders random orders (rung 1.13 and earlier), each null draw over k_null_orders of them. 'auto' (default): exact
+        for at most ten classes (10! orders, enumerated in chunks) unless k_orders is 0 (no order average) or the run
+        replays the paper's generators (floor_by_rung, perm_seed or order_seed), which keep the random orders and their
+        values; random otherwise. Reported as orderavg_method and n_orders_averaged.
 
     Returns dict with delta, theta_obs, theta_floor, p_two, z,
     delta_orderavg (+sd, p_two_orderavg, z_orderavg), the per-rung ladders
@@ -495,6 +593,28 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
                 for s in key:
                     xrng.choice(n, s, replace=False)
 
+    # the exact order average: every union a ladder can visit, read once per labelling; with unequal classes the floor at
+    # every distinct union size, n_floor_draws subsets each, from a stream of its own drawn after all the others
+    if order_average not in ("auto", "exact", "random"):
+        raise ValueError("order_average is 'auto', 'exact' or 'random'")
+    replay = floor_by_rung or perm_seed is not None or order_seed is not None      # the paper's generators' conventions
+    exact = order_average == "exact" or (order_average == "auto" and k_orders > 0 and not replay
+                                         and n_classes <= EXACT_ORDERS_MAX_CLASSES)
+    if exact and n_classes > EXACT_ORDERS_MAX_CLASSES:
+        raise ValueError(f"order_average='exact' enumerates every class order, at most {EXACT_ORDERS_MAX_CLASSES} classes "
+                         f"({n_classes} given): use 'random'")
+    ex_draws = []
+    if exact:
+        sub_masks, _ = _rung_subsets(n_classes, bc)
+        sub_cls = [[i for i in range(n_classes) if mk >> i & 1] for mk in sub_masks]
+        U_sub = np.array([[float(mk >> i & 1) for i in range(n_classes)] for mk in sub_masks])
+        sub_sizes = [sum(counts[i] for i in s) for s in sub_cls]
+        coef = _order_coefficients(counts, bc)
+        equal_sizes = len(set(counts)) == 1
+        ex_sizes = [] if equal_sizes else sorted(set(sub_sizes) - {n})
+        erng = np.random.default_rng([floor_seed if floor_seed is not None else seed, 7927])
+        ex_draws = [[erng.choice(n, m, replace=False) for m in ex_sizes] for _ in range(n_floor_draws)] if ex_sizes else []
+
     # 2. Evaluate.
     log_full = np.log(max(_subset_pr(K, np.arange(n)), 1e-9)) if fast and n in sizes else None
     KK = K * K if fast else None      # fast: the class blocks of every labelling and every floor draw by matrix products
@@ -502,19 +622,30 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     def log_pr(idx):
         return log_full if log_full is not None and len(idx) == n else np.log(max(_subset_pr(K, idx), 1e-9))
 
-    def read(lb, ords):
-        """Slopes and rung PRs of one labelling's ladders (lab or a relabelling) in the orders given."""
+    def read(lb, ords, unions=False):
+        """Slopes and rung PRs of one labelling's ladders (lab or a relabelling) in the orders given; with unions, also the
+        log PR of every rung union (the exact order average's responses), from the same class-block sums."""
         mem = members if lb is lab else None
+        ys = None
         if fast:
-            sl, pr, _, cond = _union_ladders(_class_blocks(K, lb, n_classes, KK), ords, bc)
+            blocks = _class_blocks(K, lb, n_classes, KK)
+            sl, pr, _, cond = _union_ladders(blocks, ords, bc)
             sl, pr = list(sl), [list(p) for p in pr]
             for j in np.where(cond < 1e-6)[0]:      # too much lost to the centring: this ladder row by row
                 mem = mem or [np.where(lb == c)[0] for c in range(n_classes)]
                 sl[j], _, pr[j] = _ladder(K, mem, ords[j], bc)
-            return sl, pr
+            if unions:
+                pu, _, cu = _union_prs(blocks, U_sub)
+                ys = np.log(np.maximum(pu, 1e-9))
+                for j in np.where(~(cu >= 1e-6))[0]:
+                    mem = mem or [np.where(lb == c)[0] for c in range(n_classes)]
+                    ys[j] = log_pr(np.concatenate([mem[i] for i in sub_cls[j]]))
+            return sl, pr, ys
         mem = mem or [np.where(lb == c)[0] for c in range(n_classes)]
         res = [_ladder(K, mem, o, bc) for o in ords]
-        return [r[0] for r in res], [r[2] for r in res]
+        if unions:
+            ys = np.array([log_pr(np.concatenate([mem[i] for i in s])) for s in sub_cls])
+        return [r[0] for r in res], [r[2] for r in res], ys
 
     def task(t):
         if t[0] == "cells":                 # fast: the declared floor's draws in one batch
@@ -527,15 +658,22 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
             if fast:
                 return _subset_log_prs(K, KK, [idx for row in draws for idx in row], log_full).reshape(n_floor_draws, len(t[1]))
             return np.array([[log_pr(idx) for idx in row] for row in draws])
-        return read(t[1], t[2])
+        if t[0] == "exfloor":               # one draw of the floor at every distinct union size
+            return _subset_log_prs(K, KK, t[1], log_full) if fast else np.array([log_pr(idx) for idx in t[1]])
+        if t[0] == "unions":                # rows arithmetic: the observed labelling's rung unions
+            return read(lab, [], unions=True)[2]
+        return read(t[1], t[2], unions=t[3])
 
     orig_orders = [canonical] + orders + (pp or [])
     fam_orders = {"perm": [canonical] + null_orders, "strat": [canonical] + null_orders, "shift": [canonical],
                   "tb": [canonical] + null_orders, "pair": pp and sub}
+    ex_fam = {"perm", "strat", "tb"}        # the families whose order-averaged null the exact path reads
     tasks = (([("cells", floor_draws)] if fast else [("cell", idx) for idx in floor_draws])
              + [("key", key, st) for key, st in key_state.items()]
-             + ([("read", lab, orig_orders)] if fast else [("read", lab, [o]) for o in orig_orders])
-             + [("read", lb, fam_orders[f]) for f, rl in relabel.items() for lb in rl])
+             + [("exfloor", row) for row in ex_draws]
+             + ([("read", lab, orig_orders, exact)] if fast else
+                [("read", lab, [o], False) for o in orig_orders] + ([("unions",)] if exact else []))
+             + [("read", lb, fam_orders[f], exact and f in ex_fam) for f, rl in relabel.items() for lb in rl])
     res = iter(_pmap(task, tasks, _workers(workers, 8 * n * n)))
 
     # 3. Reduce, in the serial order.
@@ -551,11 +689,13 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     floors = {decl: th_floor}
     for key in key_state:
         floors[key] = _slope(key, np.exp(next(res).mean(axis=0)))
+    ex_logs = np.array([next(res) for _ in ex_draws])          # draws x distinct union sizes (unequal classes)
     if fast:
-        sl_o, pr_o = next(res)
+        sl_o, pr_o, y_sub = next(res)
     else:
         parts = [next(res) for _ in orig_orders]
         sl_o, pr_o = [p[0][0] for p in parts], [p[1][0] for p in parts]
+        y_sub = next(res) if exact else None
     th_obs, pr_obs = float(sl_o[0]), pr_o[0]
     reads ={f: [next(res) for _ in rl] for f, rl in relabel.items()}
 
@@ -606,12 +746,47 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
     d_orders = shifts(sl_o[1:1 + len(orders)], orders)
     out["delta_orderavg"] = float(np.mean(d_orders)) if d_orders else float("nan")
     out["delta_orderavg_sd"] = float(np.std(d_orders)) if d_orders else float("nan")
+    out["orderavg_method"], out["n_orders_averaged"] = "random", int(len(d_orders))
+    if exact:
+        # every order's shift is sum_k w_k(o) [y(S_k) - F(|S_k|)] over its rung unions S_k, F the floor's mean log PR at that
+        # size; averaged over all K! orders, sum_S a_S [y_S - F(|S|)]. Relabellings keep every class's count, so a_S and F
+        # serve every null draw too. Equal classes: F at the declared rung sizes, the declared floor itself
+        import math
+        if equal_sizes:
+            f_size = {s: float(v) for s, v in zip(sizes, logs.mean(axis=0))}
+            se = th_floor_sd / np.sqrt(n_floor_draws)
+        else:
+            f_size = {m: float(v) for m, v in zip(ex_sizes, ex_logs.mean(axis=0))}
+            f_size[n] = float(logs[:, -1].mean())             # the full set: the declared floor's top rung
+            c_m = {}
+            for s_, a_ in zip(sub_sizes, coef):
+                c_m[s_] = c_m.get(s_, 0.0) + a_
+            var_m = {m: float(v) for m, v in zip(ex_sizes, ex_logs.var(axis=0, ddof=1))} if n_floor_draws > 1 else {}
+            var_m[n] = float(logs[:, -1].var(ddof=1)) if n_floor_draws > 1 else float("nan")
+            se = (float(np.sqrt(sum(c_m[m] ** 2 * var_m[m] for m in c_m) / n_floor_draws))
+                  if n_floor_draws > 1 else float("nan"))
+        F_sub = np.array([f_size[s_] for s_ in sub_sizes])
+        floor_term = float(coef @ F_sub)
+        mean_ex, sd_ex = _order_moments(counts, bc, y_sub - F_sub)
+        if d_orders:
+            out["delta_orderavg_random"] = out["delta_orderavg"]
+            out["delta_orderavg_random_sd"] = out["delta_orderavg_sd"]
+            out["delta_orderavg_random_se"] = out["delta_orderavg_sd"] / np.sqrt(len(d_orders))
+        out["delta_orderavg"] = float(coef @ y_sub) - floor_term
+        out["delta_orderavg_sd"] = sd_ex
+        out["delta_orderavg_se"] = se
+        out["orderavg_method"], out["n_orders_averaged"] = "exact", math.factorial(n_classes)
+        out["orderavg_floor_logs"] = {int(s_): v for s_, v in sorted(f_size.items())}
+        out["orderavg_identity_check"] = abs(mean_ex - out["delta_orderavg"])   # the enumeration against the coefficients
 
     def nulls(f, with_orders=True):
-        # each relabelling's declared-order shift, and its shift averaged over the null orders
-        c = [sl[0] - th_floor for sl, _ in reads[f]]
-        a = [np.mean(shifts(sl[1:], null_orders)) if null_orders else float("nan") for sl, _ in reads[f]] if with_orders else None
-        return c, a
+        # each relabelling's declared-order shift, and its shift averaged over the null orders (exact: over every order)
+        c = [rd_[0][0] - th_floor for rd_ in reads[f]]
+        if not with_orders:
+            return c, None
+        if exact and f in ex_fam:
+            return c, [float(coef @ rd_[2]) - floor_term for rd_ in reads[f]]
+        return c, [np.mean(shifts(rd_[0][1:], null_orders)) if null_orders else float("nan") for rd_ in reads[f]]
 
     if n_perm:
         null_c, null_a = nulls("perm")
@@ -651,7 +826,7 @@ def zoom(X, labels, n_perm=500, k_orders=50, k_null_orders=20,
         out["delta_pairavg"] = float(np.mean(d_pp))
         if n_perm:
             obs_sub = float(np.mean([d_pp[i] for i in sub_idx]))
-            null_p = [np.mean(shifts(sl, sub)) for sl, _ in reads["pair"]]
+            null_p = [np.mean(shifts(rd_[0], sub)) for rd_ in reads["pair"]]
             out["pairavg_z"], out["pairavg_p_two"], out["pairavg_null_mean"], out["pairavg_null_sd"] = _null_stats(obs_sub, null_p)
             out["n_pair_orders_in_null"] = len(sub)
 
@@ -1113,19 +1288,26 @@ def summarize_data(result, verbose=True):
             verdict["p_unresolved"] = True
     if "delta_orderavg" in result and np.isfinite(result["delta_orderavg"]):
         oa = result["delta_orderavg"]; same = (oa > 0) == (result["delta"] > 0)
-        txt = f"order-averaged shift {oa:+.3f} (SD over orders {result['delta_orderavg_sd']:.3f})"
+        if result.get("orderavg_method") == "exact":
+            txt = (f"order-averaged shift {oa:+.3f} over all {result['n_orders_averaged']:,} class orders (exact; SD over orders "
+                   f"{result['delta_orderavg_sd']:.3f}"
+                   + (f"; the floor's standard error {result['delta_orderavg_se']:.3f}" if np.isfinite(result.get("delta_orderavg_se", np.nan)) else "")
+                   + (f"; {result['k_orders']} random orders give {result['delta_orderavg_random']:+.3f} +- "
+                      f"{result['delta_orderavg_random_se']:.3f}" if "delta_orderavg_random" in result else "") + ")")
+        else:
+            txt = f"order-averaged shift {oa:+.3f} (SD over {result.get('n_orders_averaged', result.get('k_orders'))} random orders {result['delta_orderavg_sd']:.3f})"
         if "p_two_orderavg" in result:
             txt += f", p = {result['p_two_orderavg']:.3f}"
         txt += "; same sign as the declared order" if same else "; OPPOSITE sign to the declared order: the declared-order value is a path property, report the order-averaged one for the partition"
         lines.append(txt); verdict["orderavg_same_sign"] = bool(same)
         sd_o = result.get("delta_orderavg_sd")
         if sd_o is not None and np.isfinite(sd_o) and 2 * sd_o >= abs(result["delta"]):
-            lines.append(f"the declared shift ({result['delta']:+.3f}) lies within two SDs over random class orders ({sd_o:.3f}) of zero: "
-                         "other orders of the same classes can give the opposite sign, so the declared order is one path among many; "
+            lines.append(f"the declared shift ({result['delta']:+.3f}) lies within two SDs over class orders ({sd_o:.3f}) of zero: "
+                         "the declared shift is small against how much the shift varies over class orders, so the declared order is one path among many; "
                          "read the order-averaged shift (README rule 3)")
             verdict["read_orderavg"] = True
         elif sd_o is not None and np.isfinite(sd_o) and abs(result["delta"] - oa) > 2 * sd_o:
-            lines.append(f"the declared shift ({result['delta']:+.3f}) lies more than two SDs over random class orders ({sd_o:.3f}) from "
+            lines.append(f"the declared shift ({result['delta']:+.3f}) lies more than two SDs over class orders ({sd_o:.3f}) from "
                          f"their average ({oa:+.3f}): the declared order is an atypical path through these classes; read the "
                          "order-averaged shift for the partition (README rule 3)")
             verdict["read_orderavg"] = True
@@ -1182,9 +1364,26 @@ def summarize_data(result, verbose=True):
     elif "decompose" in result:
         dc = result["decompose"]; f = dc["delta_split_free"]
         cm = f["Tb"] + f["Cb"] + f["Cx"]
-        lines.append(f"split (Section 5): within-class part D {f['D']:+.3f} + class-mean part (Tb + Cb + Cx) {cm:+.3f} = shift {dc['delta']:+.3f}"
-                     " (decompose's own floor draws)")
-        verdict.update(within_part=float(f["D"]), class_mean_part=float(cm))
+        net_read = "net_of_bias" in dc and "delta_split_free" in dc["net_of_bias"]
+        if net_read:
+            # the sampling check fired: below a class's own dimension the raw split moves weight from D to the class means
+            # by its own sampling, so the split is read net of the surrogate that keeps each class's mean, size and variance
+            nb = dc["net_of_bias"]; nf = nb["delta_split_free"]; ncm = nf["Tb"] + nf["Cb"] + nf["Cx"]
+            ba = dc.get("bias_auto") or {}
+            why = (f"since {ba['classes_at_or_below']} of {ba['n_classes']} classes hold no more samples than their own dimension (or are "
+                   "too small to estimate it)" if ba.get("fired") else "as requested (--n-bias)")
+            lines.append(f"split (Section 5), net of the shape surrogate ({dc['bias_null']['n']} draws, each class keeping its mean, size "
+                         f"and variance, all sharing one fluctuation shape): within-class part D {nf['D']:+.3f} + class-mean part {ncm:+.3f} "
+                         f"= {nb['delta']:+.3f}, what the classes' own fluctuation shapes add to the shift (the surrogate gives "
+                         f"{dc['bias_null']['delta']:+.3f}); read this split, {why}; the raw split (D {f['D']:+.3f} + class-mean part "
+                         f"{cm:+.3f} = shift {dc['delta']:+.3f}, decompose's own floor draws) moves weight from the within-class part to the "
+                         "class means by its own sampling when classes are sampled thin (Appendix K)")
+            verdict.update(within_part=float(nf["D"]), class_mean_part=float(ncm), within_part_raw=float(f["D"]),
+                           class_mean_part_raw=float(cm), split_net_of_surrogate=True)
+        else:
+            lines.append(f"split (Section 5): within-class part D {f['D']:+.3f} + class-mean part (Tb + Cb + Cx) {cm:+.3f} = shift {dc['delta']:+.3f}"
+                         " (decompose's own floor draws)")
+            verdict.update(within_part=float(f["D"]), class_mean_part=float(cm))
         split_est = "class_pr_split" in dc                 # rung 1.13.1+: the split-half estimate, which no sample count caps
         cp = dc.get("class_pr_split") or dc.get("class_pr"); sl0 = dc.get("sign_law") or {}
         if cp and dc.get("rungs"):
@@ -1202,15 +1401,16 @@ def summarize_data(result, verbose=True):
                              f"(median {float(np.median(v)):.1f}{', from split halves' if split_est else ''})"
                              + (f"; PR(W) {sl0['PR_W']:.1f} pools the classes" if "PR_W" in sl0 else "")
                              + ("" if not below else (f"; {below} of {len(v)} classes hold no more samples than their own dimension" if cn else "")
-                                + "; below a class's own dimension the within-class part reads low, near zero or below where structure "
-                                "exists (Section 2; --decompose --n-bias sets the split against a surrogate sampled the same way)"))
+                                + f"; below a class's own dimension the {'raw ' if net_read else ''}within-class part reads low, near zero or below where structure "
+                                "exists (Section 2; " + ("the split above is read net of the shape surrogate)" if net_read else
+                                                         "--decompose --n-bias sets the split against a surrogate sampled the same way)")))
                 verdict["samples_per_class_over_dimension"] = float(ratio)
         sl = dc.get("sign_law")
         if sl and "degenerate" not in sl:
             lines.append(f"sign law (Eq. 3): full-set class-mean remainder c {sl['c_full']:+.3f}, " + _sign_law_clause(sl) + "; "
-                         + ("its sign predicts the class-mean part's, and here they agree" if np.sign(sl["c_full"]) == np.sign(cm)
-                            else "its sign predicts the class-mean part's, and here they DIFFER (a first rung with class-mean variance, or a small part)"))
-        if "net_of_bias" in dc:
+                         + (f"its sign predicts the {'raw ' if net_read else ''}class-mean part's, and here they agree" if np.sign(sl["c_full"]) == np.sign(cm)
+                            else f"its sign predicts the {'raw ' if net_read else ''}class-mean part's, and here they DIFFER (a first rung with class-mean variance, or a small part)"))
+        if "net_of_bias" in dc and not net_read:
             lines.append(f"finite-sample bias null (one covariance shape for every class): within-class part {dc['bias_null']['delta_split_free']['D']:+.3f} "
                          f"in the surrogates, {dc['net_of_bias']['delta_split_free']['D']:+.3f} net of them")
     if "between" in result or "within" in result:
@@ -1219,6 +1419,12 @@ def summarize_data(result, verbose=True):
             verdict["between_z"] = float(result["between"]["z"])
         if "p_one_unrestricted_both_halves" in result.get("within", {}):
             verdict["within_p_both_halves"] = float(result["within"]["p_one_unrestricted_both_halves"])
+    if "continuous" in result:
+        lines += _continuous_lines(result["continuous"])
+    if "drift" in result:
+        lines += _drift_lines(result["drift"])
+        if not result["drift"].get("undefined"):
+            verdict["drift_flagged"] = list(result["drift"]["flagged"])
     if "account" in result and result["account"].get("undefined"):
         lines.append(f"two-term account (Figure 3): undefined: {result['account']['undefined']}")
         verdict["account_undefined"] = result["account"]["undefined"]
@@ -1507,7 +1713,8 @@ def llm_battery(model_name, axis_files, device="cpu", n_perm=500, k_orders=50,
                 "null_mean_orderavg", "null_sd_orderavg", "theta_floor", "theta_floor_se",
                 "strat_p_two", "strat_z", "strat_null_mean", "strat_null_sd",
                 "strat_p_two_orderavg", "strat_z_orderavg", "strat_null_mean_orderavg", "strat_null_sd_orderavg",
-                "delta_pairavg", "pairavg_p_two", "pairavg_z", "pairavg_null_mean", "pairavg_null_sd")
+                "delta_pairavg", "pairavg_p_two", "pairavg_z", "pairavg_null_mean", "pairavg_null_sd", "orderavg_method",
+                "delta_orderavg_random", "delta_orderavg_random_se")
         layers = []
         for l in range(len(states[0])):
             X = np.stack([s[l] for s in states])
@@ -1817,7 +2024,9 @@ def _heads_lines(d, top=10):
     kn = set(d.get("known", []))
     mark = (lambda h: "" if not kn or h["head"] in kn else " (not known)")
     lines = [f"{len(hs)} heads of {d.get('model')}" + (f" (untrained, seed {d['untrained_seed']})" if d.get("untrained_seed") is not None else "")
-             + f" scored along {d.get('axis')} ({d.get('n_perm')} label permutations, {d.get('k_orders')} random class orders each); "
+             + f" scored along {d.get('axis')} ({d.get('n_perm')} label permutations, "
+             + ("each read over every class order" if hs and hs[0].get("orderavg_method") == "exact" else f"{d.get('k_orders')} random class orders each")
+             + "); "
              "ranked by z: " + ", ".join(f"{h['head']} {h['z']:+.1f}{mark(h)}" for h in hs[:top])]
     if all("classmean_frac_z" in h for h in hs):
         hb = sorted(hs, key=lambda h: -h["classmean_frac_z"])
@@ -1839,12 +2048,25 @@ def _heads_lines(d, top=10):
                      + ", ".join(f"{h['head']} ({h['flag']})" for h in flagged[:12]) + (" ..." if len(flagged) > 12 else ""))
     split_top = [h for h in hs[:top] if not h.get("flag") and "within" in h]
     if split_top:
+        n_net = sum(h.get("split") == "net of the shape surrogate" for h in split_top)
         lines.append("of the top heads, " + ", ".join(f"{h['head']} {'fluctuations' if h['within'] > h['class_mean'] else 'class means'}"
-                                                     for h in split_top) + " carry most of the shift (the split: which part is larger)")
+                                                     for h in split_top) + " carry the larger part of the declared-order split"
+                     + (f"; for {n_net} of them read net of the shape surrogate, since a class holds no more prompts than its own "
+                        "dimension in their write" if n_net else "") + "; the ranking itself reads the order-averaged shift)")
     lines.append("z reads how strongly the axis organizes a head's write (expression), not whether the answer depends on the head "
                  "(reliance); z and its parts (which can cancel) describe the write. To find the heads the output uses, run an intervention "
                  "(patching or ablation); among rung's outputs the class-mean share tracks that best (a mean screen)")
     return lines
+
+
+def _orders_text(axes_, k_orders):
+    """How a battery's order averages were taken, axis by axis: exact over every order, or k random orders."""
+    ex = [n for n, a_ in axes_.items() if any(l_.get("orderavg_method") == "exact" for l_ in a_["layers"])]
+    if not ex:
+        return f"{k_orders} random"
+    if len(ex) == len(axes_):
+        return f"every order, exact ({k_orders} random as a check)"
+    return f"every order, exact, on {', '.join(ex)}; {k_orders} random on the others"
 
 
 def _headline(d, kind, base=None):
@@ -1855,7 +2077,9 @@ def _headline(d, kind, base=None):
         rows += [("model", f"{d.get('model')}" + (f" @ {d['revision']}" if d.get("revision") else "")
                   + (f", untrained (seed {d['untrained_seed']})" if d.get("untrained_seed") is not None else "")),
                  ("axis", f"{d.get('axis')}: {len(d.get('classes', []))} classes, {d.get('n_prompts')} prompts"),
-                 ("label permutations per head", f"{d.get('n_perm')} (each with {d.get('k_orders')} random class orders)"),
+                 ("label permutations per head", f"{d.get('n_perm')} (each read over "
+                  + ("every class order)" if (d.get("heads") or [{}])[0].get("orderavg_method") == "exact"
+                     else f"{d.get('k_orders')} random class orders)")),
                  ("seeds", "the paper's (Appendix I)" if d.get("paper_seeds") else "default")]
         for k_, v in d.items():
             if k_.startswith("AUC_") and not k_.endswith("_null"):
@@ -1878,7 +2102,8 @@ def _headline(d, kind, base=None):
         axes_ = d["axes"] if "axes" in d else {"battery": d}
         rows += [("model", f"{d.get('model')}" + (f" @ {d['revision']}" if d.get("revision") else "")),
                  ("axes", ", ".join(axes_)), ("layers", str(max(len(a_["layers"]) for a_ in axes_.values()))),
-                 ("label permutations per layer", str(d.get("n_perm"))), ("random class orders", str(d.get("k_orders")))]
+                 ("label permutations per layer", str(d.get("n_perm"))),
+                 ("class orders", _orders_text(axes_, d.get("k_orders")))]
         return rows
     se = d.get("theta_floor_se")
     rows.append(("theta_obs = floor + shift", f"{d['theta_obs']:+.3f} = {d['theta_floor']:+.3f} {'-' if d['delta'] < 0 else '+'} {abs(d['delta']):.3f}"))
@@ -1895,7 +2120,9 @@ def _headline(d, kind, base=None):
                      f"z = {d['z']:+.1f}, two-sided p = {d['p_two']:.3f} ({d['n_perm']} permutations; p cannot fall below "
                      f"{1.0 / (d['n_perm'] + 1):.3f})"))
     if "delta_orderavg" in d and np.isfinite(d["delta_orderavg"]):
-        txt = f"{d['delta_orderavg']:+.3f} (SD over {d.get('k_orders')} random orders {d['delta_orderavg_sd']:.3f})"
+        txt = (f"{d['delta_orderavg']:+.3f} (over all {d['n_orders_averaged']:,} class orders, exact; SD over orders {d['delta_orderavg_sd']:.3f})"
+               if d.get("orderavg_method") == "exact" else
+               f"{d['delta_orderavg']:+.3f} (SD over {d.get('k_orders')} random orders {d['delta_orderavg_sd']:.3f})")
         if "p_two_orderavg" in d:
             txt += f", p = {d['p_two_orderavg']:.3f}"
         rows.append(("order-averaged shift", txt))
@@ -2130,6 +2357,10 @@ def _traces_gram(K, idx, lab):
 
 def logterms(t):
     b1, w1, b2, w2, x = t
+    if not (w1 > 0 and w2 > 0):
+        # a subset whose every class holds one sample (a floor draw of few rows among many classes) has no within-class part
+        raise _Undefined("a floor draw holds no two samples of one class, so its within-class part is undefined (many classes "
+                         "against few rows per rung: use rungs with several samples per class, --rungs, or fewer classes)")
     return {"lt": 2 * np.log(b1 + w1), "lw2": np.log(w2), "lb": np.log1p(b2 / w2), "lbx": np.log1p((b2 + 2 * x) / w2),
             "ld": 2 * np.log(w1) - np.log(w2), "tb": 2 * np.log1p(b1 / w1), "lw1": 2 * np.log(w1),
             "pr": (b1 + w1) ** 2 / (b2 + w2 + 2 * x), "traces": [float(v) for v in t]}
@@ -2417,8 +2648,8 @@ def within_arm(X, labels, halves="oddeven", n_perm=200, time_blocks=None, n_null
             return Kh - P @ P.T
         obs = _gram_shift(removed(yh), yh, nc, bc, n_null, seed)
         Q = _mean_span(Xh, yh, nc)
-        mf = decompose(Xh - (Xh @ Q) @ Q.T, yh, n_null=n_null, seed=seed, floor_by_rung=True, bin_counts=bc, workers=workers)
-        raw = decompose(Xh, yh, n_null=n_null, seed=seed, floor_by_rung=True, bin_counts=bc, workers=workers)
+        mf = decompose(Xh - (Xh @ Q) @ Q.T, yh, n_null=n_null, seed=seed, floor_by_rung=True, bin_counts=bc, workers=workers, n_bias=0)
+        raw = decompose(Xh, yh, n_null=n_null, seed=seed, floor_by_rung=True, bin_counts=bc, workers=workers, n_bias=0)
         for tag, d in (("meanfree", mf), ("raw", raw)):
             if d is None or d.get("undefined"):
                 res[tag] = {"undefined": (d or {}).get("undefined", "fewer than three rungs of ten samples")}
@@ -2473,6 +2704,108 @@ def within_arm(X, labels, halves="oddeven", n_perm=200, time_blocks=None, n_null
             if len(ps) == len(ok):
                 out[f"p_one_{name}_both_halves"] = max(ps)      # a claim on both halves is a conjunction: the larger p
     return out
+
+
+def drift_check(X, labels, times=None, n_splits=20, seed=0, n_floor_draws=20, bin_counts=None, workers=1, flag_z=2.0, order=None):
+    """Does the reading drift within the session? The rows' time order comes from `times` (each row's start, or an n x 2
+    array of [start, stop]) or, without them, from the row order. Three statistics are read on each half of a split: the
+    declared-order shift and the order-averaged shift (zoom, its own floor), and the within arm's mean-free shift (the
+    declared ladder with the half's class-mean span removed, within_arm's statistic). Splits: early vs late (the first and
+    second half in time), alternate rows in time (the odd/even halves of within_arm), and n_splits random interleaved splits, each consecutive pair
+    of rows in time dealt one to each half at random. Interleaved halves spread the session's time over both halves, so the SD
+    of their late-minus-early analogue over the random splits is a comparison spread for a session without drift; a
+    statistic is flagged when |late - early| exceeds flag_z spreads (a two-spread heuristic; its level is the measured one). On 200 stationary synthetic sessions (8 classes of 40,
+    20 splits) the declared shift, the order-averaged shift and the mean-free shift flagged 8.5%, 5.0% and 6.0% of the time
+    (z SD 1.12, 1.02, 1.09); with each class's stretch growing over the session (1 + 1 to 1 + 4) the order-averaged shift
+    flagged 50 of 50 (mean z 7.5) and the two declared-ladder statistics 18%, whose one path's spread hides it at this size
+    (scripts_canonical/drift_calibration.py). A flag says the early and late halves differ by more than interleaved halves do,
+    possible drift or slow state in the reading (read the time-blocked null, rung data --time-blocks, and report early and late). Every half needs at least
+    two rows of every class. seed sets the floors (the same for every half) and the random splits (stream [seed, 3])."""
+    X = np.asarray(X, np.float64); labels = np.asarray(labels)
+    if not np.all(np.isfinite(X)):
+        raise ValueError("drift_check: X holds NaN or inf")
+    n = len(labels)
+    classes = np.unique(labels)
+    lab = np.searchsorted(classes, labels); nc = len(classes)
+    if times is not None:
+        t = np.asarray(times, np.float64)
+        t = t[:, 0] if t.ndim == 2 else t.ravel()
+        if t.shape != (n,):
+            raise ValueError(f"times must hold one start (or [start, stop]) per row ({n}); got {np.asarray(times).shape}")
+        if not np.all(np.isfinite(t)):
+            raise ValueError("drift_check: times hold NaN or inf")
+        tord = np.argsort(t, kind="stable")      # rows in time order, so that how they were stored cannot move a floor draw
+        X, lab = X[tord], lab[tord]
+    rank = np.arange(n)
+    bc = _rung_classes(nc, bin_counts)
+    exact_ok = nc <= EXACT_ORDERS_MAX_CLASSES
+    rng = np.random.default_rng([seed, 3])
+    splits = {"early_late": (rank >= n // 2).astype(int), "alternate": rank % 2}
+    # each consecutive pair in time (ranks 2j, 2j + 1) dealt one to each half by a coin; an odd last row goes by its own coin
+    rand = [(rank % 2) ^ rng.integers(0, 2, size=(n + 1) // 2)[rank // 2] for _ in range(n_splits)]   # every coin first
+
+    def half_stats(sel):
+        yh = lab[sel]
+        if np.bincount(yh, minlength=nc).min() < 2:
+            return None
+        import warnings
+        with warnings.catch_warnings():
+            # zoom's 'classes cluster in time' advice points at this check; inside it, it says nothing
+            warnings.filterwarnings("ignore", message="zoom: consecutive rows share a class")
+            zr = zoom(X[sel], yh, n_perm=0, k_orders=0 if exact_ok else 50, seed=seed, n_floor_draws=n_floor_draws,
+                      bin_counts=bc, workers=workers, order_average="exact" if exact_ok else "random",
+                      order=None if order is None else declared_order(np.arange(nc), [int(np.searchsorted(classes, o)) for o in order]))
+        Xh = X[sel] - X[sel].mean(0)
+        P = Xh @ _mean_span(Xh, yh, nc)
+        mf = _gram_shift(Xh @ Xh.T - P @ P.T, yh, nc, bc, n_floor_draws, seed)
+        return {"shift": zr["delta"], "orderavg": zr["delta_orderavg"], "meanfree": mf}
+
+    def split_diff(h):
+        a, b = half_stats(np.where(h == 0)[0]), half_stats(np.where(h == 1)[0])
+        return (a, b) if a is not None and b is not None else (None, None)
+    el = split_diff(splits["early_late"]); oe = split_diff(splits["alternate"])
+    rr = [split_diff(h) for h in rand]
+    out = {"order": "sample times" if times is not None else "row order", "n_splits": int(n_splits), "flag_z": float(flag_z),
+           "n_floor_draws": int(n_floor_draws), "seed": int(seed), "stats": {}}
+    if el[0] is None:
+        out["undefined"] = "a class has fewer than two rows in the early or the late half"
+        return out
+    for key in ("shift", "orderavg", "meanfree"):
+        diffs = [b[key] - a[key] for a, b in rr if a is not None]
+        d = el[1][key] - el[0][key]
+        spread = float(np.std(diffs, ddof=1)) if len(diffs) > 1 else float("nan")
+        z = d / spread if spread > 0 else float("nan")
+        out["n_splits_used"] = len(diffs)
+        out["stats"][key] = {"early": el[0][key], "late": el[1][key], "late_minus_early": d,
+                             "alternate_first": oe[0][key] if oe[0] else float("nan"),
+                             "alternate_second": oe[1][key] if oe[0] else float("nan"),
+                             "alternate_difference": (oe[1][key] - oe[0][key]) if oe[0] else float("nan"),
+                             "interleaved_differences": diffs, "spread": spread, "z": z,
+                             "flag": bool(np.isfinite(z) and abs(z) > flag_z)}
+    out["flagged"] = [k for k, v in out["stats"].items() if v["flag"]]
+    return out
+
+
+def _drift_lines(dr):
+    if dr.get("undefined"):
+        return [f"drift check: undefined: {dr['undefined']}"]
+    names = {"shift": "declared shift", "orderavg": "order-averaged shift", "meanfree": "mean-free shift (within arm)"}
+    parts = [f"{names[k]} early {v['early']:+.3f}, late {v['late']:+.3f}: late - early {v['late_minus_early']:+.3f} against "
+             f"{v['spread']:.3f} for interleaved halves (z {v['z']:+.1f}; alternate rows {v['alternate_difference']:+.3f})"
+             + (" FLAGGED" if v["flag"] else "") for k, v in dr["stats"].items()]
+    if all(not np.isfinite(v["spread"]) for v in dr["stats"].values()):
+        return [f"drift check (rows in {dr['order']}): too few valid interleaved splits ({dr.get('n_splits_used', 0)}) to assess the "
+                "early-late difference"]
+    txt = (f"drift check (rows in {dr['order']}; spread = SD of the late-minus-early difference over {dr.get('n_splits_used', dr['n_splits'])} "
+           "random interleaved splits" + (f" of {dr['n_splits']}, the others leaving a class with fewer than two rows in a half"
+                                          if dr.get("n_splits_used", dr["n_splits"]) < dr["n_splits"] else "") + "): " + "; ".join(parts))
+    if dr["flagged"]:
+        txt += ("; the flagged statistics differ between early and late by more than interleaved halves do, possible drift or slow "
+                "state (the flag's measured false rate is 5.0 to 8.5% per statistic): read the time-blocked null (--time-blocks) and "
+                "report early and late")
+    else:
+        txt += f"; no statistic differs between early and late beyond {dr['flag_z']:g} interleaved spreads"
+    return [txt]
 
 
 def bias_null(X, labels, mode="shape", seed=0):
@@ -2536,7 +2869,10 @@ def _undefined_split(reason):
     return {"undefined": reason, "delta": nan, "delta_split_free": {"D": nan, "Tb": nan, "Cb": nan, "Cx": nan}}
 
 
-def decompose(X, labels, order=None, bin_counts=None, n_null=20, seed=42, min_size=10, n_shuffle=0, n_bias=0,
+BIAS_AUTO_DRAWS = 10
+
+
+def decompose(X, labels, order=None, bin_counts=None, n_null=20, seed=42, min_size=10, n_shuffle=0, n_bias="auto",
               floor_by_rung=False, fast=None, workers=1):
     """The exact split of every rung's deficit and of the shift for the ladder that accumulates the classes in
     `order` (default: sorted labels) with `bin_counts` classes per rung (default: the paper's ladder). Returns the
@@ -2544,6 +2880,12 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=20, seed=42, min_si
     checks, the sign-law readout of the full set, with n_shuffle > 0 the label-permutation baseline and the excess
     over it, and with n_bias > 0 the same split on bias_null(mode='shape') surrogates (seeds 0..n_bias-1) and the
     data net of it: the within part counts as class-dependent fluctuation structure only beyond that null.
+    n_bias='auto' (default since rung 1.14): BIAS_AUTO_DRAWS surrogates when any class holds no more samples than its own
+    fluctuation dimension (class_pr(estimate='split'), the sampling check of rung summarize; a class of fewer than four samples,
+    which that estimate cannot read, counts as below), none otherwise. Below that
+    count the raw split moves weight from the within-class part to the class means by its own sampling, even with no
+    structure (Appendix K; at 16-32 prompts per class this misread a language model's topic lift), so the split is then
+    read net of the surrogate; `bias_auto` records the check. The raw split stays in delta_split_free either way.
     floor_by_rung draws the floor rung by rung, as the paper's generators do (see zoom). fast and workers as in zoom: fast
     computes every subset's traces from the rows' Gram matrix (exact in algebra, O(m^2 C) instead of O(m^2 d)) and reads a
     floor draw of every row off the top rung (the same rows in another order); None means False with floor_by_rung, True
@@ -2573,7 +2915,10 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=20, seed=42, min_si
             return _undefined_split(f"the first {k} classes of the declared order ({order[:k]}) have no within-class variance, so the "
                                     "split is undefined at that rung; put a class with variance first or drop the constant classes")
     gram = (X @ X.T) if fast else None           # the rows' Gram, shared by the split and its label shuffles
-    out = _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size, floor_by_rung, workers, fast, gram)
+    try:
+        out = _decompose_once(X, labels, order, bin_counts, n_null, seed, min_size, floor_by_rung, workers, fast, gram)
+    except _Undefined as e:
+        return _undefined_split(str(e))
     if out is None:
         return out
     out["arithmetic"] = "fast" if fast else "rows"
@@ -2581,6 +2926,15 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=20, seed=42, min_si
     out["class_pr"] = class_pr(X, labels)
     out["class_pr_split"] = class_pr(X, labels, estimate="split")
     out["class_n"] = {k: int(np.sum(labels == c)) for k, c in zip(out["class_pr"], np.unique(labels))}   # keyed as class_pr
+    if isinstance(n_bias, str):
+        if n_bias != "auto":
+            raise ValueError("decompose: n_bias is 'auto' or a number of surrogates")
+        # a class too small for the split estimate (fewer than four samples) is sampled below any dimension it could have
+        tiny = sum(out["class_n"][k] < 4 for k in out["class_pr_split"])    # NaN from no variance is not a sampling question
+        below = tiny + sum(out["class_n"][k] <= d for k, d in out["class_pr_split"].items() if np.isfinite(d))
+        n_bias = BIAS_AUTO_DRAWS if below else 0
+        out["bias_auto"] = {"fired": bool(below), "classes_at_or_below": int(below), "classes_too_small": int(tiny),
+                            "n_classes": len(out["class_n"]), "n_bias": int(n_bias)}
     if n_bias > 0:
         bias = []
         for s_ in range(n_bias):
@@ -2589,7 +2943,12 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=20, seed=42, min_si
             except ValueError as e:                     # no surrogate keeps every class's variance: the null is undefined
                 out["bias_null"] = {"undefined": str(e)}
                 break
-            r = _decompose_once(Y, ly, order, bin_counts, n_null, seed, min_size, floor_by_rung, workers, fast)
+            try:
+                r = _decompose_once(Y, ly, order, bin_counts, n_null, seed, min_size, floor_by_rung, workers, fast)
+            except (_Undefined, ZeroDivisionError, FloatingPointError) as e:      # a surrogate rung with no within-class variance
+                out["bias_null"] = {"undefined": f"a surrogate's split is undefined ({e})"}
+                bias = []
+                break
             if r is not None:
                 bias.append(r)
         if bias:
@@ -2604,8 +2963,11 @@ def decompose(X, labels, order=None, bin_counts=None, n_null=20, seed=42, min_si
     shuf = []
     for s in range(n_shuffle):
         srng = np.random.default_rng(700 + s)
-        r = _decompose_once(X, labels[srng.permutation(len(labels))], order, bin_counts, n_null, seed, min_size, floor_by_rung,
-                            workers, fast, gram)
+        try:
+            r = _decompose_once(X, labels[srng.permutation(len(labels))], order, bin_counts, n_null, seed, min_size, floor_by_rung,
+                                workers, fast, gram)
+        except _Undefined:                          # this shuffle's floor met the same undefined draw: it adds no baseline
+            r = None
         if r is not None:
             shuf.append(r)
     if not shuf:
@@ -2735,7 +3097,14 @@ def _print_decomposition(r):
         return
     f = r["delta_split_free"]
     cm = f["Tb"] + f["Cb"] + f["Cx"]
-    print(f"decompose (Section 5): within-class part D {f['D']:+.3f} + class-mean part (Tb + Cb + Cx) {cm:+.3f} = shift {r['delta']:+.3f}")
+    if (r.get("bias_auto") or {}).get("fired") and "net_of_bias" in r:
+        nf = r["net_of_bias"]["delta_split_free"]
+        print(f"decompose (Section 5), net of the shape surrogate: within-class part D {nf['D']:+.3f} + class-mean part "
+              f"{nf['Tb'] + nf['Cb'] + nf['Cx']:+.3f} = {r['net_of_bias']['delta']:+.3f}; read this split: "
+              f"{r['bias_auto']['classes_at_or_below']} of {r['bias_auto']['n_classes']} classes hold no more samples than their own "
+              "dimension, where the raw split below moves weight to the class means by its own sampling")
+    print(f"decompose (Section 5){', raw' if (r.get('bias_auto') or {}).get('fired') and 'net_of_bias' in r else ''}: within-class part D "
+          f"{f['D']:+.3f} + class-mean part (Tb + Cb + Cx) {cm:+.3f} = shift {r['delta']:+.3f}")
     print(f"  four terms: trace A {r['delta_split']['A']:+.3f} + pooling P {r['delta_split']['P']:+.3f} + between-class Cb {r['delta_split']['Cb']:+.3f} "
           f"+ coupling Cx {r['delta_split']['Cx']:+.3f}; A + P = D + Tb (Tb {f['Tb']:+.3f}), the within-class scale S {r['delta_scale']:+.3f} cancelling between A and P")
     ex = r.get("excess", {}).get("delta_split")
@@ -3155,7 +3524,7 @@ def account(X, labels, order=None, bin_counts=None, halves=None, seed=0, n_null=
 
     def measured(Xs, lp):
         r = decompose(Xs, lp, order=list(range(K)), bin_counts=tuple(ks_all), n_null=n_null, seed=seed, min_size=min_size,
-                      floor_by_rung=floor_by_rung)
+                      floor_by_rung=floor_by_rung, n_bias=0)
         if r is None:
             raise _Undefined(f"the ladder has fewer than three rungs of {min_size} samples")
         if r.get("undefined"):
@@ -3567,12 +3936,15 @@ def _heads_result(rows, known, meta, n_null_sets=10000):
     return res
 
 
-def head_scores(H, labels, layers, paper_seeds=False, n_perm=100, k_orders=50, n_floor_draws=20, seed=0, split=True):
+def head_scores(H, labels, layers, paper_seeds=False, n_perm=100, k_orders=50, n_floor_draws=20, seed=0, split=True,
+                order_average="auto"):
     """Score every head along the declared axis: the order-averaged shift of its write and its permutation z (each null
     draw averaged over its own random orders), the class-mean variance fraction Tr B / Tr C, and with split the shift's
     within-class and class-mean parts (decompose), which say whether a head scores through its class means or its
     fluctuations. paper_seeds replays Appendix I's run: floor seed 100 layer + head + 1, orders from seed 3801, null draws
-    from seed 4800 (a label permutation, then its own k_orders orders, per draw)."""
+    from seed 4800 (a label permutation, then its own k_orders orders, per draw). order_average as in zoom: 'exact' reads
+    every head and every null draw over all class orders (the classes equal in size, at most ten), so a ranking carries no
+    order sampling; 'auto' (default) is exact there unless paper_seeds; the random draws are made either way."""
     labels = np.asarray(labels)
     classes = np.unique(labels)
     lab = np.searchsorted(classes, labels)
@@ -3580,6 +3952,22 @@ def head_scores(H, labels, layers, paper_seeds=False, n_perm=100, k_orders=50, n
     n = len(lab)
     bc = _rung_classes(nc, None)
     mem = [np.where(lab == c)[0] for c in range(nc)]
+    counts = [len(m) for m in mem]
+    if order_average not in ("auto", "exact", "random"):
+        raise ValueError("order_average is 'auto', 'exact' or 'random'")
+    can = nc <= EXACT_ORDERS_MAX_CLASSES and len(set(counts)) == 1
+    if order_average == "exact" and not can:
+        raise ValueError("head_scores: the exact order average needs classes of equal size and at most "
+                         f"{EXACT_ORDERS_MAX_CLASSES} classes; use order_average='random'")
+    exact = order_average == "exact" or (order_average == "auto" and can and not paper_seeds)
+    if exact:
+        sub_masks, _ = _rung_subsets(nc, bc)
+        U_sub = np.array([[float(mk >> i & 1) for i in range(nc)] for mk in sub_masks])
+        coef = _order_coefficients(counts, bc)
+
+        def oavg(blocks):
+            # equal classes: every order shares the declared floor, so the order average is sum_S a_S log PR(S) - floor
+            return float(coef @ np.log(np.maximum(_union_prs(blocks, U_sub)[0], 1e-9)))
     orng = np.random.default_rng(3801 if paper_seeds else seed + 3801)
     orders = [orng.permutation(nc).tolist() for _ in range(k_orders)]
     nrng = np.random.default_rng(4800 if paper_seeds else seed + 4800)
@@ -3601,13 +3989,18 @@ def head_scores(H, labels, layers, paper_seeds=False, n_perm=100, k_orders=50, n
             # every ladder below is a union of whole classes: class-block sums of the centred Gram give its PRs exactly
             Xg = Xs - Xs.mean(axis=0)
             Kg = Xg @ Xg.T
-            dbar = float(_union_ladder_slopes(_class_blocks(Kg, lab, nc), orders, bc).mean()) - th_f
-            vals = np.array([_union_ladder_slopes(_class_blocks(Kg, pl, nc), os_, bc).mean() - th_f for pl, os_ in null_draws])
+            if exact:
+                dbar = oavg(_class_blocks(Kg, lab, nc)) - th_f
+                vals = np.array([oavg(_class_blocks(Kg, pl, nc)) - th_f for pl, _ in null_draws])
+            else:
+                dbar = float(_union_ladder_slopes(_class_blocks(Kg, lab, nc), orders, bc).mean()) - th_f
+                vals = np.array([_union_ladder_slopes(_class_blocks(Kg, pl, nc), os_, bc).mean() - th_f for pl, os_ in null_draws])
             z = float((dbar - vals.mean()) / vals.std()) if vals.std() > 0 else 0.0
             Xc = X - X.mean(0)
             M = np.stack([X[lab == c].mean(0) for c in range(nc)]) - X.mean(0)
             frac = float((np.bincount(lab) @ (M ** 2).sum(1)) / max((Xc ** 2).sum(), 1e-300))
             row = {"head": f"{l}.{h}", "layer": int(l), "index": int(h), "delta_orderavg": dbar, "z": z,
+                   "orderavg_method": "exact" if exact else "random",
                    "p_two": _null_stats(dbar, vals)[1], "classmean_frac": frac,
                    "norm": float(np.linalg.norm(X, axis=1).mean())}
             if null_draws and (Xc ** 2).sum() > 0:
@@ -3624,10 +4017,17 @@ def head_scores(H, labels, layers, paper_seeds=False, n_perm=100, k_orders=50, n
             elif frac >= 1 - 1e-12:
                 row["flag"] = "constant within every class"
             if split:
-                dc = decompose(X, lab, n_null=10, seed=l * 100 + h + 1, fast=False if paper_seeds else None)
+                # the split net of the shape surrogate when a class holds no more prompts than its own dimension (16 prompts per
+                # name in a head's 64-dimensional write), raw otherwise; the paper's replay keeps the raw split
+                dc = decompose(X, lab, n_null=10, seed=l * 100 + h + 1, fast=False if paper_seeds else None,
+                               n_bias=0 if paper_seeds else "auto")
                 if dc is not None and not dc.get("undefined"):
                     f = dc["delta_split_free"]
                     row.update(within=f["D"], class_mean=f["Tb"] + f["Cb"] + f["Cx"], delta_declared=dc["delta"])
+                    if "net_of_bias" in dc:
+                        nf = dc["net_of_bias"]["delta_split_free"]
+                        row.update(within_raw=row["within"], class_mean_raw=row["class_mean"], within=nf["D"],
+                                   class_mean=nf["Tb"] + nf["Cb"] + nf["Cx"], split="net of the shape surrogate")
             rows.append(row)
         print(f"  layer {l}: top z " + ", ".join(f"{r['head']} {r['z']:+.1f}" for r in sorted(rows[-H.shape[1]:], key=lambda r: -r["z"])[:3]),
               flush=True)
@@ -3655,6 +4055,195 @@ def llm_heads(model_name, axis_file, device="cpu", revision=None, max_len=128, d
         _json.dump(res, open(out_path, "w"), indent=1)
         print(f"wrote {out_path}", flush=True)
     return res
+
+
+# ---- Classes from a continuous variable (a drift direction, a position, time): cells, origins, within-cell tuning ----
+
+def cells_from_continuous(phi, cells=8, rule="width", cyclic=False, period=2 * np.pi, origin=0.0, guard=0.0):
+    """Cut a continuous variable into `cells` classes; returns one class per sample, -1 for a sample the guard drops.
+    rule 'width': cells of equal width; cyclic: arcs of period / cells, the first starting at `origin`, by np.digitize of
+    (phi - origin) mod period on equally spaced edges (the paper's direction classes: rule 'width', cyclic, period 2 pi,
+    origin 0, eight 45-degree bins from 0 degrees, cr_order_and_withinbin_controls.bins); not cyclic: [min, max] cut into
+    equal widths. rule 'count': cells of equal count by rank (an adaptive 1-D tessellation, narrow where samples are dense);
+    cyclic, the ranks of (phi - origin) mod period. origin turns the walls of a cyclic axis; a linear axis has one cut
+    (origin 0). guard: a sample within guard x cell width of a wall is dropped (-1), the check that tuning leaking across
+    the walls does not carry a shift (for rule 'count', in rank units). How a variable is cut is part of the probe: report
+    the cut beside every shift."""
+    phi = np.asarray(phi, np.float64).ravel()
+    if not np.all(np.isfinite(phi)):
+        raise ValueError("cells_from_continuous: the variable holds NaN or inf; drop those samples first")
+    K = int(cells)
+    if K < 2:
+        raise ValueError("cells_from_continuous: cells must be at least 2")
+    if rule not in ("width", "count"):
+        raise ValueError("cells_from_continuous: rule is 'width' or 'count'")
+    if not 0.0 <= guard < 0.5:
+        raise ValueError("cells_from_continuous: guard is a fraction of a cell width in [0, 0.5)")
+    if not cyclic and origin != 0:
+        raise ValueError("cells_from_continuous: origin turns the walls of a cyclic axis; a linear axis has one cut")
+    if cyclic and not (np.isfinite(period) and period > 0):
+        raise ValueError(f"cells_from_continuous: a cyclic axis needs a positive period ({period} given)")
+    n = len(phi)
+    if rule == "width":
+        if cyclic:
+            x, lo, w = np.mod(phi - origin, period), 0.0, period / K
+            edges = np.linspace(0, period, K + 1)
+        else:
+            lo, hi = float(phi.min()), float(phi.max())
+            if not hi > lo:
+                raise ValueError("cells_from_continuous: the variable is constant")
+            x, w = phi, (hi - lo) / K
+            edges = np.linspace(lo, hi, K + 1)
+        lab = np.clip(np.digitize(x, edges) - 1, 0, K - 1)
+        frac = (x - lo) / w - lab
+    else:
+        key = np.mod(phi - origin, period) if cyclic else phi
+        rk = np.empty(n); rk[np.argsort(key, kind="stable")] = np.arange(n)
+        u = rk * K / n
+        lab = np.floor(u).astype(int)
+        frac = u - lab
+    lab = np.asarray(lab, dtype=int)
+    if guard > 0:
+        lab = np.where((frac < guard) | (frac > 1 - guard), -1, lab)
+    return lab
+
+
+def residualize_within_cells(X, labels, sub):
+    """Remove each sample's held-out sub-cell mean and add its class mean back (the paper's within-bin control,
+    scripts_canonical/cr_order_and_withinbin_controls.remove_withinbin): x -> x - mean(sub-cell without x) + class mean, so
+    the sub-cell-mean part of the tuning across each cell leaves the within-class covariance (finer tuning inside a sub-cell
+    stays). sub: one sub-cell id per sample, nested in the classes (cells_from_continuous at cells x subcells). A sub-cell with
+    one sample has no held-out mean: it is referred to its class's held-out mean (the paper's generator left such a sample
+    unsubtracted; it matches when every sub-cell holds two or more, as in all eight grating recordings), and each class is
+    then recentred on its own mean, so the class means are kept exactly. Returns (Y, share): share = the part of
+    the within-class sum of squares that the sub-cell means carry beyond noise, (B - (S - C) s2) / W, with W the
+    within-class and B the between-sub-cell sum of squares, S sub-cells in C classes and s2 the pooled within-sub-cell
+    variance (an analysis-of-variance estimate, near 0 without tuning inside the cells)."""
+    X = np.asarray(X, np.float64); labels = np.asarray(labels); sub = np.asarray(sub)
+    Y = X.copy()
+    loo_cls = np.empty_like(X)
+    for c in np.unique(labels):
+        m = labels == c; nb = int(m.sum())
+        if nb < 2:
+            raise ValueError("residualize_within_cells: every class needs two samples")
+        loo_cls[m] = (X[m].sum(0) - X[m]) / (nb - 1)
+    ss_w = ss_b = 0.0
+    for c in np.unique(labels):
+        m = labels == c
+        ss_w += float(((X[m] - X[m].mean(0)) ** 2).sum())
+    subs = np.unique(sub)
+    for b in subs:
+        m = sub == b; nb = int(m.sum())
+        if len(np.unique(labels[m])) != 1:
+            raise ValueError("residualize_within_cells: sub-cells must be nested in the classes")
+        ref = (X[m].sum(0) - X[m]) / (nb - 1) if nb >= 2 else loo_cls[m]
+        Y[m] = X[m] - ref
+        cm = X[labels == labels[m][0]].mean(0)
+        ss_b += nb * float(((X[m].mean(0) - cm) ** 2).sum())
+    n_c = len(np.unique(labels)); dof = len(X) - len(subs)
+    s2 = (ss_w - ss_b) / dof if dof > 0 else float("nan")
+    share = (ss_b - (len(subs) - n_c) * s2) / ss_w if ss_w > 0 else float("nan")
+    for c in np.unique(labels):
+        m = labels == c
+        Y[m] += X[m].mean(0) - Y[m].mean(0)       # Y[m].mean(0) is 0 to rounding unless a singleton sub-cell moved it
+    return Y, float(share)
+
+
+def continuous(X, phi, cells=8, rule="width", cyclic=False, period=2 * np.pi, origin=0.0, n_origins=None, guard=0.0,
+               residualize=False, subcells=6, n_perm=500, k_orders=50, seed=0, n_floor_draws=20, floor_seed=None,
+               floor_by_rung=False, split=True, fast=None, workers=1, standardize=False):
+    """rung on a continuous variable: classes from `cells` cells (cells_from_continuous), read at n_origins wall positions
+    turned through one cell in equal steps (default `cells` origins; cyclic only: a linear axis is read at its one cut).
+    The walls' position is a convention of the probe, and the declared order of a cyclic axis has no canonical start, so
+    the shift at one origin is one draw from the rotations: the result stores every origin's declared-order shift,
+    order-averaged shift and (split) within-class part, the reading prints their range, mean and spread over origins, and the first origin's full
+    reading (with its permutation null, n_perm draws; the other origins carry no null; rung data reads the first cut through its
+    usual pipeline, null included, and calls this with n_perm=0 for the table over origins). residualize: each sample's held-out sub-cell
+    mean removed, class mean kept (residualize_within_cells, subcells per cell, the sub-cells turning with the walls), so
+    the sub-cell-mean part of the tuning inside a cell leaves the within-class covariance; it reports the split before and after at the first origin
+    and the within-cell tuning share. Returns {'origins': [...], 'summary': {...}, 'first': the first origin's zoom result
+    (with 'decompose' when split)}."""
+    X = np.asarray(X, np.float64); phi = np.asarray(phi, np.float64).ravel()
+    if X.shape[0] != len(phi):
+        raise ValueError(f"the continuous variable has {len(phi)} values for {X.shape[0]} samples")
+    K = int(cells)
+    n_or = (K if cyclic else 1) if n_origins is None else int(n_origins)
+    if n_or < 1:
+        raise ValueError(f"continuous: n_origins must be at least 1 ({n_or} given)")
+    if not cyclic and n_or != 1:
+        raise ValueError("continuous: origins turn the walls of a cyclic axis; a linear axis is read at its one cut (n_origins=1)")
+    step = (period / K) / n_or                  # both rules turn the start angle; 'count' then cuts by rank from it
+    zkw = dict(k_orders=k_orders, seed=seed, n_floor_draws=n_floor_draws, floor_seed=floor_seed, floor_by_rung=floor_by_rung,
+               fast=fast, workers=workers, standardize=standardize)
+    dkw = dict(n_null=n_floor_draws, seed=floor_seed if floor_seed is not None else seed, floor_by_rung=floor_by_rung, fast=fast,
+               workers=workers)
+    rows, first = [], None
+    for j in range(n_or):
+        o = origin + j * step
+        lab = cells_from_continuous(phi, K, rule, cyclic, period, o, guard)
+        keep = lab >= 0
+        Xj, yj = X[keep], lab[keep]
+        row = {"origin": float(o), "n": int(keep.sum()), "class_counts": np.bincount(yj, minlength=K).tolist()}
+        if residualize:
+            # sub-cells turn with the walls; keyed by (class, sub-cell) so they nest in the classes even where a sample sits on a wall
+            sub = yj * (K * int(subcells)) + cells_from_continuous(phi, K * int(subcells), rule, cyclic, period, o, 0.0)[keep]
+            Xr, share = residualize_within_cells(Xj, yj, sub)
+            row["within_cell_tuning_share"] = share
+            if j == 0 and split:
+                d0 = decompose(_zscore(Xj) if standardize else Xj, yj, **dkw)
+                if d0 is not None and not d0.get("undefined"):
+                    row["before"] = {"delta": d0["delta"], "within": d0["delta_split_free"]["D"]}
+            Xj = Xr
+        zr = zoom(Xj, yj, n_perm=n_perm if j == 0 else 0, **zkw)
+        row.update(delta=zr["delta"], delta_orderavg=zr["delta_orderavg"], p_two=zr.get("p_two"))
+        if split:
+            d = decompose(_zscore(Xj) if standardize else Xj, yj, **dkw)
+            if d is not None and not d.get("undefined"):
+                f = d["delta_split_free"]
+                row.update(within=f["D"], class_means=f["Tb"] + f["Cb"] + f["Cx"])
+                if "net_of_bias" in d:
+                    row["within_net"] = d["net_of_bias"]["delta_split_free"]["D"]
+                if j == 0:
+                    zr["decompose"] = d
+        if j == 0:
+            first = zr
+        rows.append(row)
+    summ = {}
+    for key in ("delta", "delta_orderavg", "within", "class_means", "within_net"):
+        v = np.array([r_[key] for r_ in rows if key in r_ and r_[key] is not None and np.isfinite(r_[key])])
+        if len(v):
+            v0 = rows[0].get(key)
+            summ[key] = {"first": float(v0) if v0 is not None and np.isfinite(v0) else float("nan"), "mean": float(v.mean()),
+                         "sd": float(v.std()), "min": float(v.min()), "max": float(v.max()), "n_origins": int(len(v))}
+    return {"cells": K, "rule": rule, "cyclic": bool(cyclic), "period": float(period) if cyclic else None, "origin": float(origin),
+            "n_origins": n_or, "step": float(step) if cyclic else None, "guard": float(guard), "residualize": bool(residualize),
+            "subcells": int(subcells) if residualize else None, "origins": rows, "summary": summ, "first": first}
+
+
+def _continuous_lines(c):
+    deg = (lambda v: f"{np.degrees(v):.1f} deg") if c.get("period") and abs(c["period"] - 2 * np.pi) < 1e-12 else (lambda v: f"{v:.4g}")
+    cut = (f"{c['cells']} {'equal-width' if c['rule'] == 'width' else 'equal-count'} {'arcs' if c['cyclic'] else 'cells'}"
+           + (f", first wall at {deg(c['origin'])}" if c["cyclic"] else "") + (f", guard {c['guard']:g} of a cell" if c["guard"] else "")
+           + (f", within-cell tuning removed ({c['subcells']} held-out sub-cells per cell)" if c["residualize"] else ""))
+    lines = [f"continuous variable cut into {cut}"]
+    s = c["summary"]
+    if c["n_origins"] > 1 and not s:
+        lines.append(f"over {c['n_origins']} wall positions: no origin gives a reading (each leaves too few classes or no variance)")
+    elif c["n_origins"] > 1:
+        part = lambda k, name: (f"{name} {s[k]['min']:+.3f} to {s[k]['max']:+.3f} (mean {s[k]['mean']:+.3f}, SD {s[k]['sd']:.3f}"
+                                + (f", {s[k]['n_origins']} origins with a reading" if s[k]["n_origins"] < c["n_origins"] else "") + ")")
+        parts = [part(k, name) for k, name in (("delta", "declared-order shift"), ("delta_orderavg", "order-averaged"),
+                                               ("within", "within-class part (raw split)"),
+                                               ("within_net", "within-class part net of the shape surrogate")) if k in s]
+        lines.append(f"over {c['n_origins']} wall positions turned through one cell in steps of {deg(c['step'])}: " + ", ".join(parts)
+                     + "; the first origin's declared-order shift is one draw from the rotations, so report "
+                     + ("the order-averaged shift or " if "delta_orderavg" in s else "") + "the mean over origins beside it")
+    r0 = c["origins"][0]
+    if c["residualize"] and "before" in r0 and "within" in r0:
+        lines.append(f"within-cell tuning: held-out sub-cell means explain {100 * r0['within_cell_tuning_share']:.1f}% of the within-class "
+                     f"sum of squares beyond noise; removing it moves the shift {r0['before']['delta']:+.3f} -> {r0['delta']:+.3f} and the "
+                     f"within-class part {r0['before']['within']:+.3f} -> {r0['within']:+.3f} (first origin)")
+    return lines
 
 
 # ---- Loading recordings: arrays, MATLAB files and Neurodata Without Borders (NWB) ----
@@ -3912,7 +4501,7 @@ def _main():
     d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks that the declared order's first half holds one member of each pair and reports late_fraction as the share of the climb left after half the circle (Appendices E and K)")
     d.add_argument("--decompose", action="store_true", help="the shift split into its within-class part D and class-mean part Tb + Cb + Cx (exact four-term split, Section 5, Appendix K), with the sign law of Eq. 3")
     d.add_argument("--n-shuffle", type=int, default=5, help="with --decompose: label permutations for each term's sampling baseline (0 disables)")
-    d.add_argument("--n-bias", type=int, default=0, help="with --decompose: surrogates of the finite-sample bias null (class means kept, one covariance shape for every class)")
+    d.add_argument("--n-bias", default="auto", help="with --decompose: surrogates of the finite-sample bias null (class means kept, one covariance shape for every class), and the split read net of them; auto: 10 when any class holds no more samples than its own fluctuation dimension or is too small to estimate it (fewer than four), none otherwise")
     d.add_argument("--arm", choices=["between", "within", "both"], default=None, help="the paper's two arms: between = the class means alone (their share of the variance, Tr B / Tr C); within = the shift with each half's own class-mean span removed, on label-blind halves (Appendix K's mean-free design); both. Their nulls: --arm-null")
     d.add_argument("--arm-null", choices=["calibrated", "permutation"], default="calibrated", help="the arms' nulls: calibrated = a wild bootstrap of each class's residuals for the between arm and Freedman-Lane (fitted class means + permuted residuals) for the within arm, each valid under its own claim; permutation = the paper's label permutations (rung 1.12; --paper-floor implies it)")
     d.add_argument("--arm-halves", default="oddeven", help="with --arm within: oddeven (row parity), time (first and second half of the rows), or a file of 0/1 per row")
@@ -3922,6 +4511,17 @@ def _main():
     d.add_argument("--account-halves", default=None, help="with --account: one 0/1 per sample for sigma's split halves (default: a random half of each class)")
     d.add_argument("--no-heldout", action="store_true", help="with --account: skip the held-out arm (sigma and moments from one half, the part measured on the other)")
     d.add_argument("--time-blocks", default=None, help="rows are in acquisition order: an integer E cuts them into contiguous blocks of E rows, or a file gives one block id per row; adds the null that permutes labels only within blocks")
+    d.add_argument("--continuous", default=None, help="one value per sample of a continuous variable (a direction, a position, time) to cut into classes in place of labels: --cells, --cell-rule, --cyclic, --origins, --guard, --within-cell")
+    d.add_argument("--cells", type=int, default=8, help="with --continuous: the number of classes")
+    d.add_argument("--cell-rule", choices=["width", "count"], default="width", help="with --continuous: cells of equal width, or of equal count (narrow where samples are dense)")
+    d.add_argument("--cyclic", action="store_true", help="with --continuous: the variable is an angle (period --period); cells are arcs and the walls can turn")
+    d.add_argument("--period", type=float, default=2 * np.pi, help="with --cyclic: the period (2 pi for radians, 360 for degrees)")
+    d.add_argument("--origin", type=float, default=0.0, help="with --cyclic: the first wall, in the variable's units")
+    d.add_argument("--origins", type=int, default=None, help="with --cyclic: wall positions turned through one cell in equal steps, each read (default --cells; 1 reads the first only)")
+    d.add_argument("--guard", type=float, default=0.0, help="with --continuous: drop samples within this fraction of a cell width from a wall")
+    d.add_argument("--within-cell", choices=["keep", "residualize"], default="keep", help="with --continuous: residualize removes each sample's held-out sub-cell mean and adds its class mean back (the paper's within-bin control), so the sub-cell-mean part of the tuning inside a cell leaves the within-class covariance")
+    d.add_argument("--subcells", type=int, default=6, help="with --within-cell residualize: sub-cells per cell")
+    d.add_argument("--drift-splits", type=int, default=20, help="when --time-blocks or --sample-times say the rows are in time order: the drift check, the shift, the order-averaged shift and the within arm's mean-free shift on early vs late halves against this many random interleaved splits (0 disables)")
     d.add_argument("--cov-floors", action="store_true", help="the principal-angle dissimilarity between classes against its label-blind floor, predicted from the pooled spectrum and the samples' gain kurtosis (Appendix H)")
     d.add_argument("--cov-k", type=int, default=5, help="with --cov-floors: top residual directions per class")
     d.add_argument("--cov-perm", type=int, default=0, help="with --cov-floors: also this many label permutations, to check the predicted floor")
@@ -4109,8 +4709,10 @@ def _main():
     elif a.cmd == "data":
         X = _load_array(a.X)
         X = X.T if a.transpose else X
-        if a.labels is None and not a.candidates:
-            raise SystemExit("rung data needs labels (or --candidates)")
+        if a.labels is None and not a.candidates and not a.continuous:
+            raise SystemExit("rung data needs labels (or --continuous, or --candidates)")
+        if a.labels is not None and a.continuous:
+            raise SystemExit("--continuous builds the classes from the variable: give labels or --continuous, not both")
         labels, label_values = _load_labels(a.labels) if a.labels else (None, None)
         if label_values is not None:
             print(f"labels: {len(label_values)} classes coded in sorted order of their values ("
@@ -4148,23 +4750,52 @@ def _main():
         valid = None
         if a.valid:
             valid = _load_array(a.valid).astype(bool).ravel()
+        st = _load_array(a.sample_times).reshape(-1, 2) if a.sample_times else None
+        if st is not None and len(st) != n_rows:
+            raise SystemExit(f"--sample-times has {len(st)} rows for {n_rows} samples")
         if a.invalid_intervals:
-            if not a.sample_times:
+            if st is None:
                 raise SystemExit("--invalid-intervals needs --sample-times (each sample's start and stop)")
-            st = _load_array(a.sample_times).reshape(-1, 2)
             vi = valid_from_intervals(st[:, 0], st[:, 1], _load_array(a.invalid_intervals))
             valid = vi if valid is None else valid & vi
+        cont, sub_all = None, None
+        if a.continuous:
+            # classes from the variable over the valid samples (an equal-count cut ranks those only); the guard's drops join
+            # the validity mask; the table over wall positions reads the valid samples before the guard
+            phi_all = _load_array(a.continuous).astype(np.float64).ravel()
+            if len(phi_all) != n_rows:
+                raise SystemExit(f"--continuous has {len(phi_all)} values for {n_rows} rows of X")
+            if valid is not None and len(valid) != n_rows:
+                raise SystemExit(f"validity mask has {len(valid)} entries for {n_rows} samples")
+            base = valid if valid is not None else np.ones(n_rows, bool)
+            cut = dict(cells=a.cells, rule=a.cell_rule, cyclic=a.cyclic, period=a.period, origin=a.origin)
+            labels = np.full(n_rows, -1)
+            labels[base] = cells_from_continuous(phi_all[base], guard=a.guard, **cut)
+            sub_all = None
+            if a.within_cell == "residualize":
+                sub_all = np.full(n_rows, -1)
+                sub_all[base] = cells_from_continuous(phi_all[base], **{**cut, "cells": a.cells * a.subcells})
+            cont = {"X": X[base], "phi": phi_all[base]}
+            valid = labels >= 0
+            print(f"continuous: {a.cells} classes from {os.path.basename(a.continuous)} ({a.cell_rule}"
+                  + (f", cyclic, period {a.period:g}, first wall {a.origin:g}" if a.cyclic else "")
+                  + (f"; guard drops {int(base.sum() - valid.sum())} samples" if a.guard else "") + ")")
         if valid is not None:
             if len(valid) != n_rows:
                 raise SystemExit(f"validity mask has {len(valid)} entries for {n_rows} samples")
-            X, labels, strata, tb, acc_h = apply_valid(valid, X, labels, strata, tb, acc_h)   # blocks keep their acquisition-time ids
+            X, labels, strata, tb, acc_h, st = apply_valid(valid, X, labels, strata, tb, acc_h, st)   # blocks keep their acquisition-time ids
             if not isinstance(arm_h, str):
                 arm_h = arm_h[valid]
             cand = {k: v[valid] for k, v in cand.items()}
             if halves_c is not None and not isinstance(halves_c, str):
                 halves_c = halves_c[valid]
+            if a.continuous and sub_all is not None:
+                sub_all = sub_all[valid]
             print(f"validity mask: {len(X)} of {n_rows} samples kept"
                   + ("; class sizes " + str(dict(zip(*[v.tolist() for v in np.unique(labels, return_counts=True)]))) if labels is not None else ""))
+        if a.continuous and a.within_cell == "residualize":
+            X, share = residualize_within_cells(X, labels, labels * (a.cells * a.subcells) + sub_all)
+            print(f"within-cell tuning removed ({a.subcells} held-out sub-cells per cell): it held {100 * share:.1f}% of the within-class sum of squares beyond noise")
         if a.paper_floor:
             a.floor_draws, a.floor_seed, a.floor_by_rung = 10, 42, True
         # the arms' nulls: calibrated (wild bootstrap between, Freedman-Lane within) unless asked for, or replaying, the paper's
@@ -4209,7 +4840,8 @@ def _main():
             dec_order = None if order in (None, "sequential") else [int(np.unique(labels)[i]) for i in declared_order(np.unique(labels), order)]
             if a.decompose:
                 Xd = _zscore(X) if a.standardize else X
-                rd = decompose(Xd, labels, order=dec_order, bin_counts=rungs, n_shuffle=a.n_shuffle, n_bias=a.n_bias, **dkw)
+                nbias = a.n_bias if a.n_bias == "auto" else int(a.n_bias)
+                rd = decompose(Xd, labels, order=dec_order, bin_counts=rungs, n_shuffle=a.n_shuffle, n_bias=nbias, **dkw)
                 if rd is None:
                     print("decompose: the ladder has fewer than three rungs of ten samples; nothing to split")
                 else:
@@ -4224,11 +4856,27 @@ def _main():
                                          null="permutation" if arm_null == "permutation" else "freedman-lane")
             if a.arm:
                 _print_arms(r)
+            if (tb is not None or st is not None) and a.drift_splits > 0:
+                r["drift"] = drift_check(_zscore(X) if a.standardize else X, labels, times=st, n_splits=a.drift_splits, seed=a.seed,
+                                         n_floor_draws=a.floor_draws, bin_counts=rungs, workers=a.workers,
+                                         order=None if order in (None, "sequential") else
+                                         [np.unique(labels)[i] for i in declared_order(np.unique(labels), order)])
+                for line in _drift_lines(r["drift"]):
+                    print(line)
             if a.account:
                 Xa = _zscore(X) if a.standardize else X
                 ra = account(Xa, labels, order=dec_order, bin_counts=rungs, halves=acc_h, seed=dkw["seed"], heldout=not a.no_heldout,
                              n_null=a.floor_draws, floor_by_rung=a.floor_by_rung)
                 _print_account(ra); r["account"] = ra
+            if cont is not None:
+                c_ = continuous(cont["X"], cont["phi"], guard=a.guard, n_origins=a.origins if a.cyclic else 1,
+                                residualize=a.within_cell == "residualize", subcells=a.subcells, n_perm=0, k_orders=a.k_orders,
+                                seed=a.seed, n_floor_draws=a.floor_draws, floor_seed=a.floor_seed, floor_by_rung=a.floor_by_rung,
+                                split=True, standardize=a.standardize, **ckw, **cut)
+                c_.pop("first")
+                r["continuous"] = c_
+                for line in _continuous_lines(c_):
+                    print(line)
             if a.block_by:
                 bsz = _int_list(a.block_size)
                 if a.block_by in ("phase1", "phase2"):

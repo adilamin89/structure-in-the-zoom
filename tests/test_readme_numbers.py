@@ -154,7 +154,7 @@ def test_acceptance_section():
     hd = load("rung_heads_ioi.json")
     assert hd["paper_seeds"]["replays_llm_ioi"] and f"(AUC {hd['paper_seeds']['AUC_z']:.2f})" in README
     sp = hd["default_spread"]["AUC_z"]
-    assert f"the AUC is {sp['mean']:.2f} ± {sp['sd']:.2f}" in README
+    assert f"the AUC is {sp['mean']:.3f} ± {sp['sd']:.3f}" in README
 
 
 def test_worked_example_split():
@@ -231,8 +231,11 @@ def test_front_page_numbers():
     w = load("worked_example_gt3_rung.json")
     assert (w["n_samples"], w["n_features"]) == (4442, 11311)
     assert "One recording of 11,311 mouse V1 neurons gives three" in front and "4,442 trials by 11,311 neurons in eight drift directions" in front
-    g = load("rung_speed.json")["gt3"]
-    assert f"Appendix M's command for GT3 (200 permutations) took {g['cpu_s_new']:.0f} s of one laptop core in rung 1.11's benchmark" in front
+    import rung as r
+    tm = load("readme_timing.json")                              # scripts_canonical/readme_timing.py, one core each
+    assert tm["rung"].endswith(r.__version__) and tm["workers"] == 1
+    assert f"Appendix M's command for GT3 (200 permutations) takes {tm['gt3']['cpu_s']:.0f} CPU-seconds of one laptop core" in front
+    assert f"it takes {tm['llm']['cpu_s']:.0f} CPU-seconds of one laptop core ({tm['cpu']}), model encoding included" in front
     ok = [r for r in load("stringer_theta_decomposition.json")["rows"] if r.get("status") == "ok"]
     lo, hi = min(r["theta_obs"] for r in ok), max(r["theta_obs"] for r in ok)
     assert len(ok) == 18 and f"Random-stimulus exponents, {lo:.2f} to {hi:.2f} across all 18 imaging recordings, sit on their floors" in front
@@ -252,7 +255,7 @@ def test_front_page_numbers():
     ag = {k: np.sign(np.array([q[k] for q in rows]) + cm) == np.sign(dm) for k in ("W0", "W2")}
     neg = int((dm < 0).sum())
     assert len(rows) == len(pooled) == 167
-    assert f"the two terms, computed at the rungs' own sample counts, get the sign in {int(ag['W2'].sum())} of {len(rows)} Allen " \
+    assert f"the two terms, computed on the same trials at the rungs' own sample counts, get the sign in {int(ag['W2'].sum())} of {len(rows)} Allen " \
            f"Neuropixels populations with each direction's temporal-frequency tuning removed, including " \
            f"{int((ag['W2'] & (dm < 0)).sum())} of the {neg} negative ones (always guessing positive gets {len(rows) - neg})" in front
     # XY: the two terms' sign in every lattice and spin-wave ensemble (40 nematic lattices and spin waves, 32 polar)
@@ -278,10 +281,12 @@ def test_front_page_reading():
     """The front page prints `rung summarize` for its run on the paper's recording twice: cut to the exponent's, the declared order's
     and the split's lines (the skipped lines marked by a vertical ellipsis) in the quickstart, and in full (wrapped) in the details
     below it; its glosses, the report's alt text and the clouds animation's alt text read their numbers from the same run
-    (data_canonical/readme_gt3.json, rung 1.13.1; its numbers equal 1.13.0's)."""
+    (data_canonical/readme_gt3.json, rung 1.14.0: the declared order, floor and split equal 1.13's; the order-averaged line reads every
+    class order)."""
     import rung as r
     g = load("readme_gt3.json")
-    assert g["rung_version"] == "1.13.1" and (g["n_samples"], g["n_features"], g["n_classes"]) == (4442, 11311, 8)
+    assert g["rung_version"] == r.__version__ and (g["n_samples"], g["n_features"], g["n_classes"]) == (4442, 11311, 8)
+    assert g["orderavg_method"] == "exact" and g["n_orders_averaged"] == 40320
     front = open(os.path.join(ROOT, "README.md")).read()
     flat = " ".join(front.split())
     blocks = front.split("$ rung summarize gt3.json\n")
@@ -407,7 +412,7 @@ def test_front_page_macaque():
     mac = load("macaque_pvc11_twoterm.json")["rows"]
     neg = [q["measured_delta"] for q in mac if q["measured_delta"] < 0]
     assert len(mac) == 3 and len(neg) == 1 and all(np.sign(q["delta_pred"]) == np.sign(q["measured_delta"]) for q in mac)
-    assert (f"In mean field they also give the signs of all three macaque V1 arrays from a third laboratory, one of them negative "
+    assert (f"With one average fluctuation overlap for all pairs of classes (mean field) they also give the signs of all three macaque V1 arrays from a third laboratory (Smith and Kohn), one of them negative "
             f"({neg[0]:.2f})") in front
 
 
@@ -443,9 +448,10 @@ def test_language_model_prompt_clouds():
     assert d["rung"] == r.__version__ and d["n_per_class"] == 32 and len(cov) == 33 == sm["n_layers"]
     assert sm["net_D_positive"] == 33 == d["summary"]["z"]["net_D_positive"]          # in both frames
     assert max(sm["surrogate_share_of_shift_max"], d["summary"]["z"]["surrogate_share_of_shift_max"]) < 0.5
-    assert (f"layer 24's shift falls from {r24['delta']:+.2f} to {r24['surrogate_delta']:+.2f}; at all 33 layers, the embedding included, what the topics' own "
-            f"fluctuations add is positive ({sm['net_D_min']:+.3f} to {sm['net_D_max']:+.3f}), and the class means add almost nothing beyond "
-            f"the surrogate ({sm['net_class_means_min']:+.3f} to {sm['net_class_means_max']:+.3f})") in front
+    assert (f"layer 24's shift falls from {r24['delta']:+.2f} to {r24['surrogate_delta']:+.2f}. At all 33 layers, the embedding included, the split "
+            f"net of the surrogate (in the declared order, rung's default) puts what the topics' own fluctuations add at {sm['net_D_min']:+.3f} "
+            f"to {sm['net_D_max']:+.3f}, and at 32 prompts per topic the class means add almost nothing beyond the surrogate "
+            f"({sm['net_class_means_min']:+.3f} to {sm['net_class_means_max']:+.3f})") in front
     dims = r24["class_dim_split"]
     n_below = sum(v > d["n_per_class"] for v in dims)
     assert f"{ {7: 'Seven'}[n_below]} of the eight topics hold fewer prompts (32) than their estimated fluctuation dimension ({min(dims):.0f} to {max(dims):.0f} at layer 24, from split halves)" in front
@@ -494,3 +500,34 @@ def test_install_line_and_python_block(tmp_path):
     X, y = np.load(tmp_path / "X.npy"), np.load(tmp_path / "labels.npy")
     printed_d = re.search(r"within-class part D \+([0-9.]+) \+ class-mean part", front.split("rung summarize toy.json", 1)[1]).group(1)
     assert f"{r.decompose(X, y, seed=0, n_shuffle=5)['delta_split_free']['D']:.3f}" == printed_d
+
+
+def test_rung_114_lines():
+    """README v5 (rung 1.14): rule 8's raw and net split at Pythia-2.8B's layer 24 from the surrogate artifact; GT3's declared and
+    order-averaged shifts over eight wall positions from data_canonical/continuous_gratings.json; the ORCID iD and CITATION.cff."""
+    import rung as r
+    front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
+    l24 = load("lm_shape_surrogate_pythia-2.8b.json")["frames"]["cov"][24]
+    assert f"the raw split gives the within-class part {l24['D']:+.3f} and the net split {l24['net_D']:+.3f}" in front
+    g3 = next(q for q in load("continuous_gratings.json")["rows"] if q["name"].startswith("gratings_drifting_GT3"))["origins_raw"]
+    s = g3["summary"]
+    assert g3["n_origins"] == 8 and not g3["residualize"]
+    assert (f"on GT3 the declared shift runs {s['delta']['min']:+.2f} to {s['delta']['max']:+.2f} over the wall positions while the "
+            f"order-averaged shift stays within {s['delta_orderavg']['min']:+.2f} to {s['delta_orderavg']['max']:+.2f}") in front
+    assert "[ORCID 0000-0001-6570-7718](https://orcid.org/0000-0001-6570-7718)" in front
+    cff = open(os.path.join(ROOT, "CITATION.cff")).read()
+    assert f"version: {r.__version__}" in cff and cff.count('orcid: "https://orcid.org/0000-0001-6570-7718"') == 2
+
+
+def test_rung_114_reference_numbers():
+    """REFERENCE.md's 1.14 sentences: the exact order average on GT3 against its random-order check (readme_gt3.json), the union
+    count at eight classes, and the default net split at Pythia-2.8B's layer 24 (lm_shape_surrogate_pythia-2.8b.json)."""
+    import rung as r
+    ref = " ".join(open(os.path.join(ROOT, "REFERENCE.md")).read().split())
+    g = load("readme_gt3.json")
+    assert len(r._rung_subsets(8, (1, 2, 3, 4, 6, 8))[0]) == 191 and g["n_orders_averaged"] == 40320
+    assert "average over the 40,320 orders of eight classes is a weighted sum over the 191 class unions" in ref
+    assert (f"on GT3 the exact value is {g['delta_orderavg']:+.3f}, the random orders gave {g['delta_orderavg_random']:+.3f} +- "
+            f"{g['delta_orderavg_random_se']:.3f}") in ref
+    l24 = load("lm_shape_surrogate_pythia-2.8b.json")["frames"]["cov"][24]
+    assert f"raw within-class part is {l24['D']:+.3f} and the net one {l24['net_D']:+.3f}" in ref

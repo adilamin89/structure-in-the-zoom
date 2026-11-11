@@ -120,4 +120,5 @@ def test_within_arm_under_the_calibrated_null():
     assert (f"clears both nulls at p <= 0.05 in 31 of the 32 halves ({nd} draws each" in ref
             and f"the smallest shift of the 32, {m['obs']:+.3f}, at p = {round(m['fl_p_unr'] * (nd + 1))}/{nd + 1} unrestricted and "
                 f"{round(m['fl_p_epoch'] * (nd + 1))}/{nd + 1} inside epochs" in ref)
-    assert "rung 1.13's calibrated null in 31 of the 32" in " ".join(open(os.path.join(root, "README.md")).read().split())
+    assert ("a null that keeps each half's class means and permutes its residuals (Freedman-Lane) in 31 of the 32 halves"
+            in " ".join(open(os.path.join(root, "README.md")).read().split()))
