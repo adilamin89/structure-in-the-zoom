@@ -1,0 +1,70 @@
+cov L 0: shift +0.033 | raw D -0.071 cm +0.103 | net D +0.031 cm +0.001 (SD over orders 0.040) | class dim 70-289 | 19.5s
+cov L 1: shift +0.041 | raw D -0.051 cm +0.092 | net D +0.039 cm -0.002 (SD over orders 0.050) | class dim 46-137 | 14.0s
+cov L 2: shift +0.032 | raw D -0.066 cm +0.098 | net D +0.034 cm -0.004 (SD over orders 0.028) | class dim 82-241 | 11.3s
+cov L 3: shift +0.030 | raw D -0.071 cm +0.101 | net D +0.030 cm -0.002 (SD over orders 0.024) | class dim 97-214 | 14.7s
+cov L 4: shift +0.030 | raw D -0.071 cm +0.101 | net D +0.032 cm -0.002 (SD over orders 0.022) | class dim 112-237 | 20.5s
+cov L 5: shift +0.031 | raw D -0.071 cm +0.102 | net D +0.034 cm -0.001 (SD over orders 0.020) | class dim 115-247 | 18.6s
+cov L 6: shift +0.032 | raw D -0.069 cm +0.101 | net D +0.037 cm -0.002 (SD over orders 0.020) | class dim 120-272 | 20.2s
+cov L 7: shift +0.036 | raw D -0.065 cm +0.101 | net D +0.042 cm -0.002 (SD over orders 0.021) | class dim 108-283 | 13.8s
+cov L 8: shift +0.037 | raw D -0.065 cm +0.102 | net D +0.041 cm -0.001 (SD over orders 0.020) | class dim 108-269 | 13.1s
+cov L 9: shift +0.038 | raw D -0.064 cm +0.102 | net D +0.043 cm -0.001 (SD over orders 0.020) | class dim 104-255 | 18.1s
+cov L10: shift +0.042 | raw D -0.059 cm +0.101 | net D +0.047 cm -0.001 (SD over orders 0.019) | class dim 94-222 | 13.9s
+cov L11: shift +0.038 | raw D -0.063 cm +0.101 | net D +0.044 cm -0.001 (SD over orders 0.021) | class dim 89-218 | 17.4s
+cov L12: shift +0.038 | raw D -0.063 cm +0.102 | net D +0.044 cm -0.000 (SD over orders 0.020) | class dim 92-225 | 12.0s
+cov L13: shift +0.040 | raw D -0.061 cm +0.101 | net D +0.046 cm -0.000 (SD over orders 0.021) | class dim 87-205 | 13.1s
+cov L14: shift +0.041 | raw D -0.059 cm +0.100 | net D +0.048 cm +0.000 (SD over orders 0.024) | class dim 86-208 | 12.2s
+cov L15: shift +0.040 | raw D -0.059 cm +0.099 | net D +0.047 cm -0.001 (SD over orders 0.024) | class dim 87-203 | 13.7s
+cov L16: shift +0.041 | raw D -0.059 cm +0.100 | net D +0.048 cm -0.000 (SD over orders 0.025) | class dim 84-202 | 11.5s
+cov L17: shift +0.041 | raw D -0.058 cm +0.099 | net D +0.048 cm +0.000 (SD over orders 0.024) | class dim 84-205 | 13.4s
+cov L18: shift +0.042 | raw D -0.057 cm +0.099 | net D +0.050 cm +0.001 (SD over orders 0.023) | class dim 86-192 | 12.4s
+cov L19: shift +0.044 | raw D -0.053 cm +0.098 | net D +0.052 cm +0.001 (SD over orders 0.022) | class dim 78-170 | 19.0s
+cov L20: shift +0.048 | raw D -0.050 cm +0.098 | net D +0.053 cm +0.001 (SD over orders 0.024) | class dim 70-162 | 17.5s
+cov L21: shift +0.052 | raw D -0.042 cm +0.093 | net D +0.056 cm +0.001 (SD over orders 0.030) | class dim 51-125 | 15.1s
+cov L22: shift +0.056 | raw D -0.033 cm +0.089 | net D +0.060 cm +0.000 (SD over orders 0.036) | class dim 42-102 | 19.9s
+cov L23: shift +0.063 | raw D -0.022 cm +0.085 | net D +0.063 cm +0.002 (SD over orders 0.047) | class dim 31-76 | 13.8s
+cov L24: shift +0.065 | raw D -0.020 cm +0.085 | net D +0.064 cm +0.002 (SD over orders 0.045) | class dim 30-68 | 14.9s
+cov L25: shift +0.066 | raw D -0.019 cm +0.085 | net D +0.065 cm +0.002 (SD over orders 0.043) | class dim 30-65 | 12.4s
+cov L26: shift +0.067 | raw D -0.019 cm +0.086 | net D +0.066 cm +0.002 (SD over orders 0.042) | class dim 31-66 | 13.1s
+cov L27: shift +0.069 | raw D -0.017 cm +0.086 | net D +0.067 cm +0.003 (SD over orders 0.040) | class dim 31-64 | 12.4s
+cov L28: shift +0.069 | raw D -0.018 cm +0.087 | net D +0.066 cm +0.003 (SD over orders 0.041) | class dim 30-64 | 14.3s
+cov L29: shift +0.071 | raw D -0.018 cm +0.088 | net D +0.067 cm +0.003 (SD over orders 0.044) | class dim 30-65 | 12.3s
+cov L30: shift +0.071 | raw D -0.017 cm +0.088 | net D +0.067 cm +0.003 (SD over orders 0.045) | class dim 29-63 | 12.5s
+cov L31: shift +0.076 | raw D -0.014 cm +0.091 | net D +0.064 cm +0.004 (SD over orders 0.044) | class dim 27-53 | 12.6s
+cov L32: shift +0.080 | raw D -0.015 cm +0.095 | net D +0.054 cm +0.007 (SD over orders 0.041) | class dim 23-51 | 13.0s
+z L 0: shift +0.031 | raw D -0.071 cm +0.102 | net D +0.029 cm -0.003 (SD over orders 0.038) | class dim 80-618 | 17.8s
+z L 1: shift +0.030 | raw D -0.065 cm +0.095 | net D +0.034 cm -0.008 (SD over orders 0.035) | class dim 72-308 | 15.7s
+z L 2: shift +0.026 | raw D -0.073 cm +0.099 | net D +0.030 cm -0.006 (SD over orders 0.031) | class dim 92-430 | 14.7s
+z L 3: shift +0.026 | raw D -0.076 cm +0.102 | net D +0.029 cm -0.004 (SD over orders 0.027) | class dim 111-414 | 12.7s
+z L 4: shift +0.028 | raw D -0.074 cm +0.102 | net D +0.032 cm -0.003 (SD over orders 0.024) | class dim 123-360 | 14.3s
+z L 5: shift +0.029 | raw D -0.074 cm +0.103 | net D +0.032 cm -0.002 (SD over orders 0.021) | class dim 131-346 | 14.7s
+z L 6: shift +0.031 | raw D -0.071 cm +0.102 | net D +0.036 cm -0.002 (SD over orders 0.021) | class dim 129-337 | 13.8s
+z L 7: shift +0.035 | raw D -0.067 cm +0.102 | net D +0.041 cm -0.002 (SD over orders 0.021) | class dim 116-325 | 15.7s
+z L 8: shift +0.036 | raw D -0.067 cm +0.103 | net D +0.040 cm -0.001 (SD over orders 0.020) | class dim 115-311 | 15.0s
+z L 9: shift +0.037 | raw D -0.066 cm +0.103 | net D +0.041 cm -0.001 (SD over orders 0.020) | class dim 114-292 | 15.0s
+z L10: shift +0.039 | raw D -0.063 cm +0.102 | net D +0.044 cm -0.002 (SD over orders 0.018) | class dim 107-263 | 15.0s
+z L11: shift +0.036 | raw D -0.066 cm +0.102 | net D +0.042 cm -0.001 (SD over orders 0.019) | class dim 103-245 | 16.2s
+z L12: shift +0.035 | raw D -0.067 cm +0.103 | net D +0.041 cm -0.001 (SD over orders 0.018) | class dim 111-266 | 14.1s
+z L13: shift +0.037 | raw D -0.065 cm +0.102 | net D +0.043 cm -0.001 (SD over orders 0.020) | class dim 106-245 | 16.2s
+z L14: shift +0.038 | raw D -0.063 cm +0.101 | net D +0.045 cm -0.001 (SD over orders 0.022) | class dim 104-244 | 16.4s
+z L15: shift +0.037 | raw D -0.063 cm +0.101 | net D +0.045 cm -0.001 (SD over orders 0.021) | class dim 110-240 | 14.4s
+z L16: shift +0.038 | raw D -0.064 cm +0.102 | net D +0.045 cm -0.000 (SD over orders 0.022) | class dim 108-245 | 20.4s
+z L17: shift +0.039 | raw D -0.063 cm +0.102 | net D +0.046 cm +0.000 (SD over orders 0.021) | class dim 110-249 | 16.3s
+z L18: shift +0.041 | raw D -0.062 cm +0.103 | net D +0.047 cm +0.001 (SD over orders 0.022) | class dim 109-236 | 16.1s
+z L19: shift +0.042 | raw D -0.059 cm +0.101 | net D +0.049 cm +0.001 (SD over orders 0.021) | class dim 103-217 | 15.7s
+z L20: shift +0.045 | raw D -0.057 cm +0.102 | net D +0.050 cm +0.002 (SD over orders 0.022) | class dim 97-211 | 15.8s
+z L21: shift +0.048 | raw D -0.053 cm +0.101 | net D +0.052 cm +0.002 (SD over orders 0.023) | class dim 87-184 | 15.4s
+z L22: shift +0.051 | raw D -0.049 cm +0.100 | net D +0.054 cm +0.002 (SD over orders 0.023) | class dim 82-161 | 15.1s
+z L23: shift +0.055 | raw D -0.044 cm +0.099 | net D +0.056 cm +0.002 (SD over orders 0.022) | class dim 74-134 | 14.8s
+z L24: shift +0.057 | raw D -0.041 cm +0.098 | net D +0.058 cm +0.002 (SD over orders 0.021) | class dim 73-126 | 12.5s
+z L25: shift +0.059 | raw D -0.038 cm +0.098 | net D +0.060 cm +0.002 (SD over orders 0.021) | class dim 68-120 | 11.8s
+z L26: shift +0.060 | raw D -0.037 cm +0.097 | net D +0.061 cm +0.002 (SD over orders 0.021) | class dim 64-115 | 12.7s
+z L27: shift +0.063 | raw D -0.034 cm +0.098 | net D +0.063 cm +0.002 (SD over orders 0.019) | class dim 60-105 | 12.3s
+z L28: shift +0.064 | raw D -0.033 cm +0.098 | net D +0.064 cm +0.002 (SD over orders 0.019) | class dim 61-105 | 9.9s
+z L29: shift +0.065 | raw D -0.033 cm +0.098 | net D +0.066 cm +0.003 (SD over orders 0.018) | class dim 64-108 | 10.0s
+z L30: shift +0.064 | raw D -0.034 cm +0.098 | net D +0.066 cm +0.002 (SD over orders 0.018) | class dim 68-111 | 7.5s
+z L31: shift +0.064 | raw D -0.032 cm +0.097 | net D +0.066 cm +0.002 (SD over orders 0.019) | class dim 68-100 | 7.0s
+z L32: shift +0.066 | raw D -0.029 cm +0.095 | net D +0.062 cm +0.004 (SD over orders 0.025) | class dim 48-78 | 6.2s
+SUMMARY cov: net D +0.030..+0.067, positive 33/33; net class-mean -0.004..+0.007; class dimension 23..289 (median 111) vs 32 prompts
+SUMMARY z: net D +0.029..+0.066, positive 33/33; net class-mean -0.008..+0.004; class dimension 48..618 (median 129) vs 32 prompts
+DONE
+EXIT 0

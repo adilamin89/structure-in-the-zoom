@@ -1,0 +1,67 @@
+cov L 0: declared +0.047 -> pooled +0.004 (SD 0.036) | order-avg +0.032 -> pooled +0.002 | 0 s
+cov L 1: declared +0.084 -> pooled +0.050 (SD 0.071) | order-avg +0.023 -> pooled +0.012 | 0 s
+cov L 2: declared +0.036 -> pooled +0.011 (SD 0.030) | order-avg +0.024 -> pooled -0.000 | 0 s
+cov L 3: declared +0.030 -> pooled -0.001 (SD 0.017) | order-avg +0.021 -> pooled +0.003 | 0 s
+cov L 4: declared +0.031 -> pooled +0.007 (SD 0.016) | order-avg +0.024 -> pooled +0.002 | 0 s
+cov L 5: declared +0.033 -> pooled +0.012 (SD 0.020) | order-avg +0.025 -> pooled +0.002 | 0 s
+cov L 6: declared +0.036 -> pooled +0.003 (SD 0.013) | order-avg +0.028 -> pooled -0.003 | 0 s
+cov L 7: declared +0.040 -> pooled +0.008 (SD 0.016) | order-avg +0.034 -> pooled -0.003 | 0 s
+cov L 8: declared +0.035 -> pooled +0.011 (SD 0.023) | order-avg +0.035 -> pooled -0.002 | 0 s
+cov L 9: declared +0.035 -> pooled -0.003 (SD 0.014) | order-avg +0.037 -> pooled -0.002 | 0 s
+cov L10: declared +0.037 -> pooled +0.002 (SD 0.019) | order-avg +0.039 -> pooled -0.002 | 0 s
+cov L11: declared +0.038 -> pooled +0.001 (SD 0.012) | order-avg +0.036 -> pooled -0.001 | 0 s
+cov L12: declared +0.035 -> pooled -0.002 (SD 0.008) | order-avg +0.035 -> pooled -0.002 | 0 s
+cov L13: declared +0.033 -> pooled -0.001 (SD 0.011) | order-avg +0.036 -> pooled -0.002 | 0 s
+cov L14: declared +0.035 -> pooled +0.003 (SD 0.012) | order-avg +0.038 -> pooled -0.003 | 0 s
+cov L15: declared +0.039 -> pooled -0.002 (SD 0.007) | order-avg +0.037 -> pooled -0.004 | 0 s
+cov L16: declared +0.039 -> pooled +0.004 (SD 0.014) | order-avg +0.040 -> pooled -0.004 | 0 s
+cov L17: declared +0.039 -> pooled -0.001 (SD 0.015) | order-avg +0.041 -> pooled -0.006 | 0 s
+cov L18: declared +0.041 -> pooled -0.003 (SD 0.009) | order-avg +0.043 -> pooled -0.006 | 0 s
+cov L19: declared +0.046 -> pooled +0.007 (SD 0.008) | order-avg +0.046 -> pooled -0.003 | 0 s
+cov L20: declared +0.051 -> pooled +0.003 (SD 0.011) | order-avg +0.053 -> pooled -0.003 | 0 s
+cov L21: declared +0.066 -> pooled +0.006 (SD 0.014) | order-avg +0.063 -> pooled -0.002 | 0 s
+cov L22: declared +0.079 -> pooled +0.014 (SD 0.023) | order-avg +0.073 -> pooled +0.003 | 0 s
+cov L23: declared +0.103 -> pooled -0.016 (SD 0.031) | order-avg +0.088 -> pooled +0.007 | 0 s
+cov L24: declared +0.105 -> pooled +0.021 (SD 0.028) | order-avg +0.088 -> pooled +0.014 | 0 s
+cov L25: declared +0.109 -> pooled +0.001 (SD 0.036) | order-avg +0.088 -> pooled +0.011 | 0 s
+cov L26: declared +0.109 -> pooled +0.015 (SD 0.036) | order-avg +0.088 -> pooled +0.009 | 0 s
+cov L27: declared +0.112 -> pooled +0.015 (SD 0.035) | order-avg +0.090 -> pooled +0.010 | 0 s
+cov L28: declared +0.116 -> pooled +0.003 (SD 0.031) | order-avg +0.090 -> pooled +0.007 | 0 s
+cov L29: declared +0.124 -> pooled +0.020 (SD 0.043) | order-avg +0.090 -> pooled +0.011 | 0 s
+cov L30: declared +0.126 -> pooled +0.007 (SD 0.042) | order-avg +0.089 -> pooled +0.008 | 0 s
+cov L31: declared +0.139 -> pooled +0.010 (SD 0.034) | order-avg +0.093 -> pooled +0.017 | 0 s
+cov L32: declared +0.071 -> pooled +0.011 (SD 0.032) | order-avg +0.090 -> pooled +0.019 | 0 s
+z L 0: declared +0.031 -> pooled +0.006 (SD 0.024) | order-avg +0.034 -> pooled +0.004 | 0 s
+z L 1: declared +0.033 -> pooled +0.017 (SD 0.028) | order-avg +0.027 -> pooled +0.007 | 0 s
+z L 2: declared +0.030 -> pooled +0.013 (SD 0.025) | order-avg +0.026 -> pooled -0.000 | 0 s
+z L 3: declared +0.029 -> pooled -0.002 (SD 0.014) | order-avg +0.025 -> pooled +0.003 | 0 s
+z L 4: declared +0.028 -> pooled +0.008 (SD 0.015) | order-avg +0.025 -> pooled +0.002 | 0 s
+z L 5: declared +0.029 -> pooled +0.011 (SD 0.017) | order-avg +0.025 -> pooled +0.001 | 0 s
+z L 6: declared +0.036 -> pooled +0.003 (SD 0.012) | order-avg +0.028 -> pooled -0.003 | 0 s
+z L 7: declared +0.040 -> pooled +0.008 (SD 0.015) | order-avg +0.034 -> pooled -0.003 | 0 s
+z L 8: declared +0.035 -> pooled +0.011 (SD 0.021) | order-avg +0.035 -> pooled -0.002 | 0 s
+z L 9: declared +0.034 -> pooled -0.002 (SD 0.013) | order-avg +0.036 -> pooled -0.002 | 0 s
+z L10: declared +0.035 -> pooled +0.001 (SD 0.016) | order-avg +0.038 -> pooled -0.001 | 1 s
+z L11: declared +0.034 -> pooled +0.001 (SD 0.011) | order-avg +0.034 -> pooled -0.001 | 0 s
+z L12: declared +0.029 -> pooled -0.002 (SD 0.007) | order-avg +0.033 -> pooled -0.002 | 0 s
+z L13: declared +0.027 -> pooled -0.002 (SD 0.011) | order-avg +0.033 -> pooled -0.003 | 0 s
+z L14: declared +0.028 -> pooled +0.003 (SD 0.011) | order-avg +0.035 -> pooled -0.003 | 0 s
+z L15: declared +0.031 -> pooled -0.002 (SD 0.005) | order-avg +0.034 -> pooled -0.004 | 0 s
+z L16: declared +0.032 -> pooled +0.003 (SD 0.012) | order-avg +0.036 -> pooled -0.004 | 0 s
+z L17: declared +0.031 -> pooled -0.004 (SD 0.011) | order-avg +0.037 -> pooled -0.006 | 0 s
+z L18: declared +0.036 -> pooled -0.006 (SD 0.007) | order-avg +0.040 -> pooled -0.006 | 0 s
+z L19: declared +0.039 -> pooled +0.002 (SD 0.009) | order-avg +0.042 -> pooled -0.004 | 0 s
+z L20: declared +0.041 -> pooled -0.000 (SD 0.007) | order-avg +0.046 -> pooled -0.004 | 0 s
+z L21: declared +0.047 -> pooled -0.000 (SD 0.006) | order-avg +0.049 -> pooled -0.003 | 0 s
+z L22: declared +0.049 -> pooled -0.000 (SD 0.010) | order-avg +0.053 -> pooled -0.003 | 0 s
+z L23: declared +0.055 -> pooled +0.002 (SD 0.011) | order-avg +0.060 -> pooled +0.000 | 0 s
+z L24: declared +0.055 -> pooled +0.002 (SD 0.017) | order-avg +0.062 -> pooled +0.004 | 0 s
+z L25: declared +0.060 -> pooled +0.001 (SD 0.010) | order-avg +0.067 -> pooled +0.002 | 0 s
+z L26: declared +0.064 -> pooled +0.005 (SD 0.012) | order-avg +0.069 -> pooled +0.003 | 0 s
+z L27: declared +0.068 -> pooled +0.008 (SD 0.022) | order-avg +0.072 -> pooled +0.001 | 0 s
+z L28: declared +0.066 -> pooled +0.001 (SD 0.017) | order-avg +0.073 -> pooled -0.001 | 0 s
+z L29: declared +0.068 -> pooled +0.008 (SD 0.014) | order-avg +0.072 -> pooled +0.002 | 0 s
+z L30: declared +0.064 -> pooled +0.002 (SD 0.015) | order-avg +0.070 -> pooled +0.001 | 0 s
+z L31: declared +0.066 -> pooled +0.001 (SD 0.011) | order-avg +0.069 -> pooled +0.001 | 0 s
+z L32: declared +0.069 -> pooled +0.007 (SD 0.018) | order-avg +0.070 -> pooled +0.003 | 0 s
+DONE

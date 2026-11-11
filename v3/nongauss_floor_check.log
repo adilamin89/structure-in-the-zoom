@@ -1,0 +1,3 @@
+gauss       eps -0.000  E TrS2 sim 3.4295 pred 3.4200 gauss-pred 3.4205 | PR ratio sim 13.969 formula 13.993 Eq2 13.991
+gamma_gain  eps +2.170  E TrS2 sim 6.0583 pred 6.0511 gauss-pred 3.4434 | PR ratio sim 7.932 formula 7.945 Eq2 13.962
+poisson     eps +0.007  E TrS2 sim 3.4296 pred 3.4438 gauss-pred 3.4354 | PR ratio sim 13.943 formula 13.925 Eq2 13.959

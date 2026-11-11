@@ -104,6 +104,13 @@ architectures, the moral-concept axis before and after instruction tuning, the B
 swap nulls, the equivariant network whose invariant layers read zero, and the calibrated population models. Their scripts and
 artifacts are listed in the second table below.
 
+## The extended version
+
+The extended version of the paper (arXiv 2611.08506, version 3) adds the cyclic starts of every grating recording, the
+language-model split averaged over class orders and net of its bias, the pooled-fluctuation control on Pythia-2.8B, the floor for
+non-Gaussian samples, the macaque arrays at their own sample counts and a planted comparison with label CKA, RSA and manifold
+capacity. Their generators and artifacts are in [v3/](v3/README.md), one row per script with the section it backs.
+
 ## Raw data
 
 Raw neural data are public and not included. The grating and static recordings are the Figshare release 8279387 of Stringer et

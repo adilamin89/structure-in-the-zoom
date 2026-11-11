@@ -1,0 +1,133 @@
+Drifting GT1      walls+ 0.00  declared +0.353  order-avg +0.317 (SD 0.064)  4 s
+Drifting GT1      walls+ 5.62  declared +0.384  order-avg +0.314 (SD 0.078)  4 s
+Drifting GT1      walls+11.25  declared +0.406  order-avg +0.324 (SD 0.078)  4 s
+Drifting GT1      walls+16.88  declared +0.417  order-avg +0.333 (SD 0.077)  3 s
+Drifting GT1      walls+22.50  declared +0.449  order-avg +0.337 (SD 0.077)  4 s
+Drifting GT1      walls+28.12  declared +0.467  order-avg +0.338 (SD 0.083)  3 s
+Drifting GT1      walls+33.75  declared +0.452  order-avg +0.342 (SD 0.083)  3 s
+Drifting GT1      walls+39.38  declared +0.435  order-avg +0.338 (SD 0.085)  3 s
+Drifting GT1      start 0: forwards +0.353, backwards +0.346
+Drifting GT1      start 1: forwards +0.433, backwards +0.419
+Drifting GT1      start 2: forwards +0.386, backwards +0.410
+Drifting GT1      start 3: forwards +0.303, backwards +0.286
+Drifting GT1      start 4: forwards +0.257, backwards +0.256
+Drifting GT1      start 5: forwards +0.309, backwards +0.300
+Drifting GT1      start 6: forwards +0.255, backwards +0.276
+Drifting GT1      start 7: forwards +0.180, backwards +0.187
+Drifting GT2      walls+ 0.00  declared +0.294  order-avg +0.253 (SD 0.075)  3 s
+Drifting GT2      walls+ 5.62  declared +0.277  order-avg +0.238 (SD 0.080)  4 s
+Drifting GT2      walls+11.25  declared +0.247  order-avg +0.242 (SD 0.096)  7 s
+Drifting GT2      walls+16.88  declared +0.217  order-avg +0.240 (SD 0.076)  9 s
+Drifting GT2      walls+22.50  declared +0.251  order-avg +0.224 (SD 0.073)  6 s
+Drifting GT2      walls+28.12  declared +0.298  order-avg +0.228 (SD 0.077)  7 s
+Drifting GT2      walls+33.75  declared +0.315  order-avg +0.254 (SD 0.080)  10 s
+Drifting GT2      walls+39.38  declared +0.305  order-avg +0.266 (SD 0.082)  3 s
+Drifting GT2      start 0: forwards +0.294, backwards +0.266
+Drifting GT2      start 1: forwards +0.274, backwards +0.282
+Drifting GT2      start 2: forwards +0.240, backwards +0.227
+Drifting GT2      start 3: forwards +0.098, backwards +0.117
+Drifting GT2      start 4: forwards +0.145, backwards +0.137
+Drifting GT2      start 5: forwards +0.318, backwards +0.318
+Drifting GT2      start 6: forwards +0.341, backwards +0.344
+Drifting GT2      start 7: forwards +0.154, backwards +0.172
+Drifting GT3      walls+ 0.00  declared +0.231  order-avg +0.335 (SD 0.083)  2 s
+Drifting GT3      walls+ 5.62  declared +0.263  order-avg +0.330 (SD 0.078)  3 s
+Drifting GT3      walls+11.25  declared +0.278  order-avg +0.324 (SD 0.095)  3 s
+Drifting GT3      walls+16.88  declared +0.290  order-avg +0.316 (SD 0.093)  7 s
+Drifting GT3      walls+22.50  declared +0.354  order-avg +0.302 (SD 0.107)  8 s
+Drifting GT3      walls+28.12  declared +0.424  order-avg +0.323 (SD 0.097)  10 s
+Drifting GT3      walls+33.75  declared +0.425  order-avg +0.323 (SD 0.101)  10 s
+Drifting GT3      walls+39.38  declared +0.414  order-avg +0.290 (SD 0.073)  50 s
+Drifting GT3      start 0: forwards +0.231, backwards +0.229
+Drifting GT3      start 1: forwards +0.407, backwards +0.404
+Drifting GT3      start 2: forwards +0.368, backwards +0.391
+Drifting GT3      start 3: forwards +0.275, backwards +0.291
+Drifting GT3      start 4: forwards +0.303, backwards +0.276
+Drifting GT3      start 5: forwards +0.465, backwards +0.446
+Drifting GT3      start 6: forwards +0.281, backwards +0.301
+Drifting GT3      start 7: forwards +0.240, backwards +0.229
+v3/start_probe_all8.py:50: UserWarning: zoom: 5170 samples -> full Gram of 0.2 GB in float64 and time growing as n^2 (about 2 min per 100 permutations on one core); subsample stimuli per class (rung sizes stay matched) or run per-layer jobs in parallel.
+  z = rung.zoom(X, lab, n_perm=0, k_orders=50, workers=4)
+Local GT1         walls+ 0.00  declared +0.457  order-avg +0.395 (SD 0.054)  35 s
+Local GT1         walls+ 5.62  declared +0.473  order-avg +0.407 (SD 0.043)  9 s
+Local GT1         walls+11.25  declared +0.481  order-avg +0.406 (SD 0.042)  60 s
+Local GT1         walls+16.88  declared +0.460  order-avg +0.384 (SD 0.054)  44 s
+Local GT1         walls+22.50  declared +0.455  order-avg +0.381 (SD 0.053)  57 s
+Local GT1         walls+28.12  declared +0.446  order-avg +0.389 (SD 0.050)  29 s
+Local GT1         walls+33.75  declared +0.442  order-avg +0.391 (SD 0.050)  33 s
+Local GT1         walls+39.38  declared +0.432  order-avg +0.380 (SD 0.052)  15 s
+v3/start_probe_all8.py:59: UserWarning: zoom: 5170 samples -> full Gram of 0.2 GB in float64 and time growing as n^2 (about 2 min per 100 permutations on one core); subsample stimuli per class (rung sizes stay matched) or run per-layer jobs in parallel.
+  z = rung.zoom(X, ref, n_perm=0, k_orders=0, order=order, workers=4)
+Local GT1         start 0: forwards +0.457, backwards +0.468
+Local GT1         start 1: forwards +0.433, backwards +0.428
+Local GT1         start 2: forwards +0.438, backwards +0.428
+Local GT1         start 3: forwards +0.351, backwards +0.340
+Local GT1         start 4: forwards +0.380, backwards +0.381
+Local GT1         start 5: forwards +0.245, backwards +0.261
+Local GT1         start 6: forwards +0.325, backwards +0.322
+Local GT1         start 7: forwards +0.427, backwards +0.428
+Local GT2         walls+ 0.00  declared +0.396  order-avg +0.399 (SD 0.037)  27 s
+Local GT2         walls+ 5.62  declared +0.383  order-avg +0.399 (SD 0.052)  33 s
+Local GT2         walls+11.25  declared +0.387  order-avg +0.405 (SD 0.054)  37 s
+Local GT2         walls+16.88  declared +0.378  order-avg +0.388 (SD 0.047)  34 s
+Local GT2         walls+22.50  declared +0.405  order-avg +0.401 (SD 0.040)  21 s
+Local GT2         walls+28.12  declared +0.433  order-avg +0.405 (SD 0.046)  32 s
+Local GT2         walls+33.75  declared +0.440  order-avg +0.402 (SD 0.041)  36 s
+Local GT2         walls+39.38  declared +0.423  order-avg +0.395 (SD 0.041)  46 s
+Local GT2         start 0: forwards +0.396, backwards +0.360
+Local GT2         start 1: forwards +0.403, backwards +0.403
+Local GT2         start 2: forwards +0.366, backwards +0.379
+Local GT2         start 3: forwards +0.324, backwards +0.329
+Local GT2         start 4: forwards +0.411, backwards +0.412
+Local GT2         start 5: forwards +0.338, backwards +0.347
+Local GT2         start 6: forwards +0.450, backwards +0.447
+Local GT2         start 7: forwards +0.364, backwards +0.386
+Local GT3         walls+ 0.00  declared +0.462  order-avg +0.431 (SD 0.053)  362 s
+Local GT3         walls+ 5.62  declared +0.428  order-avg +0.407 (SD 0.058)  21 s
+Local GT3         walls+11.25  declared +0.412  order-avg +0.413 (SD 0.087)  17 s
+Local GT3         walls+16.88  declared +0.400  order-avg +0.434 (SD 0.068)  22 s
+Local GT3         walls+22.50  declared +0.386  order-avg +0.424 (SD 0.090)  17 s
+Local GT3         walls+28.12  declared +0.386  order-avg +0.410 (SD 0.073)  17 s
+Local GT3         walls+33.75  declared +0.362  order-avg +0.401 (SD 0.068)  14 s
+Local GT3         walls+39.38  declared +0.358  order-avg +0.409 (SD 0.063)  8 s
+Local GT3         start 0: forwards +0.462, backwards +0.474
+Local GT3         start 1: forwards +0.336, backwards +0.347
+Local GT3         start 2: forwards +0.342, backwards +0.323
+Local GT3         start 3: forwards +0.429, backwards +0.426
+Local GT3         start 4: forwards +0.458, backwards +0.480
+Local GT3         start 5: forwards +0.325, backwards +0.345
+Local GT3         start 6: forwards +0.402, backwards +0.380
+Local GT3         start 7: forwards +0.516, backwards +0.495
+Low-contrast GT1  walls+ 0.00  declared +0.191  order-avg +0.155 (SD 0.047)  4 s
+Low-contrast GT1  walls+ 5.62  declared +0.188  order-avg +0.161 (SD 0.057)  41 s
+Low-contrast GT1  walls+11.25  declared +0.210  order-avg +0.156 (SD 0.051)  808 s
+Low-contrast GT1  walls+16.88  declared +0.225  order-avg +0.146 (SD 0.055)  205 s
+Low-contrast GT1  walls+22.50  declared +0.215  order-avg +0.153 (SD 0.052)  25 s
+Low-contrast GT1  walls+28.12  declared +0.211  order-avg +0.153 (SD 0.051)  233 s
+Low-contrast GT1  walls+33.75  declared +0.213  order-avg +0.160 (SD 0.050)  25 s
+Low-contrast GT1  walls+39.38  declared +0.219  order-avg +0.152 (SD 0.043)  230 s
+Low-contrast GT1  start 0: forwards +0.191, backwards +0.198
+Low-contrast GT1  start 1: forwards +0.244, backwards +0.243
+Low-contrast GT1  start 2: forwards +0.153, backwards +0.156
+Low-contrast GT1  start 3: forwards +0.123, backwards +0.106
+Low-contrast GT1  start 4: forwards +0.108, backwards +0.096
+Low-contrast GT1  start 5: forwards +0.092, backwards +0.117
+Low-contrast GT1  start 6: forwards +0.084, backwards +0.075
+Low-contrast GT1  start 7: forwards +0.192, backwards +0.206
+Low-contrast GT2  walls+ 0.00  declared +0.211  order-avg +0.121 (SD 0.042)  69 s
+Low-contrast GT2  walls+ 5.62  declared +0.196  order-avg +0.115 (SD 0.038)  969 s
+Low-contrast GT2  walls+11.25  declared +0.182  order-avg +0.123 (SD 0.034)  365 s
+Low-contrast GT2  walls+16.88  declared +0.165  order-avg +0.126 (SD 0.035)  26 s
+Low-contrast GT2  walls+22.50  declared +0.157  order-avg +0.121 (SD 0.035)  1061 s
+Low-contrast GT2  walls+28.12  declared +0.139  order-avg +0.121 (SD 0.043)  16 s
+Low-contrast GT2  walls+33.75  declared +0.108  order-avg +0.124 (SD 0.041)  26 s
+Low-contrast GT2  walls+39.38  declared +0.093  order-avg +0.121 (SD 0.043)  78 s
+Low-contrast GT2  start 0: forwards +0.211, backwards +0.216
+Low-contrast GT2  start 1: forwards +0.102, backwards +0.119
+Low-contrast GT2  start 2: forwards +0.119, backwards +0.097
+Low-contrast GT2  start 3: forwards +0.114, backwards +0.102
+Low-contrast GT2  start 4: forwards +0.141, backwards +0.145
+Low-contrast GT2  start 5: forwards +0.055, backwards +0.069
+Low-contrast GT2  start 6: forwards +0.087, backwards +0.082
+Low-contrast GT2  start 7: forwards +0.136, backwards +0.125
+DONE

@@ -1,0 +1,43 @@
+spectrum: d_eff_full=53.3 top1_eig_frac=0.07 top1_dim_var_frac=0.02
+frame check: per-feature z-scored delta +0.096 (order-averaged +0.231)
+delta: 0.23074112193535104
+theta_obs: 0.3049336329624402
+theta_floor: 0.07419251102708915
+theta_floor_sd: 0.016857394657136374
+theta_floor_se: 0.003769428037689869
+n_classes: 8
+n_perm: 200
+k_orders: 50
+n_floor_draws: 20
+n_samples: 4442
+n_features: 11311
+arithmetic: fast
+same_class_rate: {'rate': 0.1197928394505742, 'expected': 0.12487634918412513, 'excess_se': -1.0247766913134564, 'n_runs': 3910, 'grouped_by_class': False}
+late_rung_classes: 4
+late_fraction: 0.6241141880562336
+delta_orderavg: 0.3345585190585653
+delta_orderavg_sd: 0.08270518548328636
+z: 13.041109593698488
+p_two: 0.004975124378109453
+null_mean: -0.003323230090513938
+null_sd: 0.017948193007975774
+z_orderavg: 83.64622498546119
+p_two_orderavg: 0.004975124378109453
+null_mean_orderavg: 0.00047585418733577135
+null_sd_orderavg: 0.003993995723408887
+n_floor_sequences: 51
+delta_z_frame: 0.09593254528054426
+delta_orderavg_z_frame: 0.2308102722578136
+sectors: class-mean kernel harmonics a +0.395, c1 +0.140, b2 +0.330, c3 +0.064, b4 +0.072
+  even (orientation-like) amplitude 0.337, odd (direction-like) 0.154, even share 0.83; sector balance q2/|q1| = 2.35
+  adjacent classes cohere at C = 0.38, antipodal at 0.59: the order the fluctuations favour is read from their overlaps (Section 5, Appendix E), not from these
+decompose (Section 5): within-class part D +0.358 + class-mean part (Tb + Cb + Cx) -0.127 = shift +0.231
+  four terms: trace A +0.197 + pooling P +0.312 + between-class Cb -0.143 + coupling Cx -0.135; A + P = D + Tb (Tb +0.152), the within-class scale S +0.046 cancelling between A and P
+  net of 5 label permutations: D +0.368 Tb +0.139 Cb -0.143 Cx -0.124 S +0.034 -> largest D; private slope (D vs log k/K) +0.37
+  exactness: sum 5.6e-15, regroup 5.8e-15, PR identity 3.6e-16
+  sign law (Eq. 3): full-set class-mean remainder c -0.318, whose sign predicts the class-mean part's; PR(W)/PR(B) = 73.2/5.0 = 14.6 against 1 + 2(1 - a)/beta = -5.4 (below zero: always negative) (a 1.51, beta = Tr B/Tr W 0.158; with a = 0 the threshold is 1 + 2/beta = 13.6, sufficient when the alignment is positive) (sign as the law says)
+  samples per class 555 against each class's own fluctuation dimension (split halves) 18.9 to 32.1, median 29.0; PR(W) 73.2, which pools the classes (README rule 8: the within-class part needs each class sampled beyond its own fluctuation dimension; --account prints the sampling term)
+wrote gt3.json
+
+--- stderr ---
+CPU_SECONDS 68.755265

@@ -1,0 +1,24 @@
+base: shift_orderavg +0.1036  D_orderavg -0.0345  classmean_orderavg +0.0865  beta +0.4197  cka +0.4853  rsa +0.4132  probe +0.9980  mft_capacity +0.2450  mft_radius +0.9133  mft_dimension +7.9799  sim_capacity +0.3681  twonn +12.7348  pr +9.3610  nc1 +0.3425  (30 s)
+T1: shift_orderavg +0.1036  D_orderavg -0.0345  classmean_orderavg +0.0865  beta +0.4197  cka +0.4853  rsa +0.4132  probe +0.9980  mft_capacity +0.2450  mft_radius +0.9133  mft_dimension +7.9799  sim_capacity +0.3708  twonn +12.7348  pr +9.3610  nc1 +0.3425  (57 s)
+T2: shift_orderavg +0.1356  D_orderavg +0.0515  classmean_orderavg +0.0282  beta +0.4197  cka +0.5027  rsa +0.4194  probe +0.9961  mft_capacity +0.2450  mft_radius +0.9133  mft_dimension +7.9799  sim_capacity +0.1872  twonn +12.6409  pr +10.0445  nc1 +0.3425  (155 s)
+T3: shift_orderavg +0.0512  D_orderavg -0.0345  classmean_orderavg +0.0354  beta +0.1531  cka +0.1744  rsa +0.1339  probe +1.0000  mft_capacity +0.1355  mft_radius +1.2140  mft_dimension +11.7775  sim_capacity +0.3393  twonn +14.6622  pr +9.0829  nc1 +1.3699  (181 s)
+T4: shift_orderavg +0.1274  D_orderavg -0.0345  classmean_orderavg +0.1278  beta +0.7431  cka +0.7986  rsa +0.5674  probe +1.0000  mft_capacity +0.4652  mft_radius +0.6001  mft_dimension +5.5394  sim_capacity +0.5192  twonn +12.6385  pr +8.0854  nc1 +0.0856  (196 s)
+A1 exact invariances (max change): {'T1': '9.8e-16', 'T2': '4.5e-16', 'T3': '1.4e-16', 'T4': '2.2e-16'} PASS
+A2 moved: {'T2': {'D_orderavg': True}, 'T3': {'beta': True, 'mft_radius': True}, 'T4': {'beta': True, 'mft_radius': True}} PASS
+A3 D base -0.0345 -> T2 +0.0515 PASS
+relative / absolute change per arm (who moves):
+  shift_orderavg       T1 2.36e-16  T2 3.19e-02  T3 5.24e-02  T4 2.37e-02
+  D_orderavg           T1 5.55e-17  T2 8.60e-02  T3 1.39e-16  T4 2.22e-16
+  classmean_orderavg   T1 1.39e-16  T2 5.84e-02  T3 5.12e-02  T4 4.12e-02
+  beta                 T1 0.00e+00  T2 2.65e-16  T3 6.35e-01  T4 7.71e-01
+  cka                  T1 3.43e-16  T2 3.59e-02  T3 6.41e-01  T4 6.46e-01
+  rsa                  T1 0.00e+00  T2 1.50e-02  T3 6.76e-01  T4 3.73e-01
+  probe                T1 0.00e+00  T2 1.96e-03  T3 1.96e-03  T4 1.96e-03
+  mft_capacity         T1 4.53e-16  T2 4.53e-16  T3 4.47e-01  T4 8.99e-01
+  mft_radius           T1 3.65e-16  T2 0.00e+00  T3 3.29e-01  T4 3.43e-01
+  mft_dimension        T1 3.34e-16  T2 0.00e+00  T3 4.76e-01  T4 3.06e-01
+  sim_capacity         T1 7.22e-03  T2 4.92e-01  T3 7.85e-02  T4 4.10e-01
+  twonn                T1 9.76e-16  T2 7.38e-03  T3 1.51e-01  T4 7.57e-03
+  pr                   T1 1.90e-16  T2 7.30e-02  T3 2.97e-02  T4 1.36e-01
+  nc1                  T1 1.62e-16  T2 0.00e+00  T3 3.00e+00  T4 7.50e-01
+done (196 s)

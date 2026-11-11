@@ -422,6 +422,8 @@ Five minutes for NeurReps 2026: the puzzle of three exponents, the ladder and it
 
 - [REFERENCE.md](https://github.com/adilamin89/structure-in-the-zoom/blob/main/REFERENCE.md): every command and option, what it
   returns and what the paper found with it; worked examples; speed, the permutation budget and the replays of the paper's runs.
+- [v3/](https://github.com/adilamin89/structure-in-the-zoom/blob/main/v3/README.md): the scripts and results behind the numbers
+  the extended version of the paper (arXiv v3) adds, one row per script with the section it backs.
 - [PAPER.md](https://github.com/adilamin89/structure-in-the-zoom/blob/main/PAPER.md): the paper's numbers, `rung` run against
   them, runs on data the paper never saw, the public raw data, and a claim-by-claim table of artifacts and the scripts that
   write them.
@@ -453,6 +455,8 @@ scripts_canonical/       one script per analysis, named for what it computes; mo
                          name the artifact they write; make_fig_*.py regenerate the figures
                          from the artifacts
 data_canonical/          the result files behind the reported numbers
+v3/                      the scripts and results behind the numbers the extended version
+                         (arXiv v3) adds
 figures_canonical/       the figures (drawn with matplotlib 3.10, one with 3.11)
 media/                   this page's pictures: the animations (rung in use, the clouds, the XY
                          lattice, Pythia's prompt clouds and layers, GPT-2's heads), Figure 1, the
