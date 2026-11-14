@@ -143,7 +143,8 @@ split (Section 5): within-class part D +0.358 + class-mean part (Tb + Cb + Cx) -
 
 - `theta_obs = floor + shift`: the rungs hold the trials of the first 1, 2, 3, 4, 6 and all 8 directions; random subsets of the
   same sizes give 0.074 of the exponent 0.305, and adding whole directions class by class gives the other +0.231. One
-  direction's trials span 29 dimensions where random trials from all eight span 45; both ladders end at the full set's
+  direction's trials span 29 dimensions where random trials from all eight span 45 in this run
+  (46 with Figure 1's ten floor draws); both ladders end at the full set's
   53, so the direction ladder climbs further.
 - `z = +13.1`: the shift sits 13 standard deviations above the same ladder with the labels permuted. The declared order adds the
   classes in their labels' order (directions 0 to 7 here); a p at its floor means no permutation reached the observed shift.
@@ -286,8 +287,8 @@ self-contained HTML page (figure, reading, numbers), and `rung plot r.json --out
 
 ### The floor
 
-Random-stimulus exponents, 0.11 to 0.75 across all 18 imaging recordings, sit on their floors (mean shift -0.002): random
-sampling alone gives them, and so does adding neighbouring neurons (0.346 against a floor of 0.342 in the recording above). Adding directions
+Random-stimulus exponents, 0.11 to 0.75 across all 18 imaging recordings, sit on their floors (mean shift -0.002), and a
+floor is the population's own covariance structure at the sizes sampled; the ladder that adds neighbouring neurons sits on its floor too (0.346 against a floor of 0.342 in the recording above). Adding directions
 class by class lifts the exponent above its floor in all eight grating recordings and 158 of 167 Neuropixels populations (temporal
 frequencies pooled), and eight topics lift every layer of Pythia-160m and 2.8B (averaged over class orders).
 
@@ -311,9 +312,10 @@ class orders).</sub>
 The fluctuations within each class carry the shift, and the class means pull it down. Each direction's trials form a cloud
 stretched its own way, so every new direction adds dimensions the others held weakly, while the class means stack variance onto a
 few strong ones. The within-class part runs +0.29 to +0.64 across the eight grating recordings and the class-mean part -0.08 to
--0.35; remove the class means from every trial and linear decoders fall to chance, while the shift still clears the paper's
-permutation test in every half of every recording, and a null that keeps each half's class means and permutes its residuals
-(Freedman-Lane) in 31 of the 32 halves.
+-0.35; remove the class means from every trial and linear decoders fall to chance, while the shift, now almost entirely within-class,
+stays above a null that keeps each half's class means and permutes its residuals (Freedman-Lane) in 31 of the 32 halves. The
+paper's 'every half' used label permutations, which run liberal for this test when the gains are heavy-tailed
+([REFERENCE.md](https://github.com/adilamin89/structure-in-the-zoom/blob/main/REFERENCE.md#feature-reference), `--arm`).
 
 ### When the sign changes
 
@@ -322,7 +324,7 @@ permutation test in every half of every recording, and a null that keeps each ha
 Class means along the strongest fluctuations stack variance onto them and tend to lower the exponent; means along weak ones fill
 those dimensions and tend to raise it. In the XY lattice the classes lie on the same orbit at every temperature and the fluctuations decide the
 sign: positive while polar order holds, negative from T = 0.9 to 1.1 as it melts, near zero above, and the two terms give its sign
-in all 72 lattice and spin-wave ensembles. In recordings the two terms, computed on the same trials at the rungs' own sample counts, get the sign in
+in all 72 lattice and spin-wave ensembles. In recordings the two terms, computed on the same trials at the rungs' own sample counts, reconstruct the sign in
 163 of 167 Allen Neuropixels populations with each direction's temporal-frequency tuning removed, including 14 of the 16 negative
 ones (always guessing positive gets 151). With one average fluctuation overlap for all pairs of classes (mean field) they also give the signs of all
 three macaque V1 arrays from a third laboratory (Smith and Kohn), one of them negative (-0.35).
@@ -336,11 +338,13 @@ the same way, with trials for prompts and neurons for hidden units).
 
 <img src="https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/media/lm_clouds.gif" width="100%" alt="Pythia-2.8B (deduped) layer 24 of 32, eight topics of 32 prompts, each prompt's last-token state. Left: the 256 prompts as dots in the plane of the topic centres (44% of the centres' spread, 7% of all variance), coloured by topic; the topic ladder adds whole topics while its floor draws prompts with the topics mixed. Right: the participation ratio of the topic ladder climbs from 18 to 53 and that of the floor from 21 to 53, a shift of +0.10; a control that keeps every topic's centre and gives all topics one fluctuation shape has a mean shift of +0.02. Statistics over all 256 prompts: how strongly topics organize the layer, not what the model uses">
 
-In Pythia-2.8B (deduped) the topics differ in how their prompts vary, as V1's directions do. Give every topic one shared
-fluctuation shape while keeping its centre (a surrogate; the mean of ten), and layer 24's shift falls from +0.10 to
+In Pythia-2.8B (deduped) the topics differ in how their prompts vary, as V1's directions do, and rung's shape surrogate
+shows it at 32 prompts per topic: give every topic one shared fluctuation shape while keeping its centre (the mean of ten
+surrogates), and layer 24's shift falls from +0.10 to
 +0.02. At all 33 layers, the embedding included, the split net of the surrogate (in the declared order, rung's default)
-puts what the topics' own fluctuations add at +0.039 to +0.111, and at 32 prompts per topic the class means add
-almost nothing beyond the surrogate (-0.003 to +0.010). Seven of the eight topics hold fewer prompts (32) than their estimated fluctuation
+puts what the topics' own fluctuation shapes add at +0.039 to +0.111 in the within-class part and
+-0.003 to +0.010 in the class-mean part; the net class-mean part leaves out what the means do on their own,
+which the surrogate keeps. Seven of the eight topics hold fewer prompts (32) than their estimated fluctuation
 dimension (30 to 68 at layer 24, from split halves), so the plain split reads the within-class part low; the surrogate, sampled the same way, is the
 comparison to quote ([lm_shape_surrogate.py](https://github.com/adilamin89/structure-in-the-zoom/blob/main/scripts_canonical/lm_shape_surrogate.py); for your own arrays, `rung data X.npy y.npy --decompose`,
 which draws the surrogate itself at these counts).
@@ -353,8 +357,8 @@ linear decoders to chance and leaves a positive shift). Use it to see at which d
 
 <img src="https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/media/lm_layers.gif" width="100%" alt="Pythia-2.8B's 32 layers and its embedding as four columns, one per label: topics, TruthfulQA categories, ETHICS domains, BLiMP grammaticality; each cell coloured by that layer's order-averaged shift (clipped at 0.15 either way) and dotted where above the label-permutation null (one-sided p of 0.05 or less, uncorrected). Topics lift every layer, TruthfulQA nearly every one, ETHICS stays near zero in the middle layers, BLiMP sits far below its null: the carrier sentences. The shift reads how strongly a label organizes a layer, not what the model uses, and a count over one model's layers is one draw">
 
-Read at every layer of Pythia-2.8B, eight topics lift all 33 layers above their permutation null, more so late (order-averaged
-shift +0.03 at the embedding, +0.10 at the last layer), and TruthfulQA's categories lift 31 of the 32 layers past the
+Read at every layer of Pythia-2.8B, eight topics lift all 33 layers above their permutation null, more so late (averaged over 50
+random class orders in Appendix I's run, +0.03 at the embedding and +0.10 at the last layer), and TruthfulQA's categories lift 31 of the 32 layers past the
 embedding although every question ends on a question mark. BLiMP's grammaticality labels sit far below their permutation null at
 32 of 33 layers and inside the null that swaps labels within each sentence pair at all 33: what they separate is the carrier
 sentences.
@@ -423,7 +427,7 @@ Five minutes for NeurReps 2026: the puzzle of three exponents, the ladder and it
 - [REFERENCE.md](https://github.com/adilamin89/structure-in-the-zoom/blob/main/REFERENCE.md): every command and option, what it
   returns and what the paper found with it; worked examples; speed, the permutation budget and the replays of the paper's runs.
 - [v3/](https://github.com/adilamin89/structure-in-the-zoom/blob/main/v3/README.md): the scripts and results behind the numbers
-  the extended version of the paper (arXiv v3) adds, one row per script with the section it backs.
+  an extended version of the paper adds (in preparation, not on arXiv yet), one row per script.
 - [PAPER.md](https://github.com/adilamin89/structure-in-the-zoom/blob/main/PAPER.md): the paper's numbers, `rung` run against
   them, runs on data the paper never saw, the public raw data, and a claim-by-claim table of artifacts and the scripts that
   write them.
@@ -455,8 +459,8 @@ scripts_canonical/       one script per analysis, named for what it computes; mo
                          name the artifact they write; make_fig_*.py regenerate the figures
                          from the artifacts
 data_canonical/          the result files behind the reported numbers
-v3/                      the scripts and results behind the numbers the extended version
-                         (arXiv v3) adds
+v3/                      the scripts and results behind the numbers an extended version
+                         of the paper adds (in preparation, not on arXiv yet)
 figures_canonical/       the figures (drawn with matplotlib 3.10, one with 3.11)
 media/                   this page's pictures: the animations (rung in use, the clouds, the XY
                          lattice, Pythia's prompt clouds and layers, GPT-2's heads), Figure 1, the

@@ -370,7 +370,7 @@ def test_measured_drift_rate_in_the_readme():
 
 
 def test_many_classes_few_rows_give_an_undefined_split_not_a_crash():
-    """LB1's report (Nov 9): 48 classes x 16 rows raised ZeroDivisionError, a 16-row floor draw holding only singleton classes."""
+    """A user report (Nov 9): 48 classes x 16 rows raised ZeroDivisionError, a 16-row floor draw holding only singleton classes."""
     X = np.random.default_rng(0).normal(size=(48 * 16, 64)); y = np.repeat(np.arange(48), 16)
     d = r.decompose(X, y, n_null=20, seed=42, n_bias=0)
     assert "no two samples of one class" in d["undefined"] and np.isnan(d["delta_split_free"]["D"])

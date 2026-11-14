@@ -1,8 +1,10 @@
 # v3: generators behind the extended version's new numbers
 
-The extended version of the paper (arXiv 2611.08506, version 3) adds results to the NeurReps version. Each new number comes from a
-script in this folder, written beside it as JSON (and a log where the run printed one). The rest come from `scripts_canonical/` and
-`data_canonical/`, as listed in [PAPER.md](../PAPER.md).
+An extended version of the paper is in preparation; it is not on arXiv yet (arXiv 2611.08506 v2 is the NeurReps paper). Each
+script below backs the numbers its row lists from the November 2026 draft, written beside it as JSON or a log; the sections named
+are the draft's, and the published version may number or word them differently. The draft's other additions (the sector numbers of
+its Appendix K among them) have generators that are not public yet. The rest come from `scripts_canonical/` and `data_canonical/`,
+as listed in [PAPER.md](../PAPER.md).
 
 | Script | What it computes | In the extended version | Needs |
 |---|---|---|---|

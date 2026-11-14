@@ -106,7 +106,7 @@ artifacts are listed in the second table below.
 
 ## The extended version
 
-The extended version of the paper (arXiv 2611.08506, version 3) adds the cyclic starts of every grating recording, the
+An extended version of the paper, in preparation and not on arXiv yet (arXiv 2611.08506 v2 is the NeurReps paper), adds the cyclic starts of every grating recording, the
 language-model split averaged over class orders and net of its bias, the pooled-fluctuation control on Pythia-2.8B, the floor for
 non-Gaussian samples, the macaque arrays at their own sample counts and a planted comparison with label CKA, RSA and manifold
 capacity. Their generators and artifacts are in [v3/](v3/README.md), one row per script with the section it backs.

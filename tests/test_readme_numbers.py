@@ -242,7 +242,7 @@ def test_front_page_numbers():
     assert abs(np.mean([r["shift_obs"] for r in ok])) < 0.01                       # 'sit on their floors': mean shift -0.002
     assert f"sit on their floors (mean shift {np.mean([r['shift_obs'] for r in ok]):+.3f})" in front
     sp = next(r for r in load("neuron_zoom_spatial.json")["rows"] if r["name"].startswith("gratings_drifting_GT3"))
-    assert f"so does adding neighbouring neurons ({sp['theta_spatial']:.3f} against a floor of {sp['theta_floor']:.3f} in the recording above)" in front
+    assert f"the ladder that adds neighbouring neurons sits on its floor too ({sp['theta_spatial']:.3f} against a floor of {sp['theta_floor']:.3f} in the recording above)" in front
     assert abs(sp["theta_spatial"] - sp["theta_floor"]) < 0.01
     g3 = load("readme_gt3.json")
     assert (f"memory and time grow with the square of the number of samples (the Gram alone is 8n² bytes, "
@@ -255,7 +255,7 @@ def test_front_page_numbers():
     ag = {k: np.sign(np.array([q[k] for q in rows]) + cm) == np.sign(dm) for k in ("W0", "W2")}
     neg = int((dm < 0).sum())
     assert len(rows) == len(pooled) == 167
-    assert f"the two terms, computed on the same trials at the rungs' own sample counts, get the sign in {int(ag['W2'].sum())} of {len(rows)} Allen " \
+    assert f"the two terms, computed on the same trials at the rungs' own sample counts, reconstruct the sign in {int(ag['W2'].sum())} of {len(rows)} Allen " \
            f"Neuropixels populations with each direction's temporal-frequency tuning removed, including " \
            f"{int((ag['W2'] & (dm < 0)).sum())} of the {neg} negative ones (always guessing positive gets {len(rows) - neg})" in front
     # XY: the two terms' sign in every lattice and spin-wave ensemble (40 nematic lattices and spin waves, 32 polar)
@@ -304,8 +304,13 @@ def test_front_page_reading():
             f"directions class by class gives the other {g['delta']:+.3f}") in flat
     assert f"`z = +{g['z']:.1f}`: the shift sits {g['z']:.0f} standard deviations above the same ladder with the labels permuted" in flat
     assert abs(g["pr_obs"][-1] - g["pr_floor"][-1]) < 1e-9 * g["pr_obs"][-1]
+    # the first rung's floor names its draws: this run's 20, and Figure 1B's ten (orientation_zoom.json, v2's +0.240) at the same sizes
+    f1 = next(r for r in load("orientation_zoom.json")["results"] if "drifting_GT3" in r["name"])
+    assert [q[1] for q in f1["rand_ladder"]] == [q[1] for q in f1["struct_ladder"]] == list(g["rung_sizes"])
+    assert abs(f1["delta"] - 0.240) < 5e-4 and g["n_floor_draws"] == 20                   # Figure 1's printed shift
     assert (f"One direction's trials span {g['pr_obs'][0]:.0f} dimensions where random trials from all eight span "
-            f"{g['pr_floor'][0]:.0f}; both ladders end at the full set's {g['pr_obs'][-1]:.0f}, so the direction ladder climbs further") in flat
+            f"{g['pr_floor'][0]:.0f} in this run ({f1['rand_ladder'][0][2]:.0f} with Figure 1's ten floor draws); both ladders end at "
+            f"the full set's {g['pr_obs'][-1]:.0f}, so the direction ladder climbs further") in flat
     assert f"carry the shift (the within-class part D, {fs['D']:+.3f}), and the class means pull it down (the class-mean part Tb + Cb + Cx, {cm:+.3f})" in flat
     assert f"default floor of 20 random ladders, shift {g['delta']:+.3f}" in flat and g["n_floor_draws"] == 20
     # the clouds animation's ladders: PR(W) from the rung traces, the floor's from the rung's D (as the generator draws them)
@@ -429,8 +434,8 @@ def test_front_page_layers():
     L4 = load("llm_score.json")["L4"]["pythia-2.8b-deduped"]
     below = sum(r["perm"]["p_two"] <= 0.05 and r["dbar50_run37"] < r["perm"]["null_mean"] for r in bl)
     assert len(tl) == t_n == 33 and set(q["distinct_last_tokens"]) <= {1, 2} and L4["swap_absorbs"] == 33
-    assert (f"eight topics lift all {t_n} layers above their permutation null, more so late (order-averaged shift "
-            f"{tl[0]['dbar50_run37']:+.2f} at the embedding, {tl[-1]['dbar50_run37']:+.2f} at the last layer), and TruthfulQA's "
+    assert (f"eight topics lift all {t_n} layers above their permutation null, more so late (averaged over 50 random class "
+            f"orders in Appendix I's run, {tl[0]['dbar50_run37']:+.2f} at the embedding and {tl[-1]['dbar50_run37']:+.2f} at the last layer), and TruthfulQA's "
             f"categories lift {q['B1_past_embedding'].split('/')[0]} of the 32 layers past the embedding although every question ends "
             f"on a question mark") in front
     assert (f"BLiMP's grammaticality labels sit far below their permutation null at {below} of 33 layers and inside the null that "
@@ -448,10 +453,13 @@ def test_language_model_prompt_clouds():
     assert d["rung"] == r.__version__ and d["n_per_class"] == 32 and len(cov) == 33 == sm["n_layers"]
     assert sm["net_D_positive"] == 33 == d["summary"]["z"]["net_D_positive"]          # in both frames
     assert max(sm["surrogate_share_of_shift_max"], d["summary"]["z"]["surrogate_share_of_shift_max"]) < 0.5
+    # the net class-mean part is what the topics' own shapes change; what the means do on their own is the surrogate's (it keeps them)
     assert (f"layer 24's shift falls from {r24['delta']:+.2f} to {r24['surrogate_delta']:+.2f}. At all 33 layers, the embedding included, the split "
-            f"net of the surrogate (in the declared order, rung's default) puts what the topics' own fluctuations add at {sm['net_D_min']:+.3f} "
-            f"to {sm['net_D_max']:+.3f}, and at 32 prompts per topic the class means add almost nothing beyond the surrogate "
-            f"({sm['net_class_means_min']:+.3f} to {sm['net_class_means_max']:+.3f})") in front
+            f"net of the surrogate (in the declared order, rung's default) puts what the topics' own fluctuation shapes add at "
+            f"{sm['net_D_min']:+.3f} to {sm['net_D_max']:+.3f} in the within-class part and {sm['net_class_means_min']:+.3f} to "
+            f"{sm['net_class_means_max']:+.3f} in the class-mean part; the net class-mean part leaves out what the means do on their own, "
+            f"which the surrogate keeps") in front
+    assert "class means add almost nothing" not in front
     dims = r24["class_dim_split"]
     n_below = sum(v > d["n_per_class"] for v in dims)
     assert f"{ {7: 'Seven'}[n_below]} of the eight topics hold fewer prompts (32) than their estimated fluctuation dimension ({min(dims):.0f} to {max(dims):.0f} at layer 24, from split halves)" in front
@@ -531,3 +539,31 @@ def test_rung_114_reference_numbers():
             f"{g['delta_orderavg_random_se']:.3f}") in ref
     l24 = load("lm_shape_surrogate_pythia-2.8b.json")["frames"]["cov"][24]
     assert f"raw within-class part is {l24['D']:+.3f} and the net one {l24['net_D']:+.3f}" in ref
+
+
+def test_front_page_halves_under_the_calibrated_null():
+    """'stays above a null that keeps each half's class means and permutes its residuals (Freedman-Lane) in 31 of the 32 halves. The
+    paper's 'every half' used label permutations, which run liberal for this test when the gains are heavy-tailed': the count is
+    test_rung_113's; the calibration reads null_calibration.json (200 seeds per regime): label permutations above the 5% level only
+    under heavy-tailed gains, Freedman-Lane at or below it there."""
+    front = " ".join(open(os.path.join(ROOT, "README.md")).read().split())
+    d = load("null_calibration.json"); cal = d["calibration"]
+    bound = 0.05 + 2 * np.sqrt(0.05 * 0.95 / d["design"]["seeds"])       # the 5% level plus two binomial SEs over the seeds
+    heavy = [v for name, v in cal.items() if "heavy" in name]
+    assert heavy and all(v["within_permutation"]["typeI_p05"] > bound for v in heavy)
+    assert all(v["within_freedman_lane"]["typeI_p05"] <= bound for v in cal.values())
+    assert ("stays above a null that keeps each half's class means and permutes its residuals (Freedman-Lane) in 31 of the 32 halves. "
+            "The paper's 'every half' used label permutations, which run liberal for this test when the gains are heavy-tailed") in front
+    assert "clears the paper's permutation test in every half" not in front
+
+
+def test_public_text_names_only_published_versions():
+    """No public text presents an arXiv version 3 (the extended version is in preparation: arXiv 2611.08506 v2 is the NeurReps paper);
+    random-subsample floors read as the population's covariance structure, and the Allen signs as a same-trial reconstruction."""
+    docs = {f: " ".join(open(os.path.join(ROOT, f)).read().split()) for f in ("README.md", "PAPER.md", "REFERENCE.md", "v3/README.md")}
+    for f, s in docs.items():
+        assert "arXiv v3" not in s and "version 3)" not in s, f
+    assert "in preparation, not on arXiv yet" in docs["README.md"] and "not on arXiv yet" in docs["v3/README.md"]
+    front = docs["README.md"]
+    assert "the population's own covariance structure at the sizes sampled" in front and "random sampling alone gives them" not in front
+    assert "reconstruct the sign in" in front and "get the sign in" not in front
