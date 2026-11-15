@@ -3,7 +3,7 @@
 [![The five-minute talk](https://img.shields.io/badge/talk-5%20min-c0392b?logo=youtube&logoColor=white)](https://youtu.be/S4kUtP37KLM)
 [![arXiv 2611.08506v2](https://img.shields.io/badge/arXiv-2611.08506v2-b31b1b)](https://arxiv.org/abs/2611.08506v2)
 [![Open the quickstart in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adilamin89/structure-in-the-zoom/blob/main/examples/quickstart.ipynb)
-[![rung 1.14.0](https://img.shields.io/badge/rung-1.14.0-24292f)](https://github.com/adilamin89/structure-in-the-zoom/tags)
+[![rung 1.15.0](https://img.shields.io/badge/rung-1.15.0-24292f)](https://github.com/adilamin89/structure-in-the-zoom/tags)
 [![MIT license](https://img.shields.io/badge/license-MIT-2f6f9f)](https://github.com/adilamin89/structure-in-the-zoom/blob/main/LICENSE)
 
 <img src="https://raw.githubusercontent.com/adilamin89/structure-in-the-zoom/main/media/hero.gif" width="100%" alt="rung in use on one mouse V1 recording, 4,442 trials by 11,311 neurons in eight drift directions. A terminal runs rung data and rung summarize; below, the ladder that adds whole directions class by class climbs from 29 to 53 dimensions, while its floor, random trials with the labels ignored, starts at 45 and meets it at the full set: slopes 0.305 and 0.074. The exponent 0.305 is the floor 0.074 plus a shift of +0.231, which the fluctuations within each direction (+0.358) and the class means (-0.127) add up to.">
@@ -58,6 +58,7 @@ axes/ioi_names.json --heads` reads every layer and every attention head.
 | the shift with a nuisance, acquisition blocks or time order held fixed | `--strata`, `--time-blocks`, `--null-shift` |
 | whether a session drifts between its early and late halves | the drift check (`--time-blocks` or `--sample-times`) |
 | a continuous variable (an angle, a position, a time) cut into classes, at every wall position | `--continuous` (`--cyclic`) |
+| a cyclic label by symmetry sector: order parameters, each sector's share of the class-mean term, the fluctuations' harmonics | `--sectors` (`--binned`) |
 | what a ladder over neurons or features keeps | `rung features` |
 | the shift at every layer of a Hugging Face model | `rung llm` (`--match-last-token` for the final-token control) |
 | which attention heads, SAE latents or other units a label organizes | `rung llm --heads`, `rung heads` |
@@ -83,9 +84,9 @@ An exponent fitted across growing subsets depends on how the subsets grow, so `r
 ## Quickstart
 
 ```bash
-pip install "rung @ git+https://github.com/adilamin89/structure-in-the-zoom@v1.14.0"
+pip install "rung @ git+https://github.com/adilamin89/structure-in-the-zoom@v1.15.0"
 # for rung llm and rung axis (adds torch, transformers and datasets):
-pip install "rung[models] @ git+https://github.com/adilamin89/structure-in-the-zoom@v1.14.0"
+pip install "rung[models] @ git+https://github.com/adilamin89/structure-in-the-zoom@v1.15.0"
 ```
 
 Python 3.10 or later, with numpy, scipy and matplotlib; `rung[nwb]` adds h5py for NWB and MATLAB v7.3 files. The paper's prompt axes
@@ -179,6 +180,26 @@ sign law (Eq. 3): full-set class-mean remainder c -0.318, always negative here: 
   the means' alignment a 1.51 exceeds 1 + beta/2 = 1.08 (beta 0.158), so any ratio exceeds
   it (here 14.6); its sign predicts the class-mean part's, and here they agree
 class-mean kernel: even amplitude 0.337, odd 0.154, sector balance 2.35
+sectors by symmetry (classes in label order on a cycle of 8, equal class weights; features
+  as given; beta = Tr B / Tr W = 0.158):
+  l = 0: beta_l 0.0000 raw, -0.0000 cross-fitted (null SD 0.0000); Phi_l 0.000; first-order
+  share c1_l -0.0000; a_l not read (beta_l within 3 null SD)
+  l = 1: beta_l 0.0369 raw, +0.0364 cross-fitted (null SD 0.0001); Phi_l 0.177; first-order
+  share c1_l +0.0333; alignment a_l 0.54 +- 0.005 (Monte Carlo SE over the cross-fit splits)
+  l = 2: beta_l 0.0863 raw, +0.0857 cross-fitted (null SD 0.0001); Phi_l 0.272; first-order
+  share c1_l -0.2170; alignment a_l 2.27 +- 0.003 (Monte Carlo SE over the cross-fit splits)
+  l = 3: beta_l 0.0167 raw, +0.0162 cross-fitted (null SD 0.0001); Phi_l 0.118; first-order
+  share c1_l +0.0171; alignment a_l 0.47 +- 0.007 (Monte Carlo SE over the cross-fit splits)
+  l = 4: beta_l 0.0186 raw, +0.0183 cross-fitted (null SD 0.0000); Phi_l 0.126; first-order
+  share c1_l -0.0059; alignment a_l 1.16 +- 0.006 (Monte Carlo SE over the cross-fit splits)
+  class-mean term c -0.3193 (exact; closed form by sector: self terms 0.3613, cross-sector
+  terms +0.0060); the first-order sum, an attribution, is -0.1625 raw and -0.1725 +- 0.0009
+  cross-fitted; with beta above 0.1 the first-order sum can miss c's sign
+  fluctuation kernel harmonics kappa_l (l = 0..4; split halves): +0.1066 +- 0.0017, +0.0244
+  +- 0.0004, +0.0508 +- 0.0008, +0.0125 +- 0.0003, +0.0244 +- 0.0008 (jackknife SE)
+  off-diagonal overlap by separation 1..4: 0.012, 0.004, 0.008, 0.020; circulant share 0.83
+  (class-position permutations: mean 0.14, p = 0.001)
+  pairing: sigma 0.255 +- 0.004, not more than two SE above 1 (no --paired ids)
 ```
 
 The deficit and climb lines say where along the ladder the shift is made, the sign-law line why the class means pull it down here, and
@@ -258,7 +279,7 @@ fractional value, such as 0.5, stops the run instead of being merged into a clas
 - **A language model:** an axis is a JSON file, `{"topic": ["prompt", ...], ...}`; a clone's `axes/` holds the paper's, and `rung axis`
   builds one from a Hugging Face dataset. `rung llm --model EleutherAI/pythia-160m --axis axes/world_knowledge32.json
   --match-last-token --out lm.json` reads the embedding and every layer at each prompt's last token (prompts cut at 128 tokens,
-  `--max-len`), with the final-token control; it takes 61 CPU-seconds of one laptop core (Apple M5 Max), model encoding included.
+  `--max-len`), with the final-token control; it takes 48 CPU-seconds of one laptop core (Apple M5 Max), model encoding included.
   `--device mps` or `cuda` runs larger models.
 - **A continuous variable** (an angle, a position, a time): `rung data X.npy --continuous phi.npy --cyclic` cuts it into eight
   arcs of equal width (`--cells`; `--cell-rule count` for equal counts) and reads the cut at eight wall positions turned through
@@ -278,7 +299,7 @@ holds no more samples than that dimension, or too few to estimate it, rung reads
 within 0.05 of its population value only once each class held about 3 to 20 times its own dimension, depending on how much the
 classes overlap, so quote the net split unless the classes are sampled far beyond that. rung works on the samples' Gram matrix, so
 memory and time grow with the square of the number of samples (the Gram alone is 8n² bytes, 0.16 GB for GT3's
-4,442); Appendix M's command for GT3 (200 permutations) takes 50 CPU-seconds of one laptop core.
+4,442); Appendix M's command for GT3 (200 permutations) takes 152 CPU-seconds of one laptop core.
 
 **Outputs.** `--out r.json` holds the result's numbers; `rung summarize r.json` reads it in plain words, `rung report r.json` writes one
 self-contained HTML page (figure, reading, numbers), and `rung plot r.json --out r.png` the figure alone.

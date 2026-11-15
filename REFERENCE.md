@@ -159,6 +159,52 @@ weights, the comparator any 'with nothing trained' claim needs; `rung report` sh
 `rung heads H.npy labels.npy` scores any stack of units the same way: SAE latents grouped by head, writes cached from a model
 `--heads` does not know.
 
+## Sectors by symmetry
+
+`rung data X.npy y.npy --sectors` reads a cyclic label (classes in label order around a circle, such as drift directions) by symmetry
+sector, l = 0 to K/2, the harmonics of the class index. Beside the class-mean kernel's harmonics (unchanged since 1.5) it prints, with
+every class weighted equally (`sector_split()` in Python):
+
+- **beta_l**, sector l's share of the class-mean variance against the fluctuations, Tr B_l / Tr W (the sectors add up to beta exactly),
+  raw and cross-fitted: the cross-fitted value pairs class means from independent halves of each class, so the means' sampling noise
+  drops out; it is the mean over ten random splits (`--sector-splits`). The split reads the frame the other analyses read
+  (`--standardize` z-scores it); the class-mean kernel's harmonics above it read the features as given.
+- **Phi_l = sqrt(Tr B_l / Tr C)**, the sector's amplitude: for drift directions Phi_1 is the polar (direction) and Phi_2 the nematic
+  (orientation) order of the class means. With `--binned` (classes are equal-width bins of a continuous angle whose samples spread
+  uniformly inside each bin, the form factor's two assumptions) it is also printed net of the bins' form factor sin(pi l/K)/(pi l/K);
+  on XY lattices sqrt(2) times that value returns the polar and nematic order parameters within 1%.
+- **c1_l = 2 (beta_l - x_l)**, x_l = Tr W B_l / Tr W^2: the sector's first-order share of the class-mean term, cross-fitted.
+- **a_l**, the sector's alignment with the fluctuations (above 1: its means lie along the strongest fluctuations and lower the
+  exponent), read only where the cross-fitted beta_l exceeds 3 standard deviations of its label-permutation null (the same split
+  mean on permuted labels; a ratio with a noisy denominator; `--sector-null` permutations), with its Monte Carlo SE over the splits:
+  the splits' noise on these rows, not the spread a new data set would show.
+- **The class-mean term c** exactly, in closed form by sector: c = 2 log(1 + sum beta_l) - log(1 + 2 sum x_l + sum y_ll'),
+  y_ll' = Tr B_l B_l' / Tr W^2, with the self terms (l = l') and the cross-sector terms. The first-order sum of c1_l is an attribution;
+  above beta 0.1 it can miss c's sign. On GT3, c is -0.319 and its raw first-order sum -0.163, almost all of it the orientation sector
+  (l = 2, a_2 2.3).
+- **The fluctuation kernel** Kn_cd = Tr(S_c S_d) / (Tr S_c Tr S_d), every entry from two independent halves (S_c from one half of
+  class c, S_d from the other half of class d; the diagonal pairs a class's two halves), averaged over 50 splits of one fixed
+  random subset of every class, 2 floor(n/2) rows for a smallest class of n: every entry is the same statistic of the same number of
+  rows, so for classes whose rows are drawn alike (one distribution, not only one covariance) the classes are exchangeable at any
+  class counts: kappa_l (l >= 1) is zero in expectation and the class-position permutation p below is exact (a diagonal of
+  full-class traces would put an offset of order 1/n on every harmonic, and each class's own row count a liberal p). It prints the profile over class separations, the
+  harmonics kappa_l with a delete-a-group jackknife SE (ten groups in every class, `--sector-jackknife`; the SE needs ten rows in
+  the smallest class with four left when a group is out; read a harmonic as zero only against that SE), and the circulant share
+  with a permutation of the class positions: whether the fluctuations rotate with the label at all (undefined when the
+  off-diagonal overlaps do not vary). If S_c = R^c S_0 R^-c for a rotation R acting on the features, the population kernel's kappa_l vanishes outside the
+  harmonics S_0 carries ({0, h, 2h} for one rotating plane of frequency h, each reduced modulo K and printed as l = min(j, K - j)).
+  That is a statement about the population; at small counts the estimate can carry harmonics the population kernel lacks (the
+  normalized half covariances' own bias rotates with the class too), so read a harmonic against its zero for identical classes,
+  not as a population mode, unless the classes hold many rows.
+- **Rows shared across classes** (a crossed or paired design, such as one carrier sentence in every class) break the cross-fit:
+  pass the carrier or pair ids with `--strata ids.npy --paired`, and rung refuses the cross-fit when an id spans two classes (and
+  `--account`'s overlap identity, which assumes independent classes). Without `--paired`, `--strata` ids are nuisance ids (blocks,
+  sessions, temporal frequency), which span classes without making rows shared. Without declared pairs rung warns when the
+  classes' mean overlap sigma, the kernel's mean off-diagonal entry over its mean diagonal entry, lies more than two jackknife SE
+  above 1: a heuristic (independent classes do not overlap more than a class overlaps itself, sigma is a ratio slightly above 1 on
+  average at small counts, and its jackknife SE ran conservative on independent synthetic designs; tests/test_rung_115.py checks
+  independent and crossed designs). The cross-fit also needs eight rows per class.
+
 ## The split at finite samples
 
 The README's rule 8 in full: why to sample each class well before reading the split.
@@ -253,8 +299,10 @@ ranking concentrates dimensions. `rung features X.npy --positions cells.npy`. Ne
 (preferred direction, preferred orientation, a file) and on random blocks, each against its own floor. What a coarser recording
 keeps. Direction-sorted blocks keep GT3's shift at every block size, random blocks lose it (+0.027 at 32; Appendix G).
 
-**`--sectors`** (`sectors`): the harmonics of the class-mean kernel on a cyclic axis, its even (orientation) and odd (direction)
-amplitudes. Which tuning the shift reads (Section 4).
+**`--sectors`** (`sectors`, `sector_split`): the harmonics of the class-mean kernel on a cyclic axis, its even (orientation) and odd
+(direction) amplitudes, and the sector split: each sector's order parameter and share of the class means, its alignment with the
+fluctuations, the exact class-mean term by sector and the fluctuation kernel's harmonics ([Sectors by symmetry](#sectors-by-symmetry)).
+Which tuning the shift reads (Section 4).
 
 **`--split-by score.npy`** (`split_by`): the top, bottom and a random third of the features at matched size, each against its own
 floor. Whether a feature property carries the shift; the most direction-selective third shifts more in all eight recordings (Section 4).

@@ -12,7 +12,7 @@
   "sports"
  ],
  "n_per_class": 32,
- "rung": "1.14.0",
+ "rung": "1.15.0",
  "estimators": "decompose(n_null=20, seed=42, n_bias=10); class_pr(estimate='split'); zoom(n_perm=0, k_orders=50, seed=0)",
  "states": "pythia-2.8b-deduped__main__topics.npz",
  "device": "mps",

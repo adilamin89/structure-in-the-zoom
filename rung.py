@@ -37,7 +37,9 @@ under --arm-null permutation and --paper-floor; 1.14 the order-averaged shift ov
 of the log PR of the unions a ladder visits, read once per labelling from class-block sums; its nulls and its SD over orders
 too), the split read net of the shape surrogate by default when a class holds no more samples than its own fluctuation
 dimension, the drift check (early vs late halves against random interleaved splits), and classes cut from a continuous
-variable (cells of equal width or count, wall positions turned through one cell, a guard band, within-cell residualization).)
+variable (cells of equal width or count, wall positions turned through one cell, a guard band, within-cell residualization);
+1.15 a cyclic label read by symmetry sector (sector_split: per-sector order parameters and alignments, cross-fitted; the class-mean
+term's exact closed form by sector; the fluctuation kernel's harmonics with a jackknife SE; refusal on rows shared across classes).)
 
 Single-file, numpy-only implementation of the paper's estimator:
 
@@ -75,7 +77,7 @@ data_canonical/ of this repository.
 """
 import numpy as np
 
-__version__ = "1.14.0"
+__version__ = "1.15.0"
 
 BIN_COUNTS_DEFAULT = (1, 2, 3, 4, 6, 8)
 
@@ -975,6 +977,403 @@ def sectors(X, labels, order=None):
     return out
 
 
+# ---- rung 1.15: the class means and the fluctuations by symmetry sector (order parameters, the split of the class-mean term) ----
+# Definitions: classes in label order on a cycle, EQUAL class weights (m_c centred over classes, W = (1/K) sum_c S_c,
+# B = (1/K) sum_c m_c m_c^T); the harmonic-l part of the class means gives B_l, with B = sum_l B_l and Tr WB = sum_l Tr W B_l exact.
+
+def _sector_harmonics(M, K):
+    """The harmonic-l part of each class mean (rows of M, centred over classes), l = 0..K//2; sector l pairs l with K - l."""
+    F = np.fft.fft(M, axis=0) / K
+    parts = []
+    for l in range(K // 2 + 1):
+        ls = [l] if (l == 0 or 2 * l == K) else [l, K - l]
+        Fl = np.zeros_like(F)
+        Fl[ls] = F[ls]
+        parts.append(np.real(np.fft.ifft(Fl * K, axis=0)))
+    return parts
+
+
+def _gram_sq(A, B):
+    """||A B^T||_F^2 = Tr(A^T A B^T B) for two row blocks, through whichever product is smaller (D x D Grams or the n_A x n_B
+    cross product)."""
+    if A.shape[1] ** 2 <= len(A) * len(B):
+        return float(((A.T @ A) * (B.T @ B)).sum())
+    return float(((A @ B.T) ** 2).sum())
+
+
+def _sector_traces(M, Z, K):
+    """Tr B_l, Tr W B_l and the matrix Tr B_l B_l' (unnormalized: sector_split divides it by Tr W^2 for y_ll') from class means
+    M (K x D, centred) and the scaled residual rows Z (W = Z^T Z)."""
+    P = _sector_harmonics(M, K)
+    trB = np.array([float((p * p).sum()) / K for p in P])
+    trWB = np.array([float(((Z @ p.T) ** 2).sum()) / K for p in P])
+    Y = np.array([[_gram_sq(P[l], P[m]) / K ** 2 for m in range(len(P))] for l in range(len(P))])
+    return P, trB, trWB, Y
+
+
+def _sector_crossfit(X, lab, K, rng, means_only=False, rn=None):
+    """One cross-fitted split: each class halved at random; Tr B_l from the two halves' means (m^A . m^B), Tr W and Tr W^2 =
+    Tr W_1 W_2 from the halves (divisor n - 1), Tr W B_l from W of one half and the means of the other half split in two
+    (m^a . W m^b), averaged over the two assignments. Unbiased for independent rows. means_only: Tr B_l and Tr W alone (the
+    permutation null of beta_l needs nothing else), Tr W from the rows' squared norms rn (X centred on its grand mean)."""
+    if means_only:
+        MA, MB, trW = [], [], 0.0
+        for c in range(K):
+            i = np.where(lab == c)[0]
+            p = i[rng.permutation(len(i))]
+            for h, M in ((p[: len(i) // 2], MA), (p[len(i) // 2:], MB)):
+                m = X[h].mean(0); M.append(m)
+                trW += 0.5 * (float(rn[h].sum()) - len(h) * float(m @ m)) / (K * (len(h) - 1))
+        PA, PB = _sector_harmonics(np.stack(MA) - np.mean(MA, 0), K), _sector_harmonics(np.stack(MB) - np.mean(MB, 0), K)
+        return np.array([float((PA[l] * PB[l]).sum()) / K for l in range(len(PA))]), trW, None, None
+    MA, MB, Z1, Z2, sub = [], [], [], [], []
+    for c in range(K):
+        Xc = X[lab == c]
+        p = rng.permutation(len(Xc))
+        h1, h2 = Xc[p[: len(Xc) // 2]], Xc[p[len(Xc) // 2:]]
+        MA.append(h1.mean(0)); MB.append(h2.mean(0))
+        Z1.append((h1 - h1.mean(0)) / np.sqrt(K * (len(h1) - 1))); Z2.append((h2 - h2.mean(0)) / np.sqrt(K * (len(h2) - 1)))
+        q1, q2 = rng.permutation(len(h1)), rng.permutation(len(h2))
+        sub.append((h1[q1[: len(h1) // 2]].mean(0), h1[q1[len(h1) // 2:]].mean(0), h2[q2[: len(h2) // 2]].mean(0), h2[q2[len(h2) // 2:]].mean(0)))
+    MA, MB = np.stack(MA), np.stack(MB)
+    Z1, Z2 = np.vstack(Z1), np.vstack(Z2)
+    PA, PB = _sector_harmonics(MA - MA.mean(0), K), _sector_harmonics(MB - MB.mean(0), K)
+    S = [np.stack([s[j] for s in sub]) for j in range(4)]
+    Ss = [_sector_harmonics(Sj - Sj.mean(0), K) for Sj in S]
+    trW = 0.5 * (float((Z1 * Z1).sum()) + float((Z2 * Z2).sum()))
+    trW2 = _gram_sq(Z1, Z2)
+    L = len(PA)
+    trB = np.array([float((PA[l] * PB[l]).sum()) / K for l in range(L)])
+    trWB = np.array([0.5 * (float(((Z1 @ Ss[2][l].T) * (Z1 @ Ss[3][l].T)).sum()) + float(((Z2 @ Ss[0][l].T) * (Z2 @ Ss[1][l].T)).sum())) / K
+                     for l in range(L)])
+    return trB, trW, trW2, trWB
+
+
+def _kernel_harmonics(Kn):
+    """The circulant profile of a K x K overlap kernel (mean over class pairs at each separation q = 0..K//2, the diagonal at
+    q = 0; the off-diagonal profile is profile[1:]), its harmonics kappa_l = sum_s Kbar(s) cos(2 pi l s / K), l = 0..K//2, and the
+    matrix of cyclic class separations."""
+    K = len(Kn)
+    cc = np.arange(K)
+    sep = np.minimum((cc[:, None] - cc[None, :]) % K, (cc[None, :] - cc[:, None]) % K)
+    half = np.array([Kn[sep == q].mean() for q in range(K // 2 + 1)])
+    kbar = np.array([half[min(s, K - s)] for s in range(K)])
+    kappa = np.array([float(np.sum(kbar * np.cos(2 * np.pi * l * np.arange(K) / K))) for l in range(K // 2 + 1)])
+    return half, kappa, sep
+
+
+def _circ_share(Kn, sep):
+    """The share of the off-diagonal overlaps' variance that their class separation explains (nan when they do not vary)."""
+    off = ~np.eye(len(Kn), dtype=bool)
+    v, s = Kn[off], sep[off]
+    mu = np.array([v[s == q].mean() for q in s])
+    ss = float(((v - v.mean()) ** 2).sum())
+    return float(1 - ((v - mu) ** 2).sum() / ss) if ss > 0 else float("nan")
+
+
+
+
+def _sector_kernel(Xc, lab, K, keys, keep=None, G=None):
+    """The fluctuation kernel Kn_cd = Tr(S_c S_d) / (Tr S_c Tr S_d) as split_half_sigma's overlap matrix estimates it, every entry
+    from two independent halves (S_c from one half of class c, S_d from the other half of class d, both directions averaged; the
+    diagonal pairs a class's two halves), averaged over the splits keys defines. Every class contributes the same 2h rows to every
+    split, h = half the smallest class: its 2h rows of lowest key in keys[0] (a fixed random subset); split s (keys[s], s >= 1)
+    orders them and takes the first h as half A and the next h as half B. Every entry is then the same statistic of the same number
+    of rows, so for classes whose rows are drawn independently from one distribution, at any class counts, the classes are
+    exchangeable: all entries share one expectation (kappa_l, l > 0, is zero in expectation) and a class-position permutation null
+    is exact (with each class's own rows, a small class's reuse across splits would make it differ from a large one's). One
+    covariance alone is not enough: the normalized half covariances' bias depends on the rows' distribution. A diagonal of full-class t_c^2
+    instead carries a finite-sample offset on every kappa_l (-2/(n + 1) for one Gaussian feature), and halves of unequal sizes
+    another.
+    keep (a row mask) drops rows, keeping each kept row's key (the jackknife's replicates share the splits). Xc: rows centred on
+    their class means; G: its Gram matrix (or None: per-class half covariances). Raises _Undefined for a half with no variance."""
+    idx = [np.where((lab == c) & (True if keep is None else keep))[0] for c in range(K)]
+    h = min(len(i) for i in idx) // 2
+    sel = [i[np.argsort(keys[0, i], kind="stable")[: 2 * h]] for i in idx]
+    acc = np.zeros((K, K))
+    for s in range(1, len(keys)):
+        H = []
+        for c in range(K):
+            o = sel[c][np.argsort(keys[s, sel[c]], kind="stable")]
+            H.append((o[:h], o[h:]))
+        if G is not None:
+            def cb(i, j):                                            # the cross-Gram of two halves, each centred on its own mean
+                B = G[np.ix_(i, j)]
+                return B - B.mean(1, keepdims=True) - B.mean(0, keepdims=True) + B.mean()
+            tr = [[float(np.trace(cb(rows, rows))) / len(rows) for rows in hc] for hc in H]
+            cross = lambda c, u, d, w: float((cb(H[c][u], H[d][w]) ** 2).sum()) / (len(H[c][u]) * len(H[d][w]))
+        else:
+            S = []
+            for hc in H:
+                Sc = []
+                for rows in hc:
+                    R = Xc[rows] - Xc[rows].mean(0)
+                    Sc.append(R.T @ R / len(rows))
+                S.append(Sc)
+            tr = [[float(np.trace(Sh)) for Sh in Sc] for Sc in S]
+            cross = lambda c, u, d, w: float((S[c][u] * S[d][w]).sum())
+        scale = max(max(t) for t in tr)
+        flat = [c for c in range(K) if min(tr[c]) <= 1e-24 * scale]
+        if flat or not scale > 0:
+            raise _Undefined(f"class(es) {flat} (by label position) have no within-class variance in a split half, so the "
+                             "fluctuation kernel is undefined; drop the constant classes")
+        for c in range(K):
+            for d in range(c, K):
+                v = 0.5 * (cross(c, 0, d, 1) / (tr[c][0] * tr[d][1]) + cross(c, 1, d, 0) / (tr[c][1] * tr[d][0]))
+                acc[c, d] = acc[d, c] = acc[c, d] + v
+    return acc / (len(keys) - 1)
+
+
+def sector_split(X, labels, binned=False, pairs=None, n_splits=10, n_null=50, n_jack=10, n_perm=2000, seed=0, kernel_splits=50,
+                 split_seed=None):
+    """The class means and the fluctuations by symmetry sector of a cyclic label (classes in label order, equal class weights;
+    definitions of the paper's extended version). Per sector l = 0..K//2:
+      beta_l = Tr B_l / Tr W (raw, and cross-fitted: means from independent halves, the mean over n_splits random splits);
+      E_l = beta_l / beta (raw); Phi_l = sqrt(Tr B_l / Tr C), cross-fitted (polar P = Phi_1, nematic Q = Phi_2 for directions), and
+      with binned=True (classes are equal-width bins of a continuous angle whose samples spread uniformly inside each bin, the form
+      factor's assumptions) Phi_l / f_l, f_l = sin(pi l / K) / (pi l / K);
+      c1_l = 2 (beta_l - x_l), x_l = Tr W B_l / Tr W^2, cross-fitted: the sector's first-order share of the class-mean term;
+      a_l = x_l / beta_l (the ratio of the split means), cross-fitted, reported only where beta_l^x exceeds 3 SD of its
+      label-permutation null (the same n_splits-split mean computed on permuted labels; its mean is 0), with its Monte Carlo SE over
+      the splits (delta method for the ratio; conditional on the rows: it measures the splits' noise, not a new data set's).
+    The class-mean term c = log PR(W + B) - log PR(W) EXACTLY in closed form on the raw estimator,
+      c = 2 log(1 + sum beta_l) - log(1 + 2 sum x_l + sum_ll' y_ll'), y_ll' = Tr B_l B_l' / Tr W^2,
+    with the self (y_ll) and cross-sector (y_ll', l != l') terms; the first-order sum (sum c1_l) is an attribution, poor when beta > 0.1.
+    The fluctuation kernel Kn_cd = Tr(S_c S_d) / (Tr S_c Tr S_d), every entry from two independent halves (_sector_kernel; the
+    estimator of split_half_sigma, halves of one size in every class), averaged over kernel_splits splits under split_seed (default
+    seed): its profile over class separations, its harmonics kappa_l with a delete-a-group jackknife SE (n_jack groups within each
+    class; the replicates keep the splits), the classes' mean overlap sigma (mean off-diagonal over mean diagonal entry: near 1 for
+    classes that fluctuate alike, a ratio slightly above 1 on average at small counts) with its jackknife SE, and the circulant share
+    with a class-position permutation null (whether the fluctuations rotate with the label at all; undefined when the off-diagonal
+    overlaps do not vary). The kernel is computed from the rows' Gram matrix or the classes' half covariances, whichever is smaller.
+    Paired rows: pairs (one id per row; rows with one id are the same item in different classes, such as a carrier sentence or a
+    minimal pair) declare a crossed or paired design, and the cross-fit is refused when an id spans classes. Nuisance ids (blocks,
+    sessions, temporal frequency) are not pairs: they span classes without making rows shared. Without pairs, sigma more than two
+    jackknife SE above 1 prints a warning that classes may share rows (a heuristic: independent classes do not overlap more than
+    a class overlaps itself, and the jackknife SE ran conservative on independent synthetic designs). The cross-fit also needs 8
+    rows in every class. Raises ValueError for malformed inputs (X not 2-D or not finite, labels or pairs not one per row or
+    missing, counts not integers in range)."""
+    X = np.asarray(X, dtype=np.float64); labels = np.asarray(labels)
+    if X.ndim != 2:
+        raise ValueError(f"sector_split: X must be samples by features (2-D; shape {X.shape} given)")
+    if labels.ndim != 1 or len(labels) != len(X):
+        raise ValueError(f"sector_split: labels need one value per row of X ({labels.shape} for {len(X)} rows)")
+    if not np.all(np.isfinite(X)):
+        raise ValueError("sector_split: X holds NaN or inf; drop or mask those rows first")
+    def _has_missing(a):                                              # NaN of any float or complex type, NaT, None
+        if a.dtype.kind in "fc":
+            return bool(np.isnan(a).any())
+        if a.dtype.kind in "mM":
+            return bool(np.isnat(a).any())
+        return a.dtype.kind == "O" and any(v is None or v != v for v in a)
+    if _has_missing(labels):
+        raise ValueError("sector_split: labels hold missing values (NaN, NaT or None)")
+    isint = lambda v: isinstance(v, (int, np.integer)) and not isinstance(v, (bool, np.bool_))
+    for name, v, lo in (("n_splits", n_splits, 1), ("n_null", n_null, 0), ("n_perm", n_perm, 0), ("kernel_splits", kernel_splits, 1)):
+        if not isint(v) or v < lo:
+            raise ValueError(f"sector_split: {name} must be an integer >= {lo} ({v!r} given)")
+    if not isint(n_jack) or n_jack < 0 or n_jack == 1:
+        raise ValueError(f"sector_split: n_jack must be 0 (no jackknife) or an integer >= 2 ({n_jack!r} given)")
+    st = None
+    if pairs is not None:
+        st = np.asarray(pairs)
+        if st.ndim != 1 or len(st) != len(labels):
+            raise ValueError(f"sector_split: pairs need one id per row ({st.shape} for {len(labels)} rows)")
+        if _has_missing(st):
+            raise ValueError("sector_split: pairs hold missing ids; give every row an id")
+    classes = np.unique(labels); K = len(classes)
+    if K < 3:
+        return {"undefined": f"sectors need at least three classes on the cycle ({K} given)", "n_classes": K}
+    lab = np.searchsorted(classes, labels)
+    counts = np.bincount(lab, minlength=K)
+    if counts.min() < 4:
+        return {"undefined": f"every class needs at least four rows (smallest {int(counts.min())})", "n_classes": K}
+    # pairing by declared pair ids (without them the kernel's sigma checks it below)
+    pairing = {"checked": "pairs" if st is not None else "kernel sigma"}
+    if st is not None:
+        shared = [s for s in np.unique(st) if len(np.unique(lab[st == s])) > 1]
+        pairing.update(paired=bool(shared), n_shared_ids=len(shared))
+    # raw sectors (exact closed form of c)
+    M = np.stack([X[lab == c].mean(0) for c in range(K)]); M = M - M.mean(0)
+    Z = np.vstack([(X[lab == c] - X[lab == c].mean(0)) / np.sqrt(K * counts[c]) for c in range(K)])
+    trW = float((Z * Z).sum()); trW2 = _gram_sq(Z, Z)
+    if not (trW > 0 and trW2 > 0):
+        return {"undefined": "no within-class variance: the sectors' ratios to Tr W are undefined", "n_classes": K}
+    P, trB, trWB, Y = _sector_traces(M, Z, K)
+    L = len(P)
+    beta_l = trB / trW; x_l = trWB / trW2; Yn = Y / trW2
+    beta = float(beta_l.sum())
+    c_closed = 2 * np.log1p(beta) - np.log1p(2 * x_l.sum() + Yn.sum())
+    c_exact = np.log((trW + trB.sum()) ** 2 / (trW2 + 2 * trWB.sum() + Y.sum())) - np.log(trW ** 2 / trW2)
+    out = {"n_classes": K, "counts": counts.tolist(), "equal_class_weights": True, "binned": bool(binned), "beta": beta,
+           "c_exact": float(c_exact), "c_closed": float(c_closed), "y_self": float(np.trace(Yn)),
+           "y_cross": float(Yn.sum() - np.trace(Yn)), "first_order_warn": bool(beta > 0.1), "pairing": pairing}
+    with np.errstate(invalid="ignore", divide="ignore"):
+        a_raw = (trWB / trB) / (trW2 / trW)
+    out["alignment"] = float((trWB.sum() / trB.sum()) / (trW2 / trW)) if trB.sum() > 0 else float("nan")
+    secs = [{"l": l, "beta_raw": float(beta_l[l]), "E_raw": float(trB[l] / trB.sum()) if trB.sum() > 0 else float("nan"),
+             "x_raw": float(x_l[l]), "a_raw": float(a_raw[l]), "c1_raw": float(2 * (beta_l[l] - x_l[l]))} for l in range(L)]
+    # cross-fit: refused for paired rows or thin classes, or when a split leaves a ratio's denominator at zero
+    refuse = ("rows shared across classes (pairs)" if pairing.get("paired") else
+              f"a class holds fewer than 8 rows (smallest {int(counts.min())})" if counts.min() < 8 else None)
+    runs = None
+    if refuse is None:
+        rng = np.random.default_rng(seed)
+        runs = [_sector_crossfit(X, lab, K, rng) for _ in range(n_splits)]
+        if not all(r[1] > 0 and r[2] > 0 for r in runs):
+            refuse = "a split leaves Tr W or Tr W_1 W_2 at zero (the halves' fluctuations share no direction)"
+    out["crossfit"] = {"used": refuse is None, "refused": refuse, "n_splits": n_splits, "n_null": n_null}
+    if refuse is None:
+        bx = np.array([r[0] / r[1] for r in runs]); xx = np.array([r[3] / r[2] for r in runs])
+        bxm, xxm = bx.mean(0), xx.mean(0)
+        trBm = np.array([r[0] for r in runs]).mean(0); trWm = float(np.mean([r[1] for r in runs]))
+        rngp = np.random.default_rng(seed + 1)
+        Xg = X - X.mean(0); rn = (Xg * Xg).sum(1)
+        null = []
+        for _ in range(n_null):                                       # the null of the reported statistic: n_splits-split means
+            labp = lab[rngp.permutation(len(lab))]
+            v = [r0[0] / r0[1] for r0 in (_sector_crossfit(Xg, labp, K, rngp, means_only=True, rn=rn) for _ in range(n_splits))]
+            null.append(np.mean(v, 0))
+        nsd = np.array(null).std(0, ddof=1) if n_null > 1 else np.full(L, np.nan)
+        for l in range(L):
+            s = secs[l]
+            phi = float(np.sqrt(max(trBm[l], 0.0) / (trWm + trBm.sum())))
+            f = 1.0 if l == 0 else float(np.sin(np.pi * l / K) / (np.pi * l / K))
+            shown = bool(n_null > 1 and bxm[l] > 3 * nsd[l])
+            a_x = float(xxm[l] / bxm[l]) if shown else None
+            se = (float(np.std(xx[:, l] - a_x * bx[:, l], ddof=1) / (abs(bxm[l]) * np.sqrt(n_splits)))
+                  if shown and n_splits > 1 else None)
+            s.update(beta_x=float(bxm[l]), beta_x_null_sd=float(nsd[l]), x_x=float(xxm[l]), c1_x=float(2 * (bxm[l] - xxm[l])),
+                     phi_x=phi, a_x=a_x, a_x_se=se, a_shown=shown)
+            if binned:
+                s["phi_x_binfree"] = phi / f
+        out["c1_x_sum"] = float(sum(s["c1_x"] for s in secs))
+        per = 2 * (bx - xx).sum(1)                                     # the cross-fitted first-order sum of each split
+        out["c1_x_sum_se"] = float(per.std(ddof=1) / np.sqrt(n_splits)) if n_splits > 1 else None
+    out["c1_raw_sum"] = float(sum(v["c1_raw"] for v in secs))
+    out["sectors"] = secs
+    # the fluctuation kernel, every entry from two independent halves
+    Xc = X.copy()
+    for c in range(K):
+        Xc[lab == c] -= X[lab == c].mean(0)
+    G = Xc @ Xc.T if len(X) ** 2 <= 2 * K * X.shape[1] ** 2 else None    # the smaller of the Gram and the 2K half covariances
+    keys = np.random.default_rng(seed if split_seed is None else split_seed).random((kernel_splits + 1, len(X)))   # row 0: the subset
+    try:
+        Kn = _sector_kernel(Xc, lab, K, keys, G=G)
+    except _Undefined as e:
+        out["kernel"] = {"undefined": str(e)}
+        if st is None:
+            pairing.update(paired=None, warn=None, undefined=str(e))
+        return out
+    def sig_of(Kx):                                                   # None when the mean diagonal overlap is not positive
+        dm = float(np.diag(Kx).mean())
+        return float(Kx[~np.eye(K, dtype=bool)].mean() / dm) if dm > 0 else None
+    half, kappa, sep = _kernel_harmonics(Kn)
+    kern = {"estimator": "split halves", "n_splits": kernel_splits, "profile": half.tolist(), "off_diagonal_profile": half[1:].tolist(),
+            "kappa": kappa.tolist(), "sigma": sig_of(Kn), "circ_share": _circ_share(Kn, sep)}
+    if not np.isfinite(kern["circ_share"]):
+        kern["circ_undefined"] = "the off-diagonal overlaps do not vary, so there is nothing for the class positions to explain"
+    elif n_perm:
+        rng = np.random.default_rng(seed + 2)
+        nul = np.array([_circ_share(Kn[np.ix_(p, p)], sep) for p in (rng.permutation(K) for _ in range(n_perm))])
+        tie = 1e-12 * max(1.0, abs(kern["circ_share"]))               # arrangements equal in exact arithmetic tie, not roundoff
+        kern.update(circ_null_mean=float(nul.mean()), circ_p=float((1 + np.sum(nul >= kern["circ_share"] - tie)) / (1 + n_perm)))
+    nmin = int(counts.min())
+    if n_jack and nmin >= n_jack and nmin - -(-nmin // n_jack) >= 4:
+        rng = np.random.default_rng(seed + 3)                     # the groups: their own stream
+        grp = np.empty(len(lab), int)
+        for c in range(K):
+            idx = np.where(lab == c)[0]
+            grp[idx[rng.permutation(len(idx))]] = np.arange(len(idx)) % n_jack
+        try:
+            reps = [_sector_kernel(Xc, lab, K, keys, keep=grp != g, G=G) for g in range(n_jack)]
+        except _Undefined as e:
+            kern["jackknife_undefined"] = str(e)
+        else:
+            jse = lambda v: np.sqrt((n_jack - 1) / n_jack * ((v - v.mean(0)) ** 2).sum(0))
+            kern["kappa_se"] = jse(np.array([_kernel_harmonics(Kr)[1] for Kr in reps])).tolist()
+            sr = [sig_of(Kr) for Kr in reps]
+            if kern["sigma"] is not None and all(v is not None for v in sr):
+                kern["sigma_se"] = float(jse(np.array(sr)))
+            kern["n_jack"] = n_jack
+    if kern["sigma"] is None:
+        kern["sigma_undefined"] = "the mean diagonal overlap is not positive, so sigma (off-diagonal over diagonal) is undefined"
+    if st is None:
+        if kern["sigma"] is None:
+            pairing.update(paired=None, warn=None, undefined=kern["sigma_undefined"])
+        elif "sigma_se" in kern:
+            pairing.update(sigma=kern["sigma"], sigma_se=kern["sigma_se"], paired=None,
+                           warn=bool(kern["sigma"] - 2 * kern["sigma_se"] > 1))
+        else:
+            why = (f"no jackknife SE for sigma: {kern['jackknife_undefined']}" if "jackknife_undefined" in kern else
+                   "no jackknife SE for sigma: a left-out group leaves the mean diagonal overlap not positive" if "n_jack" in kern else
+                   "no jackknife SE for sigma (n_jack 0, or the smallest class too small for its groups)")
+            pairing.update(sigma=kern["sigma"], paired=None, warn=None, undefined=why)
+    out["kernel"] = kern
+    return out
+
+
+def _sector_split_lines(s):
+    """The plain-language reading of sector_split's result."""
+    if s.get("undefined"):
+        return [f"sectors by symmetry: undefined: {s['undefined']}"]
+    K = s["n_classes"]
+    frame = f"; {s['frame']}" if s.get("frame") else ""
+    lines = [f"sectors by symmetry (classes in label order on a cycle of {K}, equal class weights{frame}; beta = Tr B / Tr W = {s['beta']:.3f}):"]
+    cf = s["crossfit"]
+    for v in s["sectors"]:
+        t = f"  l = {v['l']}: beta_l {v['beta_raw']:.4f} raw"
+        if cf["used"]:
+            t += f", {v['beta_x']:+.4f} cross-fitted (null SD {v['beta_x_null_sd']:.4f}); Phi_l {v['phi_x']:.3f}"
+            if "phi_x_binfree" in v:
+                t += f" ({v['phi_x_binfree']:.3f} net of the bins)"
+            t += f"; first-order share c1_l {v['c1_x']:+.4f}"
+            if v["a_shown"]:
+                t += f"; alignment a_l {v['a_x']:.2f}" + (f" +- {v['a_x_se']:.3f} (Monte Carlo SE over the cross-fit splits)"
+                                                           if v["a_x_se"] is not None else " (one split: no SE)")
+            else:
+                t += "; a_l not read (beta_l within 3 null SD)"
+        else:
+            t += f"; first-order share c1_l {v['c1_raw']:+.4f} (raw)"
+        lines.append(t)
+    if not cf["used"]:
+        lines.append(f"  cross-fit refused: {cf['refused']}; raw values carry the means' sampling noise"
+                     + ("; with rows shared across classes the raw values and the kernel describe these rows only" if s["pairing"].get("paired") else ""))
+    se = s.get("c1_x_sum_se")
+    lines.append(f"  class-mean term c {s['c_exact']:+.4f} (exact; closed form by sector: self terms {s['y_self']:.4f}, cross-sector "
+                 f"terms {s['y_cross']:+.4f}); the first-order sum, an attribution, is {s['c1_raw_sum']:+.4f} raw"
+                 + (f" and {s['c1_x_sum']:+.4f}" + (f" +- {se:.4f}" if se is not None else "") + " cross-fitted" if "c1_x_sum" in s else "")
+                 + ("; with beta above 0.1 the first-order sum can miss c's sign" if s["first_order_warn"] else ""))
+    k = s.get("kernel", {})
+    if k.get("undefined"):
+        lines.append(f"  fluctuation kernel: undefined: {k['undefined']}")
+    elif k:
+        has_se = "kappa_se" in k
+        kap = ", ".join(f"{x:+.4f}" + (f" +- {e:.4f}" if has_se else "") for x, e in zip(k["kappa"], k.get("kappa_se", k["kappa"])))
+        est = "; split halves" if k.get("estimator") == "split halves" else ""      # results written before 1.15.0 carry no estimator
+        lines.append(f"  fluctuation kernel harmonics kappa_l (l = 0..{K // 2}{est}): {kap}" + (" (jackknife SE)" if has_se else ""))
+        t = f"  off-diagonal overlap by separation 1..{K // 2}: " + ", ".join(f"{x:.3f}" for x in k["off_diagonal_profile"])
+        if k.get("circ_undefined"):
+            t += f"; circulant share undefined: {k['circ_undefined']}"
+        elif "circ_p" in k:
+            t += f"; circulant share {k['circ_share']:.2f} (class-position permutations: mean {k['circ_null_mean']:.2f}, p = {k['circ_p']:.3f})"
+        lines.append(t)
+    p = s["pairing"]
+    if p["checked"] in ("pairs", "strata"):                          # 'strata': results written by earlier 1.15 builds
+        lines.append("  rows shared across classes (paired or crossed design): cross-fit refused" if p["paired"] else
+                     "  pairs: no pair id spans two classes")
+    elif p.get("undefined"):
+        lines.append(f"  pairing unchecked: {p['undefined']}")
+    elif "sigma_se" not in p:                                          # a result written before the kernel's sigma carried an SE
+        lines.append("  pairing unchecked (no --paired ids)")
+    elif p.get("warn"):
+        lines.append(f"  classes overlap more than a class overlaps itself (sigma {p['sigma']:.3f} +- {p['sigma_se']:.3f}): they may share "
+                     "rows (crossed or paired design?); pass the pair ids with --strata ... --paired to check")
+    else:
+        lines.append(f"  pairing: sigma {p['sigma']:.3f} +- {p['sigma_se']:.3f}, not more than two SE above 1 (no --paired ids)")
+    return lines
+
+
 def _gamma_nodes(kappa, n_nodes=48):
     """Quadrature nodes and weights for a trial gain tau with E tau = 1 and E tau^2 = kappa (Gamma shape s = 1/(kappa - 1)):
     generalized Gauss-Laguerre by Golub-Welsch, numpy only; tau = 1 when kappa <= 1."""
@@ -1444,6 +1843,8 @@ def summarize_data(result, verbose=True):
         if "balance" in sc:
             txt += f", sector balance {sc['balance']:.2f}"
         lines.append(txt)
+    if "sector_split" in result:
+        lines.extend(_sector_split_lines(result["sector_split"]))
     if "cov_floors" in result and result["cov_floors"].get("undefined"):
         lines.append(f"principal-angle dissimilarity: undefined: {result['cov_floors']['undefined']}")
     elif "cov_floors" in result:
@@ -4496,7 +4897,12 @@ def _main():
     d.add_argument("--standardize", action="store_true", help="z-score every feature first (the repair when one dimension dominates the spectrum)")
     d.add_argument("--split-by", default=None, help="per-feature score file (one value per feature): also run the top, bottom and a random third of the features at matched size, each with its own floor (Section 4)")
     d.add_argument("--order", default=None, help="the declared accumulation order: sequential (default: sorted label values), antipodal (one member of each antipodal pair first), or a comma-separated list of class labels (the words, for word labels)")
-    d.add_argument("--sectors", action="store_true", help="the harmonics of the class-mean kernel for a cyclic axis (labels in cyclic order, class k at angle 2 pi k/K): sector balance, even and odd amplitudes, coherence of adjacent and antipodal classes (Section 4)")
+    d.add_argument("--sectors", action="store_true", help="a cyclic axis by symmetry sector (labels in cyclic order, class k at angle 2 pi k/K): the harmonics of the class-mean kernel (sector balance, even and odd amplitudes, coherence of adjacent and antipodal classes; Section 4), and the sector split: each sector's order parameter, share of the class means' variance and first-order share of the class-mean term, its alignment with the fluctuations, the exact class-mean term by sector, and the fluctuation kernel's harmonics")
+    d.add_argument("--binned", action="store_true", help="with --sectors: the classes are equal-width bins of a continuous angle whose samples spread uniformly inside each bin, so each sector's amplitude is also printed net of the bins' form factor sin(pi l/K)/(pi l/K)")
+    d.add_argument("--paired", action="store_true", help="the --strata ids are pair or carrier ids: rows sharing an id are one item in different classes (a minimal pair, a carrier sentence); an id spanning classes then refuses the --sectors cross-fit and --account's overlap identity, which assume independent classes. Without it --strata are nuisance ids")
+    d.add_argument("--sector-splits", type=int, default=10, help="with --sectors: cross-fit splits averaged for beta_l and x_l, and for their permutation null; the Monte Carlo SE of a_l is over them (default 10)")
+    d.add_argument("--sector-null", type=int, default=50, help="with --sectors: label permutations for the null of the cross-fitted beta_l (each the same split mean); a_l is read where beta_l exceeds 3 SD of it (default 50)")
+    d.add_argument("--sector-jackknife", type=int, default=10, help="with --sectors: groups per class for the jackknife SE of the fluctuation kernel's harmonics and of sigma (default 10; 0 skips it)")
     d.add_argument("--null-shift", action="store_true", help="labels are in time order: add the circular-shift null, which rolls the label sequence and keeps its autocorrelation")
     d.add_argument("--antipode", default=None, help="JSON {class: antipodal class}; checks that the declared order's first half holds one member of each pair and reports late_fraction as the share of the climb left after half the circle (Appendices E and K)")
     d.add_argument("--decompose", action="store_true", help="the shift split into its within-class part D and class-mean part Tb + Cb + Cx (exact four-term split, Section 5, Appendix K), with the sign law of Eq. 3")
@@ -4713,6 +5119,10 @@ def _main():
             raise SystemExit("rung data needs labels (or --continuous, or --candidates)")
         if a.labels is not None and a.continuous:
             raise SystemExit("--continuous builds the classes from the variable: give labels or --continuous, not both")
+        if a.paired and not a.strata:
+            raise SystemExit("--paired declares the --strata ids as pair or carrier ids: give --strata")
+        if a.sectors and (a.sector_splits < 1 or a.sector_null < 0 or a.sector_jackknife < 0 or a.sector_jackknife == 1):
+            raise SystemExit("--sector-splits takes 1 or more, --sector-null 0 or more, --sector-jackknife 0 (no SE) or 2 or more")
         labels, label_values = _load_labels(a.labels) if a.labels else (None, None)
         if label_values is not None:
             print(f"labels: {len(label_values)} classes coded in sorted order of their values ("
@@ -4834,6 +5244,13 @@ def _main():
                 # order of --order is a different thing and does not enter here
                 sc = sectors(X, labels)
                 _print_sectors(sc); r["sectors"] = sc
+                # the split reads the frame the other analyses read (--standardize); the kernel harmonics above read the
+                # features as given (1.14's output, which Appendix M replays)
+                ss = sector_split(_zscore(X) if a.standardize else X, labels, binned=a.binned, pairs=strata if a.paired else None,
+                                  n_splits=a.sector_splits, n_null=a.sector_null, n_jack=a.sector_jackknife, seed=a.seed)
+                if not ss.get("undefined"):
+                    ss["frame"] = "features z-scored (--standardize)" if a.standardize else "features as given"
+                print("\n".join(_sector_split_lines(ss))); r["sector_split"] = ss
             if a.cov_floors:
                 cf = cov_floors(X, labels, k=a.cov_k, n_perm=a.cov_perm, seed=a.seed)
                 _print_cov_floors(cf); r["cov_floors"] = cf
@@ -4865,8 +5282,14 @@ def _main():
                     print(line)
             if a.account:
                 Xa = _zscore(X) if a.standardize else X
-                ra = account(Xa, labels, order=dec_order, bin_counts=rungs, halves=acc_h, seed=dkw["seed"], heldout=not a.no_heldout,
-                             n_null=a.floor_draws, floor_by_rung=a.floor_by_rung)
+                spans = (a.paired and strata is not None and           # nuisance strata span classes without sharing rows
+                         any(len(np.unique(labels[np.asarray(strata) == s])) > 1 for s in np.unique(strata)))
+                if spans:          # the identity's class moments assume independent classes; shared rows break T_cd
+                    ra = {"undefined": "rows shared across classes (--paired: a pair id in more than one class): the overlap "
+                                       "identity assumes independent classes"}
+                else:
+                    ra = account(Xa, labels, order=dec_order, bin_counts=rungs, halves=acc_h, seed=dkw["seed"], heldout=not a.no_heldout,
+                                 n_null=a.floor_draws, floor_by_rung=a.floor_by_rung)
                 _print_account(ra); r["account"] = ra
             if cont is not None:
                 c_ = continuous(cont["X"], cont["phi"], guard=a.guard, n_origins=a.origins if a.cyclic else 1,

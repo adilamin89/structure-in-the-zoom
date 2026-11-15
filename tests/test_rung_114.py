@@ -275,11 +275,12 @@ def test_one_version_string():
     root = pathlib.Path(r.__file__).parent
     if not (root / "pyproject.toml").exists():
         pytest.skip("rung installed without its source tree")
-    assert r.__version__ == "1.14.0" and 'version = "1.14.0"' in (root / "pyproject.toml").read_text()
+    v = r.__version__                                                   # one version everywhere it lives
+    assert f'version = "{v}"' in (root / "pyproject.toml").read_text()
     readme = (root / "README.md").read_text()
-    assert "rung-1.14.0" in readme and "@v1.14.0" in readme and "1.13.1" not in readme.split("## The approach")[0]
+    assert f"rung-{v}" in readme and f"@v{v}" in readme and "1.13.1" not in readme.split("## The approach")[0]
     nb = (root / "examples" / "quickstart.ipynb").read_text()
-    assert "@v1.14.0" in nb and "rung 1.14.0" in nb
+    assert f"@v{v}" in nb and f"rung {v}" in nb
 
 
 def test_head_scores_read_every_order():
